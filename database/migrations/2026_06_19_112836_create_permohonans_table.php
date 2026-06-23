@@ -9,22 +9,23 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('permohonans', function (Blueprint $table) {
             $table->id();
-            // Menghubungkan ke tabel users (siapa pemohonnya)
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('nomor_tiket')->unique();
-            $table->string('file_kartu_identitas');
-            $table->text('rincian_informasi');
-            $table->text('tujuan_penggunaan');
-            $table->string('cara_memperoleh_info');
-            $table->string('cara_memperoleh_salinan');
-            $table->dateTime('tanggal_pengajuan');
-            $table->enum('status_layanan', ['diajukan', 'diproses', 'diterima', 'ditolak'])->default('diajukan');
-            $table->text('alasan_penolakan')->nullable();
-            $table->string('dokumen_jawaban')->nullable();
+            $table->foreignId('user_id')->constrained();
+            $table->string('nama');
+            $table->string('pekerjaan');
+            $table->text('alamat');
+            $table->string('telepon');
+            $table->string('email');
+            $table->string('file_identitas');
+            $table->text('info_diminta');
+            $table->text('tujuan');
+            $table->string('cara_ambil'); // Untuk menampung hasil radio button
+            $table->boolean('pernyataan');
+            $table->string('no_tiket')->nullable(); // Tambahkan ini
+            $table->string('status')->default('DIAJUKAN'); // Tambahkan ini
             $table->timestamps();
         });
     }

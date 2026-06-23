@@ -2,28 +2,30 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InformasiPublikController;
+use App\Http\Controllers\PermohonanController;
+use App\Http\Controllers\KeberatanController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
-| 1. RUTE PUBLIK (Bebas diakses tanpa perlu login)
+| 1. RUTE PUBLIK
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () { return view('public.beranda'); });
-Route::get('/informasi-publik', function () { return view('public.informasi_publik'); });
+Route::get('/informasi-publik', [InformasiPublikController::class, 'index']);
 
 
 /*
 |--------------------------------------------------------------------------
-| 2. RUTE GUEST - KHUSUS LOGIN & SSO (Hanya untuk yang belum login)
+| 2. RUTE GUEST
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
-
-    // Tampilan Form Login
     Route::get('/login', function () { return view('auth.login'); })->name('login');
     Route::get('/admin-panel/login', function () { return view('admin.login'); })->name('admin.login');
 
-    // Proses Login & SSO
     Route::controller(AuthController::class)->group(function () {
         Route::post('/login', 'publicLoginProcess');
         Route::post('/admin-panel/login', 'adminLoginProcess');
@@ -31,45 +33,26 @@ Route::middleware('guest')->group(function () {
         Route::get('/auth/google/callback', 'handleGoogleCallback');
     });
 
-    // Tambahkan di dalam Route::middleware('guest')->group(function () { ... })
     Route::get('/forgot-password', function () { return view('auth.forgot_password'); })->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
     Route::get('/reset-password/{token}', function ($token) { return view('auth.reset_password', ['token' => $token]); })->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('/register', 'showRegisterStep1')->name('register');
+        Route::post('/register/step1', 'processRegisterStep1');
+        Route::get('/register/verifikasi', 'showRegisterStep2')->name('register.step2')->middleware('signed');
+        Route::post('/register/verifikasi', 'processRegisterStep2');
+        Route::post('/register/resend-otp', 'resendOtp')->name('register.resend');
+        Route::get('/register/lengkapi-profil', 'showRegisterStep3')->name('register.step3')->middleware('signed');
+        Route::post('/register/lengkapi-profil', 'processRegisterStep3');
+    });
 });
 
 
 /*
 |--------------------------------------------------------------------------
-| 3. RUTE REGISTRASI ESTAFET (LEVEL TOKOPEDIA - SIGNED URL)
-|--------------------------------------------------------------------------
-*/
-Route::middleware('guest')->controller(AuthController::class)->group(function () {
-
-    // Langkah 1: Input Email
-    Route::get('/register', 'showRegisterStep1')->name('register');
-    Route::post('/register/step1', 'processRegisterStep1');
-
-    // Langkah 2: Input Kode OTP 4-Angka (Gembok Kriptografi Level 1)
-    Route::get('/register/verifikasi', 'showRegisterStep2')
-        ->name('register.step2')
-        ->middleware('signed'); // <--- PENGGANTI ENSURE.STEP
-    Route::post('/register/verifikasi', 'processRegisterStep2'); // <-- Path disamakan dgn GET
-    Route::post('/register/resend-otp', 'resendOtp')->name('register.resend');
-
-    // Langkah 3: Input Nama Lengkap & Sandi (Gembok Kriptografi Level 2)
-    Route::get('/register/lengkapi-profil', 'showRegisterStep3')
-        ->name('register.step3')
-        ->middleware('signed'); // <--- PENGGANTI ENSURE.STEP
-    Route::post('/register/lengkapi-profil', 'processRegisterStep3'); // <-- Path disamakan dgn GET
-
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| 4. RUTE TERPROTEKSI (Wajib LOGIN untuk bisa mengaksesnya)
+| 3. RUTE TERPROTEKSI
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
@@ -79,23 +62,39 @@ Route::middleware('auth')->group(function () {
         Route::post('/profil/buat-sandi-manual', 'buatSandiManual')->name('profil.buat-sandi');
     });
 
-    Route::get('/admin/dashboard', function () {
-        return '<h1>Selamat Datang di Dasbor Admin PPID FMIPA Unila!</h1><p>Autentikasi Pintu Rahasia Berhasil.</p>';
-    });
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->middleware('auth');
 
+    // Manajemen Informasi Publik
+    Route::get('/admin/informasi-publik', [InformasiPublikController::class, 'adminIndex']);
+    Route::get('/admin/informasi-publik/create', [InformasiPublikController::class, 'create']);
+    Route::post('/admin/informasi-publik', [InformasiPublikController::class, 'store']);
+    Route::get('/admin/informasi-publik/{id}/edit', [InformasiPublikController::class, 'edit']);
+    Route::put('/admin/informasi-publik/{id}', [InformasiPublikController::class, 'update']);
+    Route::delete('/admin/informasi-publik/{id}', [InformasiPublikController::class, 'destroy']);
+
+    // Manajemen Permohonan (Dinamis)
+    Route::get('/admin/permohonan', [PermohonanController::class, 'adminIndex']);
+    Route::get('/admin/permohonan/{id}', [PermohonanController::class, 'show']); // Detail
+    Route::put('/admin/permohonan/{id}/status', [PermohonanController::class, 'updateStatus']); // Eksekusi Status
+
+    // Manajemen Keberatan
+    Route::get('/admin/keberatan', function () { return view('admin.keberatan'); });
+
+    // Layanan Permohonan Masyarakat
+    Route::get('/permohonan', [PermohonanController::class, 'create'])->name('permohonan.create');
+    Route::post('/permohonan', [PermohonanController::class, 'store'])->name('permohonan.store');
+
+    // Layanan Keberatan Masyarakat
+    Route::get('/keberatan', [KeberatanController::class, 'create'])->name('keberatan.create');
+    Route::post('/keberatan', [KeberatanController::class, 'store'])->name('keberatan.store');
 });
 
-Route::post('/login/with-email', function (Request $request) {
-    // Gunakan method input() yang lebih aman
-    $email = $request->input('email');
-    return redirect()->route('login')->with('auto_email', $email);
-})->name('login.with.email');
 
-// Catatan: Rute /bom-sesi saya matikan (comment), karena dengan Signed URL,
-// keamanan tidak lagi diatur oleh Session browser, melainkan oleh rumus matematika di URL.
 /*
-Route::get('/bom-sesi', function () {
-    session()->flush();
-    return '<h1>Sesi pendaftaran sudah dibom nuklir.</h1>...';
-});
+|--------------------------------------------------------------------------
+| 4. RUTE UTILITY
+|--------------------------------------------------------------------------
 */
+Route::post('/login/with-email', function (Request $request) {
+    return redirect()->route('login')->with('auto_email', $request->input('email'));
+})->name('login.with.email');
