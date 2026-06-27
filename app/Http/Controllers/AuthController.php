@@ -9,15 +9,15 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\URL; // <--- PERBAIKAN PRO: Wajib diimpor untuk fitur URL Terenkripsi
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     /* =======================================================
-       BAGIAN 1: LOGIKA ADMIN (JALUR RAHASIA)
+       LOGIKA LOGIN (ADMIN & MASYARAKAT)
        ======================================================= */
     public function adminLoginProcess(Request $request)
     {
@@ -33,56 +33,40 @@ class AuthController extends Controller
             return redirect()->intended('/admin/dashboard');
         }
 
-        return back()->withErrors([
+        throw ValidationException::withMessages([
             'email' => 'Akses ditolak. Kredensial tidak valid atau Anda bukan Admin.',
-        ])->onlyInput('email');
+        ]);
     }
 
-
-    /* =======================================================
-       BAGIAN 2: LOGIKA MASYARAKAT (TANPA LIMITER SIDANG)
-       ======================================================= */
     public function publicLoginProcess(Request $request)
     {
-        // 1. Validasi wajib isi
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
-        ], [
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak sah.',
-            'password.required' => 'Kata sandi wajib diisi.'
         ]);
 
-        // 2. Siapkan kunci (hanya untuk role masyarakat)
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-            'role' => 'masyarakat'
-        ];
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 'masyarakat'])) {
+            $request->session()->regenerate();
 
-        // 3. Eksekusi Login
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate(); // Aman dari penyadapan Wi-Fi kampus
+            // INTENDED: Langsung kembali ke halaman yang tadi diakses (misal: /permohonan)
             return redirect()->intended('/');
         }
 
-        // 4. Jika gagal, kembalikan pesan ambigu tanpa hukuman waktu
         return back()->withErrors([
             'login_gagal' => 'Email atau kata sandi yang Anda masukkan salah.'
         ])->onlyInput('email');
     }
 
+    /* =======================================================
+       LOGIKA RESET PASSWORD
+       ======================================================= */
     public function sendResetLink(Request $request)
     {
-        $request->validate(['email' => 'required|email'
-        ], [
-            'email.required' => 'Email harus diisi.',
-            'email.email' => 'Format email tidak sah.'
-        ]);
+        $request->validate(['email' => 'required|email']);
         $status = Password::sendResetLink($request->only('email'));
+
         return $status === Password::RESET_LINK_SENT
-            ? back()->with('status', 'Link reset kata sandi telah dikirim ke email Anda.')
+            ? back()->with('status', 'Link reset kata sandi telah dikirim.')
             : back()->withErrors(['email' => 'Gagal mengirim link reset.']);
     }
 
@@ -92,203 +76,125 @@ class AuthController extends Controller
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
-        ], [
-            'password.required'   => 'Kata sandi wajib diisi.',
-            'password.min'        => 'Kata sandi minimal 8 karakter.',
-            'password.confirmed'  => 'Konfirmasi kata sandi tidak cocok.',
-            'email.required'      => 'Email wajib diisi.',
-            'email.email'         => 'Format email tidak valid.',
         ]);
 
         $status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) { $user->password = Hash::make($password); $user->save(); });
+            function ($user, $password) {
+                $user->password = Hash::make($password);
+                $user->save();
+            });
 
         return $status === Password::PASSWORD_RESET
             ? redirect('/login')->with('status', 'Sandi berhasil diubah.')
             : back()->withErrors(['email' => 'Token tidak valid.']);
     }
 
-
     /* =======================================================
-       BAGIAN 3: REGISTRASI ESTAFET (ENTERPRISE SIGNED-URL)
+       LOGIKA REGISTRASI ESTAFET (SIGNED URL)
        ======================================================= */
-    public function showRegisterStep1()
-    {
-        return view('auth.register_step1');
-    }
+    public function showRegisterStep1() { return view('auth.register_step1'); }
 
     public function processRegisterStep1(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email|max:255|unique:users,email'
-        ], [
-            'email.required' => 'Email harus diisi.',
-            'email.email' => 'Format email tidak sah.',
-            'email.unique' => 'Email ini sudah terdaftar. Silakan masuk.'
-        ]);
+        $request->validate(['email' => 'required|email|max:255|unique:users,email']);
 
         $email = $request->email;
         $otp = rand(1000, 9999);
 
-        // Simpan angka OTP di Cache selama 3 menit
-        Cache::put('otp_' . $email, $otp, now()->addMinutes(3));
+        Cache::put('otp_' . $email, $otp, now()->addMinutes(5));
 
-        // DETIK BERSEJARAH: Buat URL Verifikasi yang disegel dengan Kriptografi (Valid 15 menit)
-        $urlTerenkripsiStep2 = URL::temporarySignedRoute(
-            'register.step2',
-            now()->addMinutes(15),
-            ['email' => $email] // <--- Menitipkan email di dalam segel rahasia
-        );
+        $urlStep2 = URL::temporarySignedRoute('register.step2', now()->addMinutes(15), ['email' => $email]);
 
-        // Kirim email lewat Tukang Pos Google
-        try {
-            Mail::send('emails.otp', ['otp' => $otp], function($message) use ($email) {
-                $message->to($email)->subject('Kode Verifikasi Pendaftaran PPID FMIPA Unila');
-            });
-        } catch (\Exception $e) {
-            return back()->withErrors(['email' => 'Gagal mengirim OTP. Periksa koneksi internet Anda.'])->withInput();
-        }
-
-        // Lempar pemohon ke URL panjang yang bersegel
-        return redirect($urlTerenkripsiStep2);
-    }
-
-
-    /* --- LANGKAH 2: COCOKKAN OTP --- */
-    public function showRegisterStep2(Request $request)
-    {
-        // Karena sudah dipagari @signed di web.php, parameter 'email' di URL ini 100% dijamin ASLI
-        $email = $request->query('email');
-        return view('auth.register_step2', ['email' => $email]);
-    }
-
-    public function processRegisterStep2(Request $request)
-    {
-        $request->validate(['otp' => 'required|digits:4'], [
-            'otp.required' => 'Kode OTP harus diisi',
-            'otp.digits' => 'Kode OTP harus 4 angka'
-        ]);
-
-        $email = $request->query('email'); // Ambil email dari URL bersegel
-        $cachedOtp = Cache::get('otp_' . $email);
-
-        if (!$cachedOtp) {
-            return back()->withErrors(['otp' => 'Kode OTP telah kedaluwarsa. Silakan klik Kirim Ulang.']);
-        }
-
-        if ((int)$request->otp !== (int)$cachedOtp) {
-            return back()->withErrors(['otp' => 'Kode OTP yang Anda masukkan salah.']);
-        }
-
-        // JIKA OTP BENAR: Hapus memori OTP, lalu buatkan Segel URL baru untuk masuk ke Step 3
-        Cache::forget('otp_' . $email);
-
-        $urlTerenkripsiStep3 = URL::temporarySignedRoute(
-            'register.step3',
-            now()->addMinutes(15),
-            ['email' => $email]
-        );
-
-        return redirect($urlTerenkripsiStep3);
-    }
-
-    public function resendOtp(Request $request)
-    {
-        // 1. Tangkap email dari form
-        $email = $request->input('email');
-
-        if (!$email) {
-            return redirect()->route('register')->withErrors(['email' => 'Sesi tidak valid, silakan ulangi.']);
-        }
-
-        // 2. Buat angka OTP baru
-        $otp = rand(1000, 9999);
-        Cache::put('otp_' . $email, $otp, now()->addMinutes(3));
-
-        // 3. Kirim ulang email
         try {
             Mail::send('emails.otp', ['otp' => $otp], function($m) use ($email) {
                 $m->to($email)->subject('Kode Verifikasi Pendaftaran PPID FMIPA Unila');
             });
         } catch (\Exception $e) {
-            // Abaikan jika gagal koneksi agar web tidak crash
+            return back()->withErrors(['email' => 'Gagal mengirim email verifikasi.'])->withInput();
         }
 
-        // 4. KUNCI ANTI MENTAL: Buatkan segel URL Step 2 yang baru, lalu redirect ke sana!
-        $urlStep2Baru = URL::temporarySignedRoute(
-            'register.step2',
-            now()->addMinutes(15),
-            ['email' => $email]
-        );
-
-        return redirect($urlStep2Baru)->with('success', 'Kode OTP baru berhasil dikirim ulang ke email Anda.');
+        return redirect($urlStep2);
     }
 
+    public function showRegisterStep2(Request $request) { return view('auth.register_step2', ['email' => $request->query('email')]); }
 
-    /* --- LANGKAH 3: FINALISASI --- */
-    public function showRegisterStep3(Request $request)
+    public function processRegisterStep2(Request $request)
     {
         $email = $request->query('email');
-        return view('auth.register_step3', ['email' => $email]);
+
+        if (RateLimiter::tooManyAttempts('otp-check:' . $email, 5)) {
+            return back()->withErrors(['otp' => 'Terlalu banyak percobaan. Tunggu 1 menit.']);
+        }
+
+        $request->validate(['otp' => 'required|digits:4']);
+        $cachedOtp = Cache::get('otp_' . $email);
+
+        if (!$cachedOtp || (int)$request->otp !== (int)$cachedOtp) {
+            RateLimiter::hit('otp-check:' . $email);
+            return back()->withErrors(['otp' => 'Kode OTP salah atau kedaluwarsa.']);
+        }
+
+        Cache::forget('otp_' . $email);
+        RateLimiter::clear('otp-check:' . $email);
+
+        $urlStep3 = URL::temporarySignedRoute('register.step3', now()->addMinutes(15), ['email' => $email]);
+        return redirect($urlStep3);
     }
+
+    public function resendOtp(Request $request)
+    {
+        $email = $request->input('email');
+        if (!$email) return redirect()->route('register');
+
+        $otp = rand(1000, 9999);
+        Cache::put('otp_' . $email, $otp, now()->addMinutes(5));
+
+        Mail::send('emails.otp', ['otp' => $otp], function($m) use ($email) {
+            $m->to($email)->subject('Kode Verifikasi Pendaftaran PPID FMIPA Unila');
+        });
+
+        return redirect()->back()->with('success', 'OTP baru telah dikirim.');
+    }
+
+    public function showRegisterStep3(Request $request) { return view('auth.register_step3', ['email' => $request->query('email')]); }
 
     public function processRegisterStep3(Request $request)
     {
         $request->validate([
             'nama_lengkap' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
-        ], [
-            'nama_lengkap.required' => 'Nama Lengkap harus diisi',
-            'password.required' => 'Kata Sandi harus diisi',
-            'password.min' => 'Kata sandi minimal 8 karakter',
-            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok'
         ]);
-
-        $email = $request->query('email'); // Ambil email dari segel terakhir
 
         $user = User::create([
             'nama_lengkap' => $request->nama_lengkap,
-            'email' => $email,
+            'email' => $request->query('email'),
             'password' => Hash::make($request->password),
             'role' => 'masyarakat',
         ]);
 
         Auth::login($user);
-
-        return redirect('/')->with('success', 'Selamat! Akun Anda berhasil diverifikasi dan didaftarkan.');
+        return redirect('/')->with('success', 'Akun berhasil dibuat.');
     }
-
 
     /* =======================================================
-       BAGIAN 4: GOOGLE SSO & LOGOUT
+       GOOGLE SSO & LOGOUT
        ======================================================= */
-    public function redirectToGoogle()
-    {
-        return Socialite::driver('google')->redirect();
-    }
+    public function redirectToGoogle() { return Socialite::driver('google')->redirect(); }
 
     public function handleGoogleCallback()
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-            $user = User::where('email', $googleUser->getEmail())->first();
-
-            if (!$user) {
-                $user = User::create([
-                    'nama_lengkap' => $googleUser->getName(),
-                    'email' => $googleUser->getEmail(),
-                    'google_id' => $googleUser->getId(),
-                    'role' => 'masyarakat',
-                ]);
-            } else {
-                $user->update(['google_id' => $googleUser->getId()]);
-            }
+            $user = User::updateOrCreate(
+                ['email' => $googleUser->getEmail()],
+                ['nama_lengkap' => $googleUser->getName(), 'google_id' => $googleUser->getId(), 'role' => 'masyarakat']
+            );
 
             Auth::login($user);
+            // Fitur intended otomatis membawa user kembali ke halaman yang mereka coba akses
             return redirect()->intended('/');
-
         } catch (\Exception $e) {
-            return redirect('/login')->withErrors(['email' => 'Terjadi kesalahan saat terhubung ke Google. Silakan coba lagi.']);
+            return redirect('/login')->withErrors(['email' => 'Google Login gagal.']);
         }
     }
 
