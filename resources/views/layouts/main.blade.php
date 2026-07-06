@@ -3,68 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'PPID FMIPA Unila')</title>
+    <title>@yield('title', 'PPID FMIPA Universitas Lampung')</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
+        // Opsional: Konfigurasi Tailwind agar mengenali font Poppins secara resmi
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        primary: '#0095e8',
-                        unila: '#0f2b4a',
-                        unilahover: '#0a1d33',
-                    }
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
                 }
             }
         }
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-
-        /* Proteksi form agar bersih dari auto-fill browser */
-        input::-ms-reveal, input::-ms-clear { display: none; }
-        input[type="password"]::-webkit-credentials-auto-fill-button { display: none !important; visibility: hidden; pointer-events: none; }
-        input[type="password"]::-webkit-eye-off-button, input[type="password"]::-webkit-eye-button { display: none !important; visibility: hidden; }
+        /* Tetap simpan style jika ada kebutuhan spesifik, tapi sekarang lebih bersih */
+        html { scroll-behavior: smooth; }
     </style>
-
-    @stack('styles')
 </head>
-<body class="flex flex-col min-h-screen bg-gray-50 text-gray-800">
 
-    @php
-        // Daftar rute yang TIDAK menampilkan Navbar & Footer
-        $pagesWithoutNav = [
-            'login',
-            'register',
-            'register/step1', // Tambahkan jika ada path spesifik
-            'forgot-password',
-            'reset-password'
-        ];
+<body class="antialiased text-gray-800 bg-slate-50 min-h-screen flex flex-col {{ request()->is('/') ? 'is-home' : '' }}">
 
-        // Cek apakah halaman saat ini ada di daftar hitam
-        $showLayout = !request()->is($pagesWithoutNav) && !request()->is('register/*') && !request()->is('reset-password/*');
-    @endphp
+    @include('partials.navbar')
 
-    {{-- NAVBAR --}}
-    @if($showLayout)
-        @include('partials.navbar')
-    @endif
-
-    {{-- MAIN CONTENT --}}
-    <div class="flex-grow flex flex-col">
+    <main class="flex-grow">
         @yield('content')
-    </div>
+    </main>
 
-    {{-- FOOTER --}}
-    @if($showLayout)
-        @include('partials.footer')
-    @endif
-
-    @stack('scripts')
+    @include('partials.footer')
 </body>
 </html>

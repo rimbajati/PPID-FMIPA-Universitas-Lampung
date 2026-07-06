@@ -4,60 +4,80 @@ namespace App\Http\Controllers;
 
 use App\Models\InformasiPublik;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class InformasiPublikController extends Controller
 {
-    // 1. LOKET MASYARAKAT
-    public function index(Request $request)
+    public function hitungAkses($id)
     {
-        $search = $request->input('search');
-        $kategori = $request->input('kategori');
+        $info = InformasiPublik::findOrFail($id);
+        $info->increment('dilihat');
 
-        $query = InformasiPublik::query();
-
-        if (!empty($search)) {
-            $searchTerm = strtolower(trim($search));
-            $query->whereRaw('LOWER(judul_informasi) LIKE ?', ["%$searchTerm%"]);
-        }
-        if (!empty($kategori)) {
-            $query->where('kategori', $kategori);
-        }
-
-        $informasi = $query->latest()->paginate(6);
-        $informasi->appends($request->all());
-
-        return view('public.informasi_publik', compact('informasi'));
+        return redirect()->away(
+            $info->tipe_informasi === 'link' ? $info->jalur_informasi : asset($info->jalur_informasi)
+        );
     }
 
-    // 2. LOKET ADMIN
-    public function adminIndex(Request $request)
+    public function index(Request $request)
     {
-        $search = $request->input('search');
-        $kategori = $request->input('kategori');
+        $keyword = trim($request->query('search', ''));
+        $kategori = $request->query('kategori');
 
-        $totalInformasi  = InformasiPublik::count();
-        $totalBerkala    = InformasiPublik::where('kategori', 'Informasi Berkala')->count();
-        $totalSertaMerta = InformasiPublik::where('kategori', 'Informasi Serta-Merta')->count();
-        $totalSetiapSaat = InformasiPublik::where('kategori', 'Informasi Setiap Saat')->count();
+        $baseQuery = InformasiPublik::query();
 
-        $query = InformasiPublik::query();
-
-        // LOGIKA PENCARIAN DIPERBAIKI: Menggunakan lowercase agar tidak sensitif huruf besar/kecil
-        if (!empty($search)) {
-            $searchTerm = strtolower(trim($search));
-            $query->whereRaw('LOWER(judul_informasi) LIKE ?', ["%$searchTerm%"]);
-        }
-        if (!empty($kategori)) {
-            $query->where('kategori', $kategori);
+        if ($kategori) {
+            $baseQuery->where('kategori', $kategori);
         }
 
-        $informasi = $query->latest()->paginate(10);
-        $informasi->appends($request->all());
+        if ($keyword !== '') {
+            $term = strtolower($keyword);
 
-        return view('admin.informasi_publik', compact(
-            'informasi', 'totalInformasi', 'totalBerkala', 'totalSertaMerta', 'totalSetiapSaat'
-        ));
+            $matchQuery = clone $baseQuery;
+            $items = $matchQuery->whereRaw('LOWER(judul_informasi) LIKE ?', ["%$term%"])
+                ->latest()
+                ->paginate(10);
+
+            if ($items->isEmpty()) {
+                $allDocs = $baseQuery->get(['id', 'judul_informasi']);
+                $ids = [];
+                $maxDist = strlen($term) <= 3 ? 1 : 2;
+
+                foreach ($allDocs as $doc) {
+                    $titleLower = strtolower($doc->judul_informasi);
+                    if (levenshtein($term, $titleLower) <= $maxDist) {
+                        $ids[] = $doc->id;
+                        continue;
+                    }
+
+                    $tokens = explode(' ', $titleLower);
+                    foreach ($tokens as $token) {
+                        if (abs(strlen($term) - strlen($token)) > $maxDist) continue;
+                        if (levenshtein($term, $token) <= $maxDist) {
+                            $ids[] = $doc->id;
+                            break;
+                        }
+                    }
+                }
+
+                if (!empty($ids)) {
+                    $items = InformasiPublik::whereIn('id', $ids)
+                        ->latest()
+                        ->paginate(10);
+                }
+            }
+        } else {
+            $items = $baseQuery->latest()->paginate(10);
+        }
+
+        $items->appends($request->all());
+
+        return view('public.informasi_publik', ['informasi' => $items]);
+    }
+
+    public function adminIndex()
+    {
+        return view('admin.informasi_publik', [
+            'informasi' => InformasiPublik::latest()->paginate(10)
+        ]);
     }
 
     public function create()
@@ -65,101 +85,76 @@ class InformasiPublikController extends Controller
         return view('admin.informasi_publik_create');
     }
 
+    public function edit($id)
+    {
+        return view('admin.informasi_publik_create', [
+            'informasi' => InformasiPublik::findOrFail($id)
+        ]);
+    }
+
     public function store(Request $request)
     {
-        $rules = [
-            'judul_informasi' => 'required|string|max:255',
+        $request->validate([
+            'judul_informasi' => 'required|max:255',
             'kategori'        => 'required',
             'tahun_publikasi' => 'required|digits:4',
             'opsi_format'     => 'required|in:file,link',
-        ];
+            'berkas'          => 'required_if:opsi_format,file|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:10240',
+            'url_link'        => 'required_if:opsi_format,link|url',
+        ]);
 
-        if ($request->opsi_format == 'file') {
-            $rules['berkas'] = 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:10240';
+        $payload = $request->except(['opsi_format', 'berkas', 'url_link']);
+
+        if ($request->opsi_format === 'file') {
+            $file = $request->file('berkas');
+            $name = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('informasi'), $name);
+
+            $payload['tipe_informasi']  = $file->getClientOriginalExtension();
+            $payload['jalur_informasi'] = 'informasi/' . $name;
         } else {
-            $rules['url_link'] = 'required|url';
+            $payload['tipe_informasi']  = 'link';
+            $payload['jalur_informasi'] = $request->url_link;
         }
 
-        $request->validate($rules);
+        InformasiPublik::create($payload);
 
-        $informasi = new InformasiPublik();
-        $informasi->judul_informasi = $request->judul_informasi;
-        $informasi->kategori        = $request->kategori;
-        $informasi->tahun_publikasi = $request->tahun_publikasi;
-        $informasi->deskripsi       = $request->deskripsi;
-
-        if ($request->opsi_format == 'file') {
-            $path = $request->file('berkas')->store('informasi', 'public');
-            $informasi->tipe_informasi  = $request->file('berkas')->getClientOriginalExtension();
-            $informasi->jalur_informasi = 'storage/' . $path;
-        } else {
-            $informasi->tipe_informasi  = 'link';
-            $informasi->jalur_informasi = $request->url_link;
-        }
-
-        $informasi->save();
-        return redirect('/admin/informasi-publik')->with('success', 'Data berhasil ditambahkan!');
-    }
-
-    public function edit($id)
-    {
-        $informasi = InformasiPublik::findOrFail($id);
-        return view('admin.informasi_publik_create', compact('informasi'));
+        return redirect('/admin/informasi-publik')->with('success', 'Data berhasil ditambahkan.');
     }
 
     public function update(Request $request, $id)
     {
-        $informasi = InformasiPublik::findOrFail($id);
+        $info = InformasiPublik::findOrFail($id);
+        $payload = $request->except(['opsi_format', 'berkas', 'url_link']);
 
-        $rules = [
-            'judul_informasi' => 'required|string|max:255',
-            'kategori'        => 'required',
-            'tahun_publikasi' => 'required|digits:4',
-            'opsi_format'     => 'required|in:file,link',
-        ];
+        if ($request->opsi_format === 'file' && $request->hasFile('berkas')) {
+            if ($info->tipe_informasi !== 'link' && file_exists(public_path($info->jalur_informasi))) {
+                @unlink(public_path($info->jalur_informasi));
+            }
+            $file = $request->file('berkas');
+            $name = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('informasi'), $name);
 
-        if ($request->opsi_format == 'file' && $request->hasFile('berkas')) {
-            $rules['berkas'] = 'file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:10240';
-        } elseif ($request->opsi_format == 'link') {
-            $rules['url_link'] = 'required|url';
+            $payload['tipe_informasi']  = $file->getClientOriginalExtension();
+            $payload['jalur_informasi'] = 'informasi/' . $name;
+        } elseif ($request->opsi_format === 'link') {
+            $payload['tipe_informasi']  = 'link';
+            $payload['jalur_informasi'] = $request->url_link;
         }
 
-        $request->validate($rules);
+        $info->update($payload);
 
-        $informasi->judul_informasi = $request->judul_informasi;
-        $informasi->kategori        = $request->kategori;
-        $informasi->tahun_publikasi = $request->tahun_publikasi;
-        $informasi->deskripsi       = $request->deskripsi;
-
-        if ($request->opsi_format == 'file') {
-            if ($request->hasFile('berkas')) {
-                if ($informasi->tipe_informasi !== 'link') {
-                    Storage::delete(str_replace('storage/', '', $informasi->jalur_informasi));
-                }
-                $path = $request->file('berkas')->store('informasi', 'public');
-                $informasi->tipe_informasi  = $request->file('berkas')->getClientOriginalExtension();
-                $informasi->jalur_informasi = 'storage/' . $path;
-            }
-        } else {
-            if ($informasi->tipe_informasi !== 'link') {
-                Storage::delete(str_replace('storage/', '', $informasi->jalur_informasi));
-            }
-            $informasi->tipe_informasi  = 'link';
-            $informasi->jalur_informasi = $request->url_link;
-        }
-
-        $informasi->save();
-        return redirect('/admin/informasi-publik')->with('success', 'Arsip berhasil diperbarui!');
+        return redirect('/admin/informasi-publik')->with('success', 'Arsip berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        $informasi = InformasiPublik::findOrFail($id);
-        if ($informasi->tipe_informasi !== 'link') {
-            Storage::delete(str_replace('storage/', '', $informasi->jalur_informasi));
+        $info = InformasiPublik::findOrFail($id);
+        if ($info->tipe_informasi !== 'link' && file_exists(public_path($info->jalur_informasi))) {
+            @unlink(public_path($info->jalur_informasi));
         }
-        $informasi->delete();
+        $info->delete();
 
-        return redirect('/admin/informasi-publik')->with('success', 'Arsip berhasil dihapus!');
+        return redirect('/admin/informasi-publik')->with('success', 'Arsip berhasil dihapus.');
     }
 }

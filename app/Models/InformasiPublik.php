@@ -20,5 +20,6 @@ class InformasiPublik extends Model
         'tipe_informasi',  // isinya: 'pdf', 'docx', atau 'link'
         'jalur_informasi', // isinya: path simpan file atau URL http://...
         'tahun_publikasi',
+        'dilihat',         // kolom baru untuk menghitung jumlah dilihat
     ];
 }

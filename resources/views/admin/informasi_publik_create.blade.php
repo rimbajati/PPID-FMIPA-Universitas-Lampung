@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 
-{{-- Tambahkan variabel untuk mengecek mode edit --}}
 @php
     $isEdit = isset($informasi);
 @endphp
@@ -9,7 +8,6 @@
 
 @section('content')
     <div class="max-w-4xl mx-auto">
-
         <div class="flex items-center justify-between mb-8">
             <div>
                 <span class="text-xs font-bold text-[#0095e8] uppercase tracking-wider">Layanan DIP</span>
@@ -35,7 +33,6 @@
         @endif
 
         <div class="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
-            {{-- Update action: Jika Edit arahkan ke URL update (PUT), jika tambah ke URL store (POST) --}}
             <form action="{{ $isEdit ? url('/admin/informasi-publik/' . $informasi->id) : url('/admin/informasi-publik') }}"
                   method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
@@ -88,13 +85,13 @@
                 </div>
 
                 <div id="zona_file" class="bg-blue-50/30 border border-blue-100 p-6 rounded-2xl hidden">
-                    <label class="block text-sm font-bold text-gray-900 mb-2">Pilih Berkas Dokumen {{ $isEdit ? '(Opsional: Biarkan kosong jika tidak ganti)' : '' }} <span class="text-red-500">*</span></label>
-                    <input type="file" name="berkas" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" class="w-full border border-gray-300 bg-white rounded-xl p-2.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#0095e8] file:text-white hover:file:bg-blue-600 cursor-pointer">
+                    <label class="block text-sm font-bold text-gray-900 mb-2">Pilih Berkas Dokumen <span class="text-red-500">*</span></label>
+                    <input type="file" name="berkas" id="input_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" class="w-full border border-gray-300 bg-white rounded-xl p-2.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#0095e8] file:text-white hover:file:bg-blue-600 cursor-pointer">
                 </div>
 
                 <div id="zona_link" class="bg-amber-50/30 border border-amber-100 p-6 rounded-2xl hidden">
                     <label class="block text-sm font-bold text-gray-900 mb-2">Masukkan Alamat URL Lengkap <span class="text-red-500">*</span></label>
-                    <input type="url" name="url_link" value="{{ old('url_link', ($isEdit && $informasi->tipe_informasi == 'link') ? $informasi->jalur_informasi : '') }}" placeholder="https://fmipa.unila.ac.id/..." class="w-full border border-amber-300 rounded-xl p-3.5 text-sm bg-white focus:outline-none focus:border-amber-500 font-mono">
+                    <input type="url" name="url_link" id="input_link" value="{{ old('url_link', ($isEdit && $informasi->tipe_informasi == 'link') ? $informasi->jalur_informasi : '') }}" placeholder="https://fmipa.unila.ac.id/..." class="w-full border border-amber-300 rounded-xl p-3.5 text-sm bg-white focus:outline-none focus:border-amber-500 font-mono">
                 </div>
 
                 <div class="flex gap-4 pt-4 border-t border-gray-100">
@@ -103,7 +100,6 @@
                         <i class="fa-solid fa-floppy-disk mr-2"></i> {{ $isEdit ? 'Update Informasi Publik' : 'Simpan Informasi Publik' }}
                     </button>
                 </div>
-
             </form>
         </div>
     </div>
@@ -112,17 +108,25 @@
         function toggleFormat(jenis) {
             const zonaFile = document.getElementById('zona_file');
             const zonaLink = document.getElementById('zona_link');
+            const inputFile = document.getElementById('input_file');
+            const inputLink = document.getElementById('input_link');
+
             if (jenis === 'file') {
                 zonaFile.classList.remove('hidden');
                 zonaLink.classList.add('hidden');
+                inputFile.disabled = false;
+                inputLink.disabled = true;
             } else {
                 zonaFile.classList.add('hidden');
                 zonaLink.classList.remove('hidden');
+                inputFile.disabled = true;
+                inputLink.disabled = false;
             }
         }
+
         document.addEventListener("DOMContentLoaded", function() {
             const checked = document.querySelector('input[name="opsi_format"]:checked');
-            if(checked) toggleFormat(checked.value);
+            toggleFormat(checked ? checked.value : 'file');
         });
     </script>
 @endsection
