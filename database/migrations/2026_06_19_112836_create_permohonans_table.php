@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('permohonans', function (Blueprint $table) {
             $table->id();
@@ -22,10 +22,9 @@ return new class extends Migration
             $table->string('file_identitas');
             $table->text('info_diminta');
             $table->text('tujuan');
-            $table->string('cara_ambil'); // Untuk menampung hasil radio button
             $table->boolean('pernyataan');
-            $table->string('no_tiket')->nullable(); // Tambahkan ini
-            $table->string('status')->default('DIAJUKAN'); // Tambahkan ini
+            $table->string('no_tiket')->nullable();
+            $table->string('status')->default('DIAJUKAN');
             $table->timestamps();
         });
     }

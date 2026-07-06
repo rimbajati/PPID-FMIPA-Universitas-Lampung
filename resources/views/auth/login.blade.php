@@ -3,98 +3,89 @@
 @section('title', 'Masuk - PPID FMIPA Unila')
 
 @section('content')
-<!-- CSS pembunuh mata ganda bawaan browser Edge / Chrome -->
 <style>
     input::-ms-reveal, input::-ms-clear { display: none; }
     input[type="password"]::-webkit-credentials-auto-fill-button { display: none !important; }
     input[type="password"]::-webkit-eye-off-button, input[type="password"]::-webkit-eye-button { display: none !important; }
 </style>
 
-<main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-sky-50">
+<main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-slate-50">
 
-    <div class="bg-white rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-[600px]">
+    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-[600px]">
 
-        <!-- BAGIAN KIRI: Gambar Gedung FMIPA -->
         <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden">
             <img src="{{ asset('images/FMIPA.jpg') }}" alt="Gedung FMIPA Unila" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+            <div class="absolute inset-0 bg-[#0a192f]/80"></div>
             <div class="absolute bottom-0 left-0 w-full p-10 md:p-12 text-left">
-                <h2 class="text-white text-3xl md:text-4xl font-black leading-tight drop-shadow-md">
+                <h2 class="text-white text-3xl md:text-4xl font-black leading-tight">
                     Pejabat Pengelola <br> Informasi & Dokumentasi (PPID)
                 </h2>
-                <div class="w-16 h-1.5 bg-[#0095e8] mt-4 mb-4 rounded-full"></div>
-                <p class="text-blue-100 text-lg font-medium drop-shadow-md">FMIPA Universitas Lampung</p>
+                <div class="w-16 h-1.5 bg-[#0095e8] mt-4 mb-4"></div>
+                <p class="text-blue-100 text-lg font-medium">FMIPA Universitas Lampung</p>
             </div>
         </div>
 
-        <!-- BAGIAN KANAN: Form Login -->
         <div class="w-full md:w-1/2 p-10 md:p-16 flex flex-col justify-center">
 
             <div class="mb-8 text-center">
-                <h2 class="text-4xl font-extrabold text-gray-900">Masuk Sekarang</h2>
-                <p class="text-gray-500 mt-2 text-lg">Belum punya akun? <a href="{{ route('register') }}" class="text-[#0095e8] font-bold hover:underline">Daftar</a></p>
+                <h2 class="text-4xl font-black text-[#0a192f]">MASUK</h2>
+                <p class="text-gray-500 mt-2 text-lg">Belum punya akun? <a href="{{ route('register') }}" class="text-[#0a192f] font-black hover:underline">Daftar</a></p>
             </div>
 
-            <!-- FORM LOGIN UTAMA -->
+            @if (session('status'))
+                <div class="mb-6 p-4 text-sm text-green-800 bg-green-50 border-2 border-green-700 font-bold text-center">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            @if ($errors->has('login_gagal'))
+                <div class="mb-6 p-4 text-sm text-red-800 bg-red-50 border-2 border-red-700 font-bold text-center">
+                    {{ $errors->first('login_gagal') }}
+                </div>
+            @endif
+
             <form action="{{ url('/login') }}" method="POST" class="space-y-4" novalidate autocomplete="off">
                 @csrf
 
-                <!-- 1. INPUT EMAIL -->
                 <div>
-                    <label class="block text-xs font-black text-gray-700 uppercase tracking-wider mb-1.5">Email</label>
-                    <input type="email" name="email" id="email"
-                        value="{{ old('email', session('auto_email')) }}"
-                        class="w-full px-5 py-3.5 border {{ ($errors->has('email') || $errors->has('login_gagal')) ? 'border-red-500 bg-red-50/20' : 'border-gray-300 focus:border-[#0095e8] ' }} rounded-xl text-base outline-none transition"
-                        placeholder="Masukkan email Anda" required autofocus>
-
-                    @error('email')
-                        <p class="text-red-500 text-xs mt-1.5 font-bold pl-1">{{ $message }}</p>
-                    @enderror
+                    <label class="block text-xs font-black text-[#0a192f] uppercase tracking-wider mb-1.5">Email</label>
+                    <input type="email" name="email" id="email" value=""
+                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#0a192f] focus:border-[#0095e8]' }} outline-none text-base transition"
+                        placeholder="Masukan email Anda" required autofocus>
+                        @error('email') <p class="text-red-700 text-xs mt-1 font-black">{{ $errors->first() }}</p> @enderror
                 </div>
 
-                <!-- 2. INPUT PASSWORD -->
                 <div>
-                    <label class="block text-xs font-black text-gray-700 uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                    <label class="block text-xs font-black text-[#0a192f] uppercase tracking-wider mb-1.5">Kata Sandi</label>
                     <div class="relative">
                         <input type="password" name="password" id="password"
-                            class="w-full px-5 py-3.5 border {{ ($errors->has('password') || $errors->has('login_gagal')) ? 'border-red-500 bg-red-50/20' : 'border-gray-300 focus:border-[#0095e8]' }} rounded-xl text-base outline-none transition"
-                            placeholder="Masukkan kata sandi Anda" required>
-
-                        <!-- Tombol Mata FontAwesome (Kloning 100% dari Step 3) -->
-                        <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-3.5 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer">
+                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#0a192f] focus:border-[#0095e8]' }} outline-none text-base transition"
+                            placeholder="Masukan kata sandi Anda" required>
+                            @error('password') <p class="text-red-700 text-xs mt-1 font-black">{{ $message }}</p> @enderror
+                        <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-3.5 text-[#0a192f] hover:text-gray-600 focus:outline-none cursor-pointer">
                             <i class="fa-solid fa-eye" id="password-icon"></i>
                         </button>
                     </div>
-
-                    @error('password')
-                        <p class="text-red-500 text-xs mt-1.5 font-bold pl-1">{{ $message }}</p>
-                    @enderror
-
-                    @if($errors->has('login_gagal'))
-                        <p class="text-red-500 text-xs mt-1.5 font-bold pl-1">{{ $errors->first('login_gagal') }}</p>
-                    @endif
                 </div>
 
                 <div class="flex justify-end mt-1">
-                    <a href="{{ route('password.request') }}" class="text-sm font-bold text-[#0095e8] hover:underline">
+                    <a href="{{ route('password.request') }}" class="text-sm font-black text-[#0a192f] hover:underline">
                         Lupa kata sandi?
                     </a>
                 </div>
 
-                <button type="submit" class="w-full bg-[#0095e8] hover:bg-[#0081c9] text-white font-extrabold py-4 rounded-xl transition shadow-md text-base mt-4 cursor-pointer">
+                <button type="submit" class="w-full bg-[#0a192f] hover:bg-[#1a2e4d] text-white font-black py-4 transition text-base mt-4 cursor-pointer uppercase tracking-widest">
                     Masuk
                 </button>
             </form>
 
-            <!-- SEPARATOR ATAU -->
             <div class="my-5 flex items-center text-center">
-                <div class="border-t border-gray-200 flex-grow"></div>
-                <span class="px-3 text-[14px] font-bold text-gray-500">atau</span>
-                <div class="border-t border-gray-200 flex-grow"></div>
+                <div class="border-t-2 border-gray-300 flex-grow"></div>
+                <span class="px-3 text-sm font-black text-gray-500 uppercase">atau</span>
+                <div class="border-t-2 border-gray-300 flex-grow"></div>
             </div>
 
-            <!-- TOMBOL GOOGLE SSO -->
-            <a href="{{ url('/auth/google') }}" class="w-full flex justify-center items-center bg-white border border-gray-300 text-gray-700 font-bold py-3.5 px-4 rounded-xl hover:bg-gray-50 transition shadow-sm text-base cursor-pointer">
+            <a href="{{ url('/auth/google') }}" class="w-full flex justify-center items-center bg-white border-2 border-[#0a192f] text-[#0a192f] font-black py-3.5 px-4 hover:bg-slate-50 transition text-base cursor-pointer uppercase tracking-widest">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5 mr-3">
                 Masuk dengan Google
             </a>
@@ -103,7 +94,6 @@
     </div>
 </main>
 
-<!-- Script Mata Sandi (Kloning 100% dari Step 3) -->
 <script>
     function togglePassword(id) {
         const input = document.getElementById(id);

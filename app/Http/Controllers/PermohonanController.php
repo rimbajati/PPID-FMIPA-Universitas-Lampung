@@ -26,10 +26,9 @@ class PermohonanController extends Controller
             'alamat'       => 'required|string',
             'telepon'      => 'required|string|max:20',
             'email'        => 'required|email',
-            'identitas'    => 'required|file|mimes:jpg,png,pdf|max:1024',
+            'identitas'    => 'required|file|mimes:jpg,png,pdf|max:2048',
             'info_diminta' => 'required|string',
             'tujuan'       => 'required|string',
-            'cara_ambil'   => 'required|string',
             'pernyataan'   => 'accepted',
         ]);
 
@@ -49,7 +48,6 @@ class PermohonanController extends Controller
             'file_identitas' => $path,
             'info_diminta'   => $request->info_diminta,
             'tujuan'         => $request->tujuan,
-            'cara_ambil'     => $request->cara_ambil,
             'pernyataan'     => true,
             'status'         => 'DIAJUKAN',
         ]);
@@ -101,7 +99,6 @@ class PermohonanController extends Controller
 
         $permohonan = Permohonan::findOrFail($id);
 
-        // Simpan File Jawaban jika ada
         if ($request->hasFile('file_jawaban')) {
             if ($permohonan->file_jawaban) {
                 Storage::disk('public')->delete($permohonan->file_jawaban);
@@ -113,7 +110,6 @@ class PermohonanController extends Controller
         $permohonan->catatan_admin = $request->catatan_admin;
         $permohonan->save();
 
-        // Kirim Email Notifikasi
         try {
             Mail::send('emails.status_permohonan', ['permohonan' => $permohonan], function($message) use ($permohonan) {
                 $message->to($permohonan->email)

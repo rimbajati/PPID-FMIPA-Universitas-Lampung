@@ -1,55 +1,77 @@
-<nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 items-center">
-            <div class="flex-shrink-0 flex items-center">
-                <a href="/" class="font-bold text-xl text-[#0095e8]">PPID FMIPA Unila</a>
+<nav id="main-navbar" class="fixed top-0 left-0 w-full z-[999] transition-all duration-300 border-b border-transparent">
+    <div id="navbar-container" class="w-full px-6 md:px-16 lg:px-24 py-3 transition-all duration-300">
+        <div class="flex justify-between items-center">
+
+            <a href="/" class="flex items-center shrink-0 w-48">
+                <img id="navbar-logo" src="{{ asset('images/logo.png') }}" alt="Logo" class="h-9 md:h-12 w-auto object-contain brightness-0 invert transition-all duration-300">
+            </a>
+
+            <div id="desktop-menu" class="hidden md:flex items-center justify-center flex-1 gap-8 lg:gap-10">
+                @if(!request()->is('login*') && !request()->is('register*') && !request()->is('password*') && !request()->is('forgot-password') && !request()->is('reset-password*'))
+                    @php
+                        $baseClass = "nav-link relative text-base font-medium transition-all duration-300 after:content-[''] after:absolute after:left-0 after:-bottom-2 after:h-[2px] after:transition-all after:duration-300 hover:after:w-full";
+                    @endphp
+                    <a href="/" class="{{ $baseClass }} {{ request()->is('/') ? 'after:w-full' : 'after:w-0' }}">Beranda</a>
+                    <a href="/informasi-publik" class="{{ $baseClass }} {{ request()->is('informasi-publik*') ? 'after:w-full' : 'after:w-0' }}">Informasi Publik</a>
+                    <a href="https://fmipa.unila.ac.id/berita" target="_blank" class="{{ $baseClass }} after:w-0">Berita</a>
+                @endif
             </div>
 
-            <div class="hidden md:flex space-x-8 text-sm font-bold text-gray-600 items-center">
-                <a href="/informasi-publik" class="hover:text-[#0095e8] transition">Informasi Publik</a>
-                <a href="https://fmipa.unila.ac.id/berita" class="hover:text-[#0095e8] transition">Berita</a>
+            <button id="mobile-menu-btn" type="button" class="md:hidden text-white text-2xl focus:outline-none transition-colors">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
-                <div class="relative group">
-                    <button onclick="toggleLayanan()" class="hover:text-[#0095e8] transition flex items-center gap-1 focus:outline-none">
-                        Layanan
-                        <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-
-                    <div id="layananDropdown" class="hidden absolute top-full left-0 mt-3 w-72 bg-white border border-gray-100 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] py-3 z-50 transform transition-all duration-200">
-                        <a href="{{ route('permohonan.create') }}" class="flex items-center gap-3 px-5 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#0095e8] transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            <span class="font-medium text-sm">Formulir Permohonan Informasi Publik</span>
-                        </a>
-                        <a href="{{ route('keberatan.create') }}" class="flex items-center gap-3 px-5 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#0095e8] transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                            <span class="font-medium text-sm">Formulir Keberatan Informasi Publik</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex items-center">
-                @guest
-                    <a href="/login" class="bg-[#0095e8] text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-[#0081c9] transition shadow-md">Masuk</a>
-                @endguest
-
-                @auth
-                    <div class="relative ml-4">
-                        <button onclick="toggleDropdown()" class="flex items-center space-x-2 focus:outline-none hover:bg-gray-50 px-2 py-1 rounded-lg transition">
-                            <span class="text-sm font-bold text-gray-800">{{ Auth::user()->nama_lengkap }}</span>
-                            <div class="w-8 h-8 bg-[#0095e8]/10 rounded-full flex items-center justify-center border border-[#0095e8]">
-                                <svg class="w-4 h-4 text-[#0095e8]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+            <div class="hidden md:flex items-center justify-end shrink-0 w-auto">
+                @if(request()->is('login*') || request()->is('register*') || request()->is('password*') || request()->is('forgot-password') || request()->is('reset-password*'))
+                    <a href="/" class="inline-flex items-center gap-2 text-base font-semibold text-gray-700 hover:text-blue-900 transition-all nav-auth-text whitespace-nowrap">
+                        <span class="hidden md:inline">Kembali ke Beranda</span> <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </a>
+                @else
+                    @auth
+                        <div class="relative ml-2">
+                            <button id="profile-btn" type="button" class="nav-auth-text flex items-center gap-2 text-base font-semibold text-white transition-all focus:outline-none cursor-pointer whitespace-nowrap">
+                                <span class="truncate max-w-[220px] inline-block">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</span>
+                                <i class="fa-solid fa-chevron-down text-[10px] shrink-0"></i>
+                            </button>
+                            <div id="profile-dropdown" class="absolute right-0 top-full mt-2 w-40 bg-white border border-slate-100 shadow-xl py-1 rounded-lg hidden z-[9999]">
+                                <a href="{{ url('/riwayat-layanan') }}" class="block px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">Dashboard</a>
+                                <div class="border-t border-slate-100 my-1"></div>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors">Keluar</button>
+                                </form>
                             </div>
-                        </button>
-                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-100 rounded-xl shadow-xl py-1 z-50">
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 font-bold hover:bg-gray-100 transition">Keluar</button>
-                            </form>
                         </div>
-                    </div>
+                    @else
+                        <a href="/login" class="nav-auth-btn ml-4 px-8 py-2.5 bg-transparent border border-white/30 text-white text-sm font-bold uppercase tracking-wider transition-all shadow-sm hover:bg-white/10 rounded whitespace-nowrap">MASUK</a>
+                    @endauth
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="md:hidden hidden bg-slate-900 border-t border-slate-800 px-6 py-4 transition-all">
+        <div class="flex flex-col space-y-4">
+            @if(!request()->is('login*') && !request()->is('register*') && !request()->is('password*') && !request()->is('forgot-password') && !request()->is('reset-password*'))
+                <a href="/" class="text-white hover:text-blue-400 font-medium py-1">Beranda</a>
+                <a href="/informasi-publik" class="text-white hover:text-blue-400 font-medium py-1">Informasi Publik</a>
+                <a href="https://fmipa.unila.ac.id/berita" target="_blank" class="text-white hover:text-blue-400 font-medium py-1">Berita</a>
+            @else
+                <a href="/" class="text-white hover:text-blue-400 font-medium py-1 inline-flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left text-sm"></i> Kembali ke Beranda
+                </a>
+            @endif
+
+            <div class="border-t border-slate-800 pt-3">
+                @auth
+                    <!-- <div class="text-slate-400 text-sm mb-2 truncate">Login sebagai: {{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div> -->
+                    <a href="{{ url('/riwayat-layanan') }}" class="block text-white hover:text-blue-400 font-medium py-1">Dashboard</a>
+                    <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                        @csrf
+                        <button type="submit" class="w-full text-left text-red-400 hover:text-red-300 font-medium py-1">Keluar</button>
+                    </form>
+                @else
+                    <a href="/login" class="block w-full text-center py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded shadow transition-all">MASUK</a>
                 @endauth
             </div>
         </div>
@@ -57,16 +79,92 @@
 </nav>
 
 <script>
-    function toggleLayanan() { document.getElementById('layananDropdown').classList.toggle('hidden'); }
-    function toggleDropdown() { document.getElementById('profileDropdown').classList.toggle('hidden'); }
+    document.addEventListener('DOMContentLoaded', function () {
+        const navbar = document.getElementById('main-navbar');
+        const navLogo = document.getElementById('navbar-logo');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const navAuthBtn = document.querySelector('.nav-auth-btn');
+        const navAuthText = document.querySelector('.nav-auth-text');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-    // Menutup dropdown jika klik di luar area
-    window.onclick = function(event) {
-        if (!event.target.matches('button') && !event.target.closest('button')) {
-            const layDrop = document.getElementById('layananDropdown');
-            const profDrop = document.getElementById('profileDropdown');
-            if (!layDrop.classList.contains('hidden')) layDrop.classList.add('hidden');
-            if (!profDrop.classList.contains('hidden')) profDrop.classList.add('hidden');
+        const authRoutes = ['login', 'register', 'password', 'forgot-password', 'reset-password'];
+        const isAuthPage = authRoutes.some(route => window.location.pathname.includes(route));
+        const isHome = document.body.classList.contains('is-home');
+
+        function setNavbarStyle(isWhite) {
+            if (isWhite) {
+                navbar.classList.add('bg-white', 'shadow-md', 'border-gray-200');
+                if (navLogo) navLogo.classList.remove('brightness-0', 'invert');
+                if (mobileMenuBtn) {
+                    mobileMenuBtn.classList.remove('text-white');
+                    mobileMenuBtn.classList.add('text-gray-800');
+                }
+                navLinks.forEach(link => {
+                    link.classList.remove('text-white', 'after:bg-white');
+                    link.classList.add('text-gray-800', 'after:bg-blue-900');
+                });
+                if (navAuthBtn) {
+                    navAuthBtn.classList.remove('bg-transparent', 'border-white/30', 'text-white', 'hover:bg-white/10');
+                    navAuthBtn.classList.add('bg-[#0f172a]', 'text-white', 'hover:bg-black');
+                }
+                if (navAuthText) {
+                    navAuthText.classList.remove('text-white');
+                    navAuthText.classList.add('text-gray-800');
+                }
+            } else {
+                navbar.classList.remove('bg-white', 'shadow-md', 'border-gray-200');
+                if (navLogo) navLogo.classList.add('brightness-0', 'invert');
+                if (mobileMenuBtn) {
+                    mobileMenuBtn.classList.add('text-white');
+                    mobileMenuBtn.classList.remove('text-gray-800');
+                }
+                navLinks.forEach(link => {
+                    link.classList.add('text-white', 'after:bg-white');
+                    link.classList.remove('text-gray-800', 'after:bg-blue-900');
+                });
+                if (navAuthBtn) {
+                    navAuthBtn.classList.add('bg-transparent', 'border-white/30', 'text-white', 'hover:bg-white/10');
+                    navAuthBtn.classList.remove('bg-[#0f172a]', 'hover:bg-black');
+                }
+                if (navAuthText) {
+                    navAuthText.classList.remove('text-gray-800');
+                    navAuthText.classList.add('text-white');
+                }
+            }
         }
-    }
+
+        if (!isHome || isAuthPage) setNavbarStyle(true);
+        else setNavbarStyle(false);
+
+        window.addEventListener('scroll', function () {
+            if (isHome && !isAuthPage) setNavbarStyle(window.scrollY > 40);
+        });
+
+        if (profileBtn) {
+            profileBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (profileDropdown) profileDropdown.classList.toggle('hidden');
+            });
+            document.addEventListener('click', function (e) {
+                if (profileDropdown && !profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+            });
+        }
+
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                mobileMenu.classList.toggle('hidden');
+            });
+            document.addEventListener('click', function (e) {
+                if (!navbar.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        }
+    });
 </script>
