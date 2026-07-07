@@ -49,7 +49,7 @@
                 <form action="{{ url('/informasi-publik') }}" method="GET" class="relative flex items-center shadow-2xl">
                     <div class="absolute left-6 text-gray-700 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-base"></i></div>
                     <input id="live-search-input" type="text" name="search" placeholder="Masukan Informasi yang Anda cari..."
-                           class="w-full h-16 pl-14 pr-32 bg-white text-gray-900 placeholder-gray-700 text-base rounded-none focus:outline-none border-0 transition-all shadow-lg" autocomplete="off">
+                        class="w-full h-16 pl-14 pr-32 bg-white text-gray-900 placeholder-gray-700 text-base rounded-none focus:outline-none border-0 transition-all shadow-lg" autocomplete="off">
                     <div class="absolute right-2">
                         <button type="submit" class="h-12 px-8 bg-[#0a192f] hover:bg-blue-900 text-white font-medium text-xs uppercase tracking-wider transition-colors cursor-pointer">Cari</button>
                     </div>

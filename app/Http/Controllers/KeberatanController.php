@@ -17,7 +17,6 @@ class KeberatanController extends Controller
     public function create()
     {
         // Mengambil daftar permohonan milik user yang sedang login
-        // Agar user bisa memilih permohonan mana yang ingin disanggah/diajukan keberatan
         $permohonans = Permohonan::where('user_id', Auth::id())
                                  ->latest()
                                  ->get();
@@ -27,16 +26,19 @@ class KeberatanController extends Controller
 
     public function store(Request $request)
     {
+        // Menambahkan validasi untuk checkbox pernyataan
         $request->validate([
-            'permohonan_id' => 'required|exists:permohonans,id',
-            'alasan_keberatan' => 'required|string|min:15',
+            'permohonan_id'     => 'required|exists:permohonans,id',
+            'alasan_keberatan'  => 'required|string|min:15',
             'dokumen_pendukung' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'pernyataan'        => 'accepted',
         ], [
-            'permohonan_id.required' => 'Silakan pilih nomor tiket permohonan yang diajukan keberatan.',
+            'permohonan_id.required'    => 'Silakan pilih permohonan yang akan disanggah.',
             'alasan_keberatan.required' => 'Alasan keberatan wajib diisi.',
-            'alasan_keberatan.min' => 'Alasan keberatan minimal 15 karakter agar jelas dan informatif.',
-            'dokumen_pendukung.mimes' => 'Dokumen pendukung harus berupa file PDF, JPG, atau PNG.',
-            'dokumen_pendukung.max' => 'Ukuran file dokumen pendukung maksimal 2 MB.',
+            'alasan_keberatan.min'      => 'Alasan keberatan minimal 15 karakter.',
+            'dokumen_pendukung.mimes'   => 'Format dokumen harus PDF, JPG, atau PNG.',
+            'dokumen_pendukung.max'     => 'Ukuran file maksimal 2 MB.',
+            'pernyataan.accepted'       => 'Anda wajib menyetujui pernyataan ini.',
         ]);
 
         // Pastikan permohonan_id yang dikirim benar-benar milik user tersebut (Keamanan)
@@ -54,12 +56,12 @@ class KeberatanController extends Controller
 
         // Simpan ke database
         Keberatan::create([
-            'permohonan_id' => $permohonan->id,
-            'user_id' => Auth::id(),
-            'alasan_keberatan' => $request->alasan_keberatan,
+            'permohonan_id'     => $permohonan->id,
+            'user_id'           => Auth::id(),
+            'alasan_keberatan'  => $request->alasan_keberatan,
             'dokumen_pendukung' => $filePath,
             'tanggal_pengajuan' => now(),
-            'status_putusan' => 'menunggu',
+            'status_putusan'    => 'menunggu',
         ]);
 
         return redirect()->route('keberatan.create')->with('success', 'Pengajuan keberatan Anda berhasil dikirim dan sedang menunggu proses verifikasi petugas.');

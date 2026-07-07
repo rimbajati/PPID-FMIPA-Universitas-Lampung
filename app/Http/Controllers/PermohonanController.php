@@ -29,7 +29,21 @@ class PermohonanController extends Controller
             'identitas'    => 'required|file|mimes:jpg,png,pdf|max:2048',
             'info_diminta' => 'required|string',
             'tujuan'       => 'required|string',
+            'cara_ambil'   => 'required|in:Mengambil Langsung,Email,WhatsApp',
             'pernyataan'   => 'accepted',
+        ], [
+            'nama.required'         => 'Nama lengkap wajib diisi.',
+            'pekerjaan.required'    => 'Silakan pilih pekerjaan Anda.',
+            'alamat.required'       => 'Alamat lengkap wajib diisi.',
+            'telepon.required'      => 'Nomor telepon wajib diisi.',
+            'email.required'        => 'Alamat email wajib diisi.',
+            'identitas.required'    => 'File kartu identitas wajib diupload.',
+            'identitas.mimes'       => 'Format file harus JPG, PNG, atau PDF.',
+            'identitas.max'         => 'Ukuran file maksimal 2 MB.',
+            'info_diminta.required' => 'Rincian informasi wajib diisi.',
+            'tujuan.required'       => 'Tujuan penggunaan informasi wajib diisi.',
+            'cara_ambil.required'   => 'Silakan pilih cara pengambilan informasi.',
+            'pernyataan.accepted'   => 'Anda wajib menyetujui pernyataan ini.',
         ]);
 
         if (!$request->hasFile('identitas')) {
@@ -48,6 +62,7 @@ class PermohonanController extends Controller
             'file_identitas' => $path,
             'info_diminta'   => $request->info_diminta,
             'tujuan'         => $request->tujuan,
+            'cara_ambil'     => $request->cara_ambil,
             'pernyataan'     => true,
             'status'         => 'DIAJUKAN',
         ]);

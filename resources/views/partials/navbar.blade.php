@@ -33,7 +33,7 @@
                                 <span class="truncate max-w-[220px] inline-block">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</span>
                                 <i class="fa-solid fa-chevron-down text-[10px] shrink-0"></i>
                             </button>
-                            <div id="profile-dropdown" class="absolute right-0 top-full mt-2 w-40 bg-white border border-slate-100 shadow-xl py-1 rounded-lg hidden z-[9999]">
+                            <div id="profile-dropdown" class="absolute right-0 top-full mt-2 w-40 bg-white border border-slate-100 shadow-xl py-1 rounded-none hidden z-[9999]">
                                 <a href="{{ url('/riwayat-layanan') }}" class="block px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">Dashboard</a>
                                 <div class="border-t border-slate-100 my-1"></div>
                                 <form method="POST" action="{{ route('logout') }}">
