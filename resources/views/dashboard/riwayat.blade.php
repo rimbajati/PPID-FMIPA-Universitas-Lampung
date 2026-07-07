@@ -6,8 +6,8 @@
 <div class="w-full !max-w-none space-y-12">
 
     <div class="w-full">
-        <h2 class="text-xl font-bold text-[#0a192f] mb-6">Riwayat Permohonan Informasi</h2>
-        <div class="w-full bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <h2 class="text-xl font-bold text-[#0a192f] mb-6">Riwayat Pengajuan Permohonan Informasi Publik</h2>
+        <div class="w-full bg-white rounded-none border border-gray-100 shadow-sm overflow-hidden">
             <div class="w-full overflow-x-auto">
                 <table class="w-full text-sm text-left border-collapse">
                     <thead class="bg-[#0a192f] text-white">
@@ -30,7 +30,7 @@
                             </td>
                             <td class="px-8 py-5 text-gray-500 whitespace-nowrap">{{ $perm->created_at->format('d M Y') }}</td>
                             <td class="px-8 py-5">
-                                <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-none
                                     @if($perm->status == 'DIAJUKAN') bg-orange-100 text-orange-600
                                     @elseif($perm->status == 'DIPROSES') bg-blue-100 text-blue-600
                                     @elseif($perm->status == 'DITERIMA') bg-green-100 text-green-600
@@ -50,7 +50,7 @@
 
             <div class="px-8 py-4 border-t border-gray-100 bg-slate-50 flex items-center justify-between">
                 <span class="text-xs text-gray-500">Menampilkan {{ $permohonans->firstItem() ?? 0 }} - {{ $permohonans->lastItem() ?? 0 }} dari {{ $permohonans->total() }} data</span>
-                <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
+                <div class="flex items-center border border-gray-200 rounded-none overflow-hidden bg-white">
                     @if ($permohonans->onFirstPage())
                         <span class="px-3 py-2 text-gray-300 border-r border-gray-200"><i class="fa-solid fa-chevron-left text-[10px]"></i></span>
                     @else
@@ -70,8 +70,8 @@
     </div>
 
     <div class="w-full">
-        <h2 class="text-xl font-bold text-[#0a192f] mb-6">Riwayat Pengajuan Keberatan</h2>
-        <div class="w-full bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <h2 class="text-xl font-bold text-[#0a192f] mb-6">Riwayat Pengajuan Keberatan Informasi Publik</h2>
+        <div class="w-full bg-white rounded-none border border-gray-100 shadow-sm overflow-hidden">
             <div class="w-full overflow-x-auto">
                 <table class="w-full text-sm text-left border-collapse">
                     <thead class="bg-[#0a192f] text-white">
@@ -94,7 +94,7 @@
                             </td>
                             <td class="px-8 py-5 text-gray-500 whitespace-nowrap">{{ \Carbon\Carbon::parse($keb->tanggal_pengajuan)->format('d M Y') }}</td>
                             <td class="px-8 py-5">
-                                <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-none
                                     @if($keb->status_putusan == 'MENUNGGU') bg-amber-100 text-amber-600
                                     @elseif($keb->status_putusan == 'DITERIMA') bg-green-100 text-green-600
                                     @elseif($keb->status_putusan == 'DITOLAK') bg-red-100 text-red-600
@@ -113,7 +113,7 @@
 
             <div class="px-8 py-4 border-t border-gray-100 bg-slate-50 flex items-center justify-between">
                 <span class="text-xs text-gray-500">Menampilkan {{ $keberatans->firstItem() ?? 0 }} - {{ $keberatans->lastItem() ?? 0 }} dari {{ $keberatans->total() }} data</span>
-                <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
+                <div class="flex items-center border border-gray-200 rounded-none overflow-hidden bg-white">
                     @if ($keberatans->onFirstPage())
                         <span class="px-3 py-2 text-gray-300 border-r border-gray-200"><i class="fa-solid fa-chevron-left text-[10px]"></i></span>
                     @else

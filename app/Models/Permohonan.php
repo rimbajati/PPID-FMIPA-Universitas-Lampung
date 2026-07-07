@@ -16,7 +16,7 @@ class Permohonan extends Model
      */
     protected $fillable = [
         'user_id', 'nama', 'pekerjaan', 'alamat', 'telepon', 'email',
-        'file_identitas', 'info_diminta', 'tujuan', 'pernyataan', 'no_tiket', 'status', 'catatan_admin', 'file_jawaban'
+        'file_identitas', 'info_diminta', 'tujuan', 'pernyataan', 'no_tiket', 'status', 'catatan_admin', 'file_jawaban', 'cara_ambil'
     ];
 
     /**
