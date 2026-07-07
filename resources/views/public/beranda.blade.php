@@ -29,6 +29,32 @@
     $seringDiakses = \Illuminate\Support\Facades\Cache::remember('sering_diakses_beranda', $waktuCache, function () {
         return \App\Models\InformasiPublik::select('id', 'judul_informasi')->orderBy('dilihat', 'desc')->take(6)->get();
     });
+
+    // --- Data Statistik (Dinamis dari database) ---
+    $minYear = (int)(\App\Models\Permohonan::min(\Illuminate\Support\Facades\DB::raw('YEAR(created_at)')) ?? date('Y'));
+    $currentYear = (int)date('Y');
+    $years = range($minYear, $currentYear);
+
+    $yearlyData = [];
+    $monthlyData = [];
+
+    foreach ($years as $y) {
+        $yearlyData[$y] = [
+            'permohonan' => \App\Models\Permohonan::whereYear('created_at', $y)->count(),
+            'diterima'   => \App\Models\Permohonan::whereYear('created_at', $y)->where('status', 'DITERIMA')->count(),
+            'ditolak'    => \App\Models\Permohonan::whereYear('created_at', $y)->where('status', 'DITOLAK')->count(),
+            'keberatan'  => \App\Models\Keberatan::whereYear('created_at', $y)->count(),
+        ];
+
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyData[$y][$m] = [
+                'permohonan' => \App\Models\Permohonan::whereYear('created_at', $y)->whereMonth('created_at', $m)->count(),
+                'diterima'   => \App\Models\Permohonan::whereYear('created_at', $y)->whereMonth('created_at', $m)->where('status', 'DITERIMA')->count(),
+                'ditolak'    => \App\Models\Permohonan::whereYear('created_at', $y)->whereMonth('created_at', $m)->where('status', 'DITOLAK')->count(),
+                'keberatan'  => \App\Models\Keberatan::whereYear('created_at', $y)->whereMonth('created_at', $m)->count(),
+            ];
+        }
+    }
 @endphp
 
 <div class="relative min-h-[100vh] w-full flex items-center pt-32 pb-20 overflow-hidden bg-[#0a192f]">
@@ -64,7 +90,7 @@
                 <span class="text-sm font-bold uppercase tracking-widest text-blue-300 shrink-0">Informasi yang sering dicari:</span>
                 @foreach ($seringDiakses as $doc)
                 <a href="{{ route('akses.dokumen', $doc->id) }}" target="_blank" rel="noopener noreferrer"
-                   class="text-base font-medium text-gray-200 hover:text-white underline decoration-white/30 hover:decoration-white underline-offset-4 transition-all">
+                    class="text-base font-medium text-gray-200 hover:text-white underline decoration-white/30 hover:decoration-white underline-offset-4 transition-all">
                     {{ $doc->judul_informasi }}
                 </a>
                 @endforeach
@@ -77,8 +103,8 @@
                         <p class="text-gray-300 text-sm md:text-base">Anda dapat mengajukan permohonan informasi publik melalui formulir resmi kami.</p>
                     </div>
                     <a href="{{ route('permohonan.create') }}"
-                       class="bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 transition-all shadow-lg text-sm uppercase tracking-wider text-center rounded-none w-full md:w-auto">
-                       Ajukan Permohonan
+                        class="bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 transition-all shadow-lg text-sm uppercase tracking-wider text-center rounded-none w-full md:w-auto">
+                        Ajukan Permohonan
                     </a>
                 </div>
             </div>
@@ -86,7 +112,7 @@
     </div>
 </div>
 
-<section class="py-24 bg-gray-50">
+<section class="py-20 bg-white">
     <div class="container mx-auto px-8 md:px-16 lg:px-24">
         <div class="text-center mb-16">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Alur Permohonan Informasi</h2>
@@ -102,7 +128,6 @@
                     ['icon' => 'fa-envelope-open-text', 'title' => 'Terima Jawaban', 'desc' => 'Tunggu respon dari admin PPID melalui sistem atau email Anda.']
                 ];
             @endphp
-
             @foreach($steps as $index => $step)
             <div class="relative bg-white p-8 rounded-none shadow-sm border border-gray-100 hover:shadow-xl transition-all group">
                 <div class="w-16 h-16 bg-blue-900 text-white rounded-none flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
@@ -116,11 +141,43 @@
     </div>
 </section>
 
+<section class="py-14 bg-gray-50">
+    <div class="container mx-auto px-8 md:px-16 lg:px-24">
+        <div class="bg-[#172a45] rounded-none p-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start shadow-2xl">
+            <div class="text-white mt-12">
+                <p class="text-xs font-bold text-blue-300 uppercase tracking-widest mb-3">LAPORAN KETERBUKAAN INFORMASI</p>
+                <h2 id="stats-title" class="text-4xl font-bold mb-6">Statistik Permohonan Informasi</h2>
+                <div id="stats-content">
+                    <p class="text-gray-300 mb-8 leading-relaxed text-lg">
+                        Data ini menyajikan statistik keterbukaan informasi publik FMIPA Unila secara transparan. Masyarakat dapat memantau tren permohonan, status layanan, hingga perkembangan proses yang sedang berlangsung.
+                    </p>
+                    <a href="#" class="inline-flex items-center gap-2 font-bold text-white hover:text-blue-300 transition-all">
+                        <i class="fa-solid fa-arrow-right"></i> Selengkapnya
+                    </a>
+                </div>
+            </div>
+
+            <div class="w-full">
+                <div class="flex justify-between items-center mb-6 min-h-[30px]">
+                    <span id="year-label" class="text-white font-bold text-xl"></span>
+                    <button id="resetChart" class="hidden text-xs font-bold text-blue-200 hover:text-white transition-all underline">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke periode tahun
+                    </button>
+                </div>
+                <div class="h-80 w-full">
+                    <canvas id="statistikBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // Live Search
     const searchInput = document.getElementById('live-search-input');
     const resultsList = document.getElementById('live-results-list');
     let debounceTimer;
-
     searchInput.addEventListener('input', function() {
         const q = this.value.trim();
         clearTimeout(debounceTimer);
@@ -142,6 +199,80 @@
                     `).join('');
                 });
         }, 300);
+    });
+
+    // Statistik Chart
+    const yearlyData = {!! json_encode($yearlyData) !!};
+    const monthlyData = {!! json_encode($monthlyData) !!};
+    const ctx = document.getElementById('statistikBarChart').getContext('2d');
+    const resetBtn = document.getElementById('resetChart');
+    const yearLabel = document.getElementById('year-label');
+
+    let chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(yearlyData),
+            datasets: [
+                { label: 'Permohonan', data: Object.values(yearlyData).map(v => v.permohonan), backgroundColor: '#5986d4' },
+                { label: 'Diterima', data: Object.values(yearlyData).map(v => v.diterima), backgroundColor: '#22c55e' },
+                { label: 'Ditolak', data: Object.values(yearlyData).map(v => v.ditolak), backgroundColor: '#ef4444' },
+                { label: 'Keberatan', data: Object.values(yearlyData).map(v => v.keberatan), backgroundColor: '#f59e0b' }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#ffffff',
+                        usePointStyle: true,
+                        pointStyle: 'rect'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 10, color: '#e2e8f0' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                },
+                x: {
+                    ticks: { color: '#e2e8f0' },
+                    grid: { display: true, color: 'rgba(255, 255, 255, 0.1)' }
+                }
+            },
+            onClick: (e, elements) => {
+                if (elements.length > 0) {
+                    const year = chart.data.labels[elements[0].index];
+                    if (monthlyData[year]) {
+                        // Update UI
+                        yearLabel.innerText = "Tahun " + year;
+                        resetBtn.classList.remove('hidden');
+
+                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                        chart.data.labels = months;
+                        chart.data.datasets[0].data = Object.values(monthlyData[year]).map(v => v.permohonan);
+                        chart.data.datasets[1].data = Object.values(monthlyData[year]).map(v => v.diterima);
+                        chart.data.datasets[2].data = Object.values(monthlyData[year]).map(v => v.ditolak);
+                        chart.data.datasets[3].data = Object.values(monthlyData[year]).map(v => v.keberatan);
+                        chart.update();
+                    }
+                }
+            }
+        }
+    });
+
+    resetBtn.addEventListener('click', () => {
+        // Reset UI
+        yearLabel.innerText = "";
+        resetBtn.classList.add('hidden');
+
+        chart.data.labels = Object.keys(yearlyData);
+        chart.data.datasets[0].data = Object.values(yearlyData).map(v => v.permohonan);
+        chart.data.datasets[1].data = Object.values(yearlyData).map(v => v.diterima);
+        chart.data.datasets[2].data = Object.values(yearlyData).map(v => v.ditolak);
+        chart.data.datasets[3].data = Object.values(yearlyData).map(v => v.keberatan);
+        chart.update();
     });
 </script>
 @endsection
