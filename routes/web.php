@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InformasiPublikController;
 use App\Http\Controllers\PermohonanController;
 use App\Http\Controllers\KeberatanController;
+use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\DashboardController; // Untuk Admin
 use App\Http\Controllers\UserProfileController; // Untuk Pemohon/User
 use App\Http\Controllers\RiwayatController; // Untuk History Layanan
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 Route::get('/', function () { return view('public.beranda'); });
 Route::get('/informasi-publik', [InformasiPublikController::class, 'index']);
 Route::get('/akses-dokumen/{id}', [InformasiPublikController::class, 'hitungAkses'])->name('akses.dokumen');
+Route::get('/statistik', [StatistikController::class, 'index'])->name('public.statistik.index');
 
 /*
 |--------------------------------------------------------------------------

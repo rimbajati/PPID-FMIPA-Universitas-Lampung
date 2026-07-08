@@ -11,7 +11,7 @@
 
 <main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-slate-50">
 
-    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-[600px]">
+    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden rounded-3xl w-full max-w-5xl min-h-[600px]">
 
         <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden">
             <img src="{{ asset('images/FMIPA.jpg') }}" alt="Gedung FMIPA Unila" class="w-full h-full object-cover">
@@ -33,13 +33,13 @@
             </div>
 
             @if (session('status'))
-                <div class="mb-6 p-4 text-sm text-green-800 bg-green-50 border-2 border-green-700 font-bold text-center">
+                <div class="mb-6 p-4 text-sm text-green-800 bg-green-50 border-2 border-green-700 rounded-3xl font-bold text-center">
                     {{ session('status') }}
                 </div>
             @endif
 
             @if ($errors->has('login_gagal'))
-                <div class="mb-6 p-4 text-sm text-red-800 bg-red-50 border-2 border-red-700 font-bold text-center">
+                <div class="mb-6 p-4 text-sm text-red-800 bg-red-50 border-2 border-red-700 rounded-3xl font-bold text-center">
                     {{ $errors->first('login_gagal') }}
                 </div>
             @endif
@@ -49,8 +49,8 @@
 
                 <div>
                     <label class="block text-xs font-black text-[#0a192f] uppercase tracking-wider mb-1.5">Email</label>
-                    <input type="email" name="email" id="email" value=""
-                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#0a192f] focus:border-[#0095e8]' }} outline-none text-base transition"
+                    <input type="email" name="email" id="email" value="{{ old('email', session('auto_email')) }}"
+                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#0a192f] focus:border-[#0095e8]' }} outline-none rounded-3xl text-base transition"
                         placeholder="Masukan email Anda" required autofocus>
                         @error('email') <p class="text-red-700 text-xs mt-1 font-black">{{ $errors->first() }}</p> @enderror
                 </div>
@@ -59,7 +59,7 @@
                     <label class="block text-xs font-black text-[#0a192f] uppercase tracking-wider mb-1.5">Kata Sandi</label>
                     <div class="relative">
                         <input type="password" name="password" id="password"
-                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#0a192f] focus:border-[#0095e8]' }} outline-none text-base transition"
+                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#0a192f] focus:border-[#0095e8]' }} outline-none rounded-3xl text-base transition"
                             placeholder="Masukan kata sandi Anda" required>
                             @error('password') <p class="text-red-700 text-xs mt-1 font-black">{{ $message }}</p> @enderror
                         <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-3.5 text-[#0a192f] hover:text-gray-600 focus:outline-none cursor-pointer">
@@ -74,7 +74,7 @@
                     </a>
                 </div>
 
-                <button type="submit" class="w-full bg-[#0a192f] hover:bg-[#1a2e4d] text-white font-black py-4 transition text-base mt-4 cursor-pointer uppercase tracking-widest">
+                <button type="submit" class="w-full bg-[#0a192f] hover:bg-[#1a2e4d] text-white font-black py-4 transition text-base mt-4 cursor-pointer uppercase tracking-widest rounded-3xl">
                     Masuk
                 </button>
             </form>
@@ -85,7 +85,7 @@
                 <div class="border-t-2 border-gray-300 flex-grow"></div>
             </div>
 
-            <a href="{{ url('/auth/google') }}" class="w-full flex justify-center items-center bg-white border-2 border-[#0a192f] text-[#0a192f] font-black py-3.5 px-4 hover:bg-slate-50 transition text-base cursor-pointer uppercase tracking-widest">
+            <a href="{{ url('/auth/google') }}" class="w-full flex justify-center items-center bg-white border-2 border-[#0a192f] text-[#0a192f] font-black py-3.5 px-4 hover:bg-slate-50 transition rounded-3xl text-base cursor-pointer uppercase tracking-widest">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5 mr-3">
                 Masuk dengan Google
             </a>

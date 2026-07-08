@@ -75,9 +75,9 @@
                     <form action="{{ url('/informasi-publik') }}" method="GET" class="relative flex items-center shadow-2xl">
                         <div class="absolute left-6 text-gray-700 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-base"></i></div>
                         <input id="live-search-input" type="text" name="search" placeholder="Masukan Informasi yang Anda cari..."
-                            class="w-full h-16 pl-14 pr-32 bg-white text-gray-900 placeholder-gray-700 text-base rounded-none focus:outline-none border-0 transition-all shadow-lg" autocomplete="off">
+                            class="w-full h-16 pl-14 pr-32 bg-white text-gray-900 placeholder-gray-700 text-base rounded-3xl focus:outline-none border-0 transition-all shadow-lg" autocomplete="off">
                         <div class="absolute right-2">
-                            <button type="submit" class="h-12 px-8 bg-[#0a192f] hover:bg-blue-900 text-white font-medium text-xs uppercase tracking-wider transition-colors cursor-pointer">Cari</button>
+                            <button type="submit" class="h-12 px-8 bg-[#0a192f] hover:bg-blue-900 text-white font-medium text-xs uppercase rounded-3xl tracking-wider transition-colors cursor-pointer">Cari</button>
                         </div>
                     </form>
                 </div>
@@ -99,7 +99,7 @@
                 <div class="space-y-4">
                     <p class="text-md text-gray-300">Jika informasi yang Anda cari tidak ditemukan, Anda dapat mengajukan permohonan baru di bawah ini.</p>
                     <a href="{{ route('permohonan.create') }}"
-                    class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm tracking-wider transition-all shadow-lg">
+                    class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm rounded-3xl tracking-wider transition-all shadow-lg">
                         Buat Permohonan
                     </a>
                 </div>
@@ -125,8 +125,8 @@
                 ];
             @endphp
             @foreach($steps as $index => $step)
-            <div class="relative bg-white p-8 rounded-none shadow-sm border border-gray-100 hover:shadow-xl transition-all group">
-                <div class="w-16 h-16 bg-blue-900 text-white rounded-none flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+            <div class="relative bg-white p-8 rounded-3xl shadow-md border border-gray-100 hover:shadow-xl transition-all group">
+                <div class="w-16 h-16 bg-blue-900 text-white rounded-3xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
                     <i class="fa-solid {{ $step['icon'] }}"></i>
                 </div>
                 <h3 class="text-xl font-bold mb-3 text-gray-900">{{ $index + 1 }}. {{ $step['title'] }}</h3>
@@ -139,7 +139,7 @@
 
 <section class="py-14 bg-gray-50">
     <div class="container mx-auto px-8 md:px-16 lg:px-24">
-        <div class="bg-[#172a45] rounded-none p-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start shadow-2xl">
+        <div class="bg-[#172a45] rounded-3xl p-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start shadow-3xl">
             <div class="text-white mt-12">
                 <p class="text-xs font-bold text-blue-300 uppercase tracking-widest mb-3">LAPORAN KETERBUKAAN INFORMASI</p>
                 <h2 id="stats-title" class="text-4xl font-bold mb-6">Statistik Permohonan Informasi</h2>
@@ -147,7 +147,7 @@
                     <p class="text-gray-300 mb-8 leading-relaxed text-lg">
                         Data ini menyajikan statistik keterbukaan informasi publik FMIPA Unila secara transparan. Masyarakat dapat memantau tren permohonan, status layanan, hingga perkembangan proses yang sedang berlangsung.
                     </p>
-                    <a href="#" class="inline-flex items-center gap-2 font-bold text-white hover:text-blue-300 transition-all">
+                    <a href="/statistik" class="inline-flex items-center gap-2 font-bold text-white hover:text-blue-300 transition-all">
                         <i class="fa-solid fa-arrow-right"></i> Selengkapnya
                     </a>
                 </div>
@@ -183,12 +183,12 @@
                 .then(r => r.json())
                 .then(res => {
                     if (!res.found) {
-                        resultsList.innerHTML = `<div class="px-5 py-3 bg-red-950/90 border border-red-500/50 text-red-200 text-sm shadow-lg flex items-center gap-3"><i class="fa-solid fa-circle-exclamation"></i> Informasi tidak ditemukan.</div>`;
+                        resultsList.innerHTML = `<div class="px-5 py-3 bg-red-950/90 border border-red-500/50 text-red-200 text-sm shadow-lg flex rounded-3xl items-center gap-3"><i class="fa-solid fa-circle-exclamation"></i> Informasi tidak ditemukan.</div>`;
                         return;
                     }
                     resultsList.innerHTML = res.data.map(item => `
                         <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="Buka: ${item.judul}"
-                            class="inline-flex items-center gap-2.5 px-4 py-3 bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium shadow-md transition-all border border-gray-200 whitespace-normal leading-relaxed">
+                            class="inline-flex items-center gap-2.5 px-4 py-3 bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium shadow-md transition-all rounded-3xl border border-gray-200 whitespace-normal leading-relaxed">
                             <i class="fa-solid fa-file-lines text-blue-900 shrink-0"></i>
                             <span>${item.judul}</span>
                         </a>
@@ -209,32 +209,43 @@
         data: {
             labels: Object.keys(yearlyData),
             datasets: [
-                { label: 'Permohonan', data: Object.values(yearlyData).map(v => v.permohonan), backgroundColor: '#5986d4' },
-                { label: 'Diterima', data: Object.values(yearlyData).map(v => v.diterima), backgroundColor: '#22c55e' },
-                { label: 'Ditolak', data: Object.values(yearlyData).map(v => v.ditolak), backgroundColor: '#ef4444' },
-                { label: 'Keberatan', data: Object.values(yearlyData).map(v => v.keberatan), backgroundColor: '#f59e0b' }
+                { label: 'Permohonan', data: Object.values(yearlyData).map(v => v.permohonan), backgroundColor: '#5986d4', borderRadius: 16 },
+                { label: 'Diterima', data: Object.values(yearlyData).map(v => v.diterima), backgroundColor: '#22c55e', borderRadius: 16 },
+                { label: 'Ditolak', data: Object.values(yearlyData).map(v => v.ditolak), backgroundColor: '#ef4444', borderRadius: 16 },
+                { label: 'Keberatan', data: Object.values(yearlyData).map(v => v.keberatan), backgroundColor: '#f59e0b', borderRadius: 16 }
             ]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: {
                 legend: {
+                    position: 'bottom',
                     labels: {
                         color: '#ffffff',
                         usePointStyle: true,
                         pointStyle: 'rect'
                     }
                 }
+                // tooltip: {
+                //     callbacks: {
+                //         label: function(context) {
+                //             let label = context.dataset.label || '';
+                //             let xLabel = context.label;
+                //             let value = context.parsed.y;
+                //             return [label, `${xLabel}: ${value}`];
+                //         }
+                //     }
+                // }
             },
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: { stepSize: 10, color: '#e2e8f0' },
-                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    ticks: { stepSize: 5, color: '#e2e8f0' },
+                    grid: { color: '#ffffff61' }
                 },
                 x: {
                     ticks: { color: '#e2e8f0' },
-                    grid: { display: true, color: 'rgba(255, 255, 255, 0.1)' }
+                    grid: { display: true, color: '#ffffff61' }
                 }
             },
             onClick: (e, elements) => {

@@ -14,6 +14,7 @@
                     <a href="/" class="{{ $baseClass }} {{ request()->is('/') ? 'after:w-full' : 'after:w-0' }}">Beranda</a>
                     <a href="/informasi-publik" class="{{ $baseClass }} {{ request()->is('informasi-publik*') ? 'after:w-full' : 'after:w-0' }}">Informasi Publik</a>
                     <a href="https://fmipa.unila.ac.id/berita" target="_blank" class="{{ $baseClass }} after:w-0">Berita</a>
+                    <a href="/statistik" class="{{ $baseClass }} {{ request()->is('statistik*') ? 'after:w-full' : 'after:w-0' }}">Statistik</a>
                 @endif
             </div>
 
@@ -33,17 +34,23 @@
                                 <span class="truncate max-w-[220px] inline-block">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</span>
                                 <i class="fa-solid fa-chevron-down text-[10px] shrink-0"></i>
                             </button>
-                            <div id="profile-dropdown" class="absolute right-0 top-full mt-2 w-40 bg-white border border-slate-100 shadow-xl py-1 rounded-none hidden z-[9999]">
-                                <a href="{{ url('/riwayat-layanan') }}" class="block px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">Dashboard</a>
+                            <div id="profile-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-100 shadow-xl py-2 rounded-3xl hidden z-[9999]">
+                                <a href="{{ url('/riwayat-layanan') }}" class="block px-6 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+                                    Dashboard
+                                </a>
+
                                 <div class="border-t border-slate-100 my-1"></div>
+
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors">Keluar</button>
+                                    <button type="submit" class="block w-full text-left px-6 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+                                        Keluar
+                                    </button>
                                 </form>
                             </div>
                         </div>
                     @else
-                        <a href="/login" class="nav-auth-btn ml-4 px-8 py-2.5 bg-transparent border border-white/30 text-white text-sm font-bold uppercase tracking-wider transition-all shadow-sm hover:bg-white/10 rounded whitespace-nowrap">MASUK</a>
+                        <a href="/login" class="nav-auth-btn ml-4 px-8 py-2.5 bg-transparent border border-white/30 text-white text-sm font-bold uppercase tracking-wider transition-all shadow-sm hover:bg-white/10 rounded-3xl whitespace-nowrap">MASUK</a>
                     @endauth
                 @endif
             </div>
@@ -56,6 +63,7 @@
                 <a href="/" class="text-white hover:text-blue-400 font-medium py-1">Beranda</a>
                 <a href="/informasi-publik" class="text-white hover:text-blue-400 font-medium py-1">Informasi Publik</a>
                 <a href="https://fmipa.unila.ac.id/berita" target="_blank" class="text-white hover:text-blue-400 font-medium py-1">Berita</a>
+                <a href="https://fmipa.unila.ac.id/statistik" target="_blank" class="text-white hover:text-blue-400 font-medium py-1">Statistik</a>
             @else
                 <a href="/" class="text-white hover:text-blue-400 font-medium py-1 inline-flex items-center gap-2">
                     <i class="fa-solid fa-arrow-left text-sm"></i> Kembali ke Beranda
