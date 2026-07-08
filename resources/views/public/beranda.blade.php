@@ -72,41 +72,34 @@
             </div>
 
             <div class="max-w-3xl">
-                <form action="{{ url('/informasi-publik') }}" method="GET" class="relative flex items-center shadow-2xl">
-                    <div class="absolute left-6 text-gray-700 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-base"></i></div>
-                    <input id="live-search-input" type="text" name="search" placeholder="Masukan Informasi yang Anda cari..."
-                        class="w-full h-16 pl-14 pr-32 bg-white text-gray-900 placeholder-gray-700 text-base rounded-none focus:outline-none border-0 transition-all shadow-lg" autocomplete="off">
-                    <div class="absolute right-2">
-                        <button type="submit" class="h-12 px-8 bg-[#0a192f] hover:bg-blue-900 text-white font-medium text-xs uppercase tracking-wider transition-colors cursor-pointer">Cari</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div id="live-results-list" class="w-full flex flex-wrap items-center gap-2.5"></div>
-
-        <div class="space-y-6 pt-6 border-t border-white/20">
-            <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
-                <span class="text-sm font-bold uppercase tracking-widest text-blue-300 shrink-0">Informasi yang sering dicari:</span>
-                @foreach ($seringDiakses as $doc)
-                <a href="{{ route('akses.dokumen', $doc->id) }}" target="_blank" rel="noopener noreferrer"
-                    class="text-base font-medium text-gray-200 hover:text-white underline decoration-white/30 hover:decoration-white underline-offset-4 transition-all">
-                    {{ $doc->judul_informasi }}
-                </a>
-                @endforeach
-            </div>
-
-            <div class="w-fit">
-                <div class="bg-[#0a192f] border border-white/10 p-8 flex flex-col items-start gap-5 shadow-xl rounded-none">
-                    <div>
-                        <h3 class="text-xl md:text-2xl font-bold text-white mb-2">Tidak menemukan yang Anda cari?</h3>
-                        <p class="text-gray-300 text-sm md:text-base">Anda dapat mengajukan permohonan informasi publik melalui formulir resmi kami.</p>
-                    </div>
-                    <a href="{{ route('permohonan.create') }}"
-                        class="bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 transition-all shadow-lg text-sm uppercase tracking-wider text-center rounded-none w-full md:w-auto">
-                        Ajukan Permohonan
-                    </a>
+                    <form action="{{ url('/informasi-publik') }}" method="GET" class="relative flex items-center shadow-2xl">
+                        <div class="absolute left-6 text-gray-700 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-base"></i></div>
+                        <input id="live-search-input" type="text" name="search" placeholder="Masukan Informasi yang Anda cari..."
+                            class="w-full h-16 pl-14 pr-32 bg-white text-gray-900 placeholder-gray-700 text-base rounded-none focus:outline-none border-0 transition-all shadow-lg" autocomplete="off">
+                        <div class="absolute right-2">
+                            <button type="submit" class="h-12 px-8 bg-[#0a192f] hover:bg-blue-900 text-white font-medium text-xs uppercase tracking-wider transition-colors cursor-pointer">Cari</button>
+                        </div>
+                    </form>
                 </div>
+            </div>
+
+            <div id="live-results-list" class="w-full flex flex-wrap items-center gap-2.5"></div>
+
+            <div class="space-y-6 pt-6 border-t border-white/20">
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <span class="text-sm font-bold uppercase tracking-widest text-blue-300 shrink-0">Informasi yang sering dicari:</span>
+                    @foreach ($seringDiakses as $doc)
+                    <a href="{{ route('akses.dokumen', $doc->id) }}" target="_blank" rel="noopener noreferrer"
+                    class="text-base font-medium text-gray-200 hover:text-white underline decoration-white/30 hover:decoration-white underline-offset-4 transition-all">
+                        {{ $doc->judul_informasi }}
+                    </a>
+                    @endforeach
+                </div>
+
+                <a href="{{ route('permohonan.create') }}"
+                class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm tracking-wider transition-all shadow-lg">
+                    Buat Permohonan
+                </a>
             </div>
         </div>
     </div>
@@ -192,7 +185,7 @@
                     }
                     resultsList.innerHTML = res.data.map(item => `
                         <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="Buka: ${item.judul}"
-                           class="inline-flex items-center gap-2.5 px-4 py-3 bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium shadow-md transition-all border border-gray-200 whitespace-normal leading-relaxed">
+                            class="inline-flex items-center gap-2.5 px-4 py-3 bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium shadow-md transition-all border border-gray-200 whitespace-normal leading-relaxed">
                             <i class="fa-solid fa-file-lines text-blue-900 shrink-0"></i>
                             <span>${item.judul}</span>
                         </a>
