@@ -19,6 +19,10 @@ class InformasiPublikController extends Controller
 
     public function index(Request $request)
     {
+        // Menangkap nilai perPage dari request, defaultnya 10
+        $perPage = $request->input('perPage', 10);
+        $paginateCount = ($perPage == 9999) ? 9999 : (int)$perPage;
+
         $keyword = trim($request->query('search', ''));
         $kategori = $request->query('kategori');
 
@@ -32,9 +36,10 @@ class InformasiPublikController extends Controller
             $term = strtolower($keyword);
 
             $matchQuery = clone $baseQuery;
+            // Menggunakan $paginateCount sebagai ganti 10
             $items = $matchQuery->whereRaw('LOWER(judul_informasi) LIKE ?', ["%$term%"])
                 ->latest()
-                ->paginate(10);
+                ->paginate($paginateCount);
 
             if ($items->isEmpty()) {
                 $allDocs = $baseQuery->get(['id', 'judul_informasi']);
@@ -59,15 +64,18 @@ class InformasiPublikController extends Controller
                 }
 
                 if (!empty($ids)) {
+                    // Menggunakan $paginateCount sebagai ganti 10
                     $items = InformasiPublik::whereIn('id', $ids)
                         ->latest()
-                        ->paginate(10);
+                        ->paginate($paginateCount);
                 }
             }
         } else {
-            $items = $baseQuery->latest()->paginate(10);
+            // Menggunakan $paginateCount sebagai ganti 10
+            $items = $baseQuery->latest()->paginate($paginateCount);
         }
 
+        // appends() akan memastikan filter (search & kategori) tetap terbawa saat pindah halaman
         $items->appends($request->all());
 
         return view('public.informasi_publik', ['informasi' => $items]);

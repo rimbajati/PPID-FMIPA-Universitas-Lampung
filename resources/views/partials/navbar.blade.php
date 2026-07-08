@@ -11,8 +11,39 @@
                     @php
                         $baseClass = "nav-link relative text-base font-medium transition-all duration-300 after:content-[''] after:absolute after:left-0 after:-bottom-2 after:h-[2px] after:transition-all after:duration-300 hover:after:w-full";
                     @endphp
+
                     <a href="/" class="{{ $baseClass }} {{ request()->is('/') ? 'after:w-full' : 'after:w-0' }}">Beranda</a>
-                    <a href="/informasi-publik" class="{{ $baseClass }} {{ request()->is('informasi-publik*') ? 'after:w-full' : 'after:w-0' }}">Informasi Publik</a>
+
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 {{ $baseClass }} {{ request()->is('informasi-publik*') ? 'after:w-full' : 'after:w-0' }}">
+                            Informasi Publik
+                            <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+
+                        <div class="absolute left-0 pt-3 w-72 hidden group-hover:block z-[9999]">
+                            <div class="bg-white border border-slate-100 shadow-xl py-2 rounded-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+
+                                @php
+                                    $menuItems = [
+                                        ['url' => '/informasi-publik', 'label' => 'Daftar Informasi Publik'],
+                                        ['url' => '/informasi-publik/setiap-saat', 'label' => 'Informasi Tersedia Setiap Saat'],
+                                        ['url' => '/informasi-publik/berkala', 'label' => 'Informasi Tersedia Secara Berkala'],
+                                        ['url' => '/informasi-publik/serta-merta', 'label' => 'Informasi Diumumkan Serta Merta'],
+                                    ];
+                                @endphp
+
+                                @foreach($menuItems as $item)
+                                    <a href="{{ $item['url'] }}"
+                                    class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] transition-all duration-200">
+                                        {{ $item['label'] }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
                     <a href="https://fmipa.unila.ac.id/berita" target="_blank" class="{{ $baseClass }} after:w-0">Berita</a>
                     <a href="/statistik" class="{{ $baseClass }} {{ request()->is('statistik*') ? 'after:w-full' : 'after:w-0' }}">Statistik</a>
                 @endif
@@ -34,8 +65,8 @@
                                 <span class="truncate max-w-[220px] inline-block">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</span>
                                 <i class="fa-solid fa-chevron-down text-[10px] shrink-0"></i>
                             </button>
-                            <div id="profile-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-100 shadow-xl py-2 rounded-3xl hidden z-[9999]">
-                                <a href="{{ url('/riwayat-layanan') }}" class="block px-6 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+                            <div id="profile-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-100 shadow-xl py-2 rounded-2xl hidden z-[9999]">
+                                <a href="{{ url('/riwayat-layanan') }}" class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] rounded-md transition-all duration-200">
                                     Dashboard
                                 </a>
 
@@ -43,7 +74,7 @@
 
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="block w-full text-left px-6 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+                                    <button type="submit" class="block w-full text-left px-6 py-3 text-sm font-medium text-red-600 hover:text-white hover:bg-red-500 rounded-md transition-all duration-200">
                                         Keluar
                                     </button>
                                 </form>
@@ -60,20 +91,32 @@
     <div id="mobile-menu" class="md:hidden hidden bg-slate-900 border-t border-slate-800 px-6 py-4 transition-all">
         <div class="flex flex-col space-y-4">
             @if(!request()->is('login*') && !request()->is('register*') && !request()->is('password*') && !request()->is('forgot-password') && !request()->is('reset-password*'))
-                <a href="/" class="text-white hover:text-blue-400 font-medium py-1">Beranda</a>
-                <a href="/informasi-publik" class="text-white hover:text-blue-400 font-medium py-1">Informasi Publik</a>
-                <a href="https://fmipa.unila.ac.id/berita" target="_blank" class="text-white hover:text-blue-400 font-medium py-1">Berita</a>
-                <a href="https://fmipa.unila.ac.id/statistik" target="_blank" class="text-white hover:text-blue-400 font-medium py-1">Statistik</a>
+                <a href="/" class="text-white font-medium py-1">Beranda</a>
+
+                <div class="py-1">
+                    <button onclick="toggleMobileDropdown()" class="w-full flex items-center justify-between text-white  font-medium transition-colors">
+                        Informasi Publik
+                        <i id="chevron-icon" class="fa-solid fa-chevron-right text-xs transition-transform duration-300"></i>
+                    </button>
+                    <div id="mobile-dropdown" class="hidden flex flex-col pl-4 mt-3 space-y-3 border-l-2 border-slate-700">
+                        <a href="/informasi-publik" class="text-slate-300 hover:text-white text-sm transition-colors">Daftar Informasi Publik</a>
+                        <a href="/informasi-publik/setiap-saat" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Tersedia Setiap Saat</a>
+                        <a href="/informasi-publik/berkala" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Tersedia Secara Berkala</a>
+                        <a href="/informasi-publik/serta-merta" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Diumumkan Serta Merta</a>
+                    </div>
+                </div>
+
+                <a href="https://fmipa.unila.ac.id/berita" target="_blank" class="text-white font-medium py-1">Berita</a>
+                <a href="/statistik" class="text-white font-medium py-1">Statistik</a>
             @else
-                <a href="/" class="text-white hover:text-blue-400 font-medium py-1 inline-flex items-center gap-2">
+                <a href="/" class="text-white font-medium py-1 inline-flex items-center gap-2">
                     <i class="fa-solid fa-arrow-left text-sm"></i> Kembali ke Beranda
                 </a>
             @endif
 
             <div class="border-t border-slate-800 pt-3">
                 @auth
-                    <!-- <div class="text-slate-400 text-sm mb-2 truncate">Login sebagai: {{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div> -->
-                    <a href="{{ url('/riwayat-layanan') }}" class="block text-white hover:text-blue-400 font-medium py-1">Dashboard</a>
+                    <a href="{{ url('/riwayat-layanan') }}" class="block text-white font-medium py-1">Dashboard</a>
                     <form method="POST" action="{{ route('logout') }}" class="mt-2">
                         @csrf
                         <button type="submit" class="w-full text-left text-red-400 hover:text-red-300 font-medium py-1">Keluar</button>
@@ -175,4 +218,14 @@
             });
         }
     });
+
+    // FUNGSI BARU UNTUK DROPDOWN MOBILE (ACCORDION)
+    function toggleMobileDropdown() {
+        const dropdown = document.getElementById('mobile-dropdown');
+        const icon = document.getElementById('chevron-icon');
+        if (dropdown && icon) {
+            dropdown.classList.toggle('hidden');
+            icon.classList.toggle('rotate-90');
+        }
+    }
 </script>
