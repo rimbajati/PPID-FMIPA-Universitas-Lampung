@@ -85,21 +85,24 @@
 
             <div id="live-results-list" class="w-full flex flex-wrap items-center gap-2.5"></div>
 
-            <div class="space-y-6 pt-6 border-t border-white/20">
+            <div class="space-y-6">
                 <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
-                    <span class="text-sm font-bold uppercase tracking-widest text-blue-300 shrink-0">Informasi yang sering dicari:</span>
+                    <span class="text-md font-bold uppercase tracking-widest text-blue-300 shrink-0">Informasi yang sering dicari:</span>
                     @foreach ($seringDiakses as $doc)
                     <a href="{{ route('akses.dokumen', $doc->id) }}" target="_blank" rel="noopener noreferrer"
-                    class="text-base font-medium text-gray-200 hover:text-white underline decoration-white/30 hover:decoration-white underline-offset-4 transition-all">
+                    class="text-lg font-medium text-gray-200 hover:text-white underline decoration-white/30 hover:decoration-white underline-offset-4 transition-all">
                         {{ $doc->judul_informasi }}
                     </a>
                     @endforeach
                 </div>
 
-                <a href="{{ route('permohonan.create') }}"
-                class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm tracking-wider transition-all shadow-lg">
-                    Buat Permohonan
-                </a>
+                <div class="space-y-4">
+                    <p class="text-md text-gray-300">Jika informasi yang Anda cari tidak ditemukan, Anda dapat mengajukan permohonan baru di bawah ini.</p>
+                    <a href="{{ route('permohonan.create') }}"
+                    class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm tracking-wider transition-all shadow-lg">
+                        Buat Permohonan
+                    </a>
+                </div>
             </div>
         </div>
     </div>
