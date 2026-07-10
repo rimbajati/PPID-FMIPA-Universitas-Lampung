@@ -11,30 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Nama tabel disesuaikan menjadi 'informasi_publik' (tanpa 's')
+        // Tabel 'informasi_publik' sesuai draf proposal
         Schema::create('informasi_publik', function (Blueprint $table) {
             $table->id();
 
-            // Kolom disesuaikan 100% dengan draf proposal baru (menghilangkan kata 'dokumen')
             $table->string('judul_informasi');
 
-            // Mengakomodasi 4 kategori sesuai Tabel 4 draf proposal terbaru
+            // Menggunakan enum untuk memastikan data valid dan tidak terpotong (truncated)
             $table->enum('kategori', [
-                'Informasi Berkala',
-                'Informasi Serta-Merta',
-                'Informasi Setiap Saat',
-                'Informasi Dikecualikan'
+                'Informasi Tersedia Setiap Saat',
+                'Informasi Tersedia Secara Berkala',
+                'Informasi Diumumkan Serta-Merta'
             ]);
 
             $table->text('deskripsi')->nullable();
 
-            // Menampung representasi bentuk informasi (contoh: 'pdf', 'docx', atau 'link')
+            // Tipe: pdf, docx, atau link
             $table->string('tipe_informasi');
 
-            // Menampung letak berkas di server atau tautan URL eksternal
+            // Jalur: letak file di server atau URL
             $table->string('jalur_informasi');
 
             $table->string('tahun_publikasi');
+
             $table->timestamps();
         });
     }

@@ -44,6 +44,36 @@
                         </div>
                     </div>
 
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 {{ $baseClass }} {{ request()->is('layanan*') ? 'after:w-full' : 'after:w-0' }}">
+                            Layanan Informasi
+                            <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+
+                        <div class="absolute left-0 pt-3 w-72 hidden group-hover:block z-[9999]">
+                            <div class="bg-white border border-slate-100 shadow-xl py-2 rounded-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+                                @php
+                                    $menuItems = [
+                                        ['url' => '/', 'label' => 'Prosedur Permohonan Informasi'],
+                                        // DITAMBAHKAN ?type=permohonan
+                                        ['url' => route('layanan.create') . '?type=permohonan', 'label' => 'Formulir Permohonan Informasi'],
+                                        // DITAMBAHKAN ?type=keberatan
+                                        ['url' => route('layanan.create') . '?type=keberatan', 'label' => 'Formulir Pengajuan Keberatan'],
+                                    ];
+                                @endphp
+
+                                @foreach($menuItems as $item)
+                                    <a href="{{ $item['url'] }}"
+                                    class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] transition-all duration-200">
+                                        {{ $item['label'] }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
                     <a href="https://fmipa.unila.ac.id/berita" target="_blank" class="{{ $baseClass }} after:w-0">Berita</a>
                     <a href="/statistik" class="{{ $baseClass }} {{ request()->is('statistik*') ? 'after:w-full' : 'after:w-0' }}">Statistik</a>
                 @endif
@@ -94,15 +124,28 @@
                 <a href="/" class="text-white font-medium py-1">Beranda</a>
 
                 <div class="py-1">
-                    <button onclick="toggleMobileDropdown()" class="w-full flex items-center justify-between text-white  font-medium transition-colors">
+                    <button onclick="toggleMobileDropdown('dropdown-info', 'icon-info')" class="w-full flex items-center justify-between text-white font-medium transition-colors">
                         Informasi Publik
-                        <i id="chevron-icon" class="fa-solid fa-chevron-right text-xs transition-transform duration-300"></i>
+                        <i id="icon-info" class="fa-solid fa-chevron-right text-xs transition-transform duration-300"></i>
                     </button>
-                    <div id="mobile-dropdown" class="hidden flex flex-col pl-4 mt-3 space-y-3 border-l-2 border-slate-700">
+                    <div id="dropdown-info" class="hidden flex flex-col pl-4 mt-3 space-y-3 border-l-2 border-slate-700">
                         <a href="/informasi-publik" class="text-slate-300 hover:text-white text-sm transition-colors">Daftar Informasi Publik</a>
                         <a href="/informasi-publik/setiap-saat" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Tersedia Setiap Saat</a>
                         <a href="/informasi-publik/berkala" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Tersedia Secara Berkala</a>
                         <a href="/informasi-publik/serta-merta" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Diumumkan Serta Merta</a>
+                    </div>
+                </div>
+
+                <div class="py-1">
+                    <button onclick="toggleMobileDropdown('dropdown-layanan', 'icon-layanan')" class="w-full flex items-center justify-between text-white font-medium transition-colors">
+                        Layanan Informasi
+                        <i id="icon-layanan" class="fa-solid fa-chevron-right text-xs transition-transform duration-300"></i>
+                    </button>
+                    <div id="dropdown-layanan" class="hidden flex flex-col pl-4 mt-3 space-y-3 border-l-2 border-slate-700">
+                        <a href="/" class="text-slate-300 hover:text-white text-sm transition-colors">Prosedur Permohonan Informasi</a>
+
+                        <a href="{{ route('layanan.create') }}?type=permohonan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Permohonan Informasi</a>
+                        <a href="{{ route('layanan.create') }}?type=keberatan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Pengajuan Keberatan</a>
                     </div>
                 </div>
 
@@ -220,9 +263,11 @@
     });
 
     // FUNGSI BARU UNTUK DROPDOWN MOBILE (ACCORDION)
-    function toggleMobileDropdown() {
-        const dropdown = document.getElementById('mobile-dropdown');
-        const icon = document.getElementById('chevron-icon');
+    // FUNGSI DINAMIS UNTUK DROPDOWN MOBILE
+    function toggleMobileDropdown(dropdownId, iconId) {
+        const dropdown = document.getElementById(dropdownId);
+        const icon = document.getElementById(iconId);
+
         if (dropdown && icon) {
             dropdown.classList.toggle('hidden');
             icon.classList.toggle('rotate-90');

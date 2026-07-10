@@ -15,7 +15,7 @@
     <form id="searchForm" action="{{ url('/informasi-publik') }}" method="GET" class="bg-white p-6 border border-gray-100 shadow-xl mb-8 flex flex-col md:flex-row gap-4 items-center rounded-3xl">
 
         <div class="relative w-full md:w-auto flex items-center gap-2">
-            <label class="text-xs text-gray-500 font-bold uppercase whitespace-nowrap">TAMPIL</label>
+            <label class="text-xs text-gray-500 font-bold whitespace-nowrap">Menampilkan</label>
             <div class="relative">
                 <input type="hidden" name="perPage" id="perPage_input" value="{{ request('perPage', 10) }}">
                 <button type="button" id="perPageTrigger"
@@ -43,10 +43,10 @@
                     <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
                 </button>
                 <ul id="dropdownMenu" class="absolute z-50 w-full mt-2 bg-white border border-gray-100 shadow-xl rounded-2xl hidden overflow-hidden">
-                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('', '-- Jenis Informasi --')">-- Jenis Informasi --</li>
-                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('Informasi Berkala', 'Informasi Berkala')">Informasi Berkala</li>
-                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('Informasi Serta-Merta', 'Informasi Serta-Merta')">Informasi Serta-Merta</li>
-                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('Informasi Setiap Saat', 'Informasi Setiap Saat')">Informasi Setiap Saat</li>
+                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('', 'Semua Kategori')">Semua Kategori</li>
+                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('Informasi Tersedia Setiap Saat', 'Informasi Tersedia Setiap Saat')">Informasi Tersedia Setiap Saat</li>
+                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('Informasi Tersedia Secara Berkala', 'Informasi Tersedia Secara Berkala')">Informasi Tersedia Secara Berkala</li>
+                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('Informasi Diumumkan Serta-Merta', 'Informasi Diumumkan Serta-Merta')">Informasi Diumumkan Serta-Merta</li>
                 </ul>
             </div>
         </div>

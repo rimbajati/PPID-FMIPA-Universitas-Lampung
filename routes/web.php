@@ -3,12 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InformasiPublikController;
-use App\Http\Controllers\PermohonanController;
-use App\Http\Controllers\KeberatanController;
+use App\Http\Controllers\LayananController;
 use App\Http\Controllers\StatistikController;
-use App\Http\Controllers\DashboardController; // Untuk Admin
-use App\Http\Controllers\UserProfileController; // Untuk Pemohon/User
-use App\Http\Controllers\RiwayatController; // Untuk History Layanan
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\RiwayatController;
 use Illuminate\Http\Request;
 
 /*
@@ -47,12 +46,12 @@ Route::middleware('guest')->group(function () {
         Route::post('/register/step1', 'processRegisterStep1')->name('register.step1.process');
 
         Route::get('/register/verifikasi', 'showRegisterStep2')->name('register.step2')->middleware('signed');
-        Route::post('/register/verifikasi', 'processRegisterStep2')->name('register.step2.process'); // TAMBAHKAN INI
+        Route::post('/register/verifikasi', 'processRegisterStep2')->name('register.step2.process');
 
         Route::post('/register/resend-otp', 'resendOtp')->name('register.resend');
 
         Route::get('/register/lengkapi-profil', 'showRegisterStep3')->name('register.step3')->middleware('signed');
-        Route::post('/register/lengkapi-profil', 'processRegisterStep3')->name('register.step3.process'); // TAMBAHKAN INI
+        Route::post('/register/lengkapi-profil', 'processRegisterStep3')->name('register.step3.process');
     });
 });
 
@@ -67,20 +66,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/profil/buat-sandi-manual', 'buatSandiManual')->name('profil.buat-sandi');
     });
 
-    // Dashboard & Update Profile Pemohon
     Route::get('/dashboard', [UserProfileController::class, 'index'])->name('user.dashboard');
     Route::post('/dashboard/update', [UserProfileController::class, 'updateProfile'])->name('user.profile.update');
 
-    // Riwayat & Detail Layanan (RUTE INI YANG DITAMBAHKAN)
     Route::get('/riwayat-layanan', [RiwayatController::class, 'index'])->name('riwayat.index');
     Route::get('/riwayat/permohonan/{id}', [RiwayatController::class, 'showPermohonan'])->name('riwayat.permohonan.detail');
     Route::get('/riwayat/keberatan/{id}', [RiwayatController::class, 'showKeberatan'])->name('riwayat.keberatan.detail');
 
-    // Layanan PPID
-    Route::get('/permohonan', [PermohonanController::class, 'create'])->name('permohonan.create');
-    Route::post('/permohonan', [PermohonanController::class, 'store'])->name('permohonan.store');
-    Route::get('/keberatan', [KeberatanController::class, 'create'])->name('keberatan.create');
-    Route::post('/keberatan', [KeberatanController::class, 'store'])->name('keberatan.store');
+    // RUTE TERPADU LAYANAN
+    Route::get('/layanan', [LayananController::class, 'create'])->name('layanan.create');
+    Route::post('/layanan', [LayananController::class, 'store'])->name('layanan.store');
 });
 
 /*
@@ -100,9 +95,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/informasi-publik/{id}', [InformasiPublikController::class, 'destroy']);
 
     // Manajemen Permohonan & Keberatan
-    Route::get('/permohonan', [PermohonanController::class, 'adminIndex']);
-    Route::get('/permohonan/{id}', [PermohonanController::class, 'show']);
-    Route::put('/permohonan/{id}/status', [PermohonanController::class, 'updateStatus']);
+    Route::get('/permohonan', [LayananController::class, 'adminIndex']);
+    Route::get('/permohonan/{id}', [LayananController::class, 'show']);
+    Route::put('/permohonan/{id}/status', [LayananController::class, 'updateStatus']);
     Route::get('/keberatan', function () { return view('admin.keberatan'); });
 });
 

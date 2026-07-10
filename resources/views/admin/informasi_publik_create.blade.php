@@ -48,8 +48,19 @@
                         <label class="block text-sm font-bold text-gray-900 mb-2">Klasifikasi Kategori <span class="text-red-500">*</span></label>
                         <select name="kategori" class="w-full border border-gray-300 rounded-xl p-3.5 text-sm bg-gray-50 focus:outline-none focus:border-[#0095e8] font-bold text-gray-700 transition" required>
                             <option value="">-- Pilih Kategori UU KIP --</option>
-                            @foreach(['Informasi Berkala', 'Informasi Serta-Merta', 'Informasi Setiap Saat', 'Informasi Dikecualikan'] as $kat)
-                                <option value="{{ $kat }}" {{ old('kategori', $isEdit ? $informasi->kategori : '') == $kat ? 'selected' : '' }}>{{ $kat }}</option>
+
+                            @php
+                                $kategoriList = [
+                                    'Informasi Tersedia Setiap Saat',
+                                    'Informasi Tersedia Secara Berkala',
+                                    'Informasi Diumumkan Serta-Merta'
+                                ];
+                            @endphp
+
+                            @foreach($kategoriList as $kat)
+                                <option value="{{ $kat }}" {{ old('kategori', $isEdit ? $informasi->kategori : '') == $kat ? 'selected' : '' }}>
+                                    {{ $kat }}
+                                </option>
                             @endforeach
                         </select>
                     </div>

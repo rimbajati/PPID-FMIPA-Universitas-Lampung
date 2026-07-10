@@ -98,7 +98,7 @@
 
                 <div class="space-y-4">
                     <p class="text-md text-gray-300">Jika informasi yang Anda cari tidak ditemukan, Anda dapat mengajukan permohonan baru di bawah ini.</p>
-                    <a href="{{ route('permohonan.create') }}"
+                    <a href="{{ route('layanan.create') }}"
                     class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm rounded-3xl tracking-wider transition-all shadow-lg">
                         Buat Permohonan
                     </a>
