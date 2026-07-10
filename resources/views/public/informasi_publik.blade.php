@@ -7,15 +7,14 @@
 
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900 mb-2">Daftar Informasi Publik</h1>
-        <p class="text-gray-600 max-w-2xl">
+        <p class="text-gray-600 max-w-2xl text-sm md:text-base">
             Penetapan Daftar Informasi Publik Universitas Lampung mengacu pada aturan yang berlaku. Kebijakan ini mengatur jenis informasi yang wajib diumumkan dan disediakan untuk menjamin akses informasi yang akurat bagi masyarakat.
         </p>
     </div>
 
-    <form id="searchForm" action="{{ url('/informasi-publik') }}" method="GET" class="bg-white p-6 border border-gray-100 shadow-xl mb-8 flex flex-col md:flex-row gap-4 items-center rounded-3xl">
-
+    <form id="searchForm" action="{{ url('/informasi-publik') }}" method="GET" class="bg-white p-4 md:p-6 border border-gray-100 shadow-xl mb-8 flex flex-col md:flex-row gap-4 items-center rounded-3xl">
         <div class="relative w-full md:w-auto flex items-center gap-2">
-            <label class="text-xs text-gray-500 font-bold whitespace-nowrap">Menampilkan</label>
+            <label class="text-xs text-gray-500 font-bold whitespace-nowrap pl-2">Menampilkan</label>
             <div class="relative">
                 <input type="hidden" name="perPage" id="perPage_input" value="{{ request('perPage', 10) }}">
                 <button type="button" id="perPageTrigger"
@@ -54,58 +53,41 @@
         <div class="relative w-full md:w-auto flex-[2]">
             <input type="text" id="searchInput" name="search" value="{{ request('search') }}" placeholder="Masukan kata kunci..."
                 class="w-full border border-gray-200 rounded-2xl p-3 outline-none text-sm text-gray-600 pr-10 focus:border-blue-500 transition">
-            <button type="submit" class="absolute right-3 top-3.5 text-gray-400 hover:text-blue-600">
+            <button type="submit" class="absolute right-4 top-3.5 text-gray-400 hover:text-blue-600">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
         </div>
     </form>
 
-    <div class="bg-white border border-gray-100 shadow-xl rounded-3xl overflow-hidden mb-10">
-        <div class="hidden md:block overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-gray-50 border-b border-gray-100">
+    <div class="bg-white border border-gray-100 shadow-lg rounded-3xl overflow-hidden mb-10">
+        <div class="overflow-x-auto w-full">
+            <table class="w-full min-w-[700px] text-left border-collapse">
+                <thead class="bg-gray-200 border-b border-gray-100">
                     <tr>
-                        <th class="px-8 py-5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Ringkasan Informasi</th>
-                        <th class="px-8 py-5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Jenis Informasi</th>
-                        <th class="px-8 py-5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Tahun</th>
-                        <th class="px-8 py-5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Action</th>
+                        <th class="px-8 py-5 text-[11px] font-bold text-gray-1000 uppercase tracking-wider">Ringkasan Informasi</th>
+                        <th class="px-8 py-5 text-[11px] font-bold text-gray-1000 uppercase tracking-wider">Jenis Informasi</th>
+                        <th class="px-8 py-5 text-[11px] font-bold text-gray-1000 uppercase tracking-wider">Tahun</th>
+                        <th class="px-8 py-5 text-[11px] font-bold text-gray-1000 uppercase tracking-wider text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($informasi as $dok)
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-8 py-6 text-sm text-gray-800">{{ $dok->judul_informasi }}</td>
-                        <td class="px-8 py-6 text-sm text-gray-600">{{ $dok->kategori }}</td>
-                        <td class="px-8 py-6 text-sm text-gray-600">{{ $dok->tahun_publikasi }}</td>
-                        <td class="px-8 py-6">
+                    <tr class="hover:bg-gray-50 transition-colors group">
+                        <td class="px-8 py-5 text-sm text-gray-800 font-medium">{{ $dok->judul_informasi }}</td>
+                        <td class="px-8 py-5 text-sm text-gray-600 whitespace-nowrap">{{ $dok->kategori }}</td>
+                        <td class="px-8 py-5 text-sm text-gray-600">{{ $dok->tahun_publikasi }}</td>
+                        <td class="px-8 py-5 text-center">
                             <a href="{{ route('akses.dokumen', $dok->id) }}" target="_blank"
-                               class="inline-block bg-[#0a192f] text-white text-xs font-bold px-6 py-2 rounded-full hover:bg-blue-700 transition shadow-sm">
+                               class="inline-block bg-[#0a192f] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-black transition shadow-sm whitespace-nowrap">
                                 LIHAT
                             </a>
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="4" class="p-10 text-center text-gray-500">Informasi tidak ditemukan/belum tersedia.</td></tr>
+                    <tr><td colspan="4" class="p-10 text-center text-gray-500">Informasi tidak ditemukan.</td></tr>
                     @endforelse
                 </tbody>
             </table>
-        </div>
-
-        <div class="md:hidden space-y-2 p-4">
-            @forelse($informasi as $dok)
-            <div class="bg-white p-4 border border-gray-100 rounded-lg shadow-sm">
-                <h4 class="font-bold text-gray-900 mb-2">{{ $dok->judul_informasi }}</h4>
-                <div class="text-xs text-gray-500 mb-3 space-y-1">
-                    <p>Jenis: {{ $dok->kategori }}</p>
-                    <p>Tahun: {{ $dok->tahun_publikasi }}</p>
-                </div>
-                <a href="{{ route('akses.dokumen', $dok->id) }}" target="_blank" class="block w-full text-center py-2 bg-blue-600 text-white text-sm font-bold rounded-full">
-                    LIHAT
-                </a>
-            </div>
-            @empty
-            <div class="text-center p-6 text-gray-500">Data tidak ditemukan.</div>
-            @endforelse
         </div>
     </div>
 
@@ -115,7 +97,7 @@
 </div>
 
 <script>
-    // ... (Fungsi JS Anda tetap sama, pastikan ID selector sudah benar)
+    // Script tetap sama untuk handling dropdown dan search
     const trigger = document.getElementById('dropdownTrigger');
     const menu = document.getElementById('dropdownMenu');
     const input = document.getElementById('kategori_input');
