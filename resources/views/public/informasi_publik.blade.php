@@ -12,7 +12,9 @@
         </p>
     </div>
 
+    <!-- Search Form -->
     <form id="searchForm" action="{{ url('/informasi-publik') }}" method="GET" class="bg-white p-4 md:p-6 border border-gray-100 shadow-xl mb-8 flex flex-col md:flex-row gap-4 items-center rounded-3xl">
+        <!-- Filter Jumlah Per Halaman -->
         <div class="relative w-full md:w-auto flex items-center gap-2">
             <label class="text-xs text-gray-500 font-bold whitespace-nowrap pl-2">Menampilkan</label>
             <div class="relative">
@@ -33,6 +35,7 @@
             </div>
         </div>
 
+        <!-- Filter Kategori -->
         <div class="w-full md:w-auto flex-1">
             <input type="hidden" name="kategori" id="kategori_input" value="{{ request('kategori') }}">
             <div class="relative">
@@ -50,6 +53,7 @@
             </div>
         </div>
 
+        <!-- Pencarian -->
         <div class="relative w-full md:w-auto flex-[2]">
             <input type="text" id="searchInput" name="search" value="{{ request('search') }}" placeholder="Masukan kata kunci..."
                 class="w-full border border-gray-200 rounded-2xl p-3 outline-none text-sm text-gray-600 pr-10 focus:border-blue-500 transition">
@@ -59,26 +63,30 @@
         </div>
     </form>
 
+    <!-- Data Display Table -->
     <div class="bg-white border border-gray-100 shadow-lg rounded-3xl overflow-hidden mb-10">
         <div class="overflow-x-auto w-full">
             <table class="w-full min-w-[700px] text-left border-collapse">
-                <thead class="bg-gray-200 border-b border-gray-100">
+                <thead class="bg-gray-100 border-b border-gray-200">
                     <tr>
-                        <th class="px-8 py-5 text-[11px] font-bold text-gray-1000 uppercase tracking-wider">Ringkasan Informasi</th>
-                        <th class="px-8 py-5 text-[11px] font-bold text-gray-1000 uppercase tracking-wider">Jenis Informasi</th>
-                        <th class="px-8 py-5 text-[11px] font-bold text-gray-1000 uppercase tracking-wider">Tahun</th>
-                        <th class="px-8 py-5 text-[11px] font-bold text-gray-1000 uppercase tracking-wider text-center">Action</th>
+                        <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider">Ringkasan Informasi</th>
+                        <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider">Jenis Informasi</th>
+                        <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider">Tanggal Upload</th>
+                        <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider text-center">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-gray-300">
                     @forelse($informasi as $dok)
                     <tr class="hover:bg-gray-50 transition-colors group">
-                        <td class="px-8 py-5 text-sm text-gray-800 font-medium">{{ $dok->judul_informasi }}</td>
+                        <!-- Menampilkan rincian_informasi dan sub_informasi secara bersamaan -->
+                        <td class="px-8 py-5">
+                            <div class="text-md text-gray-900">{{ $dok->sub_informasi }}<div>
+                        </td>
                         <td class="px-8 py-5 text-sm text-gray-600 whitespace-nowrap">{{ $dok->kategori }}</td>
-                        <td class="px-8 py-5 text-sm text-gray-600">{{ $dok->tahun_publikasi }}</td>
+                        <td class="px-8 py-5 text-sm text-gray-600">{{ $dok->created_at->format('d/m/Y') }}</td>
                         <td class="px-8 py-5 text-center">
-                            <a href="{{ route('akses.dokumen', $dok->id) }}" target="_blank"
-                               class="inline-block bg-[#0a192f] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-black transition shadow-sm whitespace-nowrap">
+                            <a href="{{ route('akses.dokumen', $dok->id) }}" target="_blank" rel="noopener noreferrer"
+                                class="inline-block bg-[#0a192f] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-black transition shadow-sm whitespace-nowrap">
                                 LIHAT
                             </a>
                         </td>
@@ -91,13 +99,13 @@
         </div>
     </div>
 
+    <!-- Pagination -->
     <div class="flex justify-center mt-8">
-        {{ $informasi->links() }}
+        {{ $informasi->appends(request()->query())->links() }}
     </div>
 </div>
 
 <script>
-    // Script tetap sama untuk handling dropdown dan search
     const trigger = document.getElementById('dropdownTrigger');
     const menu = document.getElementById('dropdownMenu');
     const input = document.getElementById('kategori_input');

@@ -17,6 +17,10 @@ use Illuminate\Http\Request;
 */
 Route::get('/', function () { return view('public.beranda'); });
 Route::get('/informasi-publik', [InformasiPublikController::class, 'index']);
+Route::get('/informasi-setiap-saat', [App\Http\Controllers\InformasiPublikController::class, 'indexSetiapSaat']);
+Route::get('/informasi-berkala', [App\Http\Controllers\InformasiPublikController::class, 'indexBerkala']);
+Route::get('/informasi-serta-merta', [App\Http\Controllers\InformasiPublikController::class, 'indexSertaMerta']);
+Route::get('/informasi/akses/{id}', [InformasiPublikController::class, 'hitungAkses']);
 Route::get('/akses-dokumen/{id}', [InformasiPublikController::class, 'hitungAkses'])->name('akses.dokumen');
 Route::get('/statistik', [StatistikController::class, 'index'])->name('public.statistik.index');
 

@@ -5,16 +5,18 @@
         $found = true;
         if ($q !== '') {
             if (strlen($q) >= 2) {
-                $result = \App\Models\InformasiPublik::select('id', 'judul_informasi')
-                    ->where('judul_informasi', 'LIKE', "$q%")
-                    ->orWhere('judul_informasi', 'LIKE', "%$q%")
-                    ->orderByRaw("CASE WHEN judul_informasi LIKE ? THEN 1 ELSE 2 END", ["$q%"])
+                // Diperbarui: Mengambil sub_informasi
+                $result = \App\Models\InformasiPublik::select('id', 'sub_informasi')
+                    ->where('sub_informasi', 'LIKE', "$q%")
+                    ->orWhere('sub_informasi', 'LIKE', "%$q%")
+                    ->orderByRaw("CASE WHEN sub_informasi LIKE ? THEN 1 ELSE 2 END", ["$q%"])
                     ->latest()->take(6)->get();
                 if ($result->isEmpty()) { $found = false; }
             }
         }
         header('Content-Type: application/json');
-        echo json_encode(['found' => $found, 'data' => $result->map(fn($item) => ['judul' => $item->judul_informasi, 'url' => route('akses.dokumen', $item->id)])]);
+        // Diperbarui: Mapping ke sub_informasi
+        echo json_encode(['found' => $found, 'data' => $result->map(fn($item) => ['judul' => $item->sub_informasi, 'url' => route('akses.dokumen', $item->id)])]);
         exit;
     @endphp
 @endif
@@ -27,7 +29,8 @@
 @php
     $waktuCache = app()->environment('local') ? 5 : 60;
     $seringDiakses = \Illuminate\Support\Facades\Cache::remember('sering_diakses_beranda', $waktuCache, function () {
-        return \App\Models\InformasiPublik::select('id', 'judul_informasi')->orderBy('dilihat', 'desc')->take(6)->get();
+        // Diperbarui: Mengambil sub_informasi
+        return \App\Models\InformasiPublik::select('id', 'sub_informasi')->orderBy('dilihat', 'desc')->take(6)->get();
     });
 
     // --- Data Statistik (Dinamis dari database) ---
@@ -72,15 +75,14 @@
             </div>
 
             <div class="max-w-3xl">
-                    <form action="{{ url('/informasi-publik') }}" method="GET" class="relative flex items-center shadow-2xl">
-                        <div class="absolute left-6 text-gray-700 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-base"></i></div>
-                        <input id="live-search-input" type="text" name="search" placeholder="Masukan Informasi yang Anda cari..."
-                            class="w-full h-16 pl-14 pr-32 bg-white text-gray-900 placeholder-gray-700 text-base rounded-3xl focus:outline-none border-0 transition-all shadow-lg" autocomplete="off">
-                        <div class="absolute right-2">
-                            <button type="submit" class="h-12 px-8 bg-[#0a192f] hover:bg-blue-900 text-white font-medium text-xs uppercase rounded-3xl tracking-wider transition-colors cursor-pointer">Cari</button>
-                        </div>
-                    </form>
-                </div>
+                <form action="{{ url('/informasi-publik') }}" method="GET" class="relative flex items-center shadow-2xl">
+                    <div class="absolute left-6 text-gray-700 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-base"></i></div>
+                    <input id="live-search-input" type="text" name="search" placeholder="Masukan Informasi yang Anda cari..."
+                        class="w-full h-16 pl-14 pr-32 bg-white text-gray-900 placeholder-gray-700 text-base rounded-3xl focus:outline-none border-0 transition-all shadow-lg" autocomplete="off">
+                    <div class="absolute right-2">
+                        <button type="submit" class="h-12 px-8 bg-[#0a192f] hover:bg-blue-900 text-white font-medium text-xs uppercase rounded-3xl tracking-wider transition-colors cursor-pointer">Cari</button>
+                    </div>
+                </form>
             </div>
 
             <div id="live-results-list" class="w-full flex flex-wrap items-center gap-2.5"></div>
@@ -91,7 +93,8 @@
                     @foreach ($seringDiakses as $doc)
                     <a href="{{ route('akses.dokumen', $doc->id) }}" target="_blank" rel="noopener noreferrer"
                     class="text-lg font-medium text-gray-200 hover:text-white underline decoration-white/30 hover:decoration-white underline-offset-4 transition-all">
-                        {{ $doc->judul_informasi }}
+                        {{-- Diperbarui: Menggunakan sub_informasi --}}
+                        {{ $doc->sub_informasi }}
                     </a>
                     @endforeach
                 </div>
@@ -170,7 +173,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Live Search
     const searchInput = document.getElementById('live-search-input');
     const resultsList = document.getElementById('live-results-list');
     let debounceTimer;
@@ -197,7 +199,6 @@
         }, 300);
     });
 
-    // Statistik Chart
     const yearlyData = {!! json_encode($yearlyData) !!};
     const monthlyData = {!! json_encode($monthlyData) !!};
     const ctx = document.getElementById('statistikBarChart').getContext('2d');
@@ -217,45 +218,17 @@
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#ffffff',
-                        usePointStyle: true,
-                        pointStyle: 'rect'
-                    }
-                }
-                // tooltip: {
-                //     callbacks: {
-                //         label: function(context) {
-                //             let label = context.dataset.label || '';
-                //             let xLabel = context.label;
-                //             let value = context.parsed.y;
-                //             return [label, `${xLabel}: ${value}`];
-                //         }
-                //     }
-                // }
-            },
+            plugins: { legend: { position: 'bottom', labels: { color: '#ffffff', usePointStyle: true, pointStyle: 'rect' } } },
             scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 5, color: '#e2e8f0' },
-                    grid: { color: '#ffffff61' }
-                },
-                x: {
-                    ticks: { color: '#e2e8f0' },
-                    grid: { display: true, color: '#ffffff61' }
-                }
+                y: { beginAtZero: true, ticks: { stepSize: 5, color: '#e2e8f0' }, grid: { color: '#ffffff61' } },
+                x: { ticks: { color: '#e2e8f0' }, grid: { display: true, color: '#ffffff61' } }
             },
             onClick: (e, elements) => {
                 if (elements.length > 0) {
                     const year = chart.data.labels[elements[0].index];
                     if (monthlyData[year]) {
-                        // Update UI
                         yearLabel.innerText = "Tahun " + year;
                         resetBtn.classList.remove('hidden');
-
                         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
                         chart.data.labels = months;
                         chart.data.datasets[0].data = Object.values(monthlyData[year]).map(v => v.permohonan);
@@ -270,10 +243,8 @@
     });
 
     resetBtn.addEventListener('click', () => {
-        // Reset UI
         yearLabel.innerText = "";
         resetBtn.classList.add('hidden');
-
         chart.data.labels = Object.keys(yearlyData);
         chart.data.datasets[0].data = Object.values(yearlyData).map(v => v.permohonan);
         chart.data.datasets[1].data = Object.values(yearlyData).map(v => v.diterima);

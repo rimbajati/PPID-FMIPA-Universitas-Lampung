@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('permohonans', function (Blueprint $table) {
@@ -25,13 +22,15 @@ return new class extends Migration
             $table->boolean('pernyataan');
             $table->string('no_tiket')->nullable();
             $table->string('status')->default('DIAJUKAN');
+
+            // Kolom dari migrasi yang digabung
+            $table->text('catatan_admin')->nullable();
+            $table->string('file_jawaban')->nullable();
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('permohonans');

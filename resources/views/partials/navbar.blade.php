@@ -15,7 +15,7 @@
                     <a href="/" class="{{ $baseClass }} {{ request()->is('/') ? 'after:w-full' : 'after:w-0' }}">Beranda</a>
 
                     <div class="relative group">
-                        <button class="flex items-center gap-1 {{ $baseClass }} {{ request()->is('informasi-publik*') ? 'after:w-full' : 'after:w-0' }}">
+                        <button class="flex items-center gap-1 {{ $baseClass }} {{ request()->is('informasi-publik*') || request()->is('informasi-setiap-saat*') ? 'after:w-full' : 'after:w-0' }}">
                             Informasi Publik
                             <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -24,13 +24,12 @@
 
                         <div class="absolute left-0 pt-3 w-72 hidden group-hover:block z-[9999]">
                             <div class="bg-white border border-slate-100 shadow-xl py-2 rounded-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-
                                 @php
                                     $menuItems = [
                                         ['url' => '/informasi-publik', 'label' => 'Daftar Informasi Publik'],
-                                        ['url' => '/informasi-publik/setiap-saat', 'label' => 'Informasi Tersedia Setiap Saat'],
-                                        ['url' => '/informasi-publik/berkala', 'label' => 'Informasi Tersedia Secara Berkala'],
-                                        ['url' => '/informasi-publik/serta-merta', 'label' => 'Informasi Diumumkan Serta Merta'],
+                                        ['url' => '/informasi-setiap-saat', 'label' => 'Informasi Tersedia Setiap Saat'],
+                                        ['url' => '/informasi-berkala', 'label' => 'Informasi Tersedia Secara Berkala'],
+                                        ['url' => '/informasi-serta-merta', 'label' => 'Informasi Diumumkan Serta Merta'],
                                     ];
                                 @endphp
 
@@ -55,16 +54,14 @@
                         <div class="absolute left-0 pt-3 w-72 hidden group-hover:block z-[9999]">
                             <div class="bg-white border border-slate-100 shadow-xl py-2 rounded-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
                                 @php
-                                    $menuItems = [
+                                    $menuLayanan = [
                                         ['url' => '/', 'label' => 'Prosedur Permohonan Informasi'],
-                                        // DITAMBAHKAN ?type=permohonan
                                         ['url' => route('layanan.create') . '?type=permohonan', 'label' => 'Formulir Permohonan Informasi'],
-                                        // DITAMBAHKAN ?type=keberatan
                                         ['url' => route('layanan.create') . '?type=keberatan', 'label' => 'Formulir Pengajuan Keberatan'],
                                     ];
                                 @endphp
 
-                                @foreach($menuItems as $item)
+                                @foreach($menuLayanan as $item)
                                     <a href="{{ $item['url'] }}"
                                     class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] transition-all duration-200">
                                         {{ $item['label'] }}
@@ -99,9 +96,7 @@
                                 <a href="{{ url('/riwayat-layanan') }}" class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] rounded-md transition-all duration-200">
                                     Dashboard
                                 </a>
-
                                 <div class="border-t border-slate-100 my-1"></div>
-
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="block w-full text-left px-6 py-3 text-sm font-medium text-red-600 hover:text-white hover:bg-red-500 rounded-md transition-all duration-200">
@@ -118,6 +113,7 @@
         </div>
     </div>
 
+    <!-- Mobile Menu -->
     <div id="mobile-menu" class="md:hidden hidden bg-slate-900 border-t border-slate-800 px-6 py-4 transition-all">
         <div class="flex flex-col space-y-4">
             @if(!request()->is('login*') && !request()->is('register*') && !request()->is('password*') && !request()->is('forgot-password') && !request()->is('reset-password*'))
@@ -130,9 +126,9 @@
                     </button>
                     <div id="dropdown-info" class="hidden flex flex-col pl-4 mt-3 space-y-3 border-l-2 border-slate-700">
                         <a href="/informasi-publik" class="text-slate-300 hover:text-white text-sm transition-colors">Daftar Informasi Publik</a>
-                        <a href="/informasi-publik/setiap-saat" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Tersedia Setiap Saat</a>
-                        <a href="/informasi-publik/berkala" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Tersedia Secara Berkala</a>
-                        <a href="/informasi-publik/serta-merta" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Diumumkan Serta Merta</a>
+                        <a href="/informasi-setiap-saat" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Tersedia Setiap Saat</a>
+                        <a href="/informasi-berkala" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Tersedia Secara Berkala</a>
+                        <a href="/informasi-serta-merta" class="text-slate-300 hover:text-white text-sm transition-colors">Informasi Diumumkan Serta Merta</a>
                     </div>
                 </div>
 
@@ -143,7 +139,6 @@
                     </button>
                     <div id="dropdown-layanan" class="hidden flex flex-col pl-4 mt-3 space-y-3 border-l-2 border-slate-700">
                         <a href="/" class="text-slate-300 hover:text-white text-sm transition-colors">Prosedur Permohonan Informasi</a>
-
                         <a href="{{ route('layanan.create') }}?type=permohonan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Permohonan Informasi</a>
                         <a href="{{ route('layanan.create') }}?type=keberatan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Pengajuan Keberatan</a>
                     </div>
@@ -173,6 +168,7 @@
 </nav>
 
 <script>
+    // ... (Script JS Anda tetap sama seperti sebelumnya) ...
     document.addEventListener('DOMContentLoaded', function () {
         const navbar = document.getElementById('main-navbar');
         const navLogo = document.getElementById('navbar-logo');
@@ -262,8 +258,6 @@
         }
     });
 
-    // FUNGSI BARU UNTUK DROPDOWN MOBILE (ACCORDION)
-    // FUNGSI DINAMIS UNTUK DROPDOWN MOBILE
     function toggleMobileDropdown(dropdownId, iconId) {
         const dropdown = document.getElementById(dropdownId);
         const icon = document.getElementById(iconId);
