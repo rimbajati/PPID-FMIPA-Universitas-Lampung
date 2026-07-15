@@ -92,14 +92,15 @@
                                     {{ $keb->alasan_keberatan }}
                                 </div>
                             </td>
-                            <td class="px-8 py-5 text-gray-500 whitespace-nowrap">{{ \Carbon\Carbon::parse($keb->tanggal_pengajuan)->format('d M Y') }}</td>
+                            <td class="px-8 py-5 text-gray-500 whitespace-nowrap">{{ $keb->created_at->format('d M Y') }}</td>
                             <td class="px-8 py-5">
                                 <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-none
-                                    @if($keb->status_putusan == 'MENUNGGU') bg-amber-100 text-amber-600
-                                    @elseif($keb->status_putusan == 'DITERIMA') bg-green-100 text-green-600
-                                    @elseif($keb->status_putusan == 'DITOLAK') bg-red-100 text-red-600
+                                    @if($keb->status == 'DIAJUKAN') bg-amber-100 text-amber-600
+                                    @elseif($keb->status == 'DIPROSES') bg-blue-100 text-blue-600
+                                    @elseif($keb->status == 'DITERIMA') bg-green-100 text-green-600
+                                    @elseif($keb->status == 'DITOLAK') bg-red-100 text-red-600
                                     @else bg-gray-100 text-gray-600 @endif">
-                                    {{ $keb->status_putusan }}
+                                    {{ $keb->status }}
                                 </span>
                             </td>
                             <td class="px-8 py-5 text-center"><button class="text-gray-400 hover:text-[#0a192f] text-lg"><i class="fa-solid fa-ellipsis-vertical"></i></button></td>

@@ -5,42 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin - PPID FMIPA Unila</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        /* Mengimpor font Poppins dari Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        /* Menerapkan font Poppins ke seluruh halaman */
+        body { font-family: 'Poppins', sans-serif; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="relative flex items-center justify-center min-h-screen bg-[#0a192f]">
 
-    <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-gray-200">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-900">Portal Admin PPID</h1>
-            <p class="text-sm text-gray-500 mt-2">Masuk menggunakan kredensial pengelola</p>
-        </div>
+    <!-- Background Layer -->
+    <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
+    <div class="absolute inset-0 bg-[#0a192f]/80"></div>
 
-        <form action="/admin-panel/login" method="POST">
-            <!-- Tambahkan @csrf nanti saat integrasi dengan Controller -->
-            @csrf
+    <!-- Login Container (Ukuran besar max-w-lg) -->
+    <div class="relative z-10 w-full max-w-lg px-6">
 
-            <div class="mb-5">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Email Staf</label>
-                <input type="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900" placeholder="admin@fmipa.unila.ac.id" required>
+        <!-- White Card -->
+        <div class="bg-white p-10 sm:p-12 rounded-2xl shadow-2xl border border-gray-100">
+
+            <!-- Header Section -->
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Login Admin</h1>
+                <p class="text-base text-gray-500">PPID FMIPA Universitas Lampung</p>
             </div>
 
-            <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Kata Sandi</label>
-                <input type="password" name="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900" placeholder="••••••••" required>
-            </div>
+            <form action="/admin-panel/login" method="POST" class="space-y-6">
+                <!-- Tambahkan @csrf nanti saat integrasi dengan Controller -->
+                @csrf
 
-            <button type="submit" class="w-full bg-[#0f2b4a] text-white font-bold py-3 px-4 rounded-lg hover:bg-[#0a1d33] transition duration-200">
-                Otorisasi Masuk
-            </button>
-        </form>
+                <!-- Input Email -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email Admin</label>
+                    <input type="email" name="email"
+                        class="w-full px-5 py-3.5 bg-white border border-gray-300 rounded-xl text-base text-gray-900 focus:ring-2 focus:ring-[#0a192f] focus:border-[#0a192f] transition-all outline-none"
+                        placeholder="Masukkan email admin" required>
+                </div>
 
-        <div class="mt-6 text-center">
-            <a href="/" class="text-sm text-gray-500 hover:text-[#0f2b4a] transition">&larr; Kembali ke Beranda Publik</a>
+                <!-- Input Password -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Kata Sandi</label>
+                    <div class="relative">
+                        <input type="password" name="password" id="password"
+                            class="w-full pl-5 pr-14 py-3.5 bg-white border border-gray-300 rounded-xl text-base text-gray-900 focus:ring-2 focus:ring-[#0a192f] focus:border-[#0a192f] transition-all outline-none"
+                            placeholder="••••••••" required>
+                        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-gray-600 transition-colors focus:outline-none">
+                            <i class="fa-regular fa-eye text-lg" id="eye-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-[#0a192f] hover:bg-[#172a45] text-white font-bold py-4 px-4 rounded-xl text-lg transition-all shadow-md">
+                        Masuk
+                    </button>
+                </div>
+            </form>
         </div>
+
+        <!-- Tombol Kembali -->
+        <div class="mt-8 text-center">
+            <a href="/" class="inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">
+                <i class="fa-solid fa-arrow-left text-xs"></i> Kembali ke Beranda Publik
+            </a>
+        </div>
+
     </div>
 
+    <!-- Script untuk Toggle Password -->
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

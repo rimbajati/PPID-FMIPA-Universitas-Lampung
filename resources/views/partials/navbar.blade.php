@@ -56,8 +56,8 @@
                                 @php
                                     $menuLayanan = [
                                         ['url' => '/', 'label' => 'Prosedur Permohonan Informasi'],
-                                        ['url' => route('layanan.create') . '?type=permohonan', 'label' => 'Formulir Permohonan Informasi'],
-                                        ['url' => route('layanan.create') . '?type=keberatan', 'label' => 'Formulir Pengajuan Keberatan'],
+                                        ['url' => route('layanan.index') . '?type=permohonan', 'label' => 'Formulir Permohonan Informasi'],
+                                        ['url' => route('layanan.index') . '?type=keberatan', 'label' => 'Formulir Pengajuan Keberatan'],
                                     ];
                                 @endphp
 
@@ -93,7 +93,8 @@
                                 <i class="fa-solid fa-chevron-down text-[10px] shrink-0"></i>
                             </button>
                             <div id="profile-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-100 shadow-xl py-2 rounded-2xl hidden z-[9999]">
-                                <a href="{{ url('/riwayat-layanan') }}" class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] rounded-md transition-all duration-200">
+                                <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : url('/riwayat-layanan') }}"
+                                    class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] rounded-md transition-all duration-200">
                                     Dashboard
                                 </a>
                                 <div class="border-t border-slate-100 my-1"></div>
@@ -139,8 +140,8 @@
                     </button>
                     <div id="dropdown-layanan" class="hidden flex flex-col pl-4 mt-3 space-y-3 border-l-2 border-slate-700">
                         <a href="/" class="text-slate-300 hover:text-white text-sm transition-colors">Prosedur Permohonan Informasi</a>
-                        <a href="{{ route('layanan.create') }}?type=permohonan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Permohonan Informasi</a>
-                        <a href="{{ route('layanan.create') }}?type=keberatan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Pengajuan Keberatan</a>
+                        <a href="{{ route('layanan.index') }}?type=permohonan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Permohonan Informasi</a>
+                        <a href="{{ route('layanan.index') }}?type=keberatan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Pengajuan Keberatan</a>
                     </div>
                 </div>
 

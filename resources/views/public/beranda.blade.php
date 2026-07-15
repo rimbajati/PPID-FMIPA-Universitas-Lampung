@@ -1,26 +1,3 @@
-@if(request()->query('live') == 1)
-    @php
-        $q = trim(request()->query('search', ''));
-        $result = collect();
-        $found = true;
-        if ($q !== '') {
-            if (strlen($q) >= 2) {
-                // Diperbarui: Mengambil sub_informasi
-                $result = \App\Models\InformasiPublik::select('id', 'sub_informasi')
-                    ->where('sub_informasi', 'LIKE', "$q%")
-                    ->orWhere('sub_informasi', 'LIKE', "%$q%")
-                    ->orderByRaw("CASE WHEN sub_informasi LIKE ? THEN 1 ELSE 2 END", ["$q%"])
-                    ->latest()->take(6)->get();
-                if ($result->isEmpty()) { $found = false; }
-            }
-        }
-        header('Content-Type: application/json');
-        // Diperbarui: Mapping ke sub_informasi
-        echo json_encode(['found' => $found, 'data' => $result->map(fn($item) => ['judul' => $item->sub_informasi, 'url' => route('akses.dokumen', $item->id)])]);
-        exit;
-    @endphp
-@endif
-
 @extends('layouts.main')
 
 @section('title', 'Beranda - PPID FMIPA Unila')
@@ -29,13 +6,16 @@
 @php
     $waktuCache = app()->environment('local') ? 5 : 60;
     $seringDiakses = \Illuminate\Support\Facades\Cache::remember('sering_diakses_beranda', $waktuCache, function () {
-        // Diperbarui: Mengambil sub_informasi
-        return \App\Models\InformasiPublik::select('id', 'sub_informasi')->orderBy('dilihat', 'desc')->take(6)->get();
+        return \App\Models\InformasiPublik::select('id', 'sub_informasi', 'tipe_informasi', 'jalur_informasi')
+               ->orderBy('dilihat', 'desc')->take(6)->get();
     });
 
     // --- Data Statistik (Dinamis dari database) ---
-    $minYear = (int)(\App\Models\Permohonan::min(\Illuminate\Support\Facades\DB::raw('YEAR(created_at)')) ?? date('Y'));
+    $minYearDB = \App\Models\Pengajuan::min(\Illuminate\Support\Facades\DB::raw('YEAR(created_at)'));
     $currentYear = (int)date('Y');
+
+    // Jika belum ada data, gunakan hanya tahun sekarang agar tidak error
+    $minYear = $minYearDB ? (int)$minYearDB : $currentYear;
     $years = range($minYear, $currentYear);
 
     $yearlyData = [];
@@ -43,18 +23,18 @@
 
     foreach ($years as $y) {
         $yearlyData[$y] = [
-            'permohonan' => \App\Models\Permohonan::whereYear('created_at', $y)->count(),
-            'diterima'   => \App\Models\Permohonan::whereYear('created_at', $y)->where('status', 'DITERIMA')->count(),
-            'ditolak'    => \App\Models\Permohonan::whereYear('created_at', $y)->where('status', 'DITOLAK')->count(),
-            'keberatan'  => \App\Models\Keberatan::whereYear('created_at', $y)->count(),
+            'permohonan' => \App\Models\Pengajuan::where('jenis_layanan', 'Permohonan')->whereYear('created_at', $y)->count(),
+            'diterima'   => \App\Models\Pengajuan::where('jenis_layanan', 'Permohonan')->whereYear('created_at', $y)->where('status', 'DITERIMA')->count(),
+            'ditolak'    => \App\Models\Pengajuan::where('jenis_layanan', 'Permohonan')->whereYear('created_at', $y)->where('status', 'DITOLAK')->count(),
+            'keberatan'  => \App\Models\Pengajuan::where('jenis_layanan', 'Keberatan')->whereYear('created_at', $y)->count(),
         ];
 
         for ($m = 1; $m <= 12; $m++) {
             $monthlyData[$y][$m] = [
-                'permohonan' => \App\Models\Permohonan::whereYear('created_at', $y)->whereMonth('created_at', $m)->count(),
-                'diterima'   => \App\Models\Permohonan::whereYear('created_at', $y)->whereMonth('created_at', $m)->where('status', 'DITERIMA')->count(),
-                'ditolak'    => \App\Models\Permohonan::whereYear('created_at', $y)->whereMonth('created_at', $m)->where('status', 'DITOLAK')->count(),
-                'keberatan'  => \App\Models\Keberatan::whereYear('created_at', $y)->whereMonth('created_at', $m)->count(),
+                'permohonan' => \App\Models\Pengajuan::where('jenis_layanan', 'Permohonan')->whereYear('created_at', $y)->whereMonth('created_at', $m)->count(),
+                'diterima'   => \App\Models\Pengajuan::where('jenis_layanan', 'Permohonan')->whereYear('created_at', $y)->whereMonth('created_at', $m)->where('status', 'DITERIMA')->count(),
+                'ditolak'    => \App\Models\Pengajuan::where('jenis_layanan', 'Permohonan')->whereYear('created_at', $y)->whereMonth('created_at', $m)->where('status', 'DITOLAK')->count(),
+                'keberatan'  => \App\Models\Pengajuan::where('jenis_layanan', 'Keberatan')->whereYear('created_at', $y)->whereMonth('created_at', $m)->count(),
             ];
         }
     }
@@ -85,23 +65,34 @@
                 </form>
             </div>
 
+            <!-- Tempat memunculkan hasil Live Search -->
             <div id="live-results-list" class="w-full flex flex-wrap items-center gap-2.5"></div>
 
             <div class="space-y-6">
                 <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
                     <span class="text-md font-bold uppercase tracking-widest text-blue-300 shrink-0">Informasi yang sering dicari:</span>
-                    @foreach ($seringDiakses as $doc)
-                    <a href="{{ route('akses.dokumen', $doc->id) }}" target="_blank" rel="noopener noreferrer"
-                    class="text-lg font-medium text-gray-200 hover:text-white underline decoration-white/30 hover:decoration-white underline-offset-4 transition-all">
-                        {{-- Diperbarui: Menggunakan sub_informasi --}}
-                        {{ $doc->sub_informasi }}
-                    </a>
+                    @foreach($seringDiakses as $doc)
+                        @if($doc->tipe_informasi === 'link')
+                            <a href="{{ $doc->jalur_informasi }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-lg font-medium text-gray-200 hover:text-white underline decoration-white/30">
+                                {{ $doc->sub_informasi }}
+                            </a>
+                        @else
+                            <a href="{{ route('informasi.file', ['id' => $doc->id, 'slug' => \Illuminate\Support\Str::slug($doc->sub_informasi) . '.' . $doc->tipe_informasi]) }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-lg font-medium text-gray-200 hover:text-white underline decoration-white/30">
+                                {{ $doc->sub_informasi }}
+                            </a>
+                        @endif
                     @endforeach
                 </div>
 
                 <div class="space-y-4">
                     <p class="text-md text-gray-300">Jika informasi yang Anda cari tidak ditemukan, Anda dapat mengajukan permohonan baru di bawah ini.</p>
-                    <a href="{{ route('layanan.create') }}"
+                    <a href="{{ route('layanan.index') }}"
                     class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm rounded-3xl tracking-wider transition-all shadow-lg">
                         Buat Permohonan
                     </a>
@@ -176,25 +167,35 @@
     const searchInput = document.getElementById('live-search-input');
     const resultsList = document.getElementById('live-results-list');
     let debounceTimer;
+
     searchInput.addEventListener('input', function() {
         const q = this.value.trim();
         clearTimeout(debounceTimer);
-        if (q.length < 2) { resultsList.innerHTML = ''; return; }
+
+        if (q.length < 2) {
+            resultsList.innerHTML = '';
+            return;
+        }
+
         debounceTimer = setTimeout(() => {
-            fetch(`{{ url('/') }}?live=1&search=${encodeURIComponent(q)}`)
-                .then(r => r.json())
-                .then(res => {
-                    if (!res.found) {
+            fetch(`/informasi-publik?live=1&search=${encodeURIComponent(q)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.found) {
                         resultsList.innerHTML = `<div class="px-5 py-3 bg-red-950/90 border border-red-500/50 text-red-200 text-sm shadow-lg flex rounded-3xl items-center gap-3"><i class="fa-solid fa-circle-exclamation"></i> Informasi tidak ditemukan.</div>`;
                         return;
                     }
-                    resultsList.innerHTML = res.data.map(item => `
-                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="Buka: ${item.judul}"
+
+                    resultsList.innerHTML = data.data.map(item => `
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="Buka: ${item.sub_informasi}"
                             class="inline-flex items-center gap-2.5 px-4 py-3 bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium shadow-md transition-all rounded-3xl border border-gray-200 whitespace-normal leading-relaxed">
                             <i class="fa-solid fa-file-lines text-blue-900 shrink-0"></i>
-                            <span>${item.judul}</span>
+                            <span>${item.sub_informasi}</span>
                         </a>
                     `).join('');
+                })
+                .catch(err => {
+                    console.error("Gagal mengambil data pencarian:", err);
                 });
         }, 300);
     });
@@ -219,10 +220,23 @@
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { position: 'bottom', labels: { color: '#ffffff', usePointStyle: true, pointStyle: 'rect' } } },
+
             scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 5, color: '#e2e8f0' }, grid: { color: '#ffffff61' } },
-                x: { ticks: { color: '#e2e8f0' }, grid: { display: true, color: '#ffffff61' } }
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 10,
+                    ticks: {
+                        stepSize: 5,
+                        color: '#e2e8f0'
+                    },
+                    grid: { color: '#ffffff61' }
+                },
+                x: {
+                    ticks: { color: '#e2e8f0' },
+                    grid: { display: true, color: '#ffffff61' }
+                }
             },
+
             onClick: (e, elements) => {
                 if (elements.length > 0) {
                     const year = chart.data.labels[elements[0].index];

@@ -8,6 +8,7 @@ use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\PengajuanController;
 use Illuminate\Http\Request;
 
 /*
@@ -21,7 +22,11 @@ Route::get('/informasi-setiap-saat', [App\Http\Controllers\InformasiPublikContro
 Route::get('/informasi-berkala', [App\Http\Controllers\InformasiPublikController::class, 'indexBerkala']);
 Route::get('/informasi-serta-merta', [App\Http\Controllers\InformasiPublikController::class, 'indexSertaMerta']);
 Route::get('/informasi/akses/{id}', [InformasiPublikController::class, 'hitungAkses']);
-Route::get('/akses-dokumen/{id}', [InformasiPublikController::class, 'hitungAkses'])->name('akses.dokumen');
+// Rute khusus untuk melihat berkas privat (Inline Streaming PDF)
+Route::get('/informasi/lihat/{id}/{slug?}', [App\Http\Controllers\InformasiPublikController::class, 'lihatFile'])->name('informasi.file');
+
+// Rute khusus untuk jembatan/proxy link luar (Redirect Gateway)
+Route::get('/informasi/kunjungi/{id}/{slug?}', [App\Http\Controllers\InformasiPublikController::class, 'kunjungiLink'])->name('informasi.link');
 Route::get('/statistik', [StatistikController::class, 'index'])->name('public.statistik.index');
 
 /*
@@ -77,8 +82,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/riwayat/permohonan/{id}', [RiwayatController::class, 'showPermohonan'])->name('riwayat.permohonan.detail');
     Route::get('/riwayat/keberatan/{id}', [RiwayatController::class, 'showKeberatan'])->name('riwayat.keberatan.detail');
 
-    // RUTE TERPADU LAYANAN
-    Route::get('/layanan', [LayananController::class, 'create'])->name('layanan.create');
+    // RUTE TERPADU LAYANAN (Diubah dari create ke index)
+    Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
     Route::post('/layanan', [LayananController::class, 'store'])->name('layanan.store');
 });
 
@@ -88,7 +93,7 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     // Manajemen Informasi Publik
     Route::get('/informasi-publik', [InformasiPublikController::class, 'adminIndex']);
@@ -97,12 +102,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/informasi-publik/{id}/edit', [InformasiPublikController::class, 'edit']);
     Route::put('/informasi-publik/{id}', [InformasiPublikController::class, 'update']);
     Route::delete('/informasi-publik/{id}', [InformasiPublikController::class, 'destroy']);
+    Route::delete('/informasi-publik/bulk-delete', [App\Http\Controllers\InformasiPublikController::class, 'destroyBulk'])->name('admin.informasi.bulk');
 
-    // Manajemen Permohonan & Keberatan
-    Route::get('/permohonan', [LayananController::class, 'adminIndex']);
-    Route::get('/permohonan/{id}', [LayananController::class, 'show']);
-    Route::put('/permohonan/{id}/status', [LayananController::class, 'updateStatus']);
-    Route::get('/keberatan', function () { return view('admin.keberatan'); });
+    // Manajemen Pengajuan (Penyatuan Permohonan & Keberatan)
+    Route::get('/pengajuan', [PengajuanController::class, 'index']);
+    Route::get('/pengajuan/{id}', [PengajuanController::class, 'show']);
+    Route::put('/pengajuan/{id}/status', [PengajuanController::class, 'updateStatus']);
 });
 
 /* --- UTILITY ROUTE --- */

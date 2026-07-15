@@ -63,7 +63,21 @@
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' } },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { usePointStyle: true, pointStyle: 'rect' }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 10, // Memaksa batas atas minimal sampai angka 10
+                    ticks: {
+                        stepSize: 1   // Memaksa loncatan angka setiap kelipatan 1 (0, 1, 2, 3... 10)
+                    }
+                }
+            },
             onClick: (e, elements) => {
                 if (elements.length > 0) {
                     const year = chart.data.labels[elements[0].index];

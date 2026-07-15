@@ -11,14 +11,23 @@
         </a>
     </div>
 
+    @php
+        $status = strtolower($keb->status);
+        $progressClass = 'w-1/3';
+        if ($status === 'diproses') {
+            $progressClass = 'w-2/3';
+        } elseif (in_array($status, ['diterima', 'ditolak'])) {
+            $progressClass = 'w-full';
+        }
+    @endphp
     <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm mb-6">
         <div class="flex justify-between mb-2 text-[10px] font-bold uppercase">
-            <span class="{{ in_array($keb->status_putusan, ['diproses', 'diterima', 'ditolak']) ? 'text-green-600' : 'text-gray-300' }}">1. Pengajuan</span>
-            <span class="{{ in_array($keb->status_putusan, ['diterima', 'ditolak']) ? 'text-green-600' : 'text-gray-300' }}">2. Peninjauan</span>
-            <span class="{{ in_array($keb->status_putusan, ['diterima', 'ditolak']) ? 'text-green-600' : 'text-gray-300' }}">3. Putusan</span>
+            <span class="text-green-600">1. Pengajuan</span>
+            <span class="{{ in_array($status, ['diproses', 'diterima', 'ditolak']) ? 'text-green-600' : 'text-gray-300' }}">2. Peninjauan</span>
+            <span class="{{ in_array($status, ['diterima', 'ditolak']) ? 'text-green-600' : 'text-gray-300' }}">3. Putusan</span>
         </div>
         <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-            <div class="{{ $keb->status_putusan == 'diproses' ? 'w-1/2' : 'w-full' }} bg-green-500 h-2 transition-all"></div>
+            <div class="{{ $progressClass }} bg-green-500 h-2 transition-all"></div>
         </div>
     </div>
 
@@ -33,11 +42,11 @@
                 </div>
                 <div>
                     <p class="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Status Putusan</p>
-                    <p class="font-bold uppercase text-blue-600">{{ $keb->status_putusan }}</p>
+                    <p class="font-bold uppercase text-blue-600">{{ $keb->status }}</p>
                 </div>
                 <div>
                     <p class="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Tanggal Pengajuan</p>
-                    <p class="font-medium">{{ \Carbon\Carbon::parse($keb->tanggal_pengajuan)->format('d F Y, H:i') }}</p>
+                    <p class="font-medium">{{ $keb->created_at->format('d F Y, H:i') }}</p>
                 </div>
             </div>
 
@@ -48,10 +57,10 @@
                         "{{ $keb->alasan_keberatan }}"
                     </p>
                 </div>
-                @if($keb->dokumen_pendukung)
+                @if($keb->lampiran_pendukung)
                 <div>
                     <p class="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Lampiran</p>
-                    <a href="{{ asset('storage/'.$keb->dokumen_pendukung) }}" class="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline mt-1" target="_blank">
+                    <a href="{{ asset('storage/'.$keb->lampiran_pendukung) }}" class="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline mt-1" target="_blank">
                         <i class="fa-solid fa-file-arrow-down"></i> Unduh Dokumen Pendukung
                     </a>
                 </div>

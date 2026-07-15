@@ -8,62 +8,72 @@
         <p class="text-sm text-gray-500">Ringkasan aktivitas dan pemantauan statistik pelayanan informasi publik</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-2xl border border-gray-200 hover:shadow-xl transition flex flex-col justify-between">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-10 h-10 bg-[#0095e8]/10 text-[#0095e8] flex items-center justify-center rounded-lg"><i class="fa-solid fa-folder-open text-lg"></i></div>
-                <span class="text-xs font-bold text-gray-400 uppercase">Total</span>
+    <!-- Statistik Grid (Responsive Horizontal Scroll) -->
+    <div class="flex gap-4 overflow-x-auto pb-2 lg:grid lg:grid-cols-4 lg:gap-6 lg:pb-0 mb-10">
+
+        <!-- 1. Total Informasi -->
+        <div class="min-w-[200px] lg:min-w-0 relative bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 text-white shadow-xl shadow-blue-900/10 overflow-hidden h-44">
+            <div class="flex items-center gap-3 z-10 relative">
+                <i class="fa-solid fa-folder-open text-2xl text-white/80"></i>
+                <span class="text-lg font-bold tracking-wider uppercase leading-tight">Total Informasi</span>
             </div>
-            <div>
-                <h3 class="text-3xl font-extrabold text-gray-900 mb-1">{{ $totalInformasi }}</h3>
-                <p class="text-sm font-bold text-gray-500">Informasi Publik</p>
+            <div class="absolute -bottom-6 right-10 text-[100px] font-black text-white/40 select-none pointer-events-none">
+                {{ $totalInformasi }}
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-gray-200 hover:shadow-xl transition flex flex-col justify-between">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-10 h-10 bg-gray-100 text-gray-600 flex items-center justify-center rounded-lg"><i class="fa-solid fa-file-lines text-lg"></i></div>
-                <span class="text-xs font-bold text-gray-400 uppercase">Total</span>
+        <!-- 2. Total Permohonan -->
+        <div class="min-w-[200px] lg:min-w-0 relative bg-gradient-to-br from-slate-600 to-slate-800 rounded-3xl p-6 text-white shadow-xl shadow-slate-900/10 overflow-hidden h-44">
+            <div class="flex items-center gap-3 z-10 relative">
+                <i class="fa-solid fa-file-lines text-2xl text-white/80"></i>
+                <span class="text-lg font-bold tracking-wider uppercase leading-tight">Total Permohonan</span>
             </div>
-            <div>
-                <h3 class="text-3xl font-extrabold text-gray-900 mb-1">{{ $totalPermohonan }}</h3>
-                <p class="text-sm font-bold text-gray-500">Semua Permohonan</p>
-            </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl border border-blue-100 hover:shadow-xl transition flex flex-col justify-between relative overflow-hidden">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-[#0095e8]/5 rounded-full"></div>
-            <div class="flex justify-between items-start mb-4 relative z-10">
-                <div class="w-10 h-10 bg-[#0095e8] text-white flex items-center justify-center rounded-lg shadow-md"><i class="fa-solid fa-bell text-lg"></i></div>
-                <span class="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded">PENDING</span>
-            </div>
-            <div class="relative z-10">
-                <h3 class="text-3xl font-extrabold text-[#0095e8] mb-1">{{ $permohonanBaru }}</h3>
-                <p class="text-sm font-bold text-gray-600">Permohonan Baru</p>
+            <div class="absolute -bottom-6 right-10 text-[100px] font-black text-white/40 select-none pointer-events-none">
+                {{ $totalPermohonan }}
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-gray-200 hover:shadow-xl transition flex flex-col justify-between">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-10 h-10 bg-amber-100 text-amber-500 flex items-center justify-center rounded-lg"><i class="fa-solid fa-scale-balanced text-lg"></i></div>
-                <span class="bg-amber-100 text-amber-600 text-[10px] font-bold px-2 py-1 rounded">SENGKETA</span>
+        <!-- 3. Permohonan Baru -->
+        <div class="min-w-[200px] lg:min-w-0 relative bg-gradient-to-br from-sky-500 to-blue-600 rounded-3xl p-6 text-white shadow-xl shadow-blue-900/10 overflow-hidden h-44">
+            <div class="flex items-center gap-3 z-10 relative">
+                <i class="fa-solid fa-bell  text-2xl text-white/80"></i>
+                <span class="text-lg font-bold tracking-wider uppercase leading-tight">Permohonan Baru</span>
             </div>
-            <div>
-                <h3 class="text-3xl font-extrabold text-amber-500 mb-1">0</h3>
-                <p class="text-sm font-bold text-gray-600">Keberatan Baru</p>
+            <div class="absolute -bottom-6 right-10 text-[100px] font-black text-white/40 select-none pointer-events-none">
+                {{ $permohonanBaru }}
+            </div>
+        </div>
+
+        <!-- 4. Sengketa/Keberatan -->
+        <div class="min-w-[200px] lg:min-w-0 relative bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl shadow-amber-900/10 overflow-hidden h-44">
+            <div class="flex items-center gap-3 z-10 relative">
+                <i class="fa-solid fa-scale-balanced  text-2xl text-white/80"></i>
+                <span class="text-lg font-bold tracking-wider uppercase leading-tight">Sengketa/Keberatan</span>
+            </div>
+            <div class="absolute -bottom-6 right-10 text-[100px] font-black text-white/40 select-none pointer-events-none">
+                0
             </div>
         </div>
     </div>
 
+    <!-- Charts Section -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div class="lg:col-span-8 bg-white p-8 rounded-2xl border border-gray-200">
-            <h2 class="text-xl font-bold text-gray-900 mb-6">Statistik Permohonan</h2>
+
+        <!-- Bar Chart (Drill-down) -->
+        <div class="lg:col-span-8 bg-white p-8 rounded-3xl border border-gray-100 shadow-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="year-label" class="text-xl font-bold text-gray-900">Statistik Permohonan Informasi Tahunan</h2>
+                <button id="resetChart" class="hidden px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-bold transition">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
+                </button>
+            </div>
             <div class="relative w-full h-72">
-                <canvas id="statistikChart"></canvas>
+                <canvas id="statistikBarChart"></canvas>
             </div>
         </div>
 
-        <div class="lg:col-span-4 bg-white p-8 rounded-2xl border border-gray-200">
+        <!-- Doughnut Chart -->
+        <div class="lg:col-span-4 bg-white p-8 rounded-3xl border border-gray-100 shadow-lg">
             <h2 class="text-xl font-bold text-gray-900 mb-6">Penyelesaian</h2>
             <div class="relative w-full h-52">
                 <canvas id="statusChart"></canvas>
@@ -75,32 +85,64 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const stats = @json($statistik);
-    const statusCounts = @json($statusCounts);
+    const yearlyData = {!! json_encode($yearlyData) !!};
+    const monthlyData = {!! json_encode($monthlyData) !!};
+    const statusCounts = {!! json_encode($statusCounts) !!};
 
-    // Proses Data Bar Chart
-    let totalPerBulan = Array(12).fill(0), diterimaPerBulan = Array(12).fill(0), ditolakPerBulan = Array(12).fill(0);
-    stats.forEach(item => {
-        if(item.status === 'DITERIMA') diterimaPerBulan[item.bulan - 1] = item.total;
-        if(item.status === 'DITOLAK') ditolakPerBulan[item.bulan - 1] = item.total;
-        totalPerBulan[item.bulan - 1] += item.total;
-    });
+    const ctx = document.getElementById('statistikBarChart').getContext('2d');
+    const resetBtn = document.getElementById('resetChart');
+    const yearLabel = document.getElementById('year-label');
 
     // Bar Chart
-    new Chart(document.getElementById('statistikChart'), {
+    let chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'],
+            labels: Object.keys(yearlyData),
             datasets: [
-                { label: 'Total', data: totalPerBulan, backgroundColor: '#9ca3af' },
-                { label: 'Diterima', data: diterimaPerBulan, backgroundColor: '#0095e8' },
-                { label: 'Ditolak', data: ditolakPerBulan, backgroundColor: '#ef4444' }
+                { label: 'Permohonan', data: Object.values(yearlyData).map(v => v.permohonan), backgroundColor: '#5986d4', borderRadius: 6 },
+                { label: 'Diterima', data: Object.values(yearlyData).map(v => v.diterima), backgroundColor: '#22c55e', borderRadius: 6 },
+                { label: 'Ditolak', data: Object.values(yearlyData).map(v => v.ditolak), backgroundColor: '#ef4444', borderRadius: 6 },
+                { label: 'Keberatan', data: Object.values(yearlyData).map(v => v.keberatan), backgroundColor: '#f59e0b', borderRadius: 6 }
             ]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            scales: { y: { ticks: { stepSize: 1, precision: 0 } } }
+            plugins: {
+                legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'rect' } }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            },
+            onClick: (e, elements) => {
+                if (elements.length > 0) {
+                    const year = chart.data.labels[elements[0].index];
+                    if (monthlyData[year]) {
+                        yearLabel.innerText = "Statistik Tahun " + year;
+                        resetBtn.classList.remove('hidden');
+
+                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                        chart.data.labels = months;
+                        chart.data.datasets[0].data = Object.values(monthlyData[year]).map(v => v.permohonan);
+                        chart.data.datasets[1].data = Object.values(monthlyData[year]).map(v => v.diterima);
+                        chart.data.datasets[2].data = Object.values(monthlyData[year]).map(v => v.ditolak);
+                        chart.data.datasets[3].data = Object.values(monthlyData[year]).map(v => v.keberatan);
+                        chart.update();
+                    }
+                }
+            }
         }
+    });
+
+    // Reset Button Logic
+    resetBtn.addEventListener('click', () => {
+        yearLabel.innerText = "Statistik Permohonan Informasi Tahunan";
+        resetBtn.classList.add('hidden');
+        chart.data.labels = Object.keys(yearlyData);
+        chart.data.datasets[0].data = Object.values(yearlyData).map(v => v.permohonan);
+        chart.data.datasets[1].data = Object.values(yearlyData).map(v => v.diterima);
+        chart.data.datasets[2].data = Object.values(yearlyData).map(v => v.ditolak);
+        chart.data.datasets[3].data = Object.values(yearlyData).map(v => v.keberatan);
+        chart.update();
     });
 
     // Donut Chart
@@ -111,10 +153,14 @@
             datasets: [{
                 data: [statusCounts.DITERIMA, statusCounts.DIPROSES, statusCounts.Ditolak],
                 backgroundColor: ['#0095e8', '#fbbf24', '#ef4444'],
+                borderWidth: 0,
                 cutout: '75%'
             }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+        }
     });
 </script>
 @endpush

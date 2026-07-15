@@ -17,7 +17,7 @@
                         <label class="block text-xs font-bold text-gray-900 mb-1">Rincian Informasi <span class="text-red-500">*</span></label>
                         <select id="create_rincian_select" name="rincian_informasi" class="w-full border border-gray-300 rounded-lg p-3 text-sm bg-gray-50 focus:border-[#0095e8] transition" onchange="toggleRincian('create', this.value)" required>
                             <option value="">-- Pilih Rincian Informasi --</option>
-                            @foreach($kategori_tersedia as $kat)
+                            @foreach($listRincian as $kat)
                                 <option value="{{ $kat }}">{{ $kat }}</option>
                             @endforeach
                             <option value="baru" class="font-bold text-[#0095e8]">+ Buat Rincian Informasi Baru</option>
@@ -46,14 +46,14 @@
                             <input type="radio" name="opsi_format" value="file" class="mr-3" onclick="toggleFormat('create', 'file')" checked>
                             <div>
                                 <span class="block font-bold text-sm text-gray-900">Unggah Berkas</span>
-                                <span class="block text-[11px] text-gray-400">PDF, DOCX, XLSX (Max 10MB)</span>
+                                <span class="block text-[11px] text-gray-400">PDF, DOCX, XLSX (Max 2MB)</span>
                             </div>
                         </label>
                         <label class="flex-1 border border-gray-200 rounded-lg p-3 flex items-center cursor-pointer hover:bg-amber-50">
                             <input type="radio" name="opsi_format" value="link" class="mr-3" onclick="toggleFormat('create', 'link')">
                             <div>
                                 <span class="block font-bold text-sm text-gray-900">Tautan Eksternal</span>
-                                <span class="block text-[11px] text-gray-400">Link URL halaman web</span>
+                                <span class="block text-[11px] text-gray-400">Link URL</span>
                             </div>
                         </label>
                     </div>
@@ -96,7 +96,7 @@
                     <div class="col-span-2">
                         <label class="block text-xs font-bold text-gray-900 mb-1">Rincian Informasi <span class="text-red-500">*</span></label>
                         <select id="edit_rincian_select" name="rincian_informasi" class="w-full border border-gray-300 rounded-lg p-3 text-sm bg-gray-50 focus:border-amber-500 transition" onchange="toggleRincian('edit', this.value)" required>
-                            @foreach($kategori_tersedia as $kat)
+                            @foreach($listRincian as $kat)
                                 <option value="{{ $kat }}">{{ $kat }}</option>
                             @endforeach
                             <option value="baru" class="font-bold text-amber-500">+ Buat Rincian Informasi Baru</option>
@@ -125,7 +125,7 @@
                         </label>
                         <label class="flex-1 border border-gray-200 rounded-lg p-3 flex items-center cursor-pointer hover:bg-amber-50">
                             <input type="radio" id="edit_format_link" name="opsi_format" value="link" class="mr-3" onclick="toggleFormat('edit', 'link')">
-                            <span class="font-bold text-sm">Perbarui Tautan</span>
+                            <span class="font-bold text-sm">Perbarui Tautan Eksternal</span>
                         </label>
                     </div>
                 </div>

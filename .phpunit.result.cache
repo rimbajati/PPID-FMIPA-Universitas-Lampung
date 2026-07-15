@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"Tests\\Unit\\ExampleTest::test_that_true_is_true":0.424,"Tests\\Feature\\ExampleTest::test_the_application_returns_a_successful_response":0.695,"Tests\\Feature\\LayananTest::test_user_can_submit_permohonan_layanan":0.124,"Tests\\Feature\\LayananTest::test_user_can_submit_keberatan_layanan":0.014}}

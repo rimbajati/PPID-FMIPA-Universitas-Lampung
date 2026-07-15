@@ -1,3 +1,34 @@
+@if(request()->query('live') == 1)
+    @php
+        $q = trim(request()->query('search', ''));
+        $result = collect();
+        $found = true;
+
+        if ($q !== '' && strlen($q) >= 2) {
+            $result = \App\Models\InformasiPublik::select('id', 'sub_informasi', 'tipe_informasi', 'jalur_informasi', 'created_at', 'kategori')
+                ->where('sub_informasi', 'LIKE', "%$q%")
+                ->latest()
+                ->take(10)
+                ->get();
+            if ($result->isEmpty()) { $found = false; }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'found' => $found,
+            'data' => $result->map(fn($item) => [
+                'sub_informasi' => $item->sub_informasi,
+                'kategori'      => $item->kategori,
+                'tanggal'       => $item->created_at->format('d/m/Y'),
+                'url'           => $item->tipe_informasi === 'link'
+                    ? $item->jalur_informasi
+                    : route('informasi.file', ['id' => $item->id, 'slug' => \Illuminate\Support\Str::slug($item->sub_informasi) . '.' . $item->tipe_informasi])
+            ])
+        ]);
+        exit;
+    @endphp
+@endif
+
 @extends('layouts.main')
 
 @section('title', 'Informasi Publik - PPID FMIPA Unila')
@@ -8,7 +39,7 @@
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900 mb-2">Daftar Informasi Publik</h1>
         <p class="text-gray-600 max-w-2xl text-sm md:text-base">
-            Penetapan Daftar Informasi Publik Universitas Lampung mengacu pada aturan yang berlaku. Kebijakan ini mengatur jenis informasi yang wajib diumumkan dan disediakan untuk menjamin akses informasi yang akurat bagi masyarakat.
+            Penetapan Daftar Informasi Publik Universitas Lampung mengacu pada aturan yang berlaku.
         </p>
     </div>
 
@@ -19,15 +50,13 @@
             <label class="text-xs text-gray-500 font-bold whitespace-nowrap pl-2">Menampilkan</label>
             <div class="relative">
                 <input type="hidden" name="perPage" id="perPage_input" value="{{ request('perPage', 10) }}">
-                <button type="button" id="perPageTrigger"
-                    class="border border-gray-200 rounded-2xl p-3 bg-gray-50 text-sm text-gray-600 focus:border-blue-500 transition outline-none w-20 flex justify-between items-center">
+                <button type="button" id="perPageTrigger" class="border border-gray-200 rounded-2xl p-3 bg-gray-50 text-sm text-gray-600 w-20 flex justify-between items-center">
                     <span id="perPageTriggerText">{{ request('perPage') == 9999 ? 'Semua' : (request('perPage') ?: 10) }}</span>
                     <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
                 </button>
                 <ul id="perPageMenu" class="absolute z-50 w-20 mt-2 bg-white border border-gray-100 shadow-xl rounded-2xl hidden overflow-hidden">
                     @foreach([10, 25, 50, 100, 9999] as $val)
-                        <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition text-center"
-                            onclick="selectPerPage('{{ $val }}', '{{ $val == 9999 ? 'Semua' : $val }}')">
+                        <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 text-center" onclick="selectPerPage('{{ $val }}', '{{ $val == 9999 ? 'Semua' : $val }}')">
                             {{ $val == 9999 ? 'Semua' : $val }}
                         </li>
                     @endforeach
@@ -39,24 +68,23 @@
         <div class="w-full md:w-auto flex-1">
             <input type="hidden" name="kategori" id="kategori_input" value="{{ request('kategori') }}">
             <div class="relative">
-                <button type="button" id="dropdownTrigger"
-                    class="w-full flex justify-between items-center border border-gray-200 rounded-2xl p-3 bg-gray-50 text-sm text-gray-600 focus:border-blue-500 transition outline-none">
+                <button type="button" id="dropdownTrigger" class="w-full flex justify-between items-center border border-gray-200 rounded-2xl p-3 bg-gray-50 text-sm text-gray-600">
                     <span id="triggerText">{{ request('kategori') ?: '-- Jenis Informasi --' }}</span>
                     <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
                 </button>
                 <ul id="dropdownMenu" class="absolute z-50 w-full mt-2 bg-white border border-gray-100 shadow-xl rounded-2xl hidden overflow-hidden">
-                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('', 'Semua Kategori')">Semua Kategori</li>
-                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('Informasi Tersedia Setiap Saat', 'Informasi Tersedia Setiap Saat')">Informasi Tersedia Setiap Saat</li>
-                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('Informasi Tersedia Secara Berkala', 'Informasi Tersedia Secara Berkala')">Informasi Tersedia Secara Berkala</li>
-                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100 transition" onclick="selectOption('Informasi Diumumkan Serta-Merta', 'Informasi Diumumkan Serta-Merta')">Informasi Diumumkan Serta-Merta</li>
+                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100" onclick="selectOption('', 'Semua Kategori')">Semua Kategori</li>
+                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100" onclick="selectOption('Informasi Tersedia Setiap Saat', 'Informasi Tersedia Setiap Saat')">Informasi Tersedia Setiap Saat</li>
+                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100" onclick="selectOption('Informasi Tersedia Secara Berkala', 'Informasi Tersedia Secara Berkala')">Informasi Tersedia Secara Berkala</li>
+                    <li class="cursor-pointer px-4 py-3 text-sm hover:bg-gray-100" onclick="selectOption('Informasi Diumumkan Serta-Merta', 'Informasi Diumumkan Serta-Merta')">Informasi Diumumkan Serta-Merta</li>
                 </ul>
             </div>
         </div>
 
         <!-- Pencarian -->
         <div class="relative w-full md:w-auto flex-[2]">
-            <input type="text" id="searchInput" name="search" value="{{ request('search') }}" placeholder="Masukan kata kunci..."
-                class="w-full border border-gray-200 rounded-2xl p-3 outline-none text-sm text-gray-600 pr-10 focus:border-blue-500 transition">
+            <input type="text" id="searchInput" name="search" value="{{ request('search') }}" autocomplete="off" placeholder="Masukan kata kunci..."
+                class="w-full border border-gray-200 rounded-2xl p-3 outline-none text-sm text-gray-600 pr-10 focus:border-blue-500">
             <button type="submit" class="absolute right-4 top-3.5 text-gray-400 hover:text-blue-600">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -75,20 +103,15 @@
                         <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider text-center">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-300">
+                <tbody id="data-tbody">
                     @forelse($informasi as $dok)
                     <tr class="hover:bg-gray-50 transition-colors group">
-                        <!-- Menampilkan rincian_informasi dan sub_informasi secara bersamaan -->
-                        <td class="px-8 py-5">
-                            <div class="text-md text-gray-900">{{ $dok->sub_informasi }}<div>
-                        </td>
+                        <td class="px-8 py-5"><div class="text-md text-gray-900 font-medium">{{ $dok->sub_informasi }}</div></td>
                         <td class="px-8 py-5 text-sm text-gray-600 whitespace-nowrap">{{ $dok->kategori }}</td>
                         <td class="px-8 py-5 text-sm text-gray-600">{{ $dok->created_at->format('d/m/Y') }}</td>
                         <td class="px-8 py-5 text-center">
-                            <a href="{{ route('akses.dokumen', $dok->id) }}" target="_blank" rel="noopener noreferrer"
-                                class="inline-block bg-[#0a192f] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-black transition shadow-sm whitespace-nowrap">
-                                LIHAT
-                            </a>
+                            <a href="{{ route('informasi.file', ['id' => $dok->id, 'slug' => \Illuminate\Support\Str::slug($dok->sub_informasi) . '.' . $dok->tipe_informasi]) }}"
+                                target="_blank" class="inline-block bg-[#0a192f] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-black transition">LIHAT</a>
                         </td>
                     </tr>
                     @empty
@@ -100,49 +123,67 @@
     </div>
 
     <!-- Pagination -->
-    <div class="flex justify-center mt-8">
+    <div id="pagination-links" class="flex justify-center mt-8">
         {{ $informasi->appends(request()->query())->links() }}
     </div>
 </div>
 
 <script>
-    const trigger = document.getElementById('dropdownTrigger');
-    const menu = document.getElementById('dropdownMenu');
-    const input = document.getElementById('kategori_input');
-    const triggerText = document.getElementById('triggerText');
-    const ppTrigger = document.getElementById('perPageTrigger');
-    const ppMenu = document.getElementById('perPageMenu');
-    const ppInput = document.getElementById('perPage_input');
-    const ppText = document.getElementById('perPageTriggerText');
     const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('data-tbody');
+    const pagination = document.getElementById('pagination-links');
     const searchForm = document.getElementById('searchForm');
     let debounceTimer;
 
-    ppTrigger.addEventListener('click', (e) => { e.stopPropagation(); ppMenu.classList.toggle('hidden'); });
-    trigger.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('hidden'); });
-
+    // Live Search AJAX
     searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => { searchForm.submit(); }, 500);
+
+        if (query === '') {
+            searchForm.submit();
+            return;
+        }
+
+        if (query.length < 2) return;
+
+        debounceTimer = setTimeout(() => {
+            fetch(`{{ url('/informasi-publik') }}?live=1&search=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    pagination.style.display = 'none'; // Sembunyikan pagination saat live search
+                    if (data.found && data.data.length > 0) {
+                        tableBody.innerHTML = data.data.map(item => `
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-8 py-5 text-md text-gray-900 font-medium">${item.sub_informasi}</td>
+                                <td class="px-8 py-5 text-sm text-gray-600">${item.kategori}</td>
+                                <td class="px-8 py-5 text-sm text-gray-600">${item.tanggal}</td>
+                                <td class="px-8 py-5 text-center">
+                                    <a href="${item.url}" target="_blank" class="inline-block bg-[#0a192f] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-black transition">LIHAT</a>
+                                </td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        tableBody.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-gray-500">Informasi tidak ditemukan.</td></tr>';
+                    }
+                });
+        }, 500);
     });
 
+    // Toggle Dropdowns
+    document.getElementById('perPageTrigger').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('perPageMenu').classList.toggle('hidden'); });
+    document.getElementById('dropdownTrigger').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('dropdownMenu').classList.toggle('hidden'); });
+
     function selectPerPage(value, label) {
-        ppInput.value = value;
-        ppText.innerText = label;
-        ppMenu.classList.add('hidden');
+        document.getElementById('perPage_input').value = value;
+        document.getElementById('perPageTriggerText').innerText = label;
         searchForm.submit();
     }
 
     function selectOption(value, label) {
-        input.value = value;
-        triggerText.innerText = label;
-        menu.classList.add('hidden');
+        document.getElementById('kategori_input').value = value;
+        document.getElementById('triggerText').innerText = label;
         searchForm.submit();
     }
-
-    document.addEventListener('click', (e) => {
-        if (!ppTrigger.contains(e.target) && !ppMenu.contains(e.target)) ppMenu.classList.add('hidden');
-        if (!trigger.contains(e.target) && !menu.contains(e.target)) menu.classList.add('hidden');
-    });
 </script>
 @endsection
