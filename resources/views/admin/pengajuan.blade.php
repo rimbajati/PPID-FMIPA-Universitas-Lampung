@@ -95,11 +95,8 @@
                     @forelse ($permohonans as $item)
                         <tr class="hover:bg-gray-50 transition">
                             <td class="p-5 pl-8 font-mono font-bold text-[#0095e8]">{{ $item->no_tiket }}</td>
-                            <td class="p-5">
-                                <span class="px-3 py-1 rounded-lg text-[10px] font-bold uppercase
-                                    {{ $item->jenis_layanan == 'Permohonan' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600' }}">
-                                    {{ $item->jenis_layanan }}
-                                </span>
+                            <td class="p-5 text-gray-800 font-semibold text-sm whitespace-nowrap">
+                                {{ $item->jenis_layanan == 'Keberatan' ? 'Pengajuan Keberatan' : 'Permohonan Informasi' }}
                             </td>
                             <td class="p-5">
                                 <div class="font-bold text-gray-900">{{ $item->nama }}</div>
@@ -108,21 +105,29 @@
                                 {{ $item->jenis_layanan == 'Permohonan' ? $item->info_diminta : $item->tujuan_keberatan }}
                             </td>
                             <td class="p-5 font-bold text-gray-500 text-xs">{{ $item->created_at->format('d M Y') }}</td>
-                            <td class="p-5">
-                                <span class="font-bold px-3 py-1 rounded-full text-[11px] uppercase tracking-wide
+                            <td class="p-5 whitespace-nowrap">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold border
                                     {{ match($item->status) {
-                                        'DIAJUKAN' => 'bg-gray-100 text-gray-600',
-                                        'DIPROSES' => 'bg-blue-100 text-blue-700',
-                                        'DITERIMA' => 'bg-emerald-100 text-emerald-700',
-                                        'DITOLAK'  => 'bg-red-100 text-red-700',
-                                        default    => 'bg-gray-100'
+                                        'DIAJUKAN' => 'bg-amber-50/60 text-amber-800 border-amber-200/50',
+                                        'DIPROSES' => 'bg-blue-50/60 text-blue-800 border-blue-200/50',
+                                        'DITERIMA' => 'bg-emerald-50/60 text-emerald-800 border-emerald-200/50',
+                                        'DITOLAK'  => 'bg-rose-50/60 text-rose-800 border-rose-200/50',
+                                        default    => 'bg-gray-50/60 text-gray-800 border-gray-200/50'
                                     } }}">
+                                    <span class="h-1.5 w-1.5 rounded-full
+                                        {{ match($item->status) {
+                                            'DIAJUKAN' => 'bg-amber-500',
+                                            'DIPROSES' => 'bg-blue-500',
+                                            'DITERIMA' => 'bg-emerald-500',
+                                            'DITOLAK'  => 'bg-rose-500',
+                                            default    => 'bg-gray-400'
+                                        } }}"></span>
                                     {{ $item->status }}
                                 </span>
                             </td>
                             <td class="p-5 text-center">
-                                <a href="{{ url('/admin/pengajuan/' . $item->id) }}" class="inline-block px-5 py-2 bg-slate-100 hover:bg-[#0095e8] text-slate-700 hover:text-white rounded-xl font-bold text-xs transition shadow-sm">
-                                    Detail
+                                <a href="{{ url('/admin/pengajuan/' . $item->id) }}" class="inline-flex items-center justify-center w-9 h-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl transition hover:-translate-y-0.5 hover:shadow-sm" title="Lihat Detail">
+                                    <i class="fa-regular fa-eye text-sm"></i>
                                 </a>
                             </td>
                         </tr>

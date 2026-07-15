@@ -82,9 +82,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/riwayat/permohonan/{id}', [RiwayatController::class, 'showPermohonan'])->name('riwayat.permohonan.detail');
     Route::get('/riwayat/keberatan/{id}', [RiwayatController::class, 'showKeberatan'])->name('riwayat.keberatan.detail');
 
-    // RUTE TERPADU LAYANAN (Diubah dari create ke index)
     Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
     Route::post('/layanan', [LayananController::class, 'store'])->name('layanan.store');
+    Route::put('/layanan/{id}', [LayananController::class, 'update'])->name('layanan.update');
+    Route::delete('/layanan/{id}', [LayananController::class, 'destroy'])->name('layanan.destroy');
 });
 
 /*

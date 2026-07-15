@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pengajuan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PengajuanController extends Controller
 {
@@ -45,5 +46,33 @@ class PengajuanController extends Controller
 
         // Mengembalikan ke file view detail yang sudah kita buat sebelumnya
         return view('admin.pengajuan_detail', compact('permohonan'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:DIAJUKAN,DIPROSES,DITERIMA,DITOLAK',
+            'catatan_admin' => 'nullable|string',
+            'file_jawaban' => 'nullable|file|mimes:pdf,jpg,png,zip,docx|max:5120',
+        ]);
+
+        $pengajuan = Pengajuan::findOrFail($id);
+
+        $data = [
+            'status' => $request->status,
+            'catatan_admin' => $request->catatan_admin,
+        ];
+
+        if ($request->hasFile('file_jawaban')) {
+            // Delete old file if exists
+            if ($pengajuan->file_jawaban) {
+                Storage::disk('public')->delete($pengajuan->file_jawaban);
+            }
+            $data['file_jawaban'] = $request->file('file_jawaban')->store('file_jawaban', 'public');
+        }
+
+        $pengajuan->update($data);
+
+        return redirect()->back()->with('success', 'Status pengajuan berhasil diperbarui.');
     }
 }

@@ -106,10 +106,27 @@ class LayananController extends Controller
             $data->update(['no_tiket' => $nomorTiket]);
 
             DB::commit();
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Permohonan berhasil dikirim!',
+                    'tiket' => $nomorTiket
+                ]);
+            }
+
             return redirect()->back()->with(['success' => 'Permohonan berhasil dikirim!', 'tiket' => $nomorTiket]);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Gagal simpan permohonan: ' . $e->getMessage());
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage()
+                ], 500);
+            }
+
             return redirect()->back()->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
         }
     }
@@ -167,9 +184,163 @@ class LayananController extends Controller
             $nomorTiket = 'KEB-' . date('Ymd') . '-' . str_pad($data->id, 3, '0', STR_PAD_LEFT);
             $data->update(['no_tiket' => $nomorTiket]);
 
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Pengajuan keberatan berhasil dikirim.',
+                    'tiket' => $nomorTiket
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Pengajuan keberatan berhasil dikirim.');
         } catch (\Exception $e) {
             Log::error('Gagal simpan keberatan: ' . $e->getMessage());
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan sistem.');
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $pengajuan = Pengajuan::findOrFail($id);
+
+        if ($pengajuan->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($pengajuan->status !== 'DIAJUKAN') {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Pengajuan yang sedang diproses tidak dapat diubah.'], 403);
+            }
+            return redirect()->back()->with('error', 'Pengajuan yang sedang diproses tidak dapat diubah.');
+        }
+
+        if ($pengajuan->jenis_layanan === 'Permohonan') {
+            $request->validate([
+                'pekerjaan'          => 'required|string',
+                'kategori_pemohon'   => 'required|string',
+                'alamat'             => 'required|string',
+                'telepon'            => 'required|string|max:20',
+                'no_identitas'       => 'required|string',
+                'identitas'          => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+                'akta_pendirian'     => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+                'lampiran_pendukung' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+                'info_diminta'       => 'required|string',
+                'tujuan'             => 'required|string',
+                'cara_ambil'         => 'required|in:Mengambil Langsung,Email,WhatsApp',
+            ]);
+
+            try {
+                DB::beginTransaction();
+
+                $updateData = [
+                    'pekerjaan'        => $request->pekerjaan,
+                    'kategori_pemohon' => $request->kategori_pemohon,
+                    'no_identitas'     => $request->no_identitas,
+                    'alamat'           => $request->alamat,
+                    'no_hp'            => $request->telepon,
+                    'info_diminta'     => $request->info_diminta,
+                    'tujuan_permohonan'=> $request->tujuan,
+                    'cara_memperoleh'  => $request->cara_ambil,
+                ];
+
+                if ($request->hasFile('identitas')) {
+                    $updateData['lampiran_identitas'] = $request->file('identitas')->store('identitas_pemohon', 'public');
+                }
+                if ($request->hasFile('akta_pendirian')) {
+                    $updateData['akta_pendirian'] = $request->file('akta_pendirian')->store('akta_pendirian', 'public');
+                }
+                if ($request->hasFile('lampiran_pendukung')) {
+                    $updateData['lampiran_pendukung'] = $request->file('lampiran_pendukung')->store('lampiran_pendukung', 'public');
+                }
+
+                $pengajuan->update($updateData);
+
+                DB::commit();
+
+                if ($request->wantsJson()) {
+                    return response()->json(['success' => true, 'message' => 'Pengajuan permohonan berhasil diperbarui!']);
+                }
+                return redirect()->back()->with('success', 'Pengajuan permohonan berhasil diperbarui!');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Gagal update permohonan: ' . $e->getMessage());
+                if ($request->wantsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage()], 500);
+                }
+                return redirect()->back()->with('error', 'Terjadi kesalahan sistem.');
+            }
+        } else {
+            $request->validate([
+                'tujuan_keberatan'   => 'required|string',
+                'alasan_keberatan'   => 'required|string',
+                'dokumen_pendukung'  => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+            ]);
+
+            try {
+                DB::beginTransaction();
+
+                $updateData = [
+                    'tujuan_keberatan' => $request->tujuan_keberatan,
+                    'alasan_keberatan' => $request->alasan_keberatan,
+                ];
+
+                if ($request->hasFile('dokumen_pendukung')) {
+                    $updateData['lampiran_pendukung'] = $request->file('dokumen_pendukung')->store('dokumen_keberatan', 'public');
+                }
+
+                $pengajuan->update($updateData);
+
+                DB::commit();
+
+                if ($request->wantsJson()) {
+                    return response()->json(['success' => true, 'message' => 'Pengajuan keberatan berhasil diperbarui!']);
+                }
+                return redirect()->back()->with('success', 'Pengajuan keberatan berhasil diperbarui!');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Gagal update keberatan: ' . $e->getMessage());
+                if ($request->wantsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage()], 500);
+                }
+                return redirect()->back()->with('error', 'Terjadi kesalahan sistem.');
+            }
+        }
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $pengajuan = Pengajuan::findOrFail($id);
+
+        if ($pengajuan->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($pengajuan->status !== 'DIAJUKAN') {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Pengajuan yang sedang diproses tidak dapat dihapus.'], 403);
+            }
+            return redirect()->back()->with('error', 'Pengajuan yang sedang diproses tidak dapat dihapus.');
+        }
+
+        try {
+            $pengajuan->delete();
+            if ($request->wantsJson()) {
+                return response()->json(['success' => true, 'message' => 'Pengajuan berhasil dihapus!']);
+            }
+            return redirect()->back()->with('success', 'Pengajuan berhasil dihapus!');
+        } catch (\Exception $e) {
+            Log::error('Gagal hapus pengajuan: ' . $e->getMessage());
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem.'], 500);
+            }
             return redirect()->back()->with('error', 'Terjadi kesalahan sistem.');
         }
     }
