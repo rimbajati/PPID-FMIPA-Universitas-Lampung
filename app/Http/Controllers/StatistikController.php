@@ -19,7 +19,8 @@ class StatistikController extends Controller
         ];
 
         // LOGIKA DATA SAMA SEPERTI BERANDA (Updated to use Pengajuan model)
-        $minYear = (int)(Pengajuan::min(DB::raw('YEAR(created_at)')) ?? date('Y'));
+        $oldest = Pengajuan::oldest()->first();
+        $minYear = (int)($oldest ? $oldest->created_at->format('Y') : date('Y'));
         $currentYear = (int)date('Y');
         $years = range($minYear, $currentYear);
 

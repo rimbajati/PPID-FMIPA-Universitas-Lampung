@@ -35,8 +35,8 @@ Route::get('/statistik', [StatistikController::class, 'index'])->name('public.st
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
-    Route::get('/login', function () { return view('auth.login'); })->name('login');
-    Route::get('/admin-panel/login', function () { return view('admin.login'); })->name('admin.login');
+    Route::get('/login', function () { return view('auth.masuk'); })->name('login');
+    Route::get('/admin-panel/login', function () { return view('admin.masuk'); })->name('admin.login');
 
     Route::controller(AuthController::class)->group(function () {
         Route::post('/login', 'publicLoginProcess');
@@ -45,9 +45,9 @@ Route::middleware('guest')->group(function () {
         Route::get('/auth/google/callback', 'handleGoogleCallback');
     });
 
-    Route::get('/forgot-password', function () { return view('auth.forgot_password'); })->name('password.request');
+    Route::get('/forgot-password', function () { return view('auth.lupa_sandi'); })->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
-    Route::get('/reset-password/{token}', function ($token) { return view('auth.reset_password', ['token' => $token]); })->name('password.reset');
+    Route::get('/reset-password/{token}', function ($token) { return view('auth.atur_ulang_sandi', ['token' => $token]); })->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
     Route::controller(AuthController::class)->group(function () {
@@ -75,17 +75,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/profil/buat-sandi-manual', 'buatSandiManual')->name('profil.buat-sandi');
     });
 
-    Route::get('/dashboard', [UserProfileController::class, 'index'])->name('user.dashboard');
-    Route::post('/dashboard/update', [UserProfileController::class, 'updateProfile'])->name('user.profile.update');
+    Route::middleware('redirect.admin')->group(function () {
+        Route::get('/profile', [UserProfileController::class, 'index'])->name('user.profile');
+        Route::post('/profile/update', [UserProfileController::class, 'updateProfile'])->name('user.profile.update');
 
-    Route::get('/riwayat-layanan', [RiwayatController::class, 'index'])->name('riwayat.index');
-    Route::get('/riwayat/permohonan/{id}', [RiwayatController::class, 'showPermohonan'])->name('riwayat.permohonan.detail');
-    Route::get('/riwayat/keberatan/{id}', [RiwayatController::class, 'showKeberatan'])->name('riwayat.keberatan.detail');
+        Route::get('/detail-permohonan/{id}', [RiwayatController::class, 'showPermohonan'])->name('riwayat.permohonan.detail');
+        Route::get('/detail-keberatan/{id}', [RiwayatController::class, 'showKeberatan'])->name('riwayat.keberatan.detail');
 
-    Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
-    Route::post('/layanan', [LayananController::class, 'store'])->name('layanan.store');
-    Route::put('/layanan/{id}', [LayananController::class, 'update'])->name('layanan.update');
-    Route::delete('/layanan/{id}', [LayananController::class, 'destroy'])->name('layanan.destroy');
+        Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
+        Route::post('/layanan', [LayananController::class, 'store'])->name('layanan.store');
+        Route::put('/layanan/{id}', [LayananController::class, 'update'])->name('layanan.update');
+        Route::delete('/layanan/{id}', [LayananController::class, 'destroy'])->name('layanan.destroy');
+    });
 });
 
 /*
@@ -102,13 +103,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/informasi-publik', [InformasiPublikController::class, 'store']);
     Route::get('/informasi-publik/{id}/edit', [InformasiPublikController::class, 'edit']);
     Route::put('/informasi-publik/{id}', [InformasiPublikController::class, 'update']);
-    Route::delete('/informasi-publik/{id}', [InformasiPublikController::class, 'destroy']);
     Route::delete('/informasi-publik/bulk-delete', [App\Http\Controllers\InformasiPublikController::class, 'destroyBulk'])->name('admin.informasi.bulk');
+    Route::delete('/informasi-publik/{id}', [InformasiPublikController::class, 'destroy']);
 
     // Manajemen Pengajuan (Penyatuan Permohonan & Keberatan)
     Route::get('/pengajuan', [PengajuanController::class, 'index']);
     Route::get('/pengajuan/{id}', [PengajuanController::class, 'show']);
     Route::put('/pengajuan/{id}/status', [PengajuanController::class, 'updateStatus']);
+    Route::delete('/pengajuan/bulk-delete', [PengajuanController::class, 'destroyBulk'])->name('admin.pengajuan.bulk');
+    Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('admin.pengajuan.destroy');
 });
 
 /* --- UTILITY ROUTE --- */

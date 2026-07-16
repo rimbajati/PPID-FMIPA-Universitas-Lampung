@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layout.utama')
 
 @section('title', 'Statistik - PPID FMIPA Unila')
 
@@ -110,3 +110,4 @@
     });
 </script>
 @endsection
+

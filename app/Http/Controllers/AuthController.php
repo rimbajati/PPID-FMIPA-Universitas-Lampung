@@ -47,7 +47,7 @@ class AuthController extends Controller
         $request->validate(['email' => 'required|email', 'password' => 'required'], $this->getValidationMessages());
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 'masyarakat'])) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            return redirect()->intended('/layanan');
         }
         return back()->withErrors(['login_gagal' => 'Email atau kata sandi salah.']);
     }
@@ -82,7 +82,7 @@ class AuthController extends Controller
             : back()->withErrors(['email' => 'Token tidak valid atau sudah kedaluwarsa.']);
     }
 
-    public function showRegisterStep1() { return view('auth.register_step1'); }
+    public function showRegisterStep1() { return view('auth.daftar_tahap1'); }
 
     public function processRegisterStep1(Request $request)
     {
@@ -92,14 +92,14 @@ class AuthController extends Controller
         Cache::put('otp_' . $email, $otp, now()->addMinutes(5));
         $urlStep2 = URL::temporarySignedRoute('register.step2', now()->addMinutes(15), ['email' => $email]);
         try {
-            Mail::send('emails.otp', ['otp' => $otp], function($m) use ($email) {
+            Mail::send('email.otp', ['otp' => $otp], function($m) use ($email) {
                 $m->to($email)->subject('Kode Verifikasi Pendaftaran PPID FMIPA Unila');
             });
         } catch (\Exception $e) { return back()->withErrors(['email' => 'Gagal mengirim email.']); }
         return redirect($urlStep2);
     }
 
-    public function showRegisterStep2(Request $request) { return view('auth.register_step2', ['email' => $request->query('email')]); }
+    public function showRegisterStep2(Request $request) { return view('auth.daftar_tahap2', ['email' => $request->query('email')]); }
 
     public function processRegisterStep2(Request $request)
     {
@@ -122,13 +122,13 @@ class AuthController extends Controller
         if (!$email) return redirect()->route('register');
         $otp = rand(1000, 9999);
         Cache::put('otp_' . $email, $otp, now()->addMinutes(5));
-        Mail::send('emails.otp', ['otp' => $otp], function($m) use ($email) {
+        Mail::send('email.otp', ['otp' => $otp], function($m) use ($email) {
             $m->to($email)->subject('Kode Verifikasi Pendaftaran PPID FMIPA Unila');
         });
         return redirect()->back()->with('success', 'OTP baru telah dikirim.');
     }
 
-    public function showRegisterStep3(Request $request) { return view('auth.register_step3', ['email' => $request->query('email')]); }
+    public function showRegisterStep3(Request $request) { return view('auth.daftar_tahap3', ['email' => $request->query('email')]); }
 
     public function processRegisterStep3(Request $request)
     {
@@ -156,7 +156,7 @@ class AuthController extends Controller
             ]);
             if (!$user->wasRecentlyCreated) $user->update(['google_id' => $googleUser->getId()]);
             Auth::login($user);
-            return redirect()->intended('/');
+            return redirect()->intended('/layanan');
         } catch (\Exception $e) { return redirect('/login')->withErrors(['email' => 'Google Login gagal.']); }
     }
 

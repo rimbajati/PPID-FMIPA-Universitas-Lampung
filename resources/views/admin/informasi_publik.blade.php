@@ -1,23 +1,8 @@
-@extends('layouts.admin')
+@extends('layout.admin')
 
 @section('title', 'Manajemen Informasi Publik - PPID FMIPA Unila')
 
 @section('content')
-
-    <!-- Pesan Sukses -->
-    @if(session('success'))
-        <div id="success-alert" class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                    <i class="fa-solid fa-check text-emerald-600"></i>
-                </div>
-                <p class="font-bold text-sm">{{ session('success') }}</p>
-            </div>
-            <button onclick="document.getElementById('success-alert').remove()" class="text-emerald-600 hover:text-emerald-800 transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-    @endif
 
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -28,12 +13,10 @@
     </div>
 
     <!-- Statistik Grid -->
-    <!-- Container: Gunakan flex dan overflow-x-auto untuk mobile, grid untuk desktop -->
     <div class="flex gap-4 overflow-x-auto pb-2 lg:grid lg:grid-cols-4 lg:gap-6 lg:pb-0 mb-4">
 
         <!-- 1. Total Informasi -->
         <div class="min-w-[200px] lg:min-w-0 relative bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 text-white shadow-xl shadow-blue-900/10 overflow-hidden h-44">
-            <!-- Gunakan items-center, hapus mt-1 dari icon -->
             <div class="flex items-center gap-3 z-10 relative">
                 <i class="fa-solid fa-folder-open text-2xl text-white/80"></i>
                 <span class="text-lg font-bold tracking-wider uppercase leading-tight">Total Informasi Publik</span>
@@ -81,17 +64,17 @@
     <!-- Filter & Search Form -->
     <form id="filterForm" action="{{ url('/admin/informasi-publik') }}" method="GET" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
         <div>
+            <select name="rincian" onchange="this.form.submit()" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none">
+                <option value="">Semua Rincian Informasi</option>
+                @foreach($listRincian as $r) <option value="{{ $r }}" {{ request('rincian') == $r ? 'selected' : '' }}>{{ $r }}</option> @endforeach
+            </select>
+        </div>
+        <div>
             <select name="kategori" onchange="this.form.submit()" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none">
                 <option value="">Semua Jenis Informasi</option>
                 <option value="Informasi Tersedia Setiap Saat" {{ request('kategori') == 'Informasi Tersedia Setiap Saat' ? 'selected' : '' }}>Informasi Tersedia Setiap Saat</option>
                 <option value="Informasi Tersedia Secara Berkala" {{ request('kategori') == 'Informasi Tersedia Secara Berkala' ? 'selected' : '' }}>Informasi Tersedia Secara Berkala</option>
                 <option value="Informasi Diumumkan Serta-Merta" {{ request('kategori') == 'Informasi Diumumkan Serta-Merta' ? 'selected' : '' }}>Informasi Diumumkan Serta-Merta</option>
-            </select>
-        </div>
-        <div>
-            <select name="rincian" onchange="this.form.submit()" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none">
-                <option value="">Semua Rincian Informasi</option>
-                @foreach($listRincian as $r) <option value="{{ $r }}" {{ request('rincian') == $r ? 'selected' : '' }}>{{ $r }}</option> @endforeach
             </select>
         </div>
         <div class="relative">
@@ -100,14 +83,21 @@
         </div>
     </form>
 
-    <!-- Tombol Hapus Terpilih -->
-    <div class="mb-4 flex justify-end gap-3">
-        <button id="btn-bulk-delete" onclick="triggerBulkDelete()" class="hidden bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-bold transition shadow-lg text-sm">
-            <i class="fa-solid fa-trash mr-2"></i> Hapus Terpilih
-        </button>
-        <button onclick="openModal('modal-create')" class="bg-[#0095e8] hover:bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold transition shadow-lg text-sm">
-            <i class="fa-solid fa-plus mr-2"></i> Tambah Informasi Baru
-        </button>
+    <!-- Kontrol Hapus Terpilih & Tambah -->
+    <div class="mb-6 flex flex-wrap gap-4 justify-between items-center">
+        <div class="flex flex-wrap gap-3">
+            <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-2xl font-bold transition text-sm flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-base"></i> <span id="text-select-mode">Pilih Banyak</span>
+            </button>
+            <button id="btn-bulk-delete" type="button" onclick="triggerBulkDelete()" class="hidden bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-bold transition shadow-lg text-sm flex items-center gap-2">
+                <i class="fa-solid fa-trash text-base"></i> Hapus Terpilih
+            </button>
+        </div>
+        <div class="w-full sm:w-auto">
+            <button type="button" onclick="openModal('modal-create')" class="w-full sm:w-auto bg-[#0095e8] hover:bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold transition shadow-lg text-sm flex items-center justify-center gap-2">
+                <i class="fa-solid fa-plus text-base"></i> Tambah Informasi Baru
+            </button>
+        </div>
     </div>
 
     <!-- Table Section -->
@@ -118,7 +108,7 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-200 text-[14px] font-extrabold text-slate-600 uppercase tracking-widest border-b border-slate-100">
-                            <th class="p-6 pl-8 w-10"><input type="checkbox" id="select-all" class="rounded border-slate-300"></th>
+                            <th class="col-checkbox p-6 pl-8 w-10 hidden"><input type="checkbox" id="select-all" class="rounded border-slate-300"></th>
                             <th class="p-6">Rincian Informasi</th>
                             <th class="p-6">Sub Informasi</th>
                             <th class="p-6">Jenis Informasi</th>
@@ -131,17 +121,17 @@
                             @php $groupSlug = \Illuminate\Support\Str::slug($rincian); @endphp
 
                             @foreach ($groupItems as $index => $item)
-                                {{-- Cek apakah ini item terakhir di dalam grup --}}
                                 <tr class="hover:bg-slate-50/50 transition-colors {{ $loop->last ? 'border-b-2 border-slate-300' : 'border-b border-slate-50' }}">
-                                    <td class="p-6 pl-8"></td>
+                                    <td class="col-checkbox p-6 pl-8 hidden">
+                                        <input type="checkbox" name="ids[]" value="{{ $item->id }}" class="child-checkbox rounded border-slate-300" data-group="{{ $groupSlug }}">
+                                    </td>
                                     <td class="p-6">
                                         @if ($index === 0)
-                                            <input type="checkbox" class="group-checkbox rounded border-slate-300 mr-2" data-group="{{ $groupSlug }}">
+                                            <input type="checkbox" class="group-checkbox rounded border-slate-300 mr-2 hidden" data-group="{{ $groupSlug }}">
                                             <span class="font-bold text-[17px] text-slate-900">{{ $rincian }}</span>
                                         @endif
                                     </td>
                                     <td class="p-6">
-                                        <input type="checkbox" name="ids[]" value="{{ $item->id }}" class="child-checkbox rounded border-slate-300 mr-3" data-group="{{ $groupSlug }}">
                                         <span class="text-[15px] text-slate-900">{{ $item->sub_informasi }}</span>
                                     </td>
                                     <td class="p-6">
@@ -173,43 +163,42 @@
         </div>
     </form>
 
-    @include('admin.partials.modal_informasi')
-
-    <!-- Modal Delete Single -->
-    <div id="modal-delete" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full border border-slate-100 shadow-2xl">
-            <h3 class="text-xl font-bold text-center mb-2">Hapus Data?</h3>
-            <p class="text-sm text-slate-500 text-center mb-8 italic" id="delete-item-name"></p>
-            <div class="flex gap-3">
-                <button onclick="closeModal('modal-delete')" class="flex-1 py-3 bg-slate-100 rounded-xl font-bold text-sm">Batal</button>
-                <form id="form-delete" action="" method="POST" class="flex-1">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="w-full py-3 bg-red-600 text-white rounded-xl font-bold text-sm">Ya, Hapus</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Delete Bulk -->
-    <div id="modal-bulk-delete" class="hidden fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full border border-slate-100 shadow-2xl">
-            <div class="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-2xl mb-6 mx-auto"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <h3 class="text-xl font-bold text-center mb-2">Hapus <span id="bulk-count">0</span> Data?</h3>
-            <p class="text-sm text-slate-500 text-center mb-8 leading-relaxed">
-                Apakah Anda yakin ingin menghapus semua data yang terpilih secara permanen?
-            </p>
-            <div class="flex gap-3">
-                <button onclick="closeModal('modal-bulk-delete')" class="flex-1 py-3 bg-slate-100 rounded-xl font-bold text-sm">Batal</button>
-                <button onclick="document.getElementById('bulk-delete-form').submit()" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold text-sm">Ya, Hapus Semua</button>
-            </div>
-        </div>
-    </div>
+    @include('admin.modals.modal_form_informasi')
+    @include('admin.modals.modal_hapus')
 
     <script>
         const selectAll = document.getElementById('select-all');
         const groupCheckboxes = document.querySelectorAll('.group-checkbox');
         const childCheckboxes = document.querySelectorAll('.child-checkbox');
         const bulkBtn = document.getElementById('btn-bulk-delete');
+
+        let isSelectMode = false;
+        function toggleSelectMode() {
+            isSelectMode = !isSelectMode;
+            
+            const colCheckboxes = document.querySelectorAll('.col-checkbox');
+            const groupCheckboxesList = document.querySelectorAll('.group-checkbox');
+            const toggleBtn = document.getElementById('btn-toggle-select');
+            const textSelectMode = document.getElementById('text-select-mode');
+            
+            colCheckboxes.forEach(el => el.classList.toggle('hidden', !isSelectMode));
+            groupCheckboxesList.forEach(el => el.classList.toggle('hidden', !isSelectMode));
+            
+            if (isSelectMode) {
+                toggleBtn.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+                toggleBtn.classList.add('bg-rose-50', 'text-rose-600', 'hover:bg-rose-100');
+                textSelectMode.innerText = "Batal";
+            } else {
+                selectAll.checked = false;
+                [...groupCheckboxes, ...childCheckboxes].forEach(cb => cb.checked = false);
+                
+                toggleBtn.classList.remove('bg-rose-50', 'text-rose-600', 'hover:bg-rose-100');
+                toggleBtn.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+                textSelectMode.innerText = "Pilih Banyak";
+                
+                bulkBtn.classList.add('hidden');
+            }
+        }
 
         function updateMasterCheckbox() {
             const allChecked = Array.from(childCheckboxes).every(cb => cb.checked);
@@ -236,14 +225,18 @@
                 const group = this.dataset.group;
                 const siblings = document.querySelectorAll(`.child-checkbox[data-group="${group}"]`);
                 const allSiblingsSelected = Array.from(siblings).every(s => s.checked);
-                document.querySelector(`.group-checkbox[data-group="${group}"]`).checked = allSiblingsSelected;
+                const parentGroup = document.querySelector(`.group-checkbox[data-group="${group}"]`);
+                if (parentGroup) {
+                    parentGroup.checked = allSiblingsSelected;
+                }
                 updateMasterCheckbox();
                 toggleBulkBtn();
             });
         });
 
         function toggleBulkBtn() {
-            bulkBtn.classList.toggle('hidden', document.querySelectorAll('.child-checkbox:checked').length === 0);
+            const checkedCount = document.querySelectorAll('.child-checkbox:checked').length;
+            bulkBtn.classList.toggle('hidden', !isSelectMode || checkedCount === 0);
         }
 
         function triggerBulkDelete() {
@@ -271,12 +264,13 @@
         function toggleRincian(prefix, value) {
             const inputBaru = document.getElementById(`${prefix}_rincian_baru`);
             const selectElement = document.getElementById(`${prefix}_rincian_select`);
+            selectElement.name = "rincian_informasi";
             if (value === 'baru') {
                 inputBaru.classList.remove('hidden'); inputBaru.required = true;
-                selectElement.name = "kategori_lama"; inputBaru.name = "rincian_informasi_baru";
+                inputBaru.disabled = false; inputBaru.name = "rincian_informasi_baru";
             } else {
                 inputBaru.classList.add('hidden'); inputBaru.required = false;
-                selectElement.name = "rincian_informasi";
+                inputBaru.disabled = true; inputBaru.name = "rincian_informasi_baru";
             }
         }
 
@@ -309,6 +303,7 @@
             }
             document.getElementById('edit_sub').value = item.sub_informasi;
             document.getElementById('edit_kategori').value = item.kategori;
+            
             if (item.tipe_informasi === 'link') {
                 document.getElementById('edit_format_link').checked = true;
                 document.getElementById('edit_input_link').value = item.jalur_informasi;
@@ -319,5 +314,110 @@
             }
             openModal('modal-edit');
         }
+
+        function setupAjaxForm(formId, modalId) {
+            const form = document.getElementById(formId);
+            if (!form) return;
+
+            form.querySelectorAll('.input-field').forEach(input => {
+                input.addEventListener('input', function() {
+                    this.classList.remove('border-red-500');
+                    const nextElement = this.nextElementSibling;
+                    if (nextElement && nextElement.classList.contains('error-msg')) {
+                        nextElement.remove();
+                    }
+                });
+                input.addEventListener('change', function() {
+                    this.classList.remove('border-red-500');
+                    const nextElement = this.nextElementSibling;
+                    if (nextElement && nextElement.classList.contains('error-msg')) {
+                        nextElement.remove();
+                    }
+                });
+            });
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                form.querySelectorAll('.error-msg').forEach(el => el.remove());
+                form.querySelectorAll('.input-field').forEach(el => {
+                    el.classList.remove('border-red-500');
+                });
+
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirim...';
+                }
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(async response => {
+                    const isJson = response.headers.get('content-type')?.includes('application/json');
+                    const data = isJson ? await response.json() : null;
+
+                    if (response.status === 422) {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnText;
+                        }
+
+                        if (data && data.errors) {
+                            for (const [field, messages] of Object.entries(data.errors)) {
+                                let inputEl = form.querySelector(`#${modalId.replace('modal-', '')}_${field}`) || 
+                                              form.querySelector(`[name="${field}"]`) ||
+                                              form.querySelector(`#${field}`);
+
+                                if (inputEl) {
+                                    inputEl.classList.add('border-red-500');
+
+                                    const errorP = document.createElement('p');
+                                    errorP.className = 'error-msg text-red-500 text-xs mt-1';
+                                    errorP.innerText = messages[0];
+
+                                    inputEl.after(errorP);
+                                }
+                            }
+
+                            const firstError = form.querySelector('.border-red-500');
+                            if (firstError) {
+                                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }
+                    } else if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Terjadi kesalahan pada server.');
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnText;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Terjadi kesalahan jaringan.');
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupAjaxForm('form-create', 'modal-create');
+            setupAjaxForm('form-edit', 'modal-edit');
+        });
     </script>
 @endsection
+

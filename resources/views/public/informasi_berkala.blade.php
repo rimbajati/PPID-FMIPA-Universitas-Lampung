@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layout.utama')
 
 @section('title', 'Informasi Tersedia Secara Berkala - PPID FMIPA Unila')
 
@@ -35,14 +35,11 @@
                         <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider text-center">Action</th>
                     </tr>
                 </thead>
-                {{-- Hapus class divide-y divide-gray-300 dari sini --}}
                 <tbody>
                     @forelse ($informasi->groupBy('rincian_informasi') as $grup => $items)
                         @foreach($items as $index => $item)
-                            {{-- Logika border: Jika item terakhir di grup, beri border tebal (gray-300). Jika bukan, beri border tipis (gray-100) --}}
                             <tr class="hover:bg-gray-50 transition {{ $loop->last ? 'border-b-2 border-gray-300' : 'border-b border-gray-100' }}">
 
-                                {{-- Hanya tampilkan sel Rincian Informasi di baris pertama dari grup --}}
                                 @if($index === 0)
                                     <td rowspan="{{ $items->count() }}" class="p-5 pl-8 font-bold text-gray-900 align-top">
                                         {{ $grup }}
@@ -72,3 +69,4 @@
     </div>
 </div>
 @endsection
+

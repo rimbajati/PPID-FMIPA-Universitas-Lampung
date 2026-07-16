@@ -59,4 +59,12 @@ class Pengajuan extends Model
     {
         return $this->belongsTo(Pengajuan::class, 'permohonan_terkait_id');
     }
+
+    /**
+     * Relasi ke riwayat status
+     */
+    public function statusHistories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(StatusHistory::class, 'pengajuan_id')->orderBy('created_at', 'asc');
+    }
 }

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layout.admin')
 
 @section('title', 'Dashboard Admin - PPID FMIPA Unila')
 
@@ -164,3 +164,4 @@
     });
 </script>
 @endpush
+

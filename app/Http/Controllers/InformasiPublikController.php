@@ -210,13 +210,25 @@ class InformasiPublikController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'rincian_informasi'      => 'required_without:rincian_informasi_baru|max:255',
-            'rincian_informasi_baru' => 'required_without:rincian_informasi|max:255',
+            'rincian_informasi'      => 'required',
+            'rincian_informasi_baru' => 'required_if:rincian_informasi,baru|max:255',
             'sub_informasi'          => 'required',
             'kategori'               => 'required',
             'opsi_format'            => 'required|in:file,link',
-            'berkas'                 => 'required_if:opsi_format,file|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:2480',
+            'berkas'                 => 'required_if:opsi_format,file|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:2048',
             'url_link'               => 'required_if:opsi_format,link|url',
+        ], [
+            'rincian_informasi.required'              => 'Rincian informasi wajib dipilih.',
+            'rincian_informasi_baru.required_if'      => 'Rincian informasi baru wajib diisi jika membuat baru.',
+            'sub_informasi.required'                  => 'Sub/Ringkasan informasi wajib diisi.',
+            'kategori.required'                       => 'Klasifikasi jenis informasi wajib dipilih.',
+            'opsi_format.required'                    => 'Format penyajian informasi wajib dipilih.',
+            'berkas.required_if'                      => 'Berkas dokumen wajib diunggah.',
+            'berkas.file'                             => 'Berkas yang diunggah harus berupa file.',
+            'berkas.mimes'                            => 'Format berkas harus berupa pdf, doc, docx, xls, xlsx, png, jpg, atau jpeg.',
+            'berkas.max'                              => 'Ukuran berkas tidak boleh lebih dari 2MB.',
+            'url_link.required_if'                    => 'Tautan eksternal (URL) wajib diisi.',
+            'url_link.url'                            => 'Format tautan eksternal harus berupa URL yang valid.',
         ]);
 
         $payload = $request->except(['opsi_format', 'berkas', 'url_link', 'rincian_informasi_baru']);
@@ -240,10 +252,22 @@ class InformasiPublikController extends Controller
     {
         $info = InformasiPublik::findOrFail($id);
         $request->validate([
-            'rincian_informasi'      => 'required_without:rincian_informasi_baru|max:255',
-            'rincian_informasi_baru' => 'required_without:rincian_informasi|max:255',
+            'rincian_informasi'      => 'required',
+            'rincian_informasi_baru' => 'required_if:rincian_informasi,baru|max:255',
             'sub_informasi'          => 'required',
             'kategori'               => 'required',
+            'opsi_format'            => 'nullable|in:file,link',
+            'berkas'                 => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:2048',
+            'url_link'               => 'nullable|url',
+        ], [
+            'rincian_informasi.required'              => 'Rincian informasi wajib dipilih.',
+            'rincian_informasi_baru.required_if'      => 'Rincian informasi baru wajib diisi jika membuat baru.',
+            'sub_informasi.required'                  => 'Sub/Ringkasan informasi wajib diisi.',
+            'kategori.required'                       => 'Klasifikasi jenis informasi wajib dipilih.',
+            'berkas.file'                             => 'Berkas yang diunggah harus berupa file.',
+            'berkas.mimes'                            => 'Format berkas harus berupa pdf, doc, docx, xls, xlsx, png, jpg, atau jpeg.',
+            'berkas.max'                              => 'Ukuran berkas tidak boleh lebih dari 2MB.',
+            'url_link.url'                            => 'Format tautan eksternal harus berupa URL yang valid.',
         ]);
 
         $payload = $request->except(['opsi_format', 'berkas', 'url_link', 'rincian_informasi_baru']);

@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layout.utama')
 
 @section('title', 'Beranda - PPID FMIPA Unila')
 
@@ -11,11 +11,12 @@
     });
 
     // --- Data Statistik (Dinamis dari database) ---
-    $minYearDB = \App\Models\Pengajuan::min(\Illuminate\Support\Facades\DB::raw('YEAR(created_at)'));
+    $oldestPengajuan = \App\Models\Pengajuan::oldest()->first();
+    $minYearDB = $oldestPengajuan ? (int)$oldestPengajuan->created_at->format('Y') : null;
     $currentYear = (int)date('Y');
 
     // Jika belum ada data, gunakan hanya tahun sekarang agar tidak error
-    $minYear = $minYearDB ? (int)$minYearDB : $currentYear;
+    $minYear = $minYearDB ?: $currentYear;
     $years = range($minYear, $currentYear);
 
     $yearlyData = [];
@@ -40,7 +41,7 @@
     }
 @endphp
 
-<div class="relative min-h-[100vh] w-full flex items-center pt-32 pb-20 overflow-hidden bg-[#0a192f]">
+<div class="relative min-h-[100vh] w-full flex items-center pt-44 md:pt-48 pb-20 overflow-hidden bg-[#0a192f]">
     <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
     <div class="absolute inset-0 bg-gradient-to-r from-[#0a192f] via-[#0a192f]/80 to-transparent"></div>
 
@@ -91,11 +92,19 @@
                 </div>
 
                 <div class="space-y-4">
-                    <p class="text-md text-gray-300">Jika informasi yang Anda cari tidak ditemukan, Anda dapat mengajukan permohonan baru di bawah ini.</p>
-                    <a href="{{ route('layanan.index') }}"
-                    class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm rounded-3xl tracking-wider transition-all shadow-lg">
-                        Buat Permohonan
-                    </a>
+                    @if(Auth::check() && Auth::user()->isAdmin())
+                        <p class="text-md text-gray-300">Anda masuk sebagai Administrator. Silakan masuk ke panel admin untuk mengelola permohonan informasi.</p>
+                        <a href="{{ route('admin.dashboard') }}"
+                         class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm rounded-3xl tracking-wider transition-all shadow-lg">
+                            Dashboard Admin
+                        </a>
+                    @else
+                        <p class="text-md text-gray-300">Jika informasi yang Anda cari tidak ditemukan, Anda dapat mengajukan permohonan baru di bawah ini.</p>
+                        <a href="{{ route('layanan.index') }}"
+                         class="inline-block bg-white hover:bg-gray-100 text-[#0a192f] font-bold px-8 py-4 uppercase text-sm rounded-3xl tracking-wider transition-all shadow-lg">
+                            Buat Permohonan
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -112,7 +121,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             @php
                 $steps = [
-                    ['icon' => 'fa-user-plus', 'title' => 'Registrasi/Login', 'desc' => 'Daftar akun atau masuk ke sistem untuk memulai permohonan.'],
+                    ['icon' => 'fa-user-plus', 'title' => 'Registrasi/Login', 'desc' => 'Daftar akun atau masuk to sistem untuk memulai permohonan.'],
                     ['icon' => 'fa-file-signature', 'title' => 'Isi Formulir', 'desc' => 'Lengkapi form permohonan dengan data diri dan tujuan informasi.'],
                     ['icon' => 'fa-paper-plane', 'title' => 'Kirim Permohonan', 'desc' => 'Submit formulir dan dapatkan nomor registrasi permohonan.'],
                     ['icon' => 'fa-envelope-open-text', 'title' => 'Terima Jawaban', 'desc' => 'Tunggu respon dari admin PPID melalui sistem atau email Anda.']
@@ -268,3 +277,4 @@
     });
 </script>
 @endsection
+

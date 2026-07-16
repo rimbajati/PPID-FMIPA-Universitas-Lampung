@@ -6,6 +6,7 @@ use App\Models\Pengajuan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\PengajuanSubmittedMail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -19,9 +20,9 @@ class LayananController extends Controller
 
     public function index()
     {
-        $pengajuans = Pengajuan::where('user_id', Auth::id())->latest()->get();
-        $permohonans = Pengajuan::where('jenis_layanan', 'Permohonan')->where('user_id', Auth::id())->latest()->get();
-        return view('layanan.index', compact('pengajuans', 'permohonans'));
+        $pengajuans = Pengajuan::with('statusHistories')->where('user_id', Auth::id())->latest()->get();
+        $permohonans = Pengajuan::with('statusHistories')->where('jenis_layanan', 'Permohonan')->where('user_id', Auth::id())->latest()->get();
+        return view('pemohon.layanan.index', compact('pengajuans', 'permohonans'));
     }
 
     public function store(Request $request)
@@ -46,21 +47,27 @@ class LayananController extends Controller
             'alamat'             => 'required|string',
             'telepon'            => 'required|string|max:20',
             'no_identitas'       => 'required|string',
-            'identitas'          => 'required|file|mimes:jpg,png,pdf|max:2048',
-            'akta_pendirian'     => 'required_if:kategori_pemohon,LSM/NGO,Instansi Pemerintah,Lembaga Pemerintah|nullable|file|mimes:jpg,png,pdf|max:2048',
-            'lampiran_pendukung' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+            'identitas'          => 'required|file|mimes:jpg,jpeg,png|max:2048',
+            'akta_pendirian'     => 'required_if:kategori_pemohon,LSM/NGO,Instansi Pemerintah,Lembaga Pemerintah|nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'lampiran_pendukung' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'info_diminta'       => 'required|string',
             'tujuan'             => 'required|string',
-            'cara_ambil'         => 'required|in:Mengambil Langsung,Email,WhatsApp',
+            'cara_ambil'         => 'required|in:Mengambil langsung ke FMIPA,Melalui Email atau Website',
             'pernyataan'         => 'accepted',
         ], [
             'pernyataan.accepted'       => 'Anda wajib menyetujui pernyataan kebenaran data.',
-            'identitas.required'        => 'Lampiran Identitas (KTP) wajib diunggah.',
+            'identitas.required'        => 'Lampiran Identitas wajib diunggah.',
+            'identitas.mimes'           => 'Format lampiran identitas harus berupa JPG, JPEG, atau PNG.',
+            'identitas.max'             => 'Ukuran lampiran identitas maksimal 2 MB.',
             'akta_pendirian.required_if'=> 'Akta Pendirian wajib diunggah untuk kategori ini.',
+            'akta_pendirian.mimes'      => 'Format akta pendirian harus berupa JPG, JPEG, PNG, atau PDF.',
+            'akta_pendirian.max'        => 'Ukuran akta pendirian maksimal 2 MB.',
+            'lampiran_pendukung.mimes'  => 'Format lampiran data pendukung harus berupa JPG, JPEG, PNG, atau PDF.',
+            'lampiran_pendukung.max'    => 'Ukuran lampiran data pendukung maksimal 2 MB.',
             'pekerjaan.required'        => 'Pekerjaan wajib dipilih.',
             'kategori_pemohon.required' => 'Kategori pemohon wajib dipilih.',
             'alamat.required'           => 'Alamat wajib diisi.',
-            'telepon.required'          => 'Nomor HP wajib diisi.',
+            'telepon.required'          => 'Nomor telepon wajib diisi.',
             'no_identitas.required'     => 'Nomor identitas wajib diisi.',
             'info_diminta.required'     => 'Rincian informasi wajib diisi.',
             'tujuan.required'           => 'Tujuan permohonan wajib diisi.',
@@ -105,7 +112,20 @@ class LayananController extends Controller
             $nomorTiket = 'PER-' . date('Ymd') . '-' . str_pad($data->id, 3, '0', STR_PAD_LEFT);
             $data->update(['no_tiket' => $nomorTiket]);
 
+            $data->statusHistories()->create([
+                'status' => 'DIAJUKAN',
+                'catatan' => null,
+            ]);
+
             DB::commit();
+
+            // Kirim notifikasi email ke pemohon
+            try {
+                $emailUser = Auth::user()->email;
+                Mail::to($emailUser)->send(new PengajuanSubmittedMail($data));
+            } catch (\Exception $mailEx) {
+                Log::warning('Gagal mengirim email notifikasi permohonan: ' . $mailEx->getMessage());
+            }
 
             if ($request->wantsJson()) {
                 return response()->json([
@@ -137,7 +157,8 @@ class LayananController extends Controller
             'permohonan_terkait_id' => 'required|exists:pengajuans,id',
             'tujuan_keberatan'      => 'required|string',
             'alasan_keberatan'      => 'required|string',
-            'dokumen_pendukung'     => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'lampiran_pendukung'    => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen_pendukung'     => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'pernyataan'            => 'accepted',
             'no_identitas'          => 'required|string',
             'telepon'               => 'required|string',
@@ -149,8 +170,12 @@ class LayananController extends Controller
             'permohonan_terkait_id.required' => 'Mohon pilih permohonan yang terkait.',
             'tujuan_keberatan.required'      => 'Tujuan mengajukan keberatan wajib diisi.',
             'alasan_keberatan.required'      => 'Alasan mengajukan keberatan wajib diisi.',
+            'lampiran_pendukung.mimes'       => 'Format lampiran data pendukung harus berupa JPG, JPEG, PNG, atau PDF.',
+            'lampiran_pendukung.max'         => 'Ukuran lampiran data pendukung maksimal 2 MB.',
+            'dokumen_pendukung.mimes'        => 'Format lampiran data pendukung harus berupa JPG, JPEG, PNG, atau PDF.',
+            'dokumen_pendukung.max'          => 'Ukuran lampiran data pendukung maksimal 2 MB.',
             'no_identitas.required'          => 'Nomor identitas wajib diisi.',
-            'telepon.required'               => 'Nomor HP wajib diisi.',
+            'telepon.required'               => 'Nomor Telepon wajib diisi.',
             'alamat.required'                => 'Alamat wajib diisi.',
             'pekerjaan.required'             => 'Pekerjaan wajib diisi.',
             'kategori_pemohon.required'      => 'Kategori pemohon wajib diisi.',
@@ -158,8 +183,16 @@ class LayananController extends Controller
 
         try {
             $filePath = null;
-            if ($request->hasFile('dokumen_pendukung')) {
+            if ($request->hasFile('lampiran_pendukung')) {
+                $filePath = $request->file('lampiran_pendukung')->store('lampiran_pendukung', 'public');
+            } elseif ($request->hasFile('dokumen_pendukung')) {
                 $filePath = $request->file('dokumen_pendukung')->store('dokumen_keberatan', 'public');
+            } else {
+                // Inherit from the related permohonan
+                $related = Pengajuan::find($request->permohonan_terkait_id);
+                if ($related && $related->lampiran_pendukung) {
+                    $filePath = $related->lampiran_pendukung;
+                }
             }
 
             $data = Pengajuan::create([
@@ -184,6 +217,19 @@ class LayananController extends Controller
             $nomorTiket = 'KEB-' . date('Ymd') . '-' . str_pad($data->id, 3, '0', STR_PAD_LEFT);
             $data->update(['no_tiket' => $nomorTiket]);
 
+            $data->statusHistories()->create([
+                'status' => 'DIAJUKAN',
+                'catatan' => null,
+            ]);
+
+            // Kirim notifikasi email ke pemohon
+            try {
+                $emailUser = Auth::user()->email;
+                Mail::to($emailUser)->send(new PengajuanSubmittedMail($data));
+            } catch (\Exception $mailEx) {
+                Log::warning('Gagal mengirim email notifikasi keberatan: ' . $mailEx->getMessage());
+            }
+
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => true,
@@ -192,7 +238,7 @@ class LayananController extends Controller
                 ]);
             }
 
-            return redirect()->back()->with('success', 'Pengajuan keberatan berhasil dikirim.');
+            return redirect()->back()->with(['success' => 'Pengajuan keberatan berhasil dikirim.', 'tiket' => $nomorTiket]);
         } catch (\Exception $e) {
             Log::error('Gagal simpan keberatan: ' . $e->getMessage());
 
@@ -211,7 +257,7 @@ class LayananController extends Controller
     {
         $pengajuan = Pengajuan::findOrFail($id);
 
-        if ($pengajuan->user_id !== Auth::id()) {
+        if ($pengajuan->user_id != Auth::id()) {
             abort(403);
         }
 
@@ -229,12 +275,27 @@ class LayananController extends Controller
                 'alamat'             => 'required|string',
                 'telepon'            => 'required|string|max:20',
                 'no_identitas'       => 'required|string',
-                'identitas'          => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-                'akta_pendirian'     => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-                'lampiran_pendukung' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+                'identitas'          => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+                'akta_pendirian'     => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'lampiran_pendukung' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
                 'info_diminta'       => 'required|string',
                 'tujuan'             => 'required|string',
-                'cara_ambil'         => 'required|in:Mengambil Langsung,Email,WhatsApp',
+                'cara_ambil'         => 'required|in:Mengambil langsung ke FMIPA,Melalui Email atau Website',
+            ], [
+                'identitas.mimes'           => 'Format lampiran identitas harus berupa JPG, JPEG, atau PNG.',
+                'identitas.max'             => 'Ukuran lampiran identitas maksimal 2 MB.',
+                'akta_pendirian.mimes'      => 'Format akta pendirian harus berupa JPG, JPEG, PNG, atau PDF.',
+                'akta_pendirian.max'        => 'Ukuran akta pendirian maksimal 2 MB.',
+                'lampiran_pendukung.mimes'  => 'Format lampiran data pendukung harus berupa JPG, JPEG, PNG, atau PDF.',
+                'lampiran_pendukung.max'    => 'Ukuran lampiran data pendukung maksimal 2 MB.',
+                'pekerjaan.required'        => 'Pekerjaan wajib dipilih.',
+                'kategori_pemohon.required' => 'Kategori pemohon wajib dipilih.',
+                'alamat.required'           => 'Alamat wajib diisi.',
+                'telepon.required'          => 'Nomor Telepon wajib diisi.',
+                'no_identitas.required'     => 'Nomor identitas wajib diisi.',
+                'info_diminta.required'     => 'Rincian informasi wajib diisi.',
+                'tujuan.required'           => 'Tujuan permohonan wajib diisi.',
+                'cara_ambil.required'       => 'Cara memperoleh informasi wajib dipilih.',
             ]);
 
             try {
@@ -281,7 +342,13 @@ class LayananController extends Controller
             $request->validate([
                 'tujuan_keberatan'   => 'required|string',
                 'alasan_keberatan'   => 'required|string',
-                'dokumen_pendukung'  => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+                'lampiran_pendukung' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'dokumen_pendukung'  => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            ], [
+                'lampiran_pendukung.mimes' => 'Format lampiran data pendukung harus berupa JPG, JPEG, PNG, atau PDF.',
+                'lampiran_pendukung.max'   => 'Ukuran lampiran data pendukung maksimal 2 MB.',
+                'dokumen_pendukung.mimes'  => 'Format lampiran data pendukung harus berupa JPG, JPEG, PNG, atau PDF.',
+                'dokumen_pendukung.max'    => 'Ukuran lampiran data pendukung maksimal 2 MB.',
             ]);
 
             try {
@@ -292,7 +359,9 @@ class LayananController extends Controller
                     'alasan_keberatan' => $request->alasan_keberatan,
                 ];
 
-                if ($request->hasFile('dokumen_pendukung')) {
+                if ($request->hasFile('lampiran_pendukung')) {
+                    $updateData['lampiran_pendukung'] = $request->file('lampiran_pendukung')->store('lampiran_pendukung', 'public');
+                } elseif ($request->hasFile('dokumen_pendukung')) {
                     $updateData['lampiran_pendukung'] = $request->file('dokumen_pendukung')->store('dokumen_keberatan', 'public');
                 }
 
@@ -319,7 +388,7 @@ class LayananController extends Controller
     {
         $pengajuan = Pengajuan::findOrFail($id);
 
-        if ($pengajuan->user_id !== Auth::id()) {
+        if ($pengajuan->user_id != Auth::id()) {
             abort(403);
         }
 
