@@ -7,7 +7,6 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserProfileController;
-use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\PengajuanController;
 use Illuminate\Http\Request;
 
@@ -28,6 +27,7 @@ Route::get('/informasi/lihat/{id}/{slug?}', [App\Http\Controllers\InformasiPubli
 // Rute khusus untuk jembatan/proxy link luar (Redirect Gateway)
 Route::get('/informasi/kunjungi/{id}/{slug?}', [App\Http\Controllers\InformasiPublikController::class, 'kunjungiLink'])->name('informasi.link');
 Route::get('/statistik', [StatistikController::class, 'index'])->name('public.statistik.index');
+Route::get('/prosedur-permohonan', function () { return view('public.prosedur_permohonan'); })->name('prosedur.permohonan');
 
 /*
 |--------------------------------------------------------------------------
@@ -79,9 +79,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/profile', [UserProfileController::class, 'index'])->name('user.profile');
         Route::post('/profile/update', [UserProfileController::class, 'updateProfile'])->name('user.profile.update');
 
-        Route::get('/detail-permohonan/{id}', [RiwayatController::class, 'showPermohonan'])->name('riwayat.permohonan.detail');
-        Route::get('/detail-keberatan/{id}', [RiwayatController::class, 'showKeberatan'])->name('riwayat.keberatan.detail');
-
         Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
         Route::post('/layanan', [LayananController::class, 'store'])->name('layanan.store');
         Route::put('/layanan/{id}', [LayananController::class, 'update'])->name('layanan.update');
@@ -112,6 +109,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::put('/pengajuan/{id}/status', [PengajuanController::class, 'updateStatus']);
     Route::delete('/pengajuan/bulk-delete', [PengajuanController::class, 'destroyBulk'])->name('admin.pengajuan.bulk');
     Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('admin.pengajuan.destroy');
+
+    // Manajemen Prosedur Permohonan
+    Route::get('/prosedur-permohonan', [App\Http\Controllers\ProsedurPermohonanController::class, 'edit'])->name('admin.prosedur-permohonan.edit');
+    Route::put('/prosedur-permohonan', [App\Http\Controllers\ProsedurPermohonanController::class, 'update'])->name('admin.prosedur-permohonan.update');
+
+    // Manajemen Beranda Utama
+    Route::get('/beranda', [App\Http\Controllers\BerandaController::class, 'edit'])->name('admin.beranda.edit');
+    Route::put('/beranda', [App\Http\Controllers\BerandaController::class, 'update'])->name('admin.beranda.update');
+
+    // Manajemen Halaman Informasi Publik
+    Route::get('/halaman-informasi-publik', [App\Http\Controllers\KontenInformasiPublikController::class, 'edit'])->name('admin.halaman-informasi-publik.edit');
+    Route::put('/halaman-informasi-publik', [App\Http\Controllers\KontenInformasiPublikController::class, 'update'])->name('admin.halaman-informasi-publik.update');
 });
 
 /* --- UTILITY ROUTE --- */

@@ -10,13 +10,13 @@
         <div class="flex justify-between items-center">
 
             <a href="/" class="flex items-center shrink-0 w-56">
-                <img id="navbar-logo" src="{{ asset('images/logo.png') }}" alt="Logo" class="h-9 md:h-12 w-auto object-contain brightness-0 invert transition-all duration-300">
+                <img id="navbar-logo" src="{{ asset('images/logo.png') }}" alt="Logo" class="h-9 md:h-12 w-auto object-contain transition-all duration-300">
             </a>
 
             <div id="desktop-menu" class="hidden md:flex items-center justify-center flex-1 gap-8 lg:gap-10">
                 @if(!request()->is('login*') && !request()->is('register*') && !request()->is('password*') && !request()->is('forgot-password') && !request()->is('reset-password*'))
                     @php
-                        $baseClass = "nav-link relative text-base font-medium transition-all duration-300 after:content-[''] after:absolute after:left-0 after:-bottom-2 after:h-[2px] after:transition-all after:duration-300 hover:after:w-full";
+                        $baseClass = "nav-link relative text-base font-bold transition-all duration-300 after:content-[''] after:absolute after:left-0 after:-bottom-2 after:h-[2.5px] after:transition-all after:duration-300 hover:after:w-full";
                     @endphp
 
                     <a href="/" class="{{ $baseClass }} {{ request()->is('/') ? 'after:w-full' : 'after:w-0' }}">Beranda</a>
@@ -42,7 +42,7 @@
 
                                 @foreach($menuItems as $item)
                                     <a href="{{ $item['url'] }}"
-                                    class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] transition-all duration-200">
+                                    class="block px-6 py-3 text-sm font-semibold text-slate-700 hover:text-white hover:bg-[#1B365D] transition-all duration-200">
                                         {{ $item['label'] }}
                                     </a>
                                 @endforeach
@@ -51,7 +51,7 @@
                     </div>
 
                     <div class="relative group">
-                        <button class="flex items-center gap-1 {{ $baseClass }} {{ request()->is('layanan*') ? 'after:w-full' : 'after:w-0' }}">
+                        <button class="flex items-center gap-1 {{ $baseClass }} {{ request()->is('layanan*') || request()->is('prosedur-permohonan*') ? 'after:w-full' : 'after:w-0' }}">
                             Layanan Informasi
                             <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -62,7 +62,7 @@
                             <div class="bg-white border border-slate-100 shadow-xl py-2 rounded-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
                                 @php
                                     $menuLayanan = [
-                                        ['url' => '/', 'label' => 'Prosedur Permohonan Informasi'],
+                                        ['url' => route('prosedur.permohonan'), 'label' => 'Prosedur Permohonan Informasi'],
                                         ['url' => route('layanan.index') . '?type=permohonan', 'label' => 'Formulir Permohonan Informasi'],
                                         ['url' => route('layanan.index') . '?type=keberatan', 'label' => 'Formulir Pengajuan Keberatan'],
                                     ];
@@ -70,7 +70,7 @@
 
                                 @foreach($menuLayanan as $item)
                                     <a href="{{ $item['url'] }}"
-                                    class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] transition-all duration-200">
+                                    class="block px-6 py-3 text-sm font-semibold text-slate-700 hover:text-white hover:bg-[#1B365D] transition-all duration-200">
                                         {{ $item['label'] }}
                                     </a>
                                 @endforeach
@@ -89,7 +89,7 @@
 
             <div class="hidden md:flex items-center justify-end shrink-0 w-56">
                 @if(request()->is('login*') || request()->is('register*') || request()->is('password*') || request()->is('forgot-password') || request()->is('reset-password*'))
-                    <a href="/" class="inline-flex items-center gap-2 text-base font-semibold text-gray-700 hover:text-blue-900 transition-all nav-auth-text whitespace-nowrap">
+                    <a href="/" class="inline-flex items-center gap-2 text-base font-semibold text-gray-700 hover:text-[#1B365D] transition-all nav-auth-text whitespace-nowrap">
                         <span class="hidden md:inline">Kembali ke Beranda</span> <i class="fa-solid fa-arrow-right text-sm"></i>
                     </a>
                 @else
@@ -101,7 +101,7 @@
                             </button>
                             <div id="profile-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-100 shadow-xl py-2 rounded-2xl hidden z-[9999]">
                                 <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('layanan.index') }}"
-                                    class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#0a192f] rounded-md transition-all duration-200">
+                                    class="block px-6 py-3 text-sm font-medium text-slate-700 hover:text-white hover:bg-[#07597b] rounded-md transition-all duration-200">
                                     Dashboard
                                 </a>
                                 <div class="border-t border-slate-100 my-1"></div>
@@ -146,7 +146,7 @@
                         <i id="icon-layanan" class="fa-solid fa-chevron-right text-xs transition-transform duration-300"></i>
                     </button>
                     <div id="dropdown-layanan" class="hidden flex flex-col pl-4 mt-3 space-y-3 border-l-2 border-slate-700">
-                        <a href="/" class="text-slate-300 hover:text-white text-sm transition-colors">Prosedur Permohonan Informasi</a>
+                        <a href="{{ route('prosedur.permohonan') }}" class="text-slate-300 hover:text-white text-sm transition-colors {{ request()->is('prosedur-permohonan*') ? 'text-white font-bold' : '' }}">Prosedur Permohonan Informasi</a>
                         <a href="{{ route('layanan.index') }}?type=permohonan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Permohonan Informasi</a>
                         <a href="{{ route('layanan.index') }}?type=keberatan" class="text-slate-300 hover:text-white text-sm transition-colors">Formulir Pengajuan Keberatan</a>
                     </div>
@@ -168,7 +168,7 @@
                         <button type="submit" class="w-full text-left text-red-400 hover:text-red-300 font-medium py-1">Keluar</button>
                     </form>
                 @else
-                    <a href="/login" class="block w-full text-center py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded shadow transition-all">MASUK</a>
+                    <a href="/login" class="block w-full text-center py-2.5 bg-[#1B365D] hover:bg-[#1B365D] text-white font-bold rounded shadow transition-all">MASUK</a>
                 @endauth
             </div>
         </div>
@@ -196,18 +196,18 @@
         function setNavbarStyle(isWhite) {
             if (isWhite) {
                 navbar.classList.add('bg-white', 'shadow-md', 'border-gray-200');
-                if (navLogo) navLogo.classList.remove('brightness-0', 'invert');
+                if (navLogo) navLogo.style.filter = 'none';
                 if (mobileMenuBtn) {
                     mobileMenuBtn.classList.remove('text-white');
                     mobileMenuBtn.classList.add('text-gray-800');
                 }
                 navLinks.forEach(link => {
                     link.classList.remove('text-white', 'after:bg-white');
-                    link.classList.add('text-gray-800', 'after:bg-blue-900');
+                    link.classList.add('text-gray-800', 'after:bg-[#1B365D]');
                 });
                 if (navAuthBtn) {
                     navAuthBtn.classList.remove('bg-transparent', 'border-white/30', 'text-white', 'hover:bg-white/10');
-                    navAuthBtn.classList.add('bg-[#0f172a]', 'text-white', 'hover:bg-black');
+                    navAuthBtn.classList.add('bg-[#1B365D]', 'text-white', 'hover:bg-[#1B365D]');
                 }
                 if (navAuthText) {
                     navAuthText.classList.remove('text-white');
@@ -215,18 +215,18 @@
                 }
             } else {
                 navbar.classList.remove('bg-white', 'shadow-md', 'border-gray-200');
-                if (navLogo) navLogo.classList.add('brightness-0', 'invert');
+                if (navLogo) navLogo.style.filter = 'drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.95)) drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.9))';
                 if (mobileMenuBtn) {
                     mobileMenuBtn.classList.add('text-white');
                     mobileMenuBtn.classList.remove('text-gray-800');
                 }
                 navLinks.forEach(link => {
                     link.classList.add('text-white', 'after:bg-white');
-                    link.classList.remove('text-gray-800', 'after:bg-blue-900');
+                    link.classList.remove('text-gray-800', 'after:bg-[#1B365D]');
                 });
                 if (navAuthBtn) {
                     navAuthBtn.classList.add('bg-transparent', 'border-white/30', 'text-white', 'hover:bg-white/10');
-                    navAuthBtn.classList.remove('bg-[#0f172a]', 'hover:bg-black');
+                    navAuthBtn.classList.remove('bg-[#1B365D]', 'hover:bg-[#1B365D]');
                 }
                 if (navAuthText) {
                     navAuthText.classList.remove('text-gray-800');

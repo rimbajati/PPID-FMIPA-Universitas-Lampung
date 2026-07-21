@@ -7,28 +7,33 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Mengimpor font Poppins dari Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        /* Mengimpor font Plus Jakarta Sans & Inter dari Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-        /* Menerapkan font Poppins ke seluruh halaman */
-        body { font-family: 'Poppins', sans-serif; }
+        /* Menerapkan font Plus Jakarta Sans ke seluruh halaman */
+        body { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+
+        /* Force 90-degree sharp corners globally across the entire system */
+        *, ::before, ::after {
+            border-radius: 0px !important;
+        }
     </style>
 </head>
-<body class="relative flex items-center justify-center min-h-screen bg-[#0a192f]">
+<body class="relative flex items-center justify-center min-h-screen bg-[#1B365D]">
 
     <!-- Background Layer -->
-    <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
-    <div class="absolute inset-0 bg-[#0a192f]/80"></div>
+    <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#1B365D]/85 via-[#1B365D]/45 to-transparent"></div>
 
     <!-- Login Container (Ukuran besar max-w-lg) -->
     <div class="relative z-10 w-full max-w-lg px-6">
 
         <!-- White Card -->
-        <div class="bg-white p-10 sm:p-12 rounded-2xl shadow-2xl border border-gray-100">
+        <div class="bg-white p-10 sm:p-12 rounded-3xl shadow-2xl border border-gray-100">
 
             <!-- Header Section -->
             <div class="text-center mb-10">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Login Admin</h1>
+                <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Login Admin</h1>
                 <p class="text-base text-gray-500">PPID FMIPA Universitas Lampung</p>
             </div>
 
@@ -38,18 +43,18 @@
 
                 <!-- Input Email -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email Admin</label>
+                    <label class="block text-sm font-bold text-gray-900 mb-2">Email Admin</label>
                     <input type="email" name="email"
-                        class="w-full px-5 py-3.5 bg-white border border-gray-300 rounded-xl text-base text-gray-900 focus:ring-2 focus:ring-[#0a192f] focus:border-[#0a192f] transition-all outline-none"
+                        class="w-full px-5 py-3.5 bg-white border border-gray-300 rounded-2xl text-base text-gray-900 focus:ring-2 focus:ring-[#1B365D] focus:border-[#1B365D] transition-all outline-none"
                         placeholder="Masukkan email admin" required>
                 </div>
 
                 <!-- Input Password -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Kata Sandi</label>
+                    <label class="block text-sm font-bold text-gray-900 mb-2">Kata Sandi</label>
                     <div class="relative">
                         <input type="password" name="password" id="password"
-                            class="w-full pl-5 pr-14 py-3.5 bg-white border border-gray-300 rounded-xl text-base text-gray-900 focus:ring-2 focus:ring-[#0a192f] focus:border-[#0a192f] transition-all outline-none"
+                            class="w-full pl-5 pr-14 py-3.5 bg-white border border-gray-300 rounded-2xl text-base text-gray-900 focus:ring-2 focus:ring-[#1B365D] focus:border-[#1B365D] transition-all outline-none"
                             placeholder="••••••••" required>
                         <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-gray-600 transition-colors focus:outline-none">
                             <i class="fa-regular fa-eye text-lg" id="eye-icon"></i>
@@ -59,7 +64,7 @@
 
                 <!-- Submit Button -->
                 <div class="pt-4">
-                    <button type="submit" class="w-full bg-[#0a192f] hover:bg-[#172a45] text-white font-bold py-4 px-4 rounded-xl text-lg transition-all shadow-md">
+                    <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-bold py-4 px-4 rounded-2xl text-lg transition-all shadow-md">
                         Masuk
                     </button>
                 </div>

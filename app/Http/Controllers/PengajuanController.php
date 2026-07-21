@@ -44,18 +44,24 @@ class PengajuanController extends Controller
         $permohonans = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
 
         // 6. Statistik untuk Grid (Berdasarkan tabel tunggal Pengajuan)
-        $totalPermohonan = Pengajuan::count();
-        $totalDiajukan   = Pengajuan::where('status', 'DIAJUKAN')->count();
-        $totalDiproses   = Pengajuan::where('status', 'DIPROSES')->count();
-        $totalDiterima   = Pengajuan::where('status', 'DITERIMA')->count();
-        $totalDitolak    = Pengajuan::where('status', 'DITOLAK')->count();
+        $totalPermohonan       = Pengajuan::count();
+        $totalPermohonanJenis  = Pengajuan::where('jenis_layanan', 'Permohonan')->count();
+        $totalKeberatanJenis   = Pengajuan::where('jenis_layanan', 'Keberatan')->count();
+        $totalDiajukan         = Pengajuan::where('status', 'DIAJUKAN')->count();
+        $totalDiproses         = Pengajuan::where('status', 'DIPROSES')->count();
+        $totalPerbaikan        = Pengajuan::where('status', 'PERBAIKAN')->count();
+        $totalDiterima         = Pengajuan::where('status', 'DITERIMA')->count();
+        $totalDitolak          = Pengajuan::where('status', 'DITOLAK')->count();
 
         // 7. Kirim ke View
         return view('admin.pengajuan.index', compact(
             'permohonans',
             'totalPermohonan',
+            'totalPermohonanJenis',
+            'totalKeberatanJenis',
             'totalDiajukan',
             'totalDiproses',
+            'totalPerbaikan',
             'totalDiterima',
             'totalDitolak'
         ));
@@ -65,6 +71,27 @@ class PengajuanController extends Controller
     {
         // Mencari data pengajuan berdasarkan ID
         $permohonan = Pengajuan::findOrFail($id);
+
+        // Jika status pengajuan masih DIAJUKAN, otomatis ubah menjadi DIPROSES saat detail dibuka oleh Admin
+        if ($permohonan->status === 'DIAJUKAN') {
+            $permohonan->status = 'DIPROSES';
+            $permohonan->save();
+
+            // Record status history
+            $permohonan->statusHistories()->create([
+                'status' => 'DIPROSES',
+                'catatan' => null,
+            ]);
+
+            // Kirim email notifikasi bahwa status pengajuan sedang diproses
+            try {
+                if ($permohonan->email) {
+                    Mail::to($permohonan->email)->send(new PengajuanStatusChangedMail($permohonan));
+                }
+            } catch (\Exception $mailEx) {
+                Log::warning('Gagal mengirim email notifikasi status DIPROSES otomatis: ' . $mailEx->getMessage());
+            }
+        }
 
         // Mengembalikan ke file view detail yang sudah kita buat sebelumnya
         return view('admin.pengajuan.show', compact('permohonan'));
@@ -84,18 +111,21 @@ class PengajuanController extends Controller
         }
 
         $rules = [
-            'status' => 'required|in:DIAJUKAN,DIPROSES,DITERIMA,DITOLAK',
-            'catatan_admin' => $request->status === 'DITOLAK' ? 'required|string' : 'nullable|string',
+            'status' => 'required|in:DIAJUKAN,DIPROSES,PERBAIKAN,DITERIMA,DITOLAK',
+            'catatan_admin' => in_array($request->status, ['DITOLAK', 'PERBAIKAN']) ? 'required|string' : 'nullable|string',
             'file_jawaban' => 'nullable|file|mimes:pdf,jpg,png,zip,docx|max:5120',
+            'link_jawaban' => 'nullable|url|max:2048',
         ];
 
         $request->validate($rules, [
-            'catatan_admin.required' => 'Catatan/alasan wajib diisi jika status ditolak.',
+            'catatan_admin.required' => 'Catatan wajib diisi untuk menjelaskan hal yang perlu diperbaiki atau alasan penolakan.',
+            'link_jawaban.url' => 'Format tautan/link jawaban harus berupa URL yang valid (contoh: https://...).',
         ]);
 
         $data = [
             'status' => $request->status,
             'catatan_admin' => $request->catatan_admin,
+            'link_jawaban' => $request->input('link_jawaban'),
         ];
 
         if ($request->hasFile('file_jawaban')) {
@@ -103,7 +133,7 @@ class PengajuanController extends Controller
             if ($pengajuan->file_jawaban) {
                 Storage::disk('public')->delete($pengajuan->file_jawaban);
             }
-            $data['file_jawaban'] = $request->file('file_jawaban')->store('file_jawaban', 'public');
+            $data['file_jawaban'] = $this->storeOriginalFile($request->file('file_jawaban'), 'file_jawaban');
         }
 
         $pengajuan->update($data);
@@ -176,5 +206,18 @@ class PengajuanController extends Controller
         }
 
         return redirect()->back()->with('success', count($ids) . ' pengajuan berhasil dihapus.');
+    }
+
+    private function storeOriginalFile($file, $folder)
+    {
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+        $sanitized = preg_replace('/[^a-zA-Z0-9_\-\s]/', '', $originalName);
+        $sanitized = trim(preg_replace('/\s+/', '_', $sanitized));
+        if (empty($sanitized)) {
+            $sanitized = 'file';
+        }
+        $filename = time() . '_' . $sanitized . '.' . $extension;
+        return $file->storeAs($folder, $filename, 'public');
     }
 }

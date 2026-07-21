@@ -12,65 +12,65 @@
         </div>
     </div>
 
-    <!-- Statistik Grid -->
-    <div class="flex gap-4 overflow-x-auto pb-2 lg:grid lg:grid-cols-4 lg:gap-6 lg:pb-0 mb-4">
+    <!-- Statistik Grid (4 Cards Siakad Style - Kompak & Siku 90 Deg) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
 
         <!-- 1. Total Informasi -->
-        <div class="min-w-[200px] lg:min-w-0 relative bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 text-white shadow-xl shadow-blue-900/10 overflow-hidden h-44">
-            <div class="flex items-center gap-3 z-10 relative">
-                <i class="fa-solid fa-folder-open text-2xl text-white/80"></i>
-                <span class="text-lg font-bold tracking-wider uppercase leading-tight">Total Informasi Publik</span>
+        <div class="relative bg-[#1B365D] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+            <div class="z-10">
+                <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalInformasi }}</span>
+                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Total Informasi Publik</span>
             </div>
-            <div class="absolute -bottom-6 right-10 text-[100px] font-black text-white/40 select-none pointer-events-none">
-                {{ $totalInformasi }}
-            </div>
-        </div>
-
-        <!-- 4. Setiap Saat -->
-        <div class="min-w-[200px] lg:min-w-0 relative bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-3xl p-6 text-white shadow-xl shadow-indigo-900/10 overflow-hidden h-44">
-            <div class="flex items-center gap-3 z-10 relative">
-                <i class="fa-solid fa-globe text-2xl text-white/80"></i>
-                <span class="text-lg font-bold tracking-wider uppercase leading-tight">Informasi Tersedia Setiap Saat</span>
-            </div>
-            <div class="absolute -bottom-6 right-10 text-[100px] font-black text-white/40 select-none pointer-events-none">
-                {{ $totalSetiapSaat }}
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
+                <i class="fa-solid fa-folder-open"></i>
             </div>
         </div>
 
-        <!-- 2. Berkala -->
-        <div class="min-w-[200px] lg:min-w-0 relative bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-3xl p-6 text-white shadow-xl shadow-emerald-900/10 overflow-hidden h-44">
-            <div class="flex items-center gap-3 z-10 relative">
-                <i class="fa-solid fa-clock text-2xl text-white/80"></i>
-                <span class="text-lg font-bold tracking-wider uppercase leading-tight">Informasi Tersedia Secara Berkala</span>
+        <!-- 2. Setiap Saat -->
+        <div class="relative bg-[#605ca8] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+            <div class="z-10">
+                <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalSetiapSaat }}</span>
+                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Informasi Setiap Saat</span>
             </div>
-            <div class="absolute -bottom-6 right-10 text-[100px] font-black text-white/40 select-none pointer-events-none">
-                {{ $totalBerkala }}
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
+                <i class="fa-solid fa-globe"></i>
             </div>
         </div>
 
-        <!-- 3. Serta-Merta -->
-        <div class="min-w-[200px] lg:min-w-0 relative bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl shadow-amber-900/10 overflow-hidden h-44">
-            <div class="flex items-center gap-3 z-10 relative">
-                <i class="fa-solid fa-bullhorn text-2xl text-white/80"></i>
-                <span class="text-lg font-bold tracking-wider uppercase leading-tight">Informasi Diumumkan Serta-Merta</span>
+        <!-- 3. Secara Berkala -->
+        <div class="relative bg-[#2563EB] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+            <div class="z-10">
+                <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalBerkala }}</span>
+                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Informasi Secara Berkala</span>
             </div>
-            <div class="absolute -bottom-6 right-10 text-[100px] font-black text-white/40 select-none pointer-events-none">
-                {{ $totalSertaMerta }}
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+        </div>
+
+        <!-- 4. Serta-Merta -->
+        <div class="relative bg-[#0284C7] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+            <div class="z-10">
+                <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalSertaMerta }}</span>
+                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Informasi Serta-Merta</span>
+            </div>
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
+                <i class="fa-solid fa-bullhorn"></i>
             </div>
         </div>
 
     </div>
 
     <!-- Filter & Search Form -->
-    <form id="filterForm" action="{{ url('/admin/informasi-publik') }}" method="GET" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+    <form id="filterForm" action="{{ url('/admin/informasi-publik') }}" method="GET" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 items-center" onsubmit="event.preventDefault(); performLiveSearch(this);">
         <div>
-            <select name="rincian" onchange="this.form.submit()" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none">
+            <select name="rincian" onchange="performLiveSearch(this.form)" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none">
                 <option value="">Semua Rincian Informasi</option>
                 @foreach($listRincian as $r) <option value="{{ $r }}" {{ request('rincian') == $r ? 'selected' : '' }}>{{ $r }}</option> @endforeach
             </select>
         </div>
         <div>
-            <select name="kategori" onchange="this.form.submit()" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none">
+            <select name="kategori" onchange="performLiveSearch(this.form)" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none">
                 <option value="">Semua Jenis Informasi</option>
                 <option value="Informasi Tersedia Setiap Saat" {{ request('kategori') == 'Informasi Tersedia Setiap Saat' ? 'selected' : '' }}>Informasi Tersedia Setiap Saat</option>
                 <option value="Informasi Tersedia Secara Berkala" {{ request('kategori') == 'Informasi Tersedia Secara Berkala' ? 'selected' : '' }}>Informasi Tersedia Secara Berkala</option>
@@ -78,7 +78,7 @@
             </select>
         </div>
         <div class="relative">
-            <input type="text" name="search" value="{{ request('search') }}" id="searchInput" placeholder="Masukan kata kunci informasi..." class="w-full border-slate-200 bg-slate-50 rounded-xl pl-12 pr-4 py-3.5 text-sm outline-none">
+            <input type="text" name="search" value="{{ request('search') }}" id="searchInput" placeholder="Masukan kata kunci informasi..." class="w-full border-slate-200 bg-slate-50 rounded-xl pl-12 pr-4 py-3.5 text-sm outline-none" autocomplete="off">
             <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-400"></i>
         </div>
     </form>
@@ -103,7 +103,7 @@
     <!-- Table Section -->
     <form id="bulk-delete-form" action="{{ route('admin.informasi.bulk') }}" method="POST">
         @csrf @method('DELETE')
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div id="data-table-container" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-opacity duration-200">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -144,7 +144,7 @@
                                         @endphp
                                         <span class="px-3 py-1 rounded-full text-[12px] font-bold {{ $style }}">{{ $item->kategori }}</span>
                                     </td>
-                                    <td class="p-6 text-slate-400">{{ $item->created_at->format('d/m/Y') }}</td>
+                                    <td class="p-6 text-slate-400">{{ $item->created_at->translatedFormat('j F Y') }}</td>
                                     <td class="p-6 text-center">
                                         <div class="flex items-center justify-center gap-1">
                                             <a href="{{ $item->tipe_informasi === 'link' ? $item->jalur_informasi : route('informasi.file', ['id' => $item->id, 'slug' => \Illuminate\Support\Str::slug($item->sub_informasi)]) }}" target="_blank" class="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition"><i class="fa-solid fa-eye"></i></a>
@@ -163,8 +163,8 @@
         </div>
     </form>
 
-    @include('admin.modals.modal_form_informasi')
-    @include('admin.modals.modal_hapus')
+    @include('admin.informasi_publik.modals.modal_form_informasi')
+    @include('admin.informasi_publik.modals.modal_hapus')
 
     <script>
         const selectAll = document.getElementById('select-all');
@@ -245,12 +245,45 @@
             openModal('modal-bulk-delete');
         }
 
+        function performLiveSearch(formElement) {
+            const url = new URL(formElement.action, window.location.origin);
+            const formData = new FormData(formElement);
+            for (const [key, value] of formData.entries()) {
+                if (value) url.searchParams.set(key, value);
+            }
+            
+            const dataContainer = document.getElementById('data-table-container');
+            if (dataContainer) dataContainer.classList.add('opacity-50', 'pointer-events-none');
+
+            fetch(url.toString(), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(res => res.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const newTable = doc.getElementById('data-table-container');
+                if (newTable && dataContainer) {
+                    dataContainer.innerHTML = newTable.innerHTML;
+                }
+                
+                window.history.replaceState(null, '', url.toString());
+            })
+            .catch(err => console.error("Search fetch failed:", err))
+            .finally(() => {
+                if (dataContainer) dataContainer.classList.remove('opacity-50', 'pointer-events-none');
+            });
+        }
+
         const searchInput = document.getElementById('searchInput');
         let timer = null;
-        searchInput.addEventListener('input', function() {
-            clearTimeout(timer);
-            timer = setTimeout(() => { document.getElementById('filterForm').submit(); }, 800);
-        });
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(timer);
+                timer = setTimeout(() => { performLiveSearch(document.getElementById('filterForm')); }, 400);
+            });
+        }
 
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
@@ -420,4 +453,3 @@
         });
     </script>
 @endsection
-

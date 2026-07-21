@@ -19,7 +19,7 @@
             'data' => $result->map(fn($item) => [
                 'sub_informasi' => $item->sub_informasi,
                 'kategori'      => $item->kategori,
-                'tanggal'       => $item->created_at->format('d/m/Y'),
+                'tanggal'       => $item->created_at->translatedFormat('j F Y'),
                 'url'           => $item->tipe_informasi === 'link'
                     ? $item->jalur_informasi
                     : route('informasi.file', ['id' => $item->id, 'slug' => \Illuminate\Support\Str::slug($item->sub_informasi) . '.' . $item->tipe_informasi])
@@ -34,14 +34,53 @@
 @section('title', 'Informasi Publik - PPID FMIPA Unila')
 
 @section('content')
-<div class="container mx-auto px-4 py-12 pt-32 max-w-7xl">
+@php
+    $konten = \App\Models\KontenInformasiPublik::getData();
+@endphp
 
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Daftar Informasi Publik</h1>
-        <p class="text-gray-600 max-w-2xl text-sm md:text-base">
-            Penetapan Daftar Informasi Publik Universitas Lampung mengacu pada aturan yang berlaku.
-        </p>
+<!-- Hero Section Banner -->
+<div class="relative bg-[#1B365D] text-white pt-32 sm:pt-40 pb-16 sm:pb-24 overflow-hidden">
+    <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[#1B365D] via-[#1B365D]/90 to-[#1B365D]/70"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
+        <!-- Breadcrumb -->
+        <nav class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-cyan-200 mb-6">
+            <a href="/" class="hover:text-white transition-colors">Beranda</a>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span>Layanan Informasi</span>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span class="text-white font-bold"> Daftar Informasi Publik</span>
+        </nav>
+
+        <div class="max-w-4xl space-y-4">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
+                {{ $konten['informasi_publik_judul'] }}
+            </h1>
+            <p class="text-slate-100 text-sm sm:text-lg md:text-xl leading-relaxed font-normal">
+                {{ $konten['informasi_publik_subjudul'] }}
+            </p>
+        </div>
     </div>
+</div>
+
+@auth
+    @if(Auth::user()->isAdmin())
+    <div class="fixed bottom-6 right-6 z-[9999] transition-all transform hover:scale-105">
+        <a href="{{ route('admin.halaman-informasi-publik.edit') }}"
+           class="inline-flex items-center gap-3 px-6 py-4 bg-[#1B365D] hover:bg-[#07597b] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider shadow-2xl border-2 border-white/20">
+            <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+            </span>
+            <i class="fa-solid fa-pen-to-square text-base"></i>
+            <span>Edit Halaman Ini (Admin)</span>
+        </a>
+    </div>
+    @endif
+@endauth
+
+<div class="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24 max-w-7xl pb-16">
 
     <!-- Search Form -->
     <form id="searchForm" action="{{ url('/informasi-publik') }}" method="GET" class="bg-white p-4 md:p-6 border border-gray-100 shadow-xl mb-8 flex flex-col md:flex-row gap-4 items-center rounded-3xl">
@@ -108,10 +147,10 @@
                     <tr class="hover:bg-gray-50 transition-colors group">
                         <td class="px-8 py-5"><div class="text-md text-gray-900 font-medium">{{ $dok->sub_informasi }}</div></td>
                         <td class="px-8 py-5 text-sm text-gray-600 whitespace-nowrap">{{ $dok->kategori }}</td>
-                        <td class="px-8 py-5 text-sm text-gray-600">{{ $dok->created_at->format('d/m/Y') }}</td>
+                        <td class="px-8 py-5 text-sm text-gray-600">{{ $dok->created_at->translatedFormat('j F Y') }}</td>
                         <td class="px-8 py-5 text-center">
                             <a href="{{ route('informasi.file', ['id' => $dok->id, 'slug' => \Illuminate\Support\Str::slug($dok->sub_informasi) . '.' . $dok->tipe_informasi]) }}"
-                                target="_blank" class="inline-block bg-[#0a192f] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-black transition">LIHAT</a>
+                                target="_blank" class="inline-block bg-[#1B365D] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-[#1B365D] transition">LIHAT</a>
                         </td>
                     </tr>
                     @empty
@@ -159,7 +198,7 @@
                                 <td class="px-8 py-5 text-sm text-gray-600">${item.kategori}</td>
                                 <td class="px-8 py-5 text-sm text-gray-600">${item.tanggal}</td>
                                 <td class="px-8 py-5 text-center">
-                                    <a href="${item.url}" target="_blank" class="inline-block bg-[#0a192f] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-black transition">LIHAT</a>
+                                    <a href="${item.url}" target="_blank" class="inline-block bg-[#1B365D] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-[#1B365D] transition">LIHAT</a>
                                 </td>
                             </tr>
                         `).join('');

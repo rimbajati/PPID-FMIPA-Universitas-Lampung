@@ -7,18 +7,98 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Poppins', sans-serif !important; }
+        body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; }
         /* Scrollbar kustom untuk sidebar agar lebih rapi */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 0px !important; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Force 90-degree sharp corners globally across the entire system */
+        *, ::before, ::after {
+            border-radius: 0px !important;
+        }
+
+        /* Siakad Table Style (Global Table Design) */
+        table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+            border: 1px solid #cbd5e1 !important;
+            background-color: #ffffff !important;
+            border-radius: 0px !important;
+        }
+        table thead tr {
+            background-color: #2c3e50 !important;
+            color: #ffffff !important;
+        }
+        table thead th {
+            background-color: #2c3e50 !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            padding: 10px 14px !important;
+            border: 1px solid #233545 !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.25) !important;
+            border-bottom: 1px solid #cbd5e1 !important;
+            font-size: 0.8125rem !important;
+            letter-spacing: 0.025em !important;
+        }
+        table thead th:last-child {
+            border-right: 1px solid #233545 !important;
+        }
+        table tbody tr {
+            transition: background-color 0.15s ease-in-out;
+        }
+        table tbody tr:nth-child(odd) {
+            background-color: #f8fafc !important;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #ffffff !important;
+        }
+        table tbody tr:hover {
+            background-color: #e2e8f0 !important;
+        }
+        table tbody td {
+            padding: 10px 14px !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #334155 !important;
+            font-size: 0.875rem !important;
+            vertical-align: middle !important;
+        }
+        table th.text-center, table td.text-center {
+            text-align: center !important;
+        }
+        table th.text-right, table td.text-right {
+            text-align: right !important;
+        }
+        table th.text-left, table td.text-left {
+            text-align: left !important;
+        }
     </style>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '0px',
+                        'DEFAULT': '0px',
+                        'md': '0px',
+                        'lg': '0px',
+                        'xl': '0px',
+                        '2xl': '0px',
+                        '3xl': '0px',
+                        'full': '0px',
+                    }
+                }
+            }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -46,23 +126,59 @@
                 </div>
 
                 <!-- Navigasi Utama -->
-                <nav class="px-6 space-y-2.5 mt-2">
+                <nav class="px-6 space-y-2 mt-2">
                     @php
-                        $navItems = [
-                            ['url' => '/admin/dashboard', 'icon' => 'fa-chart-pie', 'label' => 'Dashboard'],
-                            ['url' => '/admin/informasi-publik', 'icon' => 'fa-folder-open', 'label' => 'Informasi Publik'],
-                            ['url' => '/admin/pengajuan', 'icon' => 'fa-file-lines', 'label' => 'Pengajuan'],
-                        ];
+                        $isEditKontenActive = request()->is('admin/beranda*') || request()->is('admin/prosedur-permohonan*') || request()->is('admin/halaman-informasi-publik*');
                     @endphp
 
-                    @foreach($navItems as $item)
-                        <a href="{{ url($item['url']) }}"
-                           class="flex items-center px-5 py-3.5 rounded-[14px] text-[15px] font-semibold transition-all duration-300
-                           {{ request()->is(ltrim($item['url'], '/').'*') ? 'bg-[#0f172a] text-white shadow-lg shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
-                            <i class="fa-solid {{ $item['icon'] }} text-lg w-7 text-center mr-2"></i>
-                            {{ $item['label'] }}
-                        </a>
-                    @endforeach
+                    <a href="{{ url('/admin/dashboard') }}"
+                       class="flex items-center px-5 py-3.5 rounded-[14px] text-[15px] font-semibold transition-all duration-300 {{ request()->is('admin/dashboard*') ? 'bg-[#1B365D] text-white shadow-lg shadow-sky-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                        <i class="fa-solid fa-chart-pie text-lg w-7 text-center mr-2"></i>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a href="{{ url('/admin/informasi-publik') }}"
+                       class="flex items-center px-5 py-3.5 rounded-[14px] text-[15px] font-semibold transition-all duration-300 {{ request()->is('admin/informasi-publik*') ? 'bg-[#1B365D] text-white shadow-lg shadow-sky-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                        <i class="fa-solid fa-folder-open text-lg w-7 text-center mr-2"></i>
+                        <span>Informasi Publik</span>
+                    </a>
+
+                    <a href="{{ url('/admin/pengajuan') }}"
+                       class="flex items-center px-5 py-3.5 rounded-[14px] text-[15px] font-semibold transition-all duration-300 {{ request()->is('admin/pengajuan*') ? 'bg-[#1B365D] text-white shadow-lg shadow-sky-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                        <i class="fa-solid fa-file-lines text-lg w-7 text-center mr-2"></i>
+                        <span>Pengajuan</span>
+                    </a>
+
+                    <!-- Parent Menu: Kelola Konten -->
+                    <div class="space-y-1">
+                        <button type="button" onclick="toggleEditKontenMenu()"
+                                class="w-full flex items-center justify-between px-5 py-3.5 rounded-[14px] text-[15px] font-semibold transition-all duration-300 {{ $isEditKontenActive ? 'bg-[#1B365D] text-white shadow-lg shadow-sky-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                            <div class="flex items-center">
+                                <i class="fa-solid fa-pen-to-square text-lg w-7 text-center mr-2"></i>
+                                <span>Kelola Konten</span>
+                            </div>
+                            <i id="edit-konten-arrow" class="fa-solid fa-chevron-down text-xs transition-transform duration-300 {{ $isEditKontenActive ? 'rotate-180' : '' }}"></i>
+                        </button>
+
+                        <!-- Sub-menu Items -->
+                        <div id="edit-konten-submenu" class="{{ $isEditKontenActive ? '' : 'hidden' }} pl-4 space-y-1 pt-1">
+                            <a href="{{ url('/admin/beranda') }}"
+                               class="flex items-center px-4 py-2.5 rounded-[12px] text-[14px] font-semibold transition-all duration-300 {{ request()->is('admin/beranda*') ? 'bg-[#07597b] text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                                <i class="fa-solid fa-house text-sm w-6 text-center mr-2"></i>
+                                <span>Beranda</span>
+                            </a>
+                            <a href="{{ url('/admin/prosedur-permohonan') }}"
+                               class="flex items-center px-4 py-2.5 rounded-[12px] text-[14px] font-semibold transition-all duration-300 {{ request()->is('admin/prosedur-permohonan*') ? 'bg-[#07597b] text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                                <i class="fa-solid fa-list-check text-sm w-6 text-center mr-2"></i>
+                                <span>Prosedur Permohonan Informasi</span>
+                            </a>
+                            <a href="{{ url('/admin/halaman-informasi-publik') }}"
+                               class="flex items-center px-4 py-2.5 rounded-[12px] text-[14px] font-semibold transition-all duration-300 {{ request()->is('admin/halaman-informasi-publik*') ? 'bg-[#07597b] text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                                <i class="fa-solid fa-folder-open text-sm w-6 text-center mr-2"></i>
+                                <span>Informasi Publik</span>
+                            </a>
+                        </div>
+                    </div>
                 </nav>
             </div>
 
@@ -97,10 +213,6 @@
                     <div class="text-right hidden sm:block">
                         <p class="font-bold text-slate-800 text-[15px]">{{ auth()->user()->nama_lengkap ?? 'Admin PPID' }}</p>
                     </div>
-                    <!-- Avatar Lingkaran -->
-                    <div class="w-10 h-10 bg-[#0f172a] text-white rounded-full flex items-center justify-center font-bold text-base shadow-md">
-                        {{ substr(auth()->user()->nama_lengkap ?? 'A', 0, 1) }}
-                    </div>
                 </div>
             </header>
 
@@ -123,7 +235,7 @@
         </div>
     </div>
 
-    <!-- Script Kontrol Sidebar Mobile -->
+    <!-- Script Kontrol Sidebar Mobile & Menu Collapsible -->
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -131,6 +243,18 @@
 
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
+        }
+
+        function toggleEditKontenMenu() {
+            const menu = document.getElementById('edit-konten-submenu');
+            const arrow = document.getElementById('edit-konten-arrow');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+            } else {
+                menu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
         }
     </script>
     @stack('scripts')

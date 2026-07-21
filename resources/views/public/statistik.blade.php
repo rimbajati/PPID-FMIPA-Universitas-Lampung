@@ -3,11 +3,35 @@
 @section('title', 'Statistik - PPID FMIPA Unila')
 
 @section('content')
-<div class="pt-28 pb-16 bg-gray-50 min-h-screen">
+<!-- Hero Section Banner -->
+<div class="relative bg-[#1B365D] text-white pt-32 sm:pt-40 pb-16 sm:pb-20 overflow-hidden mb-12">
+    <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[#1B365D] via-[#1B365D]/90 to-[#1B365D]/70"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
+        <!-- Breadcrumb -->
+        <nav class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-cyan-200 mb-6">
+            <a href="/" class="hover:text-white transition-colors">Beranda</a>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span>Layanan Informasi</span>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span class="text-white font-bold">Laporan & Statistik</span>
+        </nav>
+
+        <div class="max-w-4xl space-y-4">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
+                Statistik Permohonan Informasi
+            </h1>
+            <p class="text-slate-100 text-sm sm:text-lg md:text-xl leading-relaxed font-normal">
+                Ringkasan laporan terhadap akses informasi publik FMIPA Universitas Lampung yang meliputi jumlah permohonan, status layanan, dan kategori keberatan secara terbuka.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="pb-16 bg-gray-50 min-h-screen">
     <div class="container mx-auto px-6 max-w-6xl">
-        <div class="bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-slate-200">
-            <h1 class="text-3xl font-bold text-slate-800 mb-2">Statistik Permohonan Informasi</h1>
-            <p class="text-slate-500 mb-10">Ringkasan laporan terhadap akses informasi publik FMIPA Unila yang meliputi jumlah permohonan, status layanan, dan kategori keberatan.</p>
+        <div class="bg-white p-8 md:p-12 shadow-xl border border-slate-200">
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
                 @php
@@ -55,7 +79,7 @@
         data: {
             labels: Object.keys(yearlyData),
             datasets: [
-                { label: 'Permohonan', data: Object.values(yearlyData).map(v => v.permohonan), backgroundColor: '#5986d4', borderRadius: 16 },
+                { label: 'Permohonan', data: Object.values(yearlyData).map(v => v.permohonan), backgroundColor: '#1B365D', borderRadius: 16 },
                 { label: 'Diterima', data: Object.values(yearlyData).map(v => v.diterima), backgroundColor: '#22c55e', borderRadius: 16 },
                 { label: 'Ditolak', data: Object.values(yearlyData).map(v => v.ditolak), backgroundColor: '#ef4444', borderRadius: 16 },
                 { label: 'Keberatan', data: Object.values(yearlyData).map(v => v.keberatan), backgroundColor: '#f59e0b', borderRadius: 16 }

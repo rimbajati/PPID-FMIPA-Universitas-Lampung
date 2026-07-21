@@ -18,9 +18,30 @@ class LayananController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $pengajuans = Pengajuan::with('statusHistories')->where('user_id', Auth::id())->latest()->get();
+        $query = Pengajuan::with('statusHistories')->where('user_id', Auth::id());
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('jenis_layanan')) {
+            $query->where('jenis_layanan', $request->jenis_layanan);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('no_tiket', 'like', "%{$search}%")
+                  ->orWhere('info_diminta', 'like', "%{$search}%")
+                  ->orWhere('tujuan_permohonan', 'like', "%{$search}%")
+                  ->orWhere('tujuan_keberatan', 'like', "%{$search}%")
+                  ->orWhere('alasan_keberatan', 'like', "%{$search}%");
+            });
+        }
+
+        $pengajuans = $query->latest()->get();
         $permohonans = Pengajuan::with('statusHistories')->where('jenis_layanan', 'Permohonan')->where('user_id', Auth::id())->latest()->get();
         return view('pemohon.layanan.index', compact('pengajuans', 'permohonans'));
     }
@@ -77,16 +98,16 @@ class LayananController extends Controller
         try {
             DB::beginTransaction();
 
-            $pathIdentitas = $request->file('identitas')->store('identitas_pemohon', 'public');
+            $pathIdentitas = $this->storeOriginalFile($request->file('identitas'), 'identitas_pemohon');
 
             $pathAkta = null;
             if ($request->hasFile('akta_pendirian')) {
-                $pathAkta = $request->file('akta_pendirian')->store('akta_pendirian', 'public');
+                $pathAkta = $this->storeOriginalFile($request->file('akta_pendirian'), 'akta_pendirian');
             }
 
             $pathPendukung = null;
             if ($request->hasFile('lampiran_pendukung')) {
-                $pathPendukung = $request->file('lampiran_pendukung')->store('lampiran_pendukung', 'public');
+                $pathPendukung = $this->storeOriginalFile($request->file('lampiran_pendukung'), 'lampiran_pendukung');
             }
 
             $data = Pengajuan::create([
@@ -181,16 +202,32 @@ class LayananController extends Controller
             'kategori_pemohon.required'      => 'Kategori pemohon wajib diisi.',
         ]);
 
+        $related = Pengajuan::where('id', $request->permohonan_terkait_id)
+                            ->where('user_id', Auth::id())
+                            ->where('jenis_layanan', 'Permohonan')
+                            ->first();
+
+        if (!$related) {
+            $errorMsg = 'Permohonan informasi terkait tidak ditemukan atau bukan milik Anda.';
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMsg,
+                    'errors'  => ['permohonan_terkait_id' => [$errorMsg]]
+                ], 422);
+            }
+            return redirect()->back()->withErrors(['permohonan_terkait_id' => $errorMsg]);
+        }
+
         try {
             $filePath = null;
             if ($request->hasFile('lampiran_pendukung')) {
-                $filePath = $request->file('lampiran_pendukung')->store('lampiran_pendukung', 'public');
+                $filePath = $this->storeOriginalFile($request->file('lampiran_pendukung'), 'lampiran_pendukung');
             } elseif ($request->hasFile('dokumen_pendukung')) {
-                $filePath = $request->file('dokumen_pendukung')->store('dokumen_keberatan', 'public');
+                $filePath = $this->storeOriginalFile($request->file('dokumen_pendukung'), 'dokumen_keberatan');
             } else {
                 // Inherit from the related permohonan
-                $related = Pengajuan::find($request->permohonan_terkait_id);
-                if ($related && $related->lampiran_pendukung) {
+                if ($related->lampiran_pendukung) {
                     $filePath = $related->lampiran_pendukung;
                 }
             }
@@ -198,7 +235,7 @@ class LayananController extends Controller
             $data = Pengajuan::create([
                 'user_id'               => Auth::id(),
                 'jenis_layanan'         => 'Keberatan',
-                'permohonan_terkait_id' => $request->permohonan_terkait_id,
+                'permohonan_terkait_id' => $related->id,
                 'tujuan_keberatan'      => $request->tujuan_keberatan,
                 'alasan_keberatan'      => $request->alasan_keberatan,
                 'lampiran_pendukung'    => $filePath,
@@ -211,7 +248,7 @@ class LayananController extends Controller
                 'no_identitas'          => $request->no_identitas,
                 'no_hp'                 => $request->telepon,
                 'alamat'                => $request->alamat,
-                'lampiran_identitas'    => '-'
+                'lampiran_identitas'    => $related->lampiran_identitas ?: '-'
             ]);
 
             $nomorTiket = 'KEB-' . date('Ymd') . '-' . str_pad($data->id, 3, '0', STR_PAD_LEFT);
@@ -261,11 +298,11 @@ class LayananController extends Controller
             abort(403);
         }
 
-        if ($pengajuan->status !== 'DIAJUKAN') {
+        if (!in_array($pengajuan->status, ['DIAJUKAN', 'PERBAIKAN'])) {
             if ($request->wantsJson()) {
-                return response()->json(['success' => false, 'message' => 'Pengajuan yang sedang diproses tidak dapat diubah.'], 403);
+                return response()->json(['success' => false, 'message' => 'Pengajuan yang sedang diproses atau selesai tidak dapat diubah.'], 403);
             }
-            return redirect()->back()->with('error', 'Pengajuan yang sedang diproses tidak dapat diubah.');
+            return redirect()->back()->with('error', 'Pengajuan yang sedang diproses atau selesai tidak dapat diubah.');
         }
 
         if ($pengajuan->jenis_layanan === 'Permohonan') {
@@ -301,6 +338,8 @@ class LayananController extends Controller
             try {
                 DB::beginTransaction();
 
+                $isWasPerbaikan = $pengajuan->status === 'PERBAIKAN';
+
                 $updateData = [
                     'pekerjaan'        => $request->pekerjaan,
                     'kategori_pemohon' => $request->kategori_pemohon,
@@ -310,19 +349,27 @@ class LayananController extends Controller
                     'info_diminta'     => $request->info_diminta,
                     'tujuan_permohonan'=> $request->tujuan,
                     'cara_memperoleh'  => $request->cara_ambil,
+                    'status'           => 'DIAJUKAN',
                 ];
 
                 if ($request->hasFile('identitas')) {
-                    $updateData['lampiran_identitas'] = $request->file('identitas')->store('identitas_pemohon', 'public');
+                    $updateData['lampiran_identitas'] = $this->storeOriginalFile($request->file('identitas'), 'identitas_pemohon');
                 }
                 if ($request->hasFile('akta_pendirian')) {
-                    $updateData['akta_pendirian'] = $request->file('akta_pendirian')->store('akta_pendirian', 'public');
+                    $updateData['akta_pendirian'] = $this->storeOriginalFile($request->file('akta_pendirian'), 'akta_pendirian');
                 }
                 if ($request->hasFile('lampiran_pendukung')) {
-                    $updateData['lampiran_pendukung'] = $request->file('lampiran_pendukung')->store('lampiran_pendukung', 'public');
+                    $updateData['lampiran_pendukung'] = $this->storeOriginalFile($request->file('lampiran_pendukung'), 'lampiran_pendukung');
                 }
 
                 $pengajuan->update($updateData);
+
+                if ($isWasPerbaikan) {
+                    $pengajuan->statusHistories()->create([
+                        'status' => 'DIAJUKAN',
+                        'catatan' => 'Pemohon telah memperbarui data pengajuan.',
+                    ]);
+                }
 
                 DB::commit();
 
@@ -360,9 +407,9 @@ class LayananController extends Controller
                 ];
 
                 if ($request->hasFile('lampiran_pendukung')) {
-                    $updateData['lampiran_pendukung'] = $request->file('lampiran_pendukung')->store('lampiran_pendukung', 'public');
+                    $updateData['lampiran_pendukung'] = $this->storeOriginalFile($request->file('lampiran_pendukung'), 'lampiran_pendukung');
                 } elseif ($request->hasFile('dokumen_pendukung')) {
-                    $updateData['lampiran_pendukung'] = $request->file('dokumen_pendukung')->store('dokumen_keberatan', 'public');
+                    $updateData['lampiran_pendukung'] = $this->storeOriginalFile($request->file('dokumen_pendukung'), 'dokumen_keberatan');
                 }
 
                 $pengajuan->update($updateData);
@@ -384,6 +431,19 @@ class LayananController extends Controller
         }
     }
 
+    private function storeOriginalFile($file, $folder)
+    {
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+        $sanitized = preg_replace('/[^a-zA-Z0-9_\-\s]/', '', $originalName);
+        $sanitized = trim(preg_replace('/\s+/', '_', $sanitized));
+        if (empty($sanitized)) {
+            $sanitized = 'file';
+        }
+        $filename = time() . '_' . $sanitized . '.' . $extension;
+        return $file->storeAs($folder, $filename, 'public');
+    }
+
     public function destroy(Request $request, $id)
     {
         $pengajuan = Pengajuan::findOrFail($id);
@@ -394,9 +454,9 @@ class LayananController extends Controller
 
         if ($pengajuan->status !== 'DIAJUKAN') {
             if ($request->wantsJson()) {
-                return response()->json(['success' => false, 'message' => 'Pengajuan yang sedang diproses tidak dapat dihapus.'], 403);
+                return response()->json(['success' => false, 'message' => 'Hanya pengajuan berstatus diajukan yang dapat dihapus.'], 403);
             }
-            return redirect()->back()->with('error', 'Pengajuan yang sedang diproses tidak dapat dihapus.');
+            return redirect()->back()->with('error', 'Hanya pengajuan berstatus diajukan yang dapat dihapus.');
         }
 
         try {

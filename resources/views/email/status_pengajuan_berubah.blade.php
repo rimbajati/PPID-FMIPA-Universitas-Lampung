@@ -1,240 +1,309 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembaruan Status Pengajuan PPID FMIPA</title>
+    <title>Pembaruan Status Pengajuan - PPID FMIPA Unila</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
             margin: 0;
             padding: 0;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        .container {
-            max-width: 600px;
-            margin: 40px auto;
+        .wrapper {
+            width: 100%;
+            background-color: #f1f5f9;
+            padding: 32px 16px;
+            box-sizing: border-box;
+        }
+        .main-card {
+            max-width: 580px;
+            margin: 0 auto;
             background-color: #ffffff;
-            border-radius: 24px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
             border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
         }
         .header {
-            background-color: #0b192f;
-            padding: 40px 30px;
-            text-align: center;
-        }
-        .header h1 {
+            background-color: #1B365D;
+            padding: 28px 32px;
             color: #ffffff;
-            margin: 0;
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
         }
-        .header p {
-            color: #0095e8;
-            margin: 5px 0 0 0;
-            font-size: 14px;
-            font-weight: 600;
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #ffffff;
+        }
+        .brand-sub {
+            font-size: 11px;
+            color: #93c5fd;
+            margin: 3px 0 0 0;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
         }
         .content {
-            padding: 40px 30px;
+            padding: 32px;
         }
         .greeting {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: #0f172a;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
-        .intro {
-            font-size: 15px;
-            color: #64748b;
-            margin-bottom: 30px;
+        .message-text {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 24px;
+        }
+        .status-badge-container {
+            margin-bottom: 24px;
+            text-align: center;
         }
         .status-badge {
             display: inline-block;
-            padding: 10px 24px;
-            border-radius: 12px;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
             font-weight: 800;
-            font-size: 18px;
-            margin-bottom: 30px;
-            text-align: center;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
         .status-diproses {
+            background-color: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+        .status-perbaikan {
             background-color: #fffbeb;
-            border: 1px solid #fef3c7;
-            color: #b45309;
+            color: #92400e;
+            border: 1px solid #fde68a;
         }
         .status-diterima {
             background-color: #ecfdf5;
-            border: 1px solid #d1fae5;
-            color: #047857;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
         }
         .status-ditolak {
-            background-color: #fef2f2;
-            border: 1px solid #fee2e2;
-            color: #b91c1c;
+            background-color: #fff1f2;
+            color: #9f1239;
+            border: 1px solid #fecdd3;
         }
         .status-diajukan {
-            background-color: #f0f9ff;
-            border: 1px solid #e0f2fe;
-            color: #0369a1;
-        }
-        .info-card {
             background-color: #f8fafc;
+            color: #475569;
             border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 30px;
         }
-        .info-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
-        .info-body {
-            font-size: 15px;
-            color: #1e293b;
-            font-weight: 500;
-        }
-        .data-table {
+        .details-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
         }
-        .data-table td {
-            padding: 10px 0;
-            vertical-align: top;
-            font-size: 14px;
+        .details-table td {
+            padding: 12px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid #f1f5f9;
         }
-        .data-table td.label {
-            width: 35%;
+        .details-table tr:last-child td {
+            border-bottom: none;
+        }
+        .label-col {
+            width: 36%;
             color: #64748b;
             font-weight: 600;
         }
-        .data-table td.value {
-            width: 65%;
-            color: #1e293b;
-            font-weight: 500;
-            padding-left: 10px;
-        }
-        .footer {
-            background-color: #f8fafc;
-            padding: 30px;
-            text-align: center;
-            font-size: 13px;
-            color: #94a3b8;
-            border-top: 1px solid #e2e8f0;
-        }
-        .footer a {
-            color: #0095e8;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .btn-action {
-            display: block;
-            text-align: center;
-            background-color: #0b192f;
-            color: #ffffff !important;
-            padding: 14px 24px;
-            border-radius: 12px;
+        .value-col {
+            color: #0f172a;
             font-weight: 700;
-            text-decoration: none;
-            margin-top: 20px;
-            box-shadow: 0 4px 6px -1px rgba(11, 25, 47, 0.2);
         }
-        .btn-action:hover {
-            background-color: #0095e8;
+        .notes-card {
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+        .notes-card.perbaikan {
+            background-color: #fffbeb;
+            border-color: #fde68a;
+        }
+        .notes-card.ditolak {
+            background-color: #fff1f2;
+            border-color: #fecdd3;
+        }
+        .notes-card.diterima {
+            background-color: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+        .notes-card.default {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+        }
+        .notes-header {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .notes-card.perbaikan .notes-header { color: #b45309; }
+        .notes-card.ditolak .notes-header { color: #be123c; }
+        .notes-card.diterima .notes-header { color: #15803d; }
+        .notes-card.default .notes-header { color: #475569; }
+
+        .notes-body {
+            font-size: 13.5px;
+            color: #1e293b;
+            line-height: 1.55;
+            font-weight: 500;
+        }
+        .btn-wrapper {
+            text-align: center;
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+        .btn-primary {
+            display: inline-block;
+            background-color: #1B365D;
+            color: #ffffff !important;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13.5px;
+            text-decoration: none;
         }
         .btn-download {
             display: inline-block;
-            background-color: #047857;
+            background-color: #059669;
             color: #ffffff !important;
-            padding: 10px 20px;
+            padding: 9px 18px;
             border-radius: 8px;
             font-weight: 700;
+            font-size: 12.5px;
             text-decoration: none;
-            font-size: 13px;
-            margin-top: 10px;
+            margin-top: 12px;
         }
-        .btn-download:hover {
-            background-color: #065f46;
+        .footer {
+            padding: 24px 32px;
+            background-color: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>PPID FMIPA</h1>
-        <p>Universitas Lampung</p>
-    </div>
-
-    <div class="content">
-        <div class="greeting">Halo, {{ $pengajuan->nama }}</div>
-        <div class="intro">
-            Status pengajuan layanan informasi Anda telah diperbarui oleh Administrator PPID FMIPA Unila. Berikut rincian perubahan status terkini:
+<div class="wrapper">
+    <div class="main-card">
+        <div class="header">
+            <h1 class="brand-title">PPID FMIPA UNILA</h1>
+            <p class="brand-sub">Pejabat Pengelola Informasi & Dokumentasi</p>
         </div>
 
-        <div style="text-align: center; margin-bottom: 10px;">
-            <span class="status-badge 
-                @if($pengajuan->status === 'DIPROSES') status-diproses
-                @elseif($pengajuan->status === 'DITERIMA') status-diterima
-                @elseif($pengajuan->status === 'DITOLAK') status-ditolak
-                @else status-diajukan
-                @endif">
-                STATUS: {{ $pengajuan->status }}
-            </span>
-        </div>
-
-        <table class="data-table">
-            <tr>
-                <td class="label">No. Tiket</td>
-                <td class="value">: <strong style="color: #0b192f;">{{ $pengajuan->no_tiket }}</strong></td>
-            </tr>
-            <tr>
-                <td class="label">Jenis Layanan</td>
-                <td class="value">: {{ $pengajuan->jenis_layanan == 'Keberatan' ? 'Pengajuan Keberatan' : 'Permohonan Informasi' }}</td>
-            </tr>
-            <tr>
-                <td class="label">Waktu Pembaruan</td>
-                <td class="value">: {{ date('d F Y, H:i') }} WIB</td>
-            </tr>
-        </table>
-
-        @if($pengajuan->catatan_admin)
-            <div class="info-card">
-                <div class="info-title">Catatan Administrator</div>
-                <div class="info-body">{!! nl2br(e($pengajuan->catatan_admin)) !!}</div>
-                
-                @if($pengajuan->status === 'DITERIMA' && $pengajuan->file_jawaban)
-                    <div style="margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
-                        <span class="info-title" style="display: block; margin-bottom: 5px;">Berkas Jawaban / Tanggapan</span>
-                        <a href="{{ url('/storage/' . $pengajuan->file_jawaban) }}" target="_blank" class="btn-download">
-                            <i class="fa-solid fa-download"></i> Unduh Berkas Lampiran
-                        </a>
-                    </div>
+        <div class="content">
+            <div class="greeting">Halo, {{ $pengajuan->nama }}</div>
+            
+            <p class="message-text">
+                @if($pengajuan->status === 'PERBAIKAN')
+                    Pengajuan layanan informasi Anda membutuhkan perbaikan data sebelum dapat diproses lebih lanjut.
+                @elseif($pengajuan->status === 'DIPROSES')
+                    Pengajuan layanan informasi Anda saat ini sedang ditindaklanjuti oleh tim PPID FMIPA Unila.
+                @elseif($pengajuan->status === 'DITERIMA')
+                    Permohonan informasi Anda telah disetujui dan ditanggapi oleh PPID FMIPA Unila.
+                @elseif($pengajuan->status === 'DITOLAK')
+                    Pengajuan layanan informasi Anda tidak dapat ditindaklanjuti.
+                @else
+                    Status pengajuan layanan informasi Anda telah diperbarui.
                 @endif
+            </p>
+
+            <div class="status-badge-container">
+                <span class="status-badge 
+                    @if($pengajuan->status === 'DIPROSES') status-diproses
+                    @elseif($pengajuan->status === 'PERBAIKAN') status-perbaikan
+                    @elseif($pengajuan->status === 'DITERIMA') status-diterima
+                    @elseif($pengajuan->status === 'DITOLAK') status-ditolak
+                    @else status-diajukan
+                    @endif">
+                    Status: {{ $pengajuan->status }}
+                </span>
             </div>
-        @endif
 
-        <a href="{{ url('/layanan') }}" class="btn-action">Lihat Riwayat & Detail Lengkap</a>
-    </div>
+            <table class="details-table">
+                <tr>
+                    <td class="label-col">Nomor Tiket</td>
+                    <td class="value-col">{{ $pengajuan->no_tiket }}</td>
+                </tr>
+                <tr>
+                    <td class="label-col">Jenis Layanan</td>
+                    <td class="value-col">{{ $pengajuan->jenis_layanan == 'Keberatan' ? 'Pengajuan Keberatan' : 'Permohonan Informasi' }}</td>
+                </tr>
+                <tr>
+                    <td class="label-col">Waktu Pembaruan</td>
+                    <td class="value-col">{{ date('d F Y, H:i') }} WIB</td>
+                </tr>
+            </table>
 
-    <div class="footer">
-        <p>Email ini dikirim secara otomatis oleh sistem PPID FMIPA Universitas Lampung.</p>
-        <p>&copy; {{ date('Y') }} PPID FMIPA Unila. All Rights Reserved.</p>
+            @if($pengajuan->catatan_admin)
+                <div class="notes-card 
+                    @if($pengajuan->status === 'PERBAIKAN') perbaikan
+                    @elseif($pengajuan->status === 'DITOLAK') ditolak
+                    @elseif($pengajuan->status === 'DITERIMA') diterima
+                    @else default
+                    @endif">
+                    <div class="notes-header">
+                        @if($pengajuan->status === 'PERBAIKAN')
+                            Catatan Perbaikan dari Petugas
+                        @elseif($pengajuan->status === 'DITOLAK')
+                            Alasan Penolakan
+                        @elseif($pengajuan->status === 'DITERIMA')
+                            Tanggapan Administrator
+                        @else
+                            Catatan Administrator
+                        @endif
+                    </div>
+                    <div class="notes-body">{!! nl2br(e($pengajuan->catatan_admin)) !!}</div>
+
+                    @if($pengajuan->status === 'DITERIMA' && $pengajuan->file_jawaban)
+                        <div style="margin-top: 14px; pt-3; border-top: 1px dashed #cbd5e1;">
+                            <a href="{{ url('/storage/' . $pengajuan->file_jawaban) }}" target="_blank" class="btn-download">
+                                Unduh Lampiran Tanggapan
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            @endif
+
+            <div class="btn-wrapper">
+                <a href="{{ url('/layanan') }}" class="btn-primary">
+                    @if($pengajuan->status === 'PERBAIKAN')
+                        Perbaiki Data Sekarang
+                    @else
+                        Lihat Detail Pengajuan
+                    @endif
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p style="margin:0 0 4px 0;">Pesan otomatis dari Portal Layanan Informasi PPID FMIPA Unila.</p>
+            <p style="margin:0;">&copy; {{ date('Y') }} Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Lampung.</p>
+        </div>
     </div>
 </div>
 
 </body>
 </html>
+
 

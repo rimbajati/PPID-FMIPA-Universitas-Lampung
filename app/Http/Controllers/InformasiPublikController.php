@@ -189,7 +189,7 @@ class InformasiPublikController extends Controller
 
         $informasi = $query->latest()->paginate(10)->appends($request->all());
 
-        return view('admin.informasi_publik', compact(
+        return view('admin.informasi_publik.index', compact(
             'informasi', 'listRincian', 'totalInformasi', 'totalBerkala', 'totalSertaMerta', 'totalSetiapSaat'
         ));
     }

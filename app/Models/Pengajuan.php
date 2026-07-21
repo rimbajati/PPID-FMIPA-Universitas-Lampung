@@ -35,6 +35,7 @@ class Pengajuan extends Model
         'status',
         'catatan_admin',
         'file_jawaban',
+        'link_jawaban',
     ];
 
     /**

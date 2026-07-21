@@ -66,7 +66,15 @@
             permohonanTerkait.disabled = false;
         }
         
-        document.querySelectorAll('.error-msg').forEach(el => el.remove());
+        const identitasError = document.getElementById('identitas-file-error');
+        if (identitasError) {
+            identitasError.innerText = '';
+            identitasError.classList.add('hidden');
+        }
+
+        document.querySelectorAll('.error-msg').forEach(el => {
+            if (el.id !== 'identitas-file-error') el.remove();
+        });
         document.querySelectorAll('.input-field').forEach(el => {
             el.classList.remove('border-red-500');
             el.classList.add('border-slate-300');
@@ -78,6 +86,39 @@
         if (hiddenCaraAmbil) hiddenCaraAmbil.value = '';
         
         toggleFormFields();
+    }
+
+    function validateIdentitasFile(input) {
+        const errorEl = document.getElementById('identitas-file-error');
+        if (!input.files || input.files.length === 0) {
+            if (errorEl) {
+                errorEl.innerText = '';
+                errorEl.classList.add('hidden');
+            }
+            return;
+        }
+
+        const file = input.files[0];
+        const allowedExtensions = ['jpg', 'jpeg', 'png'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(fileExtension)) {
+            // Kosongkan input agar file tidak terinput
+            input.value = '';
+            if (errorEl) {
+                errorEl.innerText = 'Format file lampiran identitas harus berupa gambar (JPG, JPEG, PNG). File tidak dapat diunggah.';
+                errorEl.classList.remove('hidden');
+            }
+            input.classList.add('border-red-500');
+            input.classList.remove('border-slate-300');
+        } else {
+            if (errorEl) {
+                errorEl.innerText = '';
+                errorEl.classList.add('hidden');
+            }
+            input.classList.remove('border-red-500');
+            input.classList.add('border-slate-300');
+        }
     }
     function toggleFormFields() {
         const type = document.getElementById('jenis_layanan').value;
@@ -558,53 +599,43 @@
         
         if (data.status_histories && data.status_histories.length > 0) {
             data.status_histories.forEach(history => {
-                let statusColorClass = '';
-                if (history.status === 'DIAJUKAN') statusColorClass = 'text-amber-600';
-                else if (history.status === 'DIPROSES') statusColorClass = 'text-blue-600';
-                else if (history.status === 'DITERIMA') statusColorClass = 'text-emerald-600';
-                else if (history.status === 'DITOLAK') statusColorClass = 'text-rose-600';
-                
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td class="p-5 font-bold ${statusColorClass}">${history.status}</td>
-                    <td class="p-5">${formatWIB(history.created_at)}</td>
-                    <td class="p-5">${history.catatan || '-'}</td>
+                    <td class="p-5 font-bold text-slate-800">${history.status}</td>
+                    <td class="p-5 text-slate-700">${formatWIB(history.created_at)}</td>
+                    <td class="p-5 text-slate-700">${history.catatan && history.catatan.trim() !== '' ? history.catatan : '-'}</td>
                 `;
                 historyBody.appendChild(row);
             });
         } else {
             // Fallback for legacy records that don't have history records
-            let statusColorClass = '';
-            if (data.status === 'DIAJUKAN') statusColorClass = 'text-amber-600';
-            else if (data.status === 'DIPROSES') statusColorClass = 'text-blue-600';
-            else if (data.status === 'DITERIMA') statusColorClass = 'text-emerald-600';
-            else if (data.status === 'DITOLAK') statusColorClass = 'text-rose-600';
-
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td class="p-5 font-bold ${statusColorClass}">${data.status}</td>
-                <td class="p-5">${formatWIB(data.updated_at)}</td>
-                <td class="p-5">${data.catatan_admin || '-'}</td>
+                <td class="p-5 font-bold text-slate-800">${data.status}</td>
+                <td class="p-5 text-slate-700">${formatWIB(data.updated_at)}</td>
+                <td class="p-5 text-slate-700">${data.catatan_admin && data.catatan_admin.trim() !== '' ? data.catatan_admin : '-'}</td>
             `;
             historyBody.appendChild(row);
         }
 
-        // Setup Identitas Link
+        // Setup Identitas Link (Pop-up Modal)
         const identitasContainer = document.getElementById('modal-identitas-doc');
         if(data.lampiran_identitas && data.lampiran_identitas !== '-') {
-            identitasContainer.innerHTML = `<a href="/storage/${data.lampiran_identitas}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1 rounded-lg text-xs font-semibold transition-colors"><i class="fa-solid fa-file-pdf"></i> Lihat Identitas (KTP/SIM/KTM)</a>`;
+            const url = `/storage/${data.lampiran_identitas}`;
+            identitasContainer.innerHTML = `<button type="button" onclick="openPreviewDoc('${url}', '${data.nama}', '${data.no_identitas || ''}', 'Identitas (KTP/SIM/KTM)')" class="inline-flex items-center gap-2 text-[#1B365D] bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 px-3.5 py-1.5 rounded-lg text-sm font-semibold transition"><i class="fa-solid fa-id-card text-[#1B365D]"></i> Identitas </button>`;
         } else {
             identitasContainer.innerText = '-';
         }
         
-        // Setup Akta Link
+        // Setup Akta Link (Buka di Tab Baru)
         const aktaRow = document.getElementById('row-modal-akta');
         const aktaContainer = document.getElementById('modal-akta-doc');
         const showAkta = ['LSM/NGO', 'Instansi Pemerintah', 'Lembaga Pemerintah'].includes(data.kategori_pemohon);
         if (showAkta) {
             aktaRow.classList.remove('hidden');
             if (data.akta_pendirian && data.akta_pendirian !== '-') {
-                aktaContainer.innerHTML = `<a href="/storage/${data.akta_pendirian}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1 rounded-lg text-xs font-semibold transition-colors"><i class="fa-solid fa-file-pdf"></i> Lihat Akta Pendirian</a>`;
+                const url = `/storage/${data.akta_pendirian}`;
+                aktaContainer.innerHTML = `<a href="${url}" target="_blank" class="inline-flex items-center gap-2 text-[#1B365D] bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 px-3.5 py-1.5 rounded-lg text-sm font-semibold transition"><i class="fa-solid fa-file-lines text-[#1B365D]"></i> Akta Pendirian Badan hukum </a>`;
             } else {
                 aktaContainer.innerText = '-';
             }
@@ -612,15 +643,56 @@
             aktaRow.classList.add('hidden');
         }
 
-        // Setup Pendukung Link
+        // Setup Pendukung Link (Buka di Tab Baru)
         const pendukungContainer = document.getElementById('modal-pendukung-doc');
         if(data.lampiran_pendukung && data.lampiran_pendukung !== '-') {
-            pendukungContainer.innerHTML = `<a href="/storage/${data.lampiran_pendukung}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1 rounded-lg text-xs font-semibold transition-colors"><i class="fa-solid fa-file-pdf"></i> Lihat Lampiran Data Pendukung</a>`;
+            const url = `/storage/${data.lampiran_pendukung}`;
+            pendukungContainer.innerHTML = `<a href="${url}" target="_blank" class="inline-flex items-center gap-2 text-[#1B365D] bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 px-3.5 py-1.5 rounded-lg text-sm font-semibold transition"><i class="fa-solid fa-file-lines text-[#1B365D]"></i> Dokumen Pendukung </a>`;
         } else {
             pendukungContainer.innerText = '-';
         }
 
+        // Store active data for modal action buttons
+        window.currentSummaryData = data;
+
+        // Toggle footer action button visibilities
+        const btnKeberatan = document.getElementById('modal-btn-keberatan');
+        if (btnKeberatan) {
+            btnKeberatan.classList.toggle('hidden', data.jenis_layanan !== 'Permohonan');
+        }
+
+        const btnEdit = document.getElementById('modal-btn-edit');
+        const btnDelete = document.getElementById('modal-btn-delete');
+        if (btnEdit) {
+            btnEdit.classList.toggle('hidden', !['DIAJUKAN', 'PERBAIKAN'].includes(data.status));
+        }
+        if (btnDelete) {
+            btnDelete.classList.toggle('hidden', data.status !== 'DIAJUKAN');
+        }
+
         toggleModal('modal-summary', true);
+    }
+
+    function actionAjukanKeberatanFromModal() {
+        if (!window.currentSummaryData) return;
+        const id = window.currentSummaryData.id;
+        toggleModal('modal-summary', false);
+        openAjukanKeberatan(id);
+    }
+
+    function actionEditFromModal() {
+        if (!window.currentSummaryData) return;
+        const item = window.currentSummaryData;
+        toggleModal('modal-summary', false);
+        openEditModal(item);
+    }
+
+    function actionDeleteFromModal() {
+        if (!window.currentSummaryData) return;
+        const id = window.currentSummaryData.id;
+        const noTiket = window.currentSummaryData.no_tiket;
+        toggleModal('modal-summary', false);
+        deletePengajuan(id, noTiket);
     }
 
     function openEditModal(item) {
@@ -777,5 +849,108 @@
             };
         }
     }
+
+    function switchToPermohonan() {
+        const jenisLayanan = document.getElementById('jenis_layanan');
+        if (jenisLayanan) {
+            jenisLayanan.value = 'Permohonan';
+            toggleFormFields();
+        }
+    }
+
+    function openAjukanKeberatan(permohonanId) {
+        resetForm();
+        toggleModal('modal-form', true);
+        const jenisLayanan = document.getElementById('jenis_layanan');
+        if (jenisLayanan) {
+            jenisLayanan.value = 'Keberatan';
+            toggleFormFields();
+        }
+        const permohonanSelect = document.getElementById('permohonan_terkait_id');
+        if (permohonanSelect) {
+            permohonanSelect.value = permohonanId;
+            fillRelatedPermohonanData();
+        }
+    }
+
+    function openPreviewDoc(url, nama, noIdentitas, label) {
+        const imgEl = document.getElementById('preview-identitas-img');
+        const iframeEl = document.getElementById('preview-identitas-iframe');
+        const titleEl = document.getElementById('preview-identitas-title');
+        const namaEl = document.getElementById('preview-nama-lengkap');
+        const noIdentitasEl = document.getElementById('preview-no-identitas');
+
+        if (titleEl) titleEl.innerText = `Preview ${label}`;
+        if (namaEl) namaEl.innerText = nama || '-';
+        if (noIdentitasEl) noIdentitasEl.innerText = (noIdentitas && noIdentitas !== 'undefined' && noIdentitas !== '') ? noIdentitas : '-';
+
+        const isImage = /\.(jpg|jpeg|png|webp|gif)$/i.test(url);
+        if (isImage) {
+            if (imgEl) {
+                imgEl.src = url;
+                imgEl.classList.remove('hidden');
+            }
+            if (iframeEl) {
+                iframeEl.src = '';
+                iframeEl.classList.add('hidden');
+            }
+        } else {
+            if (iframeEl) {
+                iframeEl.src = url;
+                iframeEl.classList.remove('hidden');
+            }
+            if (imgEl) {
+                imgEl.src = '';
+                imgEl.classList.add('hidden');
+            }
+        }
+
+        toggleModal('modal-preview-identitas', true);
+    }
+
+    function performLiveSearch(formElement) {
+        const url = new URL(formElement.action, window.location.origin);
+        const formData = new FormData(formElement);
+        for (const [key, value] of formData.entries()) {
+            if (value) url.searchParams.set(key, value);
+        }
+        
+        const dataContainer = document.getElementById('data-table-container');
+        if (dataContainer) dataContainer.classList.add('opacity-50', 'pointer-events-none');
+
+        fetch(url.toString(), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            const newTable = doc.getElementById('data-table-container');
+            if (newTable && dataContainer) {
+                dataContainer.innerHTML = newTable.innerHTML;
+            }
+            
+            window.history.replaceState(null, '', url.toString());
+        })
+        .catch(err => console.error("Search fetch failed:", err))
+        .finally(() => {
+            if (dataContainer) dataContainer.classList.remove('opacity-50', 'pointer-events-none');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            let timer = null;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    const filterForm = document.getElementById('filterForm');
+                    if (filterForm) performLiveSearch(filterForm);
+                }, 400);
+            });
+        }
+    });
 </script>
 

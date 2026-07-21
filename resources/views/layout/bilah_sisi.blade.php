@@ -7,18 +7,98 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Poppins', sans-serif !important; }
+        body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; }
         /* Scrollbar kustom untuk sidebar agar lebih rapi */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 0px !important; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Force 90-degree sharp corners globally across the entire system */
+        *, ::before, ::after {
+            border-radius: 0px !important;
+        }
+
+        /* Siakad Table Style (Global Table Design) */
+        table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+            border: 1px solid #cbd5e1 !important;
+            background-color: #ffffff !important;
+            border-radius: 0px !important;
+        }
+        table thead tr {
+            background-color: #2c3e50 !important;
+            color: #ffffff !important;
+        }
+        table thead th {
+            background-color: #2c3e50 !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            padding: 10px 14px !important;
+            border: 1px solid #233545 !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.25) !important;
+            border-bottom: 1px solid #cbd5e1 !important;
+            font-size: 0.8125rem !important;
+            letter-spacing: 0.025em !important;
+        }
+        table thead th:last-child {
+            border-right: 1px solid #233545 !important;
+        }
+        table tbody tr {
+            transition: background-color 0.15s ease-in-out;
+        }
+        table tbody tr:nth-child(odd) {
+            background-color: #f8fafc !important;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #ffffff !important;
+        }
+        table tbody tr:hover {
+            background-color: #e2e8f0 !important;
+        }
+        table tbody td {
+            padding: 10px 14px !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #334155 !important;
+            font-size: 0.875rem !important;
+            vertical-align: middle !important;
+        }
+        table th.text-center, table td.text-center {
+            text-align: center !important;
+        }
+        table th.text-right, table td.text-right {
+            text-align: right !important;
+        }
+        table th.text-left, table td.text-left {
+            text-align: left !important;
+        }
     </style>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '0px',
+                        'DEFAULT': '0px',
+                        'md': '0px',
+                        'lg': '0px',
+                        'xl': '0px',
+                        '2xl': '0px',
+                        '3xl': '0px',
+                        'full': '0px',
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
@@ -48,14 +128,14 @@
                 <nav class="px-6 space-y-2.5 mt-2">
                     <a href="{{ route('layanan.index') }}"
                        class="flex items-center px-5 py-3.5 rounded-[14px] text-[15px] font-semibold transition-all duration-300
-                       {{ request()->routeIs('layanan.index') ? 'bg-[#0f172a] text-white shadow-lg shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                       {{ request()->routeIs('layanan.index') ? 'bg-[#1B365D] text-white shadow-lg shadow-sky-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
                         <i class="fa-solid fa-layer-group text-lg w-7 text-center mr-2"></i>
                         Pengajuan
                     </a>
 
                     <a href="{{ route('user.profile') }}"
                        class="flex items-center px-5 py-3.5 rounded-[14px] text-[15px] font-semibold transition-all duration-300
-                       {{ request()->routeIs('user.profile') ? 'bg-[#0f172a] text-white shadow-lg shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                       {{ request()->routeIs('user.profile') ? 'bg-[#1B365D] text-white shadow-lg shadow-sky-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
                         <i class="fa-solid fa-user-pen text-lg w-7 text-center mr-2"></i>
                         Update Profile
                     </a>
@@ -92,10 +172,6 @@
                 <div class="flex items-center gap-4">
                     <div class="text-right hidden sm:block">
                         <p class="font-bold text-slate-800 text-[15px]">{{ Auth::user()->nama_lengkap ?? 'User' }}</p>
-                    </div>
-                    <!-- Avatar Lingkaran (Mengambil inisial nama pertama) -->
-                    <div class="w-10 h-10 bg-[#0f172a] text-white rounded-full flex items-center justify-center font-bold text-base shadow-md">
-                        {{ substr(Auth::user()->nama_lengkap ?? 'U', 0, 1) }}
                     </div>
                 </div>
             </header>

@@ -272,7 +272,42 @@ class LayananTest extends TestCase
         $response->assertStatus(403);
         $response->assertJson([
             'success' => false,
-            'message' => 'Pengajuan yang sedang diproses tidak dapat dihapus.'
+            'message' => 'Hanya pengajuan berstatus diajukan yang dapat dihapus.'
+        ]);
+        $this->assertDatabaseHas('pengajuans', [
+            'id' => $permohonan->id,
+        ]);
+    }
+
+    public function test_user_cannot_delete_permohonan_when_status_is_perbaikan()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $permohonan = Pengajuan::create([
+            'user_id' => $user->id,
+            'jenis_layanan' => 'Permohonan',
+            'no_tiket' => 'REQ-PERBAIKAN-DEL',
+            'nama' => $user->nama_lengkap,
+            'email' => $user->email,
+            'pekerjaan' => 'Mahasiswa',
+            'kategori_pemohon' => 'Perorangan',
+            'no_identitas' => '1234567890123456',
+            'no_hp' => '081234567890',
+            'alamat' => 'Bandar Lampung',
+            'info_diminta' => 'Permohonan info',
+            'tujuan_permohonan' => 'Tujuan',
+            'cara_memperoleh' => 'Email',
+            'lampiran_identitas' => 'temp.jpg',
+            'status' => 'PERBAIKAN'
+        ]);
+
+        $response = $this->deleteJson(route('layanan.destroy', $permohonan->id));
+
+        $response->assertStatus(403);
+        $response->assertJson([
+            'success' => false,
+            'message' => 'Hanya pengajuan berstatus diajukan yang dapat dihapus.'
         ]);
         $this->assertDatabaseHas('pengajuans', [
             'id' => $permohonan->id,
@@ -655,5 +690,160 @@ class LayananTest extends TestCase
         $permohonans2 = $response2->original->getData()['permohonans'];
         $this->assertTrue($permohonans2->contains($p1));
         $this->assertFalse($permohonans2->contains($p2));
+    }
+
+    public function test_user_can_filter_and_search_own_pengajuan()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $p1 = Pengajuan::create([
+            'user_id' => $user->id,
+            'jenis_layanan' => 'Permohonan',
+            'no_tiket' => 'TIKET-PEMOHON-1',
+            'nama' => $user->nama_lengkap,
+            'email' => $user->email,
+            'pekerjaan' => 'Mahasiswa',
+            'kategori_pemohon' => 'Perorangan',
+            'no_identitas' => '1234567890123456',
+            'no_hp' => '081234567890',
+            'alamat' => 'Bandar Lampung',
+            'info_diminta' => 'Data Anggaran FMIPA',
+            'tujuan_permohonan' => 'Riset',
+            'cara_memperoleh' => 'Email',
+            'lampiran_identitas' => 'temp.jpg',
+            'status' => 'DIAJUKAN'
+        ]);
+
+        $p2 = Pengajuan::create([
+            'user_id' => $user->id,
+            'jenis_layanan' => 'Keberatan',
+            'no_tiket' => 'TIKET-PEMOHON-2',
+            'nama' => $user->nama_lengkap,
+            'email' => $user->email,
+            'pekerjaan' => 'Mahasiswa',
+            'kategori_pemohon' => 'Perorangan',
+            'no_identitas' => '1234567890123456',
+            'no_hp' => '081234567890',
+            'alamat' => 'Bandar Lampung',
+            'tujuan_keberatan' => 'Keberatan Biaya',
+            'alasan_keberatan' => 'Informasi tidak disediakan',
+            'lampiran_identitas' => 'temp.jpg',
+            'status' => 'DIPROSES'
+        ]);
+
+        // Filter Jenis Layanan
+        $res = $this->get('/layanan?jenis_layanan=Permohonan');
+        $res->assertStatus(200);
+        $items = $res->original->getData()['pengajuans'];
+        $this->assertTrue($items->contains($p1));
+        $this->assertFalse($items->contains($p2));
+
+        // Filter Status
+        $resStatus = $this->get('/layanan?status=DIPROSES');
+        $resStatus->assertStatus(200);
+        $itemsStatus = $resStatus->original->getData()['pengajuans'];
+        $this->assertFalse($itemsStatus->contains($p1));
+        $this->assertTrue($itemsStatus->contains($p2));
+
+        // Search
+        $resSearch = $this->get('/layanan?search=Anggaran');
+        $resSearch->assertStatus(200);
+        $itemsSearch = $resSearch->original->getData()['pengajuans'];
+        $this->assertTrue($itemsSearch->contains($p1));
+        $this->assertFalse($itemsSearch->contains($p2));
+    }
+
+    public function test_admin_can_update_status_to_perbaikan_with_mandatory_catatan()
+    {
+        Storage::fake('public');
+        \Illuminate\Support\Facades\Mail::fake();
+
+        $admin = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create();
+
+        $permohonan = Pengajuan::create([
+            'user_id' => $user->id,
+            'jenis_layanan' => 'Permohonan',
+            'no_tiket' => 'REQ-PERBAIKAN-1',
+            'nama' => 'User Perbaikan',
+            'email' => 'userperbaikan@gmail.com',
+            'pekerjaan' => 'Mahasiswa',
+            'kategori_pemohon' => 'Perorangan',
+            'no_identitas' => '1234567890123456',
+            'no_hp' => '081234567890',
+            'alamat' => 'Bandar Lampung',
+            'info_diminta' => 'Data Informasi',
+            'tujuan_permohonan' => 'Riset',
+            'cara_memperoleh' => 'Email',
+            'lampiran_identitas' => 'temp.jpg',
+            'status' => 'DIPROSES'
+        ]);
+
+        $this->actingAs($admin);
+
+        // Update to PERBAIKAN without catatan should fail
+        $failResponse = $this->put("/admin/pengajuan/{$permohonan->id}/status", [
+            'status' => 'PERBAIKAN',
+            'catatan_admin' => '',
+        ]);
+        $failResponse->assertSessionHasErrors('catatan_admin');
+
+        // Update to PERBAIKAN with catatan should succeed
+        $successResponse = $this->put("/admin/pengajuan/{$permohonan->id}/status", [
+            'status' => 'PERBAIKAN',
+            'catatan_admin' => 'Nama pada form tidak sesuai dengan foto KTP.',
+        ]);
+        $successResponse->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('pengajuans', [
+            'id' => $permohonan->id,
+            'status' => 'PERBAIKAN',
+            'catatan_admin' => 'Nama pada form tidak sesuai dengan foto KTP.',
+        ]);
+    }
+
+    public function test_user_can_update_permohonan_when_status_is_perbaikan()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $permohonan = Pengajuan::create([
+            'user_id' => $user->id,
+            'jenis_layanan' => 'Permohonan',
+            'no_tiket' => 'REQ-PERBAIKAN-2',
+            'nama' => 'User Perbaikan 2',
+            'email' => 'user2@gmail.com',
+            'pekerjaan' => 'Mahasiswa',
+            'kategori_pemohon' => 'Perorangan',
+            'no_identitas' => '1234567890123456',
+            'no_hp' => '081234567890',
+            'alamat' => 'Bandar Lampung',
+            'info_diminta' => 'Data Kurikulum Lama',
+            'tujuan_permohonan' => 'Tugas',
+            'cara_memperoleh' => 'Melalui Email atau Website',
+            'lampiran_identitas' => 'temp.jpg',
+            'status' => 'PERBAIKAN',
+            'catatan_admin' => 'Tolong perbarui rincian informasi.',
+        ]);
+
+        $response = $this->put(route('layanan.update', $permohonan->id), [
+            'pekerjaan' => 'Mahasiswa',
+            'kategori_pemohon' => 'Perorangan',
+            'no_identitas' => '1234567890123456',
+            'telepon' => '081234567890',
+            'alamat' => 'Bandar Lampung',
+            'info_diminta' => 'Data Kurikulum Terbaru 2026',
+            'tujuan' => 'Tugas Akhir Spesifik',
+            'cara_ambil' => 'Melalui Email atau Website',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('pengajuans', [
+            'id' => $permohonan->id,
+            'info_diminta' => 'Data Kurikulum Terbaru 2026',
+            'status' => 'DIAJUKAN',
+        ]);
     }
 }

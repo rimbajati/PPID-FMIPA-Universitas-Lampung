@@ -11,10 +11,13 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Data Statis untuk Kartu (Membatasi jenis_layanan)
-        $totalInformasi  = InformasiPublik::count();
-        $totalPermohonan = Pengajuan::where('jenis_layanan', 'Permohonan')->count();
-        $permohonanBaru  = Pengajuan::where('jenis_layanan', 'Permohonan')->where('status', 'DIAJUKAN')->count();
+        // 1. Data Statis untuk Kartu Statistik (4 Kartu Utama)
+        $totalInformasi   = InformasiPublik::count();
+        $totalPengajuan   = Pengajuan::count();
+        $totalPermohonan  = Pengajuan::where('jenis_layanan', 'Permohonan')->count();
+        $totalKeberatan   = Pengajuan::where('jenis_layanan', 'Keberatan')->count();
+        $pengajuanBaru    = Pengajuan::where('status', 'DIAJUKAN')->count();
+        $pengajuanDiproses = Pengajuan::where('status', 'DIPROSES')->count();
 
         // 2. Mengambil data mentah permohonan dan keberatan menggunakan model Pengajuan
         $permohonanStats = Pengajuan::where('jenis_layanan', 'Permohonan')
@@ -28,34 +31,47 @@ class DashboardController extends Controller
             ->get();
 
         // 3. Memproses data menjadi format yang dibutuhkan Chart
-        $monthlyData = [];
-        $yearlyData = [];
+        $currentYear = (int) date('Y');
+        $monthlyData = [
+            $currentYear => []
+        ];
 
-        // Inisialisasi struktur data
+        // Fill all 12 months with default zeroes for current year
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyData[$currentYear][$m] = ['permohonan' => 0, 'diterima' => 0, 'ditolak' => 0, 'keberatan' => 0];
+        }
+
         // Menggabungkan data dari permohonan dan keberatan
         foreach ($permohonanStats as $stat) {
-            $y = $stat->year;
-            $m = $stat->month;
+            $y = (int) $stat->year;
+            $m = (int) $stat->month;
 
-            if (!isset($monthlyData[$y][$m])) {
-                $monthlyData[$y][$m] = ['permohonan' => 0, 'diterima' => 0, 'ditolak' => 0, 'keberatan' => 0];
+            if (!isset($monthlyData[$y])) {
+                for ($i = 1; $i <= 12; $i++) {
+                    $monthlyData[$y][$i] = ['permohonan' => 0, 'diterima' => 0, 'ditolak' => 0, 'keberatan' => 0];
+                }
             }
 
             $monthlyData[$y][$m]['permohonan'] += $stat->total;
-            if ($stat->status == 'DITERIMA') $monthlyData[$y][$m]['diterima'] += $stat->total;
-            if ($stat->status == 'DITOLAK')  $monthlyData[$y][$m]['ditolak'] += $stat->total;
+            if (strtoupper($stat->status) == 'DITERIMA') $monthlyData[$y][$m]['diterima'] += $stat->total;
+            if (strtoupper($stat->status) == 'DITOLAK')  $monthlyData[$y][$m]['ditolak'] += $stat->total;
         }
 
         foreach ($keberatanStats as $stat) {
-            $y = $stat->year;
-            $m = $stat->month;
-            if (!isset($monthlyData[$y][$m])) {
-                $monthlyData[$y][$m] = ['permohonan' => 0, 'diterima' => 0, 'ditolak' => 0, 'keberatan' => 0];
+            $y = (int) $stat->year;
+            $m = (int) $stat->month;
+
+            if (!isset($monthlyData[$y])) {
+                for ($i = 1; $i <= 12; $i++) {
+                    $monthlyData[$y][$i] = ['permohonan' => 0, 'diterima' => 0, 'ditolak' => 0, 'keberatan' => 0];
+                }
             }
+
             $monthlyData[$y][$m]['keberatan'] += $stat->total;
         }
 
         // Kalkulasi Yearly Data dari Monthly Data
+        $yearlyData = [];
         foreach ($monthlyData as $year => $months) {
             $yearlyData[$year] = ['permohonan' => 0, 'diterima' => 0, 'ditolak' => 0, 'keberatan' => 0];
             foreach ($months as $monthData) {
@@ -66,20 +82,33 @@ class DashboardController extends Controller
             }
         }
 
-        // Data untuk Donut Chart
+        // Data Lengkap untuk Donut Chart (Status Keseluruhan Pengajuan)
         $statusCounts = [
-            'DITERIMA' => Pengajuan::where('jenis_layanan', 'Permohonan')->where('status', 'DITERIMA')->count(),
-            'DIPROSES' => Pengajuan::where('jenis_layanan', 'Permohonan')->where('status', 'DIPROSES')->count(),
-            'Ditolak'  => Pengajuan::where('jenis_layanan', 'Permohonan')->where('status', 'DITOLAK')->count(),
+            'DIAJUKAN' => Pengajuan::where('status', 'DIAJUKAN')->count(),
+            'DIPROSES' => Pengajuan::where('status', 'DIPROSES')->count(),
+            'DITERIMA' => Pengajuan::where('status', 'DITERIMA')->count(),
+            'DITOLAK'  => Pengajuan::where('status', 'DITOLAK')->count(),
         ];
 
-        return view('admin.dashboard', compact(
+        $totalPengajuanAll = array_sum($statusCounts);
+        $completionRate = $totalPengajuanAll > 0 ? round(($statusCounts['DITERIMA'] / $totalPengajuanAll) * 100) : 0;
+
+        // Data 5 Pengajuan Terbaru untuk Widget Dashboard
+        $recentPengajuan = Pengajuan::with('user')->latest()->take(5)->get();
+
+        return view('admin.dashboard.index', compact(
             'totalInformasi',
+            'totalPengajuan',
             'totalPermohonan',
-            'permohonanBaru',
+            'totalKeberatan',
+            'pengajuanBaru',
+            'pengajuanDiproses',
             'yearlyData',
             'monthlyData',
-            'statusCounts'
+            'statusCounts',
+            'totalPengajuanAll',
+            'completionRate',
+            'recentPengajuan'
         ));
     }
 }
