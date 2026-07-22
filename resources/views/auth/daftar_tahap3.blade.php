@@ -87,6 +87,23 @@
             icon.classList.add('fa-eye');
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('border-red-700', 'border-red-500');
+                this.classList.add('border-[#1B365D]');
+                const container = this.closest('div');
+                if (container) {
+                    const errorMsg = container.querySelector('.text-red-700, .text-red-600, .text-red-500');
+                    if (errorMsg) {
+                        errorMsg.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
 </script>
 @endsection
 

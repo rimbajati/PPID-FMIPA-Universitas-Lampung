@@ -38,12 +38,6 @@
                 </div>
             @endif
 
-            @if ($errors->has('login_gagal'))
-                <div class="mb-6 p-4 text-sm text-red-800 bg-red-50 border-2 border-red-700 rounded-3xl font-bold text-center">
-                    {{ $errors->first('login_gagal') }}
-                </div>
-            @endif
-
             <form action="{{ url('/login') }}" method="POST" class="space-y-4" novalidate autocomplete="off">
                 @csrf
 
@@ -52,7 +46,11 @@
                     <input type="email" name="email" id="email" value="{{ old('email', session('auto_email')) }}"
                         class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none rounded-3xl text-base transition"
                         placeholder="Masukan email Anda" required autofocus>
-                        @error('email') <p class="text-red-700 text-xs mt-1 font-black">{{ $errors->first() }}</p> @enderror
+                    @error('email')
+                        <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-exclamation text-xs"></i> {{ $message }}
+                        </p>
+                    @enderror
                 </div>
 
                 <div>
@@ -61,7 +59,11 @@
                         <input type="password" name="password" id="password"
                             class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none rounded-3xl text-base transition"
                             placeholder="Masukan kata sandi Anda" required>
-                            @error('password') <p class="text-red-700 text-xs mt-1 font-black">{{ $message }}</p> @enderror
+                        @error('password')
+                            <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-exclamation text-xs"></i> {{ $message }}
+                            </p>
+                        @enderror
                         <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-3.5 text-gray-500 hover:text-gray-800 focus:outline-none cursor-pointer">
                             <i class="fa-solid fa-eye" id="password-icon"></i>
                         </button>
@@ -73,6 +75,12 @@
                         Lupa kata sandi?
                     </a>
                 </div>
+
+                @if ($errors->has('login_gagal'))
+                    <div class="mt-4 p-4 text-sm text-red-800 bg-red-50 border-2 border-red-700 rounded-3xl font-bold text-center">
+                        {{ $errors->first('login_gagal') }}
+                    </div>
+                @endif
 
                 <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-black py-4 transition text-base mt-4 cursor-pointer uppercase tracking-widest rounded-3xl">
                     Masuk
@@ -108,6 +116,23 @@
             icon.classList.add('fa-eye');
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('border-red-700', 'border-red-500');
+                this.classList.add('border-[#1B365D]');
+                const container = this.closest('div');
+                if (container) {
+                    const errorMsg = container.querySelector('.text-red-700, .text-red-600, .text-red-500');
+                    if (errorMsg) {
+                        errorMsg.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
 </script>
 @endsection
 

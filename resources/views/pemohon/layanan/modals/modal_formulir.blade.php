@@ -56,6 +56,7 @@
                     <div>
                         <label class="block text-base font-bold text-slate-700 mb-1">Nama Lengkap</label>
                         <input type="text" name="nama" value="{{ auth()->user()->nama_lengkap }}" class="w-full border border-slate-300 rounded-xl p-3.5 text-base bg-gray-50" readonly>
+                        <span class="text-[11px] text-slate-400 font-medium mt-1 block italic">* Terisi otomatis sesuai data akun terdaftar Anda (dapat diubah di menu update profile).</span>
                     </div>
                     <div>
                         <label class="block text-base font-bold text-slate-700 mb-1">Nomor Identitas (KTP / SIM / KTM) <span class="text-red-500">*</span></label>
@@ -65,6 +66,7 @@
                     <div>
                         <label class="block text-base font-bold text-slate-700 mb-1">Email</label>
                         <input type="email" name="email" value="{{ auth()->user()->email }}" class="w-full border border-slate-300 rounded-xl p-3.5 text-base bg-gray-50" readonly>
+                        <span class="text-[11px] text-slate-400 font-medium mt-1 block italic">* Terisi otomatis sesuai data akun terdaftar Anda.</span>
                     </div>
                     <div>
                         <label class="block text-base font-bold text-slate-700 mb-1">Nomor Telepon <span class="text-red-500">*</span></label>

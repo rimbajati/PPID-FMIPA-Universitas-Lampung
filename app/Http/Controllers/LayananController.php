@@ -130,7 +130,9 @@ class LayananController extends Controller
                 'no_tiket'           => 'TEMP',
             ]);
 
-            $nomorTiket = 'PER-' . date('Ymd') . '-' . str_pad($data->id, 3, '0', STR_PAD_LEFT);
+            $today = date('Ymd');
+            $countToday = Pengajuan::where('no_tiket', 'like', "PER-{$today}-%")->count();
+            $nomorTiket = 'PER-' . $today . '-' . str_pad($countToday + 1, 3, '0', STR_PAD_LEFT);
             $data->update(['no_tiket' => $nomorTiket]);
 
             $data->statusHistories()->create([
@@ -251,7 +253,9 @@ class LayananController extends Controller
                 'lampiran_identitas'    => $related->lampiran_identitas ?: '-'
             ]);
 
-            $nomorTiket = 'KEB-' . date('Ymd') . '-' . str_pad($data->id, 3, '0', STR_PAD_LEFT);
+            $today = date('Ymd');
+            $countToday = Pengajuan::where('no_tiket', 'like', "KEB-{$today}-%")->count();
+            $nomorTiket = 'KEB-' . $today . '-' . str_pad($countToday + 1, 3, '0', STR_PAD_LEFT);
             $data->update(['no_tiket' => $nomorTiket]);
 
             $data->statusHistories()->create([

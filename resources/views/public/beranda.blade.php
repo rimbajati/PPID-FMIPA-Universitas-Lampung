@@ -129,19 +129,19 @@
             $alurSteps = $prosedurData['tahapan_permohonan'] ?? $beranda['alur_steps'];
         @endphp
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div class="flex flex-wrap justify-center gap-6 sm:gap-7">
             @foreach($alurSteps as $index => $step)
-            <div class="relative bg-[#1B365D] hover:bg-[#162c4c] text-white p-8 sm:p-10 shadow-xl border border-white/10 flex flex-col justify-between overflow-hidden min-h-[260px] group transition-all duration-300 hover:-translate-y-1">
+            <div class="relative bg-[#1B365D] hover:bg-[#162c4c] text-white p-7 sm:p-8 rounded-2xl shadow-xl border border-white/10 flex flex-col justify-between overflow-hidden w-full md:w-[calc(50%-14px)] lg:w-[calc(33.333%-19px)] min-h-[220px] group transition-all duration-300 hover:-translate-y-1">
                 <!-- Decorative Top Geometric Shapes -->
-                <div class="flex items-center gap-1.5 opacity-40 mb-6">
-                    <span class="w-3 h-3 bg-cyan-300"></span>
-                    <span class="w-3 h-3 bg-cyan-100"></span>
-                    <span class="w-3 h-3 bg-white"></span>
+                <div class="flex items-center gap-1.5 opacity-40 mb-4">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-300"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-100"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-white"></span>
                 </div>
 
                 <!-- Title & Description -->
-                <div class="relative z-10 space-y-3 pr-6 mb-6">
-                    <h3 class="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+                <div class="relative z-10 space-y-2.5 pr-4 mb-4">
+                    <h3 class="text-lg sm:text-xl font-extrabold text-white leading-snug">
                         {{ $step['judul'] ?? $step['title'] }}
                     </h3>
                     <p class="text-xs sm:text-sm text-cyan-100/90 leading-relaxed font-medium">
@@ -149,8 +149,8 @@
                     </p>
                 </div>
 
-                <!-- Huge Watermark Step Number -->
-                <span class="absolute -right-2 -bottom-4 text-7xl sm:text-8xl md:text-9xl font-black text-white/20 pointer-events-none select-none group-hover:text-white/30 transition-colors leading-none">
+                <!-- Balanced Watermark Step Number -->
+                <span class="absolute -right-2 -bottom-3 text-7xl sm:text-8xl font-black text-white/20 pointer-events-none select-none group-hover:text-white/30 transition-colors leading-none">
                     {{ $index + 1 }}
                 </span>
             </div>

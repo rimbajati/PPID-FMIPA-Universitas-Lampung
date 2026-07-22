@@ -44,9 +44,11 @@
                     <input type="email" name="email" value="{{ old('email') }}"
                         class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none rounded-3xl text-base transition"
                         placeholder="contoh: nama@email.com" required autofocus>
-                    @if(!$errors->has('email'))
-                        @error('email') <p class="text-red-700 text-xs mt-1.5 font-black">{{ $message }}</p> @enderror
-                    @endif
+                    @error('email')
+                        <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-exclamation text-xs"></i> {{ $message }}
+                        </p>
+                    @enderror
                 </div>
                 <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-black py-4 transition rounded-3xl shadow-md text-base mt-2 uppercase tracking-widest">
                     Selanjutnya
@@ -55,6 +57,25 @@
         </div>
     </div>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('border-red-700', 'border-red-500');
+                this.classList.add('border-[#1B365D]');
+                const container = this.closest('div');
+                if (container) {
+                    const errorMsg = container.querySelector('.text-red-700, .text-red-600, .text-red-500');
+                    if (errorMsg) {
+                        errorMsg.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+</script>
 
 @if($errors->has('email') && str_contains($errors->first('email'), 'terdaftar'))
     <div id="emailConflictModal" class="fixed inset-0 bg-[#1B365D]/60 z-50 flex items-center justify-center p-4">

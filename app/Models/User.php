@@ -31,4 +31,9 @@ class User extends Authenticatable
     public function isAdmin() {
         return $this->role === 'admin'; // Sesuaikan kolom database Anda
     }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\CustomResetPasswordNotification($token));
+    }
 }
