@@ -119,7 +119,9 @@ class PengajuanController extends Controller
 
         $request->validate($rules, [
             'catatan_admin.required' => 'Catatan wajib diisi untuk menjelaskan hal yang perlu diperbaiki atau alasan penolakan.',
-            'link_jawaban.url' => 'Format tautan/link jawaban harus berupa URL yang valid (contoh: https://...).',
+            'link_jawaban.url'       => 'Format tautan/link jawaban harus berupa URL yang valid (contoh: https://...).',
+            'file_jawaban.mimes'     => 'Format file jawaban harus berupa PDF, JPG, PNG, ZIP, atau DOCX.',
+            'file_jawaban.max'       => 'Ukuran file jawaban tidak boleh lebih dari 5 MB.',
         ]);
 
         $data = [

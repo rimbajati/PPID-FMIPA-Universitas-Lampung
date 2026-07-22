@@ -282,8 +282,12 @@
                                         </a>
                                     </div>
                                 @endif
-                                <input type="file" name="file_jawaban" id="file_jawaban" class="w-full border border-slate-300 rounded p-2 text-xs text-slate-700 bg-white focus:border-[#1B365D] file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:bg-[#1B365D] file:text-white file:font-semibold cursor-pointer">
-                                <span class="block text-xs text-slate-500">Format yang didukung: PDF, JPG, PNG, ZIP, DOCX (Maksimal 5MB)</span>
+                                <input type="file" name="file_jawaban" id="file_jawaban" class="w-full border border-slate-300 rounded p-2 text-xs text-slate-700 bg-white focus:border-[#1B365D] file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:bg-[#1B365D] file:text-white file:font-semibold cursor-pointer" onchange="validateFileSize(this)">
+                                <span class="block text-xs text-slate-500 mt-1">(Format: PDF, JPG, PNG, ZIP, DOCX | Maksimal: 5 MB)</span>
+                                <p id="file_jawaban_error" class="text-red-600 text-xs font-bold mt-1.5 hidden flex items-center gap-1.5"><i class="fa-solid fa-circle-exclamation text-xs"></i> <span></span></p>
+                                @error('file_jawaban')
+                                    <p class="text-red-600 text-xs font-bold mt-1.5 flex items-center gap-1.5"><i class="fa-solid fa-circle-exclamation text-xs"></i> {{ $message }}</p>
+                                @enderror
                             </div>
 
                             <!-- Zona Link -->
@@ -404,6 +408,26 @@
             if (inputFile) inputFile.disabled = true;
             if (inputLink) inputLink.disabled = false;
         }
+    }
+
+    function validateFileSize(input) {
+        const errorEl = document.getElementById(input.id + '_error');
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            const maxMB = 5;
+            const maxSize = maxMB * 1024 * 1024;
+            if (file.size > maxSize) {
+                const actualMB = (file.size / (1024 * 1024)).toFixed(2);
+                if (errorEl) {
+                    errorEl.querySelector('span').textContent = `Ukuran file terlalu besar! Maksimal ${maxMB} MB (Ukuran file Anda: ${actualMB} MB).`;
+                    errorEl.classList.remove('hidden');
+                }
+                input.value = '';
+                return false;
+            }
+        }
+        if (errorEl) errorEl.classList.add('hidden');
+        return true;
     }
 
     window.addEventListener('DOMContentLoaded', () => {

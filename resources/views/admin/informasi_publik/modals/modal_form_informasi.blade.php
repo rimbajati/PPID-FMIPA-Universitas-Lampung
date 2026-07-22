@@ -60,7 +60,12 @@
                 </div>
                 <div id="create_zona_file" class="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <label class="block text-sm font-bold text-gray-900 mb-2">Pilih Berkas Dokumen <span class="text-red-500">*</span></label>
-                    <input type="file" name="berkas" id="create_input_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" class="input-field w-full text-base file:mr-3 file:py-2 file:px-5 file:rounded-lg file:border-0 file:bg-[#0095e8] file:text-white cursor-pointer">
+                    <input type="file" name="berkas" id="create_input_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" onchange="validateAdminInformasiFile(this)" class="input-field w-full text-base file:mr-3 file:py-2 file:px-5 file:rounded-lg file:border-0 file:bg-[#0095e8] file:text-white cursor-pointer">
+                    <p class="text-xs text-gray-400 mt-1.5">(Format: PDF, DOC, DOCX, XLS, XLSX, PNG, JPG, JPEG | Maks: 2 MB)</p>
+                    <p id="create_input_file_error" class="text-red-600 text-xs font-bold mt-1.5 hidden flex items-center gap-1.5"><i class="fa-solid fa-circle-exclamation text-xs"></i> <span></span></p>
+                    @error('berkas')
+                        <p class="text-red-600 text-xs font-bold mt-1.5 flex items-center gap-1.5"><i class="fa-solid fa-circle-exclamation text-xs"></i> {{ $message }}</p>
+                    @enderror
                 </div>
                 <div id="create_zona_link" class="bg-amber-50 p-4 rounded-xl border border-amber-200 hidden">
                     <label class="block text-sm font-bold text-gray-900 mb-2">Masukkan Alamat URL Lengkap <span class="text-red-500">*</span></label>
@@ -136,7 +141,12 @@
                 </div>
                 <div id="edit_zona_file" class="bg-amber-50/30 p-4 rounded-lg border border-amber-200 hidden">
                     <label class="block text-sm font-bold text-gray-900 mb-2">Pilih Berkas Baru</label>
-                    <input type="file" name="berkas" id="edit_input_file" class="input-field w-full text-base file:mr-3 file:py-2 file:px-5 file:rounded-lg file:border-0 file:bg-amber-500 file:text-white cursor-pointer">
+                    <input type="file" name="berkas" id="edit_input_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" onchange="validateAdminInformasiFile(this)" class="input-field w-full text-base file:mr-3 file:py-2 file:px-5 file:rounded-lg file:border-0 file:bg-amber-500 file:text-white cursor-pointer">
+                    <p class="text-xs text-gray-400 mt-1.5">(Format: PDF, DOC, DOCX, XLS, XLSX, PNG, JPG, JPEG | Maks: 2 MB)</p>
+                    <p id="edit_input_file_error" class="text-red-600 text-xs font-bold mt-1.5 hidden flex items-center gap-1.5"><i class="fa-solid fa-circle-exclamation text-xs"></i> <span></span></p>
+                    @error('berkas')
+                        <p class="text-red-600 text-xs font-bold mt-1.5 flex items-center gap-1.5"><i class="fa-solid fa-circle-exclamation text-xs"></i> {{ $message }}</p>
+                    @enderror
                 </div>
                 <div id="edit_zona_link" class="bg-amber-50 p-4 rounded-xl border border-amber-200 hidden">
                     <label class="block text-sm font-bold text-gray-900 mb-2">Masukkan Alamat URL Lengkap</label>
@@ -152,3 +162,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    function validateAdminInformasiFile(input) {
+        const errorEl = document.getElementById(input.id + '_error');
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            const maxMB = 2;
+            const maxSize = maxMB * 1024 * 1024;
+            if (file.size > maxSize) {
+                const actualMB = (file.size / (1024 * 1024)).toFixed(2);
+                if (errorEl) {
+                    errorEl.querySelector('span').textContent = `Ukuran berkas terlalu besar! Maksimal ${maxMB} MB (Ukuran berkas Anda: ${actualMB} MB).`;
+                    errorEl.classList.remove('hidden');
+                }
+                input.value = '';
+                return false;
+            }
+        }
+        if (errorEl) errorEl.classList.add('hidden');
+        return true;
+    }
+</script>

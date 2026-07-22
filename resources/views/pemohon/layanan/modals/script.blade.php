@@ -370,7 +370,9 @@
                 return false;
             }
             if (file.size > MAX_FILE_SIZE) {
-                showFieldError(field, `Ukuran ${rules.label} melebihi batas maksimal 2 MB.`);
+                const actualMB = (file.size / (1024 * 1024)).toFixed(2);
+                showFieldError(field, `Ukuran ${rules.label} terlalu besar! Maksimal 2 MB (Ukuran file Anda: ${actualMB} MB).`);
+                field.value = '';
                 return false;
             }
             clearFieldError(field);
