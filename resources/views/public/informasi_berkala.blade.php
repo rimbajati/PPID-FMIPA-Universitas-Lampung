@@ -78,7 +78,7 @@
                     <tbody>
                         @forelse ($informasi->groupBy('rincian_informasi') as $grup => $items)
                             @foreach($items as $index => $item)
-                                <tr class="hover:bg-gray-50 transition {{ $loop->last ? 'border-b-2 border-gray-300' : 'border-b border-gray-100' }}">
+                                <tr class="hover:bg-gray-50 transition {{ $loop->last ? 'border-b-2 border-gray-300' : '' }}">
 
                                     @if($index === 0)
                                         <td rowspan="{{ $items->count() }}" class="p-5 pl-8 font-bold text-gray-900 align-top">

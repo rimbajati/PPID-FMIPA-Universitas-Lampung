@@ -45,10 +45,11 @@
                             <th class="px-5 py-3 text-left font-semibold">Status</th>
                             <th class="px-5 py-3 text-left font-semibold">Waktu</th>
                             <th class="px-5 py-3 text-left font-semibold">Catatan</th>
+                            <th class="px-5 py-3 text-left font-semibold">Hasil / Jawaban</th>
                         </tr>
                     </thead>
                     <tbody id="modal-status-history-body" class="divide-y divide-slate-100 text-slate-800 bg-white">
-                        <tr><td class="px-5 py-3.5 font-medium">-</td><td class="px-5 py-3.5">-</td><td class="px-5 py-3.5">-</td></tr>
+                        <tr><td class="px-5 py-3.5 font-medium">-</td><td class="px-5 py-3.5">-</td><td class="px-5 py-3.5">-</td><td class="px-5 py-3.5">-</td></tr>
                     </tbody>
                 </table>
             </div>

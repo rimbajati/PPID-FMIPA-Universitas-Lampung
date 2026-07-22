@@ -96,6 +96,11 @@
                     @auth
                         <div class="relative ml-2">
                             <button id="profile-btn" type="button" class="nav-auth-text flex items-center gap-2 text-base font-semibold text-white transition-all focus:outline-none cursor-pointer whitespace-nowrap">
+                                @if(Auth::user()->role === 'admin' || (method_exists(Auth::user(), 'isAdmin') && Auth::user()->isAdmin()))
+                                    <i class="fa-solid fa-user-tie text-amber-300 text-lg"></i>
+                                @else
+                                    <i class="fa-solid fa-circle-user text-cyan-300 text-lg"></i>
+                                @endif
                                 <span class="truncate max-w-[220px] inline-block">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</span>
                                 <i class="fa-solid fa-chevron-down text-[10px] shrink-0"></i>
                             </button>

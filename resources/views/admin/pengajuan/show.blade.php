@@ -14,9 +14,15 @@
             <h1 class="text-2xl font-bold text-slate-800 tracking-tight">
                 {{ $isKeberatan ? 'Detail Pengajuan Keberatan' : 'Detail Permohonan Informasi' }}
             </h1>
-            <div class="text-lg font-bold text-[#1B365D] font-mono mt-0.5">
-                #{{ $permohonan->no_tiket }}
-            </div>
+            @if(Str::startsWith($permohonan->no_tiket, 'KEB'))
+                <div class="text-lg font-bold font-mono mt-0.5" style="color: #d97706 !important;">
+                    #{{ $permohonan->no_tiket }}
+                </div>
+            @else
+                <div class="text-lg font-bold font-mono mt-0.5" style="color: #1B365D !important;">
+                    #{{ $permohonan->no_tiket }}
+                </div>
+            @endif
         </div>
         <div>
             <a href="{{ url('/admin/pengajuan') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1B365D] hover:bg-[#1B365D]/90 text-white rounded font-bold text-sm shadow-sm transition">

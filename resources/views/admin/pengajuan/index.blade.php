@@ -127,7 +127,15 @@
                                 <td class="col-checkbox p-6 pl-8 hidden">
                                     <input type="checkbox" name="ids[]" value="{{ $item->id }}" class="child-checkbox rounded border-slate-300">
                                 </td>
-                                <td class="p-6 pl-8 font-mono font-bold text-slate-900 text-[15px]">{{ $item->no_tiket }}</td>
+                                @if(Str::startsWith($item->no_tiket, 'KEB'))
+                                    <td class="p-6 pl-8 font-mono font-bold text-[15px] whitespace-nowrap" style="color: #d97706 !important;">
+                                        {{ $item->no_tiket }}
+                                    </td>
+                                @else
+                                    <td class="p-6 pl-8 font-mono font-bold text-[15px] whitespace-nowrap" style="color: #1B365D !important;">
+                                        {{ $item->no_tiket }}
+                                    </td>
+                                @endif
                                 <td class="p-6 text-slate-900 font-bold text-[15px] whitespace-nowrap">
                                     {{ $item->jenis_layanan == 'Keberatan' ? 'Pengajuan Keberatan' : 'Permohonan Informasi' }}
                                 </td>

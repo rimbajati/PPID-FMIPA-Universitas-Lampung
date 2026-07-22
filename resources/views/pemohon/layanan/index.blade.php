@@ -64,13 +64,21 @@
                         <th class="px-5 py-4">Rincian Pengajuan</th>
                         <th class="px-5 py-4 whitespace-nowrap">Tanggal</th>
                         <th class="px-5 py-4">Status</th>
-                        <th class="px-5 py-4 text-center">Aksi</th>
+                        <th class="px-5 py-4 text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($pengajuans as $item)
                     <tr class="hover:bg-slate-50/80 transition-colors">
-                        <td class="px-5 py-4 font-bold text-[#1B365D] whitespace-nowrap text-sm">{{ $item->no_tiket }}</td>
+                        @if(Str::startsWith($item->no_tiket, 'KEB'))
+                            <td class="px-5 py-4 font-bold text-sm whitespace-nowrap" style="color: #d97706 !important;">
+                                {{ $item->no_tiket }}
+                            </td>
+                        @else
+                            <td class="px-5 py-4 font-bold text-sm whitespace-nowrap" style="color: #1B365D !important;">
+                                {{ $item->no_tiket }}
+                            </td>
+                        @endif
                         <td class="px-5 py-4 text-slate-800 text-sm font-medium whitespace-nowrap">
                             {{ $item->jenis_layanan == 'Keberatan' ? 'Pengajuan Keberatan' : 'Permohonan Informasi' }}
                         </td>
@@ -89,10 +97,24 @@
                             </span>
                         </td>
                         <td class="px-5 py-4 text-center whitespace-nowrap">
-                            <button onclick="openSummaryModal({{ json_encode($item) }})"
-                                    class="inline-flex items-center justify-center px-4 py-1.5 bg-[#1B365D] hover:bg-[#1B365D] text-white text-xs font-semibold rounded-lg shadow-sm transition active:scale-95 cursor-pointer">
-                                Detail
-                            </button>
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="openSummaryModal({{ json_encode($item) }})"
+                                        class="inline-flex items-center justify-center px-3.5 py-1.5 bg-[#1B365D] hover:bg-[#162c4c] text-white text-xs font-semibold rounded-lg shadow-sm transition active:scale-95 cursor-pointer">
+                                    Detail
+                                </button>
+                                @if($item->file_jawaban)
+                                    <a href="{{ asset('storage/' . $item->file_jawaban) }}" target="_blank" title="Unduh File Jawaban PPID"
+                                       class="inline-flex items-center justify-center px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition">
+                                        <i class="fa-solid fa-download mr-1"></i> File
+                                    </a>
+                                @endif
+                                @if($item->link_jawaban)
+                                    <a href="{{ $item->link_jawaban }}" target="_blank" title="Buka Link Jawaban PPID"
+                                       class="inline-flex items-center justify-center px-2.5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-semibold rounded-lg shadow-sm transition">
+                                        <i class="fa-solid fa-up-right-from-square mr-1"></i> Link
+                                    </a>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty

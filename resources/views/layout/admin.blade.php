@@ -209,9 +209,14 @@
                 <div class="hidden lg:block"></div> <!-- Spacer -->
 
                 <!-- Profil Info -->
-                <div class="flex items-center gap-4">
-                    <div class="text-right hidden sm:block">
-                        <p class="font-bold text-slate-800 text-[15px]">{{ auth()->user()->nama_lengkap ?? 'Admin PPID' }}</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-[#1B365D]/10 border border-[#1B365D]/20 flex items-center justify-center text-[#1B365D] shrink-0">
+                        <i class="fa-solid fa-user-tie text-base"></i>
+                    </div>
+                    <div class="text-left hidden sm:block">
+                        <p class="font-bold text-slate-800 text-[15px] flex items-center gap-2">
+                            <span>{{ auth()->user()->nama_lengkap ?? 'Admin PPID' }}</span>
+                        </p>
                     </div>
                 </div>
             </header>

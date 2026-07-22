@@ -255,7 +255,7 @@
                 </tr>
             </table>
 
-            @if($pengajuan->catatan_admin)
+            @if($pengajuan->catatan_admin || $pengajuan->file_jawaban || $pengajuan->link_jawaban)
                 <div class="notes-card 
                     @if($pengajuan->status === 'PERBAIKAN') perbaikan
                     @elseif($pengajuan->status === 'DITOLAK') ditolak
@@ -268,17 +268,28 @@
                         @elseif($pengajuan->status === 'DITOLAK')
                             Alasan Penolakan
                         @elseif($pengajuan->status === 'DITERIMA')
-                            Tanggapan Administrator
+                            Tanggapan & Jawaban Administrator
                         @else
                             Catatan Administrator
                         @endif
                     </div>
-                    <div class="notes-body">{!! nl2br(e($pengajuan->catatan_admin)) !!}</div>
 
-                    @if($pengajuan->status === 'DITERIMA' && $pengajuan->file_jawaban)
-                        <div style="margin-top: 14px; pt-3; border-top: 1px dashed #cbd5e1;">
-                            <a href="{{ url('/storage/' . $pengajuan->file_jawaban) }}" target="_blank" class="btn-download">
-                                Unduh Lampiran Tanggapan
+                    @if($pengajuan->catatan_admin)
+                        <div class="notes-body">{!! nl2br(e($pengajuan->catatan_admin)) !!}</div>
+                    @endif
+
+                    @if($pengajuan->file_jawaban)
+                        <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed #cbd5e1;">
+                            <a href="{{ url('/storage/' . $pengajuan->file_jawaban) }}" target="_blank" class="btn-download" style="display: inline-block; background-color: #1B365D; color: #ffffff; padding: 10px 18px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 13px;">
+                                📥 Unduh File Jawaban
+                            </a>
+                        </div>
+                    @endif
+
+                    @if($pengajuan->link_jawaban)
+                        <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed #cbd5e1;">
+                            <a href="{{ $pengajuan->link_jawaban }}" target="_blank" class="btn-download" style="display: inline-block; background-color: #059669; color: #ffffff; padding: 10px 18px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 13px;">
+                                🔗 Buka Tautan / Link Jawaban
                             </a>
                         </div>
                     @endif

@@ -121,16 +121,16 @@
                             @php $groupSlug = \Illuminate\Support\Str::slug($rincian); @endphp
 
                             @foreach ($groupItems as $index => $item)
-                                <tr class="hover:bg-slate-50/50 transition-colors {{ $loop->last ? 'border-b-2 border-slate-300' : 'border-b border-slate-50' }}">
+                                <tr class="hover:bg-slate-50/50 transition-colors {{ $loop->last ? 'border-b-2 border-slate-300' : '' }}">
                                     <td class="col-checkbox p-6 pl-8 hidden">
                                         <input type="checkbox" name="ids[]" value="{{ $item->id }}" class="child-checkbox rounded border-slate-300" data-group="{{ $groupSlug }}">
                                     </td>
-                                    <td class="p-6">
-                                        @if ($index === 0)
+                                    @if ($index === 0)
+                                        <td rowspan="{{ $groupItems->count() }}" class="p-6 align-top">
                                             <input type="checkbox" class="group-checkbox rounded border-slate-300 mr-2 hidden" data-group="{{ $groupSlug }}">
                                             <span class="font-bold text-[17px] text-slate-900">{{ $rincian }}</span>
-                                        @endif
-                                    </td>
+                                        </td>
+                                    @endif
                                     <td class="p-6">
                                         <span class="text-[15px] text-slate-900">{{ $item->sub_informasi }}</span>
                                     </td>

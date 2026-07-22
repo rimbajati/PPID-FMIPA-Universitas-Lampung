@@ -112,6 +112,14 @@
                     <label class="block text-base font-bold text-slate-700">Lampiran Identitas (KTP / SIM / KTM) <span class="text-red-500">*</span></label>
                     <input type="file" name="identitas" id="identitas" data-required accept=".jpg,.jpeg,.png" onchange="validateIdentitasFile(this)" class="input-field w-full border {{ $errors->has('identitas') ? 'border-red-500' : 'border-slate-300' }} rounded-xl p-2 text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#1B365D] file:text-white hover:file:bg-[#1B365D] file:transition-all cursor-pointer">
                     <p class="text-xs text-slate-400 font-medium mt-1.5">(Format: JPG, JPEG, PNG | Maks: 2 MB)</p>
+                    <div id="identitas-existing-file-info" class="mt-2 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center justify-between hidden">
+                        <span class="flex items-center gap-1.5 text-xs text-slate-700 font-medium">
+                            <i class="fa-solid fa-file-image text-[#1B365D] text-sm"></i> Berkas Identitas Saat Ini
+                        </span>
+                        <a id="identitas-existing-file-link" href="#" target="_blank" class="text-xs text-[#1B365D] font-bold hover:underline flex items-center gap-1">
+                            Lihat Berkas <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
                     <p id="identitas-file-error" class="error-msg text-red-500 text-xs font-semibold mt-1.5 hidden"></p>
                     @error('identitas') <p class="error-msg text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -120,6 +128,14 @@
                     <label class="block text-base font-bold text-slate-700">Lampiran Akta Pendirian Badan Hukum <span class="text-red-500">*</span></label>
                     <input type="file" name="akta_pendirian" id="akta_pendirian" data-required class="input-field w-full border {{ $errors->has('akta_pendirian') ? 'border-red-500' : 'border-slate-300' }} rounded-xl p-2 text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#1B365D] file:text-white hover:file:bg-[#1B365D] file:transition-all cursor-pointer">
                     <p class="text-xs text-slate-400 font-medium mt-1.5">(Format: JPG, PNG, PDF | Maks: 2 MB)</p>
+                    <div id="akta-existing-file-info" class="mt-2 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center justify-between hidden">
+                        <span class="flex items-center gap-1.5 text-xs text-slate-700 font-medium">
+                            <i class="fa-solid fa-file-pdf text-[#1B365D] text-sm"></i> Akta Pendirian Saat Ini
+                        </span>
+                        <a id="akta-existing-file-link" href="#" target="_blank" class="text-xs text-[#1B365D] font-bold hover:underline flex items-center gap-1">
+                            Lihat Berkas <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
                     @error('akta_pendirian') <p class="error-msg text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -138,6 +154,14 @@
                         <label class="block text-base font-bold text-slate-700">Lampiran Data Pendukung (Opsional)</label>
                         <input type="file" name="lampiran_pendukung" id="lampiran_pendukung" class="input-field w-full border {{ $errors->has('lampiran_pendukung') ? 'border-red-500' : 'border-slate-300' }} rounded-xl p-2 text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#1B365D] file:text-white hover:file:bg-[#1B365D] file:transition-all cursor-pointer">
                         <p class="text-xs text-slate-400 font-medium mt-1.5">(Format: JPG, PNG, PDF | Maks: 2 MB | jika file lebih dari satu, silahkan digabungkan (merge) menjadi 1 file pdf)</p>
+                        <div id="pendukung-existing-file-info" class="mt-2 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center justify-between hidden">
+                            <span class="flex items-center gap-1.5 text-xs text-slate-700 font-medium">
+                                <i class="fa-solid fa-file-lines text-[#1B365D] text-sm"></i> Lampiran Pendukung Saat Ini
+                            </span>
+                            <a id="pendukung-existing-file-link" href="#" target="_blank" class="text-xs text-[#1B365D] font-bold hover:underline flex items-center gap-1">
+                                Lihat Berkas <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+                            </a>
+                        </div>
                         @error('lampiran_pendukung') <p class="error-msg text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>

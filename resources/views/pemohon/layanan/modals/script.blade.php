@@ -84,6 +84,12 @@
         document.querySelectorAll('input[name="cara_ambil_radio"]').forEach(r => r.checked = false);
         const hiddenCaraAmbil = document.getElementById('cara_ambil');
         if (hiddenCaraAmbil) hiddenCaraAmbil.value = '';
+
+        // Hide existing file badges
+        ['identitas-existing-file-info', 'akta-existing-file-info', 'pendukung-existing-file-info', 'keberatan-existing-file-info'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        });
         
         toggleFormFields();
     }
@@ -401,6 +407,7 @@
             form.querySelectorAll('[data-js-error]').forEach(function(el) { el.remove(); });
 
             let firstError = null;
+            const isEditMode = !!form.querySelector('input[name="_method"]');
 
             const requiredFields = form.querySelectorAll('[data-required]');
             requiredFields.forEach(function(field) {
@@ -411,7 +418,8 @@
 
                 let isEmpty = false;
                 if (field.type === 'file') {
-                    isEmpty = field.files.length === 0;
+                    // File inputs are optional in Edit Mode (existing file is kept)
+                    isEmpty = !isEditMode && field.files.length === 0;
                 } else if (field.type === 'checkbox') {
                     isEmpty = !field.checked;
                 } else {
@@ -423,10 +431,14 @@
                     showFieldError(field, label);
                     if (!firstError) firstError = field;
                 } else {
-                    // For file inputs: also validate type & size even if file exists
+                    // For file inputs: validate type & size ONLY if a file is actually selected
                     if (field.type === 'file') {
-                        const valid = validateFileField(field);
-                        if (!valid && !firstError) firstError = field;
+                        if (field.files.length > 0) {
+                            const valid = validateFileField(field);
+                            if (!valid && !firstError) firstError = field;
+                        } else {
+                            clearFieldError(field);
+                        }
                     } else {
                         clearFieldError(field);
                     }
@@ -567,7 +579,12 @@
 
     function openSummaryModal(data) {
         document.getElementById('modal-nama').innerText = data.nama;
-        document.getElementById('modal-tiket').innerText = data.no_tiket;
+        const tiketEl = document.getElementById('modal-tiket');
+        if (tiketEl) {
+            const isKeb = (data.no_tiket || '').startsWith('KEB');
+            tiketEl.style.color = isKeb ? '#d97706' : '#1B365D';
+            tiketEl.innerText = data.no_tiket;
+        }
         document.getElementById('modal-no-identitas').innerText = data.no_identitas;
         document.getElementById('modal-email').innerText = data.email;
         document.getElementById('modal-hp').innerText = data.no_hp;
@@ -601,21 +618,51 @@
         
         if (data.status_histories && data.status_histories.length > 0) {
             data.status_histories.forEach(history => {
+                let hasilHtml = '-';
+                if (history.status === 'DITERIMA' || (history.status === data.status && (data.file_jawaban || data.link_jawaban))) {
+                    let btns = [];
+                    if (data.file_jawaban) {
+                        btns.push(`<a href="/storage/${data.file_jawaban}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1B365D] hover:bg-[#162c4c] text-white rounded-lg font-bold text-xs shadow-xs transition"><i class="fa-solid fa-file-arrow-down"></i> Unduh File</a>`);
+                    }
+                    if (data.link_jawaban) {
+                        btns.push(`<a href="${data.link_jawaban}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs shadow-xs transition"><i class="fa-solid fa-up-right-from-square"></i> Buka Link</a>`);
+                    }
+                    if (btns.length > 0) {
+                        hasilHtml = `<div class="flex items-center gap-2 flex-wrap">${btns.join('')}</div>`;
+                    }
+                }
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td class="p-5 font-bold text-slate-800">${history.status}</td>
                     <td class="p-5 text-slate-700">${formatWIB(history.created_at)}</td>
                     <td class="p-5 text-slate-700">${history.catatan && history.catatan.trim() !== '' ? history.catatan : '-'}</td>
+                    <td class="p-5 text-slate-700">${hasilHtml}</td>
                 `;
                 historyBody.appendChild(row);
             });
         } else {
             // Fallback for legacy records that don't have history records
+            let hasilHtml = '-';
+            if (data.status === 'DITERIMA' || data.file_jawaban || data.link_jawaban) {
+                let btns = [];
+                if (data.file_jawaban) {
+                    btns.push(`<a href="/storage/${data.file_jawaban}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1B365D] hover:bg-[#162c4c] text-white rounded-lg font-bold text-xs shadow-xs transition"><i class="fa-solid fa-file-arrow-down"></i> Unduh File</a>`);
+                }
+                if (data.link_jawaban) {
+                    btns.push(`<a href="${data.link_jawaban}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs shadow-xs transition"><i class="fa-solid fa-up-right-from-square"></i> Buka Link</a>`);
+                }
+                if (btns.length > 0) {
+                    hasilHtml = `<div class="flex items-center gap-2 flex-wrap">${btns.join('')}</div>`;
+                }
+            }
+
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="p-5 font-bold text-slate-800">${data.status}</td>
                 <td class="p-5 text-slate-700">${formatWIB(data.updated_at)}</td>
                 <td class="p-5 text-slate-700">${data.catatan_admin && data.catatan_admin.trim() !== '' ? data.catatan_admin : '-'}</td>
+                <td class="p-5 text-slate-700">${hasilHtml}</td>
             `;
             historyBody.appendChild(row);
         }
@@ -793,6 +840,34 @@
             setFieldsLockState(false);
         }
         
+        // Populate existing files info badges in edit mode
+        if (item.lampiran_identitas && item.lampiran_identitas !== '-') {
+            const elInfo = document.getElementById('identitas-existing-file-info');
+            const elLink = document.getElementById('identitas-existing-file-link');
+            if (elInfo && elLink) {
+                elLink.href = `/storage/${item.lampiran_identitas}`;
+                elInfo.classList.remove('hidden');
+            }
+        }
+
+        if (item.akta_pendirian && item.akta_pendirian !== '-') {
+            const elInfo = document.getElementById('akta-existing-file-info');
+            const elLink = document.getElementById('akta-existing-file-link');
+            if (elInfo && elLink) {
+                elLink.href = `/storage/${item.akta_pendirian}`;
+                elInfo.classList.remove('hidden');
+            }
+        }
+
+        if (item.lampiran_pendukung && item.lampiran_pendukung !== '-') {
+            const elInfo = document.getElementById('pendukung-existing-file-info');
+            const elLink = document.getElementById('pendukung-existing-file-link');
+            if (elInfo && elLink) {
+                elLink.href = `/storage/${item.lampiran_pendukung}`;
+                elInfo.classList.remove('hidden');
+            }
+        }
+
         // Make sure body wrapper is shown
         const wrapper = document.getElementById('form-body-wrapper');
         if (wrapper) wrapper.classList.remove('hidden');
