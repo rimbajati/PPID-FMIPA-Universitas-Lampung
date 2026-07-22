@@ -129,7 +129,7 @@
                     <a href="{{ route('layanan.index') }}"
                        class="flex items-center px-5 py-3.5 rounded-[14px] text-[15px] font-semibold transition-all duration-300
                        {{ request()->routeIs('layanan.index') ? 'bg-[#1B365D] text-white shadow-lg shadow-sky-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
-                        <i class="fa-solid fa-layer-group text-lg w-7 text-center mr-2"></i>
+                        <i class="fa-solid fa-inbox text-lg w-7 text-center mr-2"></i>
                         Pengajuan
                     </a>
 

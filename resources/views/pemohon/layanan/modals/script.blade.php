@@ -582,7 +582,7 @@
         const tiketEl = document.getElementById('modal-tiket');
         if (tiketEl) {
             const isKeb = (data.no_tiket || '').startsWith('KEB');
-            tiketEl.style.color = isKeb ? '#d97706' : '#1B365D';
+            tiketEl.style.color = isKeb ? '#d97706' : '#2563eb';
             tiketEl.innerText = data.no_tiket;
         }
         document.getElementById('modal-no-identitas').innerText = data.no_identitas;

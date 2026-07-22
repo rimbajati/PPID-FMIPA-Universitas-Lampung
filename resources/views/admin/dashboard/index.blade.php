@@ -45,7 +45,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
 
         <!-- 1. Total Informasi Publik -->
-        <div class="relative bg-[#1B365D] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#0d9488] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalInformasi }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Total Informasi Publik</span>
@@ -78,13 +78,13 @@
         </a>
 
         <!-- 4. Total Pengajuan Keberatan -->
-        <a href="{{ url('/admin/pengajuan?jenis=Keberatan') }}" class="relative bg-[#0284C7] hover:bg-[#0369A1] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px] transition-colors block cursor-pointer group">
+        <a href="{{ url('/admin/pengajuan?jenis=Keberatan') }}" class="relative bg-[#d97706] hover:bg-[#b45309] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px] transition-colors block cursor-pointer group">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalKeberatan }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Pengajuan Keberatan</span>
             </div>
             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 group-hover:scale-110 transition-transform select-none pointer-events-none">
-                <i class="fa-solid fa-shield-cat"></i>
+                <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
         </a>
 
@@ -272,10 +272,11 @@
                                     @php
                                         $st = strtoupper($p->status ?? 'DIAJUKAN');
                                         $bgMap = [
-                                            'DIAJUKAN' => 'bg-sky-50 text-sky-700 border-sky-200',
-                                            'DIPROSES' => 'bg-amber-50 text-amber-700 border-amber-200',
-                                            'DITERIMA' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                                            'DITOLAK'  => 'bg-rose-50 text-rose-700 border-rose-200',
+                                            'DIAJUKAN'  => 'bg-slate-100 text-slate-700 border-slate-200',
+                                            'DIPROSES'  => 'bg-blue-100 text-blue-700 border-blue-200',
+                                            'PERBAIKAN' => 'bg-amber-100 text-amber-700 border-amber-200',
+                                            'DITERIMA'  => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                                            'DITOLAK'   => 'bg-rose-100 text-rose-700 border-rose-200',
                                         ];
                                         $cls = $bgMap[$st] ?? 'bg-slate-50 text-slate-700 border-slate-200';
                                     @endphp

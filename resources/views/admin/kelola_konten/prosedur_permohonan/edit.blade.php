@@ -16,7 +16,7 @@
         <div>
             <a href="{{ route('prosedur.permohonan') }}" target="_blank"
                class="inline-flex items-center gap-2 px-6 py-3.5 bg-[#1B365D] hover:bg-[#07597b] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all shadow">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> Lihat Tampilan Publik
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Lihat Halaman
             </a>
         </div>
     </div>

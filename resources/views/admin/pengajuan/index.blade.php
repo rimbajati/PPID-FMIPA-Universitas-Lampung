@@ -12,7 +12,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
 
         <!-- 1. Total -->
-        <div class="relative bg-[#0073b7] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#2C3E50] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalPermohonan ?? 0 }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Total</span>
@@ -23,7 +23,7 @@
         </div>
 
         <!-- 2. Diajukan -->
-        <div class="relative bg-[#1B365D] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#64748b] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalDiajukan ?? 0 }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Diajukan</span>
@@ -34,7 +34,7 @@
         </div>
 
         <!-- 3. Diproses -->
-        <div class="relative bg-[#f39c12] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#2563eb] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalDiproses ?? 0 }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Diproses</span>
@@ -45,7 +45,7 @@
         </div>
 
         <!-- 4. Diterima -->
-        <div class="relative bg-[#00a65a] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#059669] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalDiterima ?? 0 }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Diterima</span>
@@ -56,7 +56,7 @@
         </div>
 
         <!-- 5. Ditolak -->
-        <div class="relative bg-[#dd4b39] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#dc2626] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalDitolak ?? 0 }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Ditolak</span>
@@ -128,11 +128,11 @@
                                     <input type="checkbox" name="ids[]" value="{{ $item->id }}" class="child-checkbox rounded border-slate-300">
                                 </td>
                                 @if(Str::startsWith($item->no_tiket, 'KEB'))
-                                    <td class="p-6 pl-8 font-mono font-bold text-[15px] whitespace-nowrap" style="color: #d97706 !important;">
+                                    <td class="p-6 pl-8 font-bold text-[15px] whitespace-nowrap" style="color: #d97706 !important;">
                                         {{ $item->no_tiket }}
                                     </td>
                                 @else
-                                    <td class="p-6 pl-8 font-mono font-bold text-[15px] whitespace-nowrap" style="color: #1B365D !important;">
+                                    <td class="p-6 pl-8 font-bold text-[15px] whitespace-nowrap" style="color: #2563eb !important;">
                                         {{ $item->no_tiket }}
                                     </td>
                                 @endif
@@ -149,12 +149,12 @@
                                 <td class="p-6 whitespace-nowrap">
                                     @php
                                         $statusStyle = match($item->status) {
-                                            'DIAJUKAN'  => 'bg-amber-100 text-amber-700',
-                                            'DIPROSES'  => 'bg-indigo-100 text-indigo-700',
-                                            'PERBAIKAN' => 'bg-orange-100 text-orange-800',
-                                            'DITERIMA'  => 'bg-emerald-100 text-emerald-700',
-                                            'DITOLAK'   => 'bg-rose-100 text-rose-700',
-                                            default     => 'bg-slate-100 text-slate-600',
+                                            'DIAJUKAN'  => 'bg-slate-100 text-slate-700 border border-slate-200',
+                                            'DIPROSES'  => 'bg-blue-100 text-blue-700 border border-blue-200',
+                                            'PERBAIKAN' => 'bg-amber-100 text-amber-700 border border-amber-200',
+                                            'DITERIMA'  => 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+                                            'DITOLAK'   => 'bg-rose-100 text-rose-700 border border-rose-200',
+                                            default     => 'bg-slate-100 text-slate-600 border border-slate-200',
                                         };
                                     @endphp
                                     <span class="px-3.5 py-1 rounded-full text-[12px] font-bold inline-block text-center {{ $statusStyle }}">

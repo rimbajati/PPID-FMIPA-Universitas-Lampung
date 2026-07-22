@@ -75,7 +75,7 @@
                                 {{ $item->no_tiket }}
                             </td>
                         @else
-                            <td class="px-5 py-4 font-bold text-sm whitespace-nowrap" style="color: #1B365D !important;">
+                            <td class="px-5 py-4 font-bold text-sm whitespace-nowrap" style="color: #2563eb !important;">
                                 {{ $item->no_tiket }}
                             </td>
                         @endif
@@ -87,12 +87,17 @@
                         </td>
                         <td class="px-5 py-4 text-slate-500 text-sm whitespace-nowrap">{{ $item->created_at->translatedFormat('j F Y') }}</td>
                         <td class="px-5 py-4 whitespace-nowrap">
-                            <span class="text-xs font-bold tracking-wide uppercase
-                                    {{ $item->status == 'DIAJUKAN' ? 'text-amber-600' : '' }}
-                                    {{ $item->status == 'DIPROSES' ? 'text-blue-600' : '' }}
-                                    {{ $item->status == 'PERBAIKAN' ? 'text-orange-600' : '' }}
-                                    {{ $item->status == 'DITERIMA' ? 'text-emerald-600' : '' }}
-                                    {{ $item->status == 'DITOLAK' ? 'text-rose-600' : '' }}">
+                            @php
+                                $stClass = match($item->status) {
+                                    'DIAJUKAN'  => 'bg-slate-100 text-slate-700 border border-slate-200',
+                                    'DIPROSES'  => 'bg-blue-100 text-blue-700 border border-blue-200',
+                                    'PERBAIKAN' => 'bg-amber-100 text-amber-700 border border-amber-200',
+                                    'DITERIMA'  => 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+                                    'DITOLAK'   => 'bg-rose-100 text-rose-700 border border-rose-200',
+                                    default     => 'bg-slate-100 text-slate-600 border border-slate-200',
+                                };
+                            @endphp
+                            <span class="px-3 py-1 rounded-full text-[11px] font-bold inline-block uppercase text-center {{ $stClass }}">
                                 {{ $item->status }}
                             </span>
                         </td>

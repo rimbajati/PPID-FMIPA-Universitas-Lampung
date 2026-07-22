@@ -145,7 +145,7 @@
 
                     <a href="{{ url('/admin/pengajuan') }}"
                        class="flex items-center px-5 py-3.5 rounded-[14px] text-[15px] font-semibold transition-all duration-300 {{ request()->is('admin/pengajuan*') ? 'bg-[#1B365D] text-white shadow-lg shadow-sky-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
-                        <i class="fa-solid fa-file-lines text-lg w-7 text-center mr-2"></i>
+                        <i class="fa-solid fa-inbox text-lg w-7 text-center mr-2"></i>
                         <span>Pengajuan</span>
                     </a>
 
@@ -169,12 +169,12 @@
                             </a>
                             <a href="{{ url('/admin/prosedur-permohonan') }}"
                                class="flex items-center px-4 py-2.5 rounded-[12px] text-[14px] font-semibold transition-all duration-300 {{ request()->is('admin/prosedur-permohonan*') ? 'bg-[#07597b] text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
-                                <i class="fa-solid fa-list-check text-sm w-6 text-center mr-2"></i>
+                                <i class="fa-solid fa-clipboard-list text-sm w-6 text-center mr-2"></i>
                                 <span>Prosedur Permohonan Informasi</span>
                             </a>
                             <a href="{{ url('/admin/halaman-informasi-publik') }}"
                                class="flex items-center px-4 py-2.5 rounded-[12px] text-[14px] font-semibold transition-all duration-300 {{ request()->is('admin/halaman-informasi-publik*') ? 'bg-[#07597b] text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
-                                <i class="fa-solid fa-folder-open text-sm w-6 text-center mr-2"></i>
+                                <i class="fa-solid fa-layer-group text-sm w-6 text-center mr-2"></i>
                                 <span>Informasi Publik</span>
                             </a>
                         </div>

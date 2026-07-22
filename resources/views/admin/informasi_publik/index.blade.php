@@ -16,7 +16,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
 
         <!-- 1. Total Informasi -->
-        <div class="relative bg-[#1B365D] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#0d9488] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalInformasi }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Total Informasi Publik</span>
@@ -137,10 +137,10 @@
                                     <td class="p-6">
                                         @php
                                             $style = [
-                                                'Informasi Tersedia Setiap Saat' => 'bg-indigo-100 text-indigo-700',
-                                                'Informasi Tersedia Secara Berkala' => 'bg-emerald-100 text-emerald-700',
-                                                'Informasi Diumumkan Serta-Merta' => 'bg-amber-100 text-amber-700',
-                                            ][$item->kategori] ?? 'bg-slate-100 text-slate-600';
+                                                'Informasi Tersedia Setiap Saat' => 'bg-[#605ca8]/15 text-[#4e4a8e] border border-[#605ca8]/30',
+                                                'Informasi Tersedia Secara Berkala' => 'bg-blue-100 text-[#1d4ed8] border border-blue-200',
+                                                'Informasi Diumumkan Serta-Merta' => 'bg-sky-100 text-[#0369a1] border border-sky-200',
+                                            ][$item->kategori] ?? 'bg-slate-100 text-slate-600 border border-slate-200';
                                         @endphp
                                         <span class="px-3 py-1 rounded-full text-[12px] font-bold {{ $style }}">{{ $item->kategori }}</span>
                                     </td>
