@@ -1,4 +1,4 @@
-@extends('layout.admin')
+@extends('layouts.admin')
 
 @section('title', 'Detail ' . $permohonan->jenis_layanan . ' #' . $permohonan->no_tiket . ' - PPID FMIPA Unila')
 

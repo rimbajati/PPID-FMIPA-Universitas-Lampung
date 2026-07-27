@@ -1,4 +1,4 @@
-@extends('layout.utama')
+@extends('layouts.app')
 
 @section('title', 'Beranda - PPID FMIPA Unila')
 
@@ -60,14 +60,13 @@
                 </h1>
             </div>
 
-            <div class="max-w-3xl">
-                <form action="{{ url('/informasi-publik') }}" method="GET" class="relative flex items-center shadow-2xl">
-                    <div class="absolute left-6 text-gray-700 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-base"></i></div>
+            <div class="max-w-2xl">
+                <form action="{{ url('/informasi-publik') }}" method="GET" class="flex items-stretch shadow-lg rounded-md overflow-hidden bg-white border border-gray-300">
                     <input id="live-search-input" type="text" name="search" placeholder="{{ $beranda['hero_search_placeholder'] }}"
-                        class="w-full h-16 pl-14 pr-32 bg-white text-gray-900 placeholder-gray-700 text-base rounded-3xl focus:outline-none border-0 transition-all shadow-lg" autocomplete="off">
-                    <div class="absolute right-2">
-                        <button type="submit" class="h-12 px-8 bg-[#1B365D] hover:bg-[#1B365D] text-white font-medium text-xs uppercase rounded-3xl tracking-wider transition-colors cursor-pointer">Cari</button>
-                    </div>
+                        class="w-full h-12 md:h-14 px-5 bg-white text-gray-900 placeholder-gray-400 text-base focus:outline-none border-0" autocomplete="off">
+                    <button type="submit" aria-label="Cari" class="px-6 bg-[#1B365D] hover:bg-[#152a4a] text-white flex items-center justify-center transition-colors cursor-pointer shrink-0">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </button>
                 </form>
             </div>
 
@@ -75,21 +74,21 @@
             <div id="live-results-list" class="w-full flex flex-wrap items-center gap-2.5"></div>
 
             <div class="space-y-6">
-                <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
-                    <span class="text-md font-bold uppercase tracking-widest text-cyan-100 shrink-0">Informasi yang sering dicari:</span>
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-3">
+                    <span class="text-base md:text-lg font-bold tracking-wide text-cyan-100 shrink-0">Informasi yang Sering Dicari:</span>
                     @foreach($seringDiakses as $doc)
                         @if($doc->tipe_informasi === 'link')
                             <a href="{{ $doc->jalur_informasi }}"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="text-lg font-medium text-white hover:text-cyan-100 underline decoration-white/30">
+                            class="inline-flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-md text-sm font-medium text-white transition-all backdrop-blur-sm shadow-sm">
                                 {{ $doc->sub_informasi }}
                             </a>
                         @else
                             <a href="{{ route('informasi.file', ['id' => $doc->id, 'slug' => \Illuminate\Support\Str::slug($doc->sub_informasi) . '.' . $doc->tipe_informasi]) }}"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="text-lg font-medium text-white hover:text-cyan-100 underline decoration-white/30">
+                            class="inline-flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-md text-sm font-medium text-white transition-all backdrop-blur-sm shadow-sm">
                                 {{ $doc->sub_informasi }}
                             </a>
                         @endif
@@ -100,13 +99,13 @@
                     @if(Auth::check() && Auth::user()->isAdmin())
                         <p class="text-md text-white">Anda adalah Admin. Silakan masuk ke panel admin untuk mengelola informasi dan pengajuan.</p>
                         <a href="{{ route('admin.dashboard') }}"
-                          class="inline-block bg-white hover:bg-gray-100 text-[#1B365D] font-bold px-8 py-4 uppercase text-sm rounded-2xl tracking-wider transition-all shadow-lg">
+                          class="inline-block bg-white hover:bg-gray-100 text-[#1B365D] font-bold px-8 py-4 uppercase text-sm rounded-lg tracking-wider transition-all shadow-lg">
                             Dashboard Admin
                         </a>
                     @else
                         <p class="text-md text-white">{{ $beranda['hero_cta_user_text'] }}</p>
                         <a href="{{ route('layanan.index') }}"
-                          class="inline-block bg-white hover:bg-gray-100 text-[#1B365D] font-bold px-8 py-4 uppercase text-sm rounded-2xl tracking-wider transition-all shadow-lg">
+                          class="inline-block bg-white hover:bg-gray-100 text-[#1B365D] font-bold px-8 py-4 uppercase text-sm rounded-lg tracking-wider transition-all shadow-lg">
                             Buat Permohonan
                         </a>
                     @endif
@@ -115,6 +114,73 @@
         </div>
     </div>
 </div>
+
+<!-- SECTION: 3 Kategori Utama Informasi Publik (UU No. 14 Tahun 2008) -->
+<section class="py-16 bg-white border-b border-slate-200">
+    <div class="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
+        <div class="text-center mb-12 space-y-2">
+            <span class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#07597b]">Kategori Informasi</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Klasifikasi Informasi Publik</h2>
+            <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">PPID FMIPA Universitas Lampung menyediakan akses informasi publik sesuai Undang-Undang No. 14 Tahun 2008.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Kartu 1: Informasi Secara Berkala -->
+            <div class="bg-slate-50 border border-slate-200 p-8 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+                <div class="space-y-4">
+                    <div class="w-14 h-14 bg-[#1B365D] text-white flex items-center justify-center text-2xl shadow-md">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#07597b] transition-colors">Informasi Berkala</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Informasi yang wajib diperbarui dan disediakan secara rutin seperti profil lembaga, program kerja, laporan keuangan, dan kinerja tahunan FMIPA Unila.
+                    </p>
+                </div>
+                <div class="pt-6 mt-6 border-t border-slate-200">
+                    <a href="/informasi-berkala" class="inline-flex items-center gap-2 text-sm font-bold text-[#1B365D] hover:text-[#07597b] transition-colors">
+                        Lihat Informasi <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Kartu 2: Informasi Serta Merta -->
+            <div class="bg-slate-50 border border-slate-200 p-8 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+                <div class="space-y-4">
+                    <div class="w-14 h-14 bg-[#1B365D] text-white flex items-center justify-center text-2xl shadow-md">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#07597b] transition-colors">Informasi Serta Merta</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Informasi yang dapat mengancam hajat hidup orang banyak dan ketertiban umum yang perlu segera diumumkan tanpa penundaan.
+                    </p>
+                </div>
+                <div class="pt-6 mt-6 border-t border-slate-200">
+                    <a href="/informasi-serta-merta" class="inline-flex items-center gap-2 text-sm font-bold text-[#1B365D] hover:text-[#07597b] transition-colors">
+                        Lihat Informasi <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Kartu 3: Informasi Setiap Saat -->
+            <div class="bg-slate-50 border border-slate-200 p-8 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+                <div class="space-y-4">
+                    <div class="w-14 h-14 bg-[#1B365D] text-white flex items-center justify-center text-2xl shadow-md">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#07597b] transition-colors">Informasi Setiap Saat</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Informasi yang telah dikuasai dan disediakan oleh PPID yang dapat diakses dan diperoleh publik sewaktu-waktu saat dibutuhkan.
+                    </p>
+                </div>
+                <div class="pt-6 mt-6 border-t border-slate-200">
+                    <a href="/informasi-setiap-saat" class="inline-flex items-center gap-2 text-sm font-bold text-[#1B365D] hover:text-[#07597b] transition-colors">
+                        Lihat Informasi <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="py-20 bg-slate-50">
     <div class="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
@@ -131,7 +197,7 @@
 
         <div class="flex flex-wrap justify-center gap-6 sm:gap-7">
             @foreach($alurSteps as $index => $step)
-            <div class="relative bg-[#1B365D] hover:bg-[#162c4c] text-white p-7 sm:p-8 rounded-2xl shadow-xl border border-white/10 flex flex-col justify-between overflow-hidden w-full md:w-[calc(50%-14px)] lg:w-[calc(33.333%-19px)] min-h-[220px] group transition-all duration-300 hover:-translate-y-1">
+            <div class="relative bg-[#1B365D] hover:bg-[#162c4c] text-white p-7 sm:p-8 shadow-xl border border-white/10 flex flex-col justify-between overflow-hidden w-full md:w-[calc(50%-14px)] lg:w-[calc(33.333%-19px)] min-h-[220px] group transition-all duration-300 hover:-translate-y-1">
                 <!-- Decorative Top Geometric Shapes -->
                 <div class="flex items-center gap-1.5 opacity-40 mb-4">
                     <span class="w-2.5 h-2.5 rounded-full bg-cyan-300"></span>
@@ -161,7 +227,7 @@
 
 <section class="py-14 bg-gray-50">
     <div class="container mx-auto px-8 md:px-16 lg:px-24">
-        <div class="bg-[#1B365D] rounded-3xl p-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start shadow-3xl">
+        <div class="bg-[#1B365D] p-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start shadow-3xl">
             <div class="text-white mt-12">
                 <p class="text-xs font-bold text-cyan-200 uppercase tracking-widest mb-3">{{ $beranda['stats_tagline'] }}</p>
                 <h2 id="stats-title" class="text-4xl font-bold mb-6">{{ $beranda['stats_judul'] }}</h2>
@@ -186,6 +252,71 @@
                     <canvas id="statistikBarChart"></canvas>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: Pertanyaan Sering Diajukan (FAQ Accordion) -->
+<section class="py-20 bg-white border-t border-slate-200">
+    <div class="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24 max-w-4xl">
+        <div class="text-center mb-14 space-y-2">
+            <span class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#07597b]">Pertanyaan Umum</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Pertanyaan Sering Diajukan (FAQ)</h2>
+            <p class="text-sm sm:text-base text-slate-600">Temukan jawaban cepat atas pertanyaan yang sering diajukan mengenai layanan permohonan informasi publik.</p>
+        </div>
+
+        <div class="space-y-4">
+            <!-- FAQ Item 1 -->
+            <details class="group bg-slate-50 border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer transition-all duration-200">
+                <summary class="flex items-center justify-between gap-4 font-bold text-slate-900 text-lg group-open:text-[#07597b]">
+                    <span>Siapa saja yang berhak mengajukan permohonan informasi publik di PPID FMIPA Unila?</span>
+                    <span class="transition-transform duration-300 group-open:-rotate-180 shrink-0 text-[#1B365D]">
+                        <i class="fa-solid fa-chevron-down text-base"></i>
+                    </span>
+                </summary>
+                <div class="mt-4 text-slate-600 text-sm leading-relaxed border-t border-slate-200 pt-4">
+                    Setiap Warga Negara Indonesia (WNI) individu, kelompok masyarakat, maupun badan hukum Indonesia berhak mengajukan permohonan informasi publik dengan melampirkan identitas resmi (KTP/KTM/Paspor) yang berlaku.
+                </div>
+            </details>
+
+            <!-- FAQ Item 2 -->
+            <details class="group bg-slate-50 border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer transition-all duration-200">
+                <summary class="flex items-center justify-between gap-4 font-bold text-slate-900 text-lg group-open:text-[#07597b]">
+                    <span>Berapa lama waktu penyelesaian permohonan informasi publik?</span>
+                    <span class="transition-transform duration-300 group-open:-rotate-180 shrink-0 text-[#1B365D]">
+                        <i class="fa-solid fa-chevron-down text-base"></i>
+                    </span>
+                </summary>
+                <div class="mt-4 text-slate-600 text-sm leading-relaxed border-t border-slate-200 pt-4">
+                    Sesuai ketentuan UU KIP, PPID FMIPA Unila wajib memberikan jawaban atas permohonan informasi selambat-lambatnya 10 (sepuluh) hari kerja sejak formulir diterima secara lengkap, dan dapat diperpanjang paling lambat 7 (tujuh) hari kerja berikutnya.
+                </div>
+            </details>
+
+            <!-- FAQ Item 3 -->
+            <details class="group bg-slate-50 border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer transition-all duration-200">
+                <summary class="flex items-center justify-between gap-4 font-bold text-slate-900 text-lg group-open:text-[#07597b]">
+                    <span>Apakah layanan permohonan informasi dipungut biaya?</span>
+                    <span class="transition-transform duration-300 group-open:-rotate-180 shrink-0 text-[#1B365D]">
+                        <i class="fa-solid fa-chevron-down text-base"></i>
+                    </span>
+                </summary>
+                <div class="mt-4 text-slate-600 text-sm leading-relaxed border-t border-slate-200 pt-4">
+                    Layanan permohonan informasi publik di PPID FMIPA Unila adalah <strong>GRATIS (bebas biaya)</strong>. Jika pemohon membutuhkan penggandaan dokumen fisik (fotokopi) atau pengiriman pos, biaya penggandaan/pengiriman ditanggung oleh pemohon.
+                </div>
+            </details>
+
+            <!-- FAQ Item 4 -->
+            <details class="group bg-slate-50 border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer transition-all duration-200">
+                <summary class="flex items-center justify-between gap-4 font-bold text-slate-900 text-lg group-open:text-[#07597b]">
+                    <span>Bagaimana jika permohonan informasi ditolak atau tidak ditanggapi?</span>
+                    <span class="transition-transform duration-300 group-open:-rotate-180 shrink-0 text-[#1B365D]">
+                        <i class="fa-solid fa-chevron-down text-base"></i>
+                    </span>
+                </summary>
+                <div class="mt-4 text-slate-600 text-sm leading-relaxed border-t border-slate-200 pt-4">
+                    Pemohon informasi berhak mengajukan <strong>Pengajuan Keberatan</strong> kepada Atasan PPID melalui menu Formulir Keberatan di website ini dalam kurun waktu maksimal 30 hari kerja sejak ditemukannya alasan keberatan.
+                </div>
+            </details>
         </div>
     </div>
 </section>
@@ -227,14 +358,14 @@
                 .then(res => res.json())
                 .then(data => {
                     if (!data.found) {
-                        resultsList.innerHTML = `<div class="px-5 py-3 bg-red-950/90 border border-red-500/50 text-red-200 text-sm shadow-lg flex rounded-3xl items-center gap-3"><i class="fa-solid fa-circle-exclamation"></i> Informasi tidak ditemukan.</div>`;
+                        resultsList.innerHTML = `<div class="px-5 py-3 bg-red-950/90 border border-red-500/50 text-red-200 text-sm shadow-lg flex rounded-md items-center gap-3"><i class="fa-solid fa-circle-exclamation"></i> Informasi tidak ditemukan.</div>`;
                         return;
                     }
 
                     resultsList.innerHTML = data.data.map(item => `
                         <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="Buka: ${item.sub_informasi}"
-                            class="inline-flex items-center gap-2.5 px-4 py-3 bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium shadow-md transition-all rounded-3xl border border-gray-200 whitespace-normal leading-relaxed">
-                            <i class="fa-solid fa-file-lines text-[#1B365D] shrink-0"></i>
+                            class="inline-flex items-center gap-3 px-5 py-3 bg-white text-slate-800 hover:bg-slate-50 text-sm font-semibold shadow-md hover:shadow-lg transition-all rounded-md border border-slate-200 whitespace-normal leading-normal">
+                            <i class="fa-solid fa-file-lines text-[#1B365D] text-base shrink-0"></i>
                             <span>${item.sub_informasi}</span>
                         </a>
                     `).join('');

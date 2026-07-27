@@ -1,4 +1,4 @@
-@extends('layout.bilah_sisi')
+@extends('layouts.user')
 
 @section('content')
 <div class="container mx-auto px-4 py-6">

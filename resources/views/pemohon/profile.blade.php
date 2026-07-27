@@ -1,4 +1,4 @@
-@extends('layout.bilah_sisi')
+@extends('layouts.user')
 
 @section('content')
 <div class="max-w-4xl mx-auto">

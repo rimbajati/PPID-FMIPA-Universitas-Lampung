@@ -1,4 +1,4 @@
-@extends('layout.utama')
+@extends('layouts.app')
 
 @section('title', 'Reset Kata Sandi - PPID FMIPA Unila')
 

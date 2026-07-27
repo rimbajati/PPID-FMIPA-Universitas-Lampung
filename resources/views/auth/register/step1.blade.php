@@ -1,4 +1,4 @@
-@extends('layout.utama')
+@extends('layouts.app')
 
 @section('title', 'Daftar Akun - PPID FMIPA Unila')
 
@@ -107,4 +107,3 @@
 @endif
 
 @endsection
-

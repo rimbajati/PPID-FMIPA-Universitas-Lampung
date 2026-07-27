@@ -1,4 +1,4 @@
-@extends('layout.utama')
+@extends('layouts.app')
 
 @section('title', 'Verifikasi Kode OTP - PPID FMIPA Unila')
 
@@ -74,4 +74,3 @@
     </div>
 </main>
 @endsection
-

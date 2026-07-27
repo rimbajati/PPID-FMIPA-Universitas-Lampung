@@ -29,7 +29,7 @@
     @endphp
 @endif
 
-@extends('layout.utama')
+@extends('layouts.app')
 
 @section('title', 'Informasi Publik - PPID FMIPA Unila')
 

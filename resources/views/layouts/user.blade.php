@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Dashboard User - PPID FMIPA Unila')</title>
+    <link rel="icon" type="image/png" href="{{ asset('logoPPID.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logoPPID.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; }
+        html { font-size: 17px; scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; font-size: 1rem; }
         /* Scrollbar kustom untuk sidebar agar lebih rapi */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -43,8 +45,10 @@
             border: 1px solid #233545 !important;
             border-right: 1px solid rgba(255, 255, 255, 0.25) !important;
             border-bottom: 1px solid #cbd5e1 !important;
-            font-size: 0.8125rem !important;
+            font-size: 0.875rem !important;
             letter-spacing: 0.025em !important;
+            text-align: center !important;
+            text-transform: none !important;
         }
         table thead th:last-child {
             border-right: 1px solid #233545 !important;
@@ -115,8 +119,12 @@
             <div class="flex-1 overflow-y-auto flex flex-col">
                 <!-- Logo Section -->
                 <div class="px-7 py-8 flex items-center justify-between">
-                    <a href="/" class="flex items-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo PPID" class="h-[46px] w-auto">
+                    <a href="/" class="flex items-center shrink-0 gap-2.5 group">
+                        <img src="{{ asset('images/logoPPID.png') }}" alt="Logo Unila" class="h-10 md:h-12 w-auto object-contain transition-all duration-300">
+                        <div class="text-left leading-snug">
+                            <span class="block text-slate-900 font-extrabold text-base md:text-lg tracking-wider uppercase">PPID FMIPA</span>
+                            <span class="block text-[#1B365D] font-bold text-[11px] md:text-xs tracking-wider uppercase">Universitas Lampung</span>
+                        </div>
                     </a>
                     <!-- Tombol Tutup Mobile (Tampilan Hamburger Premium) -->
                     <button onclick="toggleSidebar()" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 border border-slate-100 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm">
@@ -204,4 +212,3 @@
     </script>
 </body>
 </html>
-

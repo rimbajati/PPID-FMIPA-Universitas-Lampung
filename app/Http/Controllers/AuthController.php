@@ -82,7 +82,7 @@ class AuthController extends Controller
             : back()->withErrors(['email' => 'Token tidak valid atau sudah kedaluwarsa.']);
     }
 
-    public function showRegisterStep1() { return view('auth.daftar_tahap1'); }
+    public function showRegisterStep1() { return view('auth.register.step1'); }
 
     public function processRegisterStep1(Request $request)
     {
@@ -99,7 +99,7 @@ class AuthController extends Controller
         return redirect($urlStep2);
     }
 
-    public function showRegisterStep2(Request $request) { return view('auth.daftar_tahap2', ['email' => $request->query('email')]); }
+    public function showRegisterStep2(Request $request) { return view('auth.register.step2_otp', ['email' => $request->query('email')]); }
 
     public function processRegisterStep2(Request $request)
     {
@@ -128,7 +128,7 @@ class AuthController extends Controller
         return redirect()->back()->with('success', 'OTP baru telah dikirim.');
     }
 
-    public function showRegisterStep3(Request $request) { return view('auth.daftar_tahap3', ['email' => $request->query('email')]); }
+    public function showRegisterStep3(Request $request) { return view('auth.register.step3_profile', ['email' => $request->query('email')]); }
 
     public function processRegisterStep3(Request $request)
     {

@@ -35,8 +35,8 @@ Route::get('/prosedur-permohonan', function () { return view('public.prosedur_pe
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
-    Route::get('/login', function () { return view('auth.masuk'); })->name('login');
-    Route::get('/admin-panel/login', function () { return view('admin.masuk'); })->name('admin.login');
+    Route::get('/login', function () { return view('auth.login.index'); })->name('login');
+    Route::get('/admin-panel/login', function () { return view('admin.auth.login'); })->name('admin.login');
 
     Route::controller(AuthController::class)->group(function () {
         Route::post('/login', 'publicLoginProcess');
@@ -45,9 +45,9 @@ Route::middleware('guest')->group(function () {
         Route::get('/auth/google/callback', 'handleGoogleCallback');
     });
 
-    Route::get('/forgot-password', function () { return view('auth.lupa_sandi'); })->name('password.request');
+    Route::get('/forgot-password', function () { return view('auth.password.forgot'); })->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
-    Route::get('/reset-password/{token}', function ($token) { return view('auth.atur_ulang_sandi', ['token' => $token]); })->name('password.reset');
+    Route::get('/reset-password/{token}', function ($token) { return view('auth.password.reset', ['token' => $token]); })->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
     Route::controller(AuthController::class)->group(function () {

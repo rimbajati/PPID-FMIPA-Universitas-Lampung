@@ -1,4 +1,4 @@
-@extends('layout.admin')
+@extends('layouts.admin')
 
 @section('title', 'Dashboard Admin - PPID FMIPA Unila')
 
@@ -45,10 +45,10 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
 
         <!-- 1. Total Informasi Publik -->
-        <div class="relative bg-[#0d9488] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#0d9488] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[120px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalInformasi }}</span>
-                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Total Informasi Publik</span>
+                <span class="text-sm sm:text-base font-extrabold text-white/95 tracking-wide block">Total Informasi Publik</span>
             </div>
             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
                 <i class="fa-solid fa-folder-open"></i>
@@ -56,10 +56,10 @@
         </div>
 
         <!-- 2. Total Pengajuan -->
-        <div class="relative bg-[#2C3E50] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#2C3E50] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[120px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalPengajuan }}</span>
-                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Total Seluruh Pengajuan</span>
+                <span class="text-sm sm:text-base font-extrabold text-white/95 tracking-wide block">Total Seluruh Pengajuan</span>
             </div>
             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
                 <i class="fa-solid fa-inbox"></i>
@@ -67,10 +67,10 @@
         </div>
 
         <!-- 3. Total Permohonan Informasi -->
-        <a href="{{ url('/admin/pengajuan?jenis=Permohonan') }}" class="relative bg-[#2563EB] hover:bg-[#1D4ED8] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px] transition-colors block cursor-pointer group">
+        <a href="{{ url('/admin/pengajuan?jenis=Permohonan') }}" class="relative bg-[#2563EB] hover:bg-[#1D4ED8] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[120px] transition-colors block cursor-pointer group">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalPermohonan }}</span>
-                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Permohonan Informasi</span>
+                <span class="text-sm sm:text-base font-extrabold text-white/95 tracking-wide block">Permohonan Informasi</span>
             </div>
             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 group-hover:scale-110 transition-transform select-none pointer-events-none">
                 <i class="fa-solid fa-file-signature"></i>
@@ -78,7 +78,7 @@
         </a>
 
         <!-- 4. Total Pengajuan Keberatan -->
-        <a href="{{ url('/admin/pengajuan?jenis=Keberatan') }}" class="relative bg-[#d97706] hover:bg-[#b45309] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px] transition-colors block cursor-pointer group">
+        <a href="{{ url('/admin/pengajuan?jenis=Keberatan') }}" class="relative bg-[#d97706] hover:bg-[#b45309] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[120px] transition-colors block cursor-pointer group">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalKeberatan }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Pengajuan Keberatan</span>

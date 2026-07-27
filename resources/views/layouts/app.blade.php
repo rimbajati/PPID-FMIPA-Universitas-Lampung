@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'PPID FMIPA Universitas Lampung')</title>
+    <link rel="icon" type="image/png" href="{{ asset('logoPPID.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logoPPID.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,18 +18,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
-                    },
-                    borderRadius: {
-                        'none': '0px',
-                        'sm': '0px',
-                        'DEFAULT': '0px',
-                        'md': '0px',
-                        'lg': '0px',
-                        'xl': '0px',
-                        '2xl': '0px',
-                        '3xl': '0px',
-                        'full': '0px',
+                        sans: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
                     }
                 }
             }
@@ -36,10 +26,15 @@
     </script>
 
     <style>
-        html { scroll-behavior: smooth; }
-        /* Force 90-degree sharp corners globally across the entire system */
+        html { scroll-behavior: smooth; font-size: 17px; }
+        body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; font-size: 1rem; }
+        /* Force 90-degree sharp corners globally except specifically requested rounded elements */
         *, ::before, ::after {
             border-radius: 0px !important;
+        }
+
+        .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl {
+            border-radius: 0.375rem !important;
         }
 
         /* Siakad Table Style (Global Table Design) */
@@ -63,8 +58,10 @@
             border: 1px solid #233545 !important;
             border-right: 1px solid rgba(255, 255, 255, 0.25) !important;
             border-bottom: 1px solid #cbd5e1 !important;
-            font-size: 0.8125rem !important;
+            font-size: 0.875rem !important;
             letter-spacing: 0.025em !important;
+            text-align: center !important;
+            text-transform: none !important;
         }
         table thead th:last-child {
             border-right: 1px solid #233545 !important;
@@ -102,13 +99,12 @@
 
 <body class="antialiased text-gray-800 bg-slate-50 min-h-screen flex flex-col {{ request()->is('/') ? 'is-home' : '' }}">
 
-    @include('partials.bilah_navigasi')
+    @include('partials.navbar')
 
     <main class="flex-grow">
         @yield('content')
     </main>
 
-    @include('partials.kaki_halaman')
+    @include('partials.footer')
 </body>
 </html>
-

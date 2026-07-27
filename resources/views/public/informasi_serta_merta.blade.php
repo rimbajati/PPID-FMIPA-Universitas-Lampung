@@ -1,4 +1,4 @@
-@extends('layout.utama')
+@extends('layouts.app')
 
 @section('title', 'Informasi Diumumkan Serta Merta - PPID FMIPA Unila')
 

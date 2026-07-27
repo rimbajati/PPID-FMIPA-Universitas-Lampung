@@ -1,4 +1,4 @@
-@extends('layout.utama')
+@extends('layouts.app')
 
 @section('title', 'Lengkapi Profil - PPID FMIPA Unila')
 
@@ -106,4 +106,3 @@
     });
 </script>
 @endsection
-
