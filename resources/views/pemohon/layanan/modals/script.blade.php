@@ -135,11 +135,12 @@
         const wrapper = document.getElementById('form-body-wrapper');
         const lampiranPermohonan = document.getElementById('lampiran_pendukung');
         const lampiranKeberatan = document.getElementById('lampiran_pendukung_keberatan');
+
+        // Lampiran identitas selalu aktif dan tampil agar dapat diisi/diubah
+        document.getElementById('section-identitas').classList.remove('hidden');
+        document.getElementById('identitas').disabled = false;
         
         if (type === 'Keberatan') {
-            setFieldsLockState(true);
-            document.getElementById('section-identitas').classList.add('hidden');
-            document.getElementById('identitas').disabled = true;
             document.getElementById('section-akta').classList.add('hidden');
             document.getElementById('akta_pendirian').disabled = true;
             
@@ -150,8 +151,6 @@
             wrapper.classList.toggle('hidden', !relatedId);
         } else if (type === 'Permohonan') {
             setFieldsLockState(false);
-            document.getElementById('section-identitas').classList.remove('hidden');
-            document.getElementById('identitas').disabled = false;
             
             if (lampiranPermohonan) lampiranPermohonan.disabled = false;
             if (lampiranKeberatan) lampiranKeberatan.disabled = true;
@@ -775,7 +774,7 @@
         const jenisLayanan = document.getElementById('jenis_layanan');
         if (jenisLayanan) {
             jenisLayanan.value = item.jenis_layanan;
-            jenisLayanan.disabled = true; // Disable editing service type
+            jenisLayanan.disabled = false;
         }
         
         // Trigger field visibility based on jenis_layanan
@@ -786,7 +785,7 @@
             const permohonanTerkait = document.getElementById('permohonan_terkait_id');
             if (permohonanTerkait) {
                 permohonanTerkait.value = item.permohonan_terkait_id;
-                permohonanTerkait.disabled = true; // Disable editing related ticket
+                permohonanTerkait.disabled = false;
             }
             // Populate Keberatan specific fields
             const tujuanKeberatan = document.getElementById('tujuan_keberatan');
@@ -833,12 +832,8 @@
             checkKategori();
         }
         
-        // Auto fill locked/unlocked state
-        if (item.jenis_layanan === 'Keberatan') {
-            setFieldsLockState(true);
-        } else {
-            setFieldsLockState(false);
-        }
+        // Ensure all fields are unlocked for full edit capability
+        setFieldsLockState(false);
         
         // Populate existing files info badges in edit mode
         if (item.lampiran_identitas && item.lampiran_identitas !== '-') {

@@ -1,6 +1,6 @@
 <!-- Modal Form -->
-<div id="modal-form" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-xl">
+<div id="modal-form" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-start justify-center p-4 pt-10 sm:pt-16">
+    <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[85vh] overflow-y-auto shadow-xl">
         <div class="sticky top-0 bg-white px-6 py-4 border-b border-slate-200 flex justify-between items-center z-10">
             <h2 class="text-xl font-bold text-slate-800">Formulir Pengajuan PPID</h2>
             <button onclick="toggleModal('modal-form', false)" class="text-slate-400 hover:text-slate-600 text-xl"><i class="fa-solid fa-xmark"></i></button>

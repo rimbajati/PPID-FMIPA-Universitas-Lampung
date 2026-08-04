@@ -29,7 +29,7 @@
     <div class="relative z-10 w-full max-w-lg px-6">
 
         <!-- White Card -->
-        <div class="bg-white p-10 sm:p-12 rounded-3xl shadow-2xl border border-gray-100">
+        <div class="bg-white p-10 sm:p-12 rounded-none shadow-2xl border border-gray-100">
 
             <!-- Header Section -->
             <div class="text-center mb-10">
@@ -45,7 +45,7 @@
                 <div>
                     <label class="block text-sm font-bold text-gray-900 mb-2">Email Admin</label>
                     <input type="email" name="email"
-                        class="w-full px-5 py-3.5 bg-white border border-gray-300 rounded-2xl text-base text-gray-900 focus:ring-2 focus:ring-[#1B365D] focus:border-[#1B365D] transition-all outline-none"
+                        class="w-full px-5 py-3.5 bg-white border border-gray-300 rounded-none text-base text-gray-900 focus:ring-2 focus:ring-[#1B365D] focus:border-[#1B365D] transition-all outline-none"
                         placeholder="Masukkan email admin" required>
                 </div>
 
@@ -54,7 +54,7 @@
                     <label class="block text-sm font-bold text-gray-900 mb-2">Kata Sandi</label>
                     <div class="relative">
                         <input type="password" name="password" id="password"
-                            class="w-full pl-5 pr-14 py-3.5 bg-white border border-gray-300 rounded-2xl text-base text-gray-900 focus:ring-2 focus:ring-[#1B365D] focus:border-[#1B365D] transition-all outline-none"
+                            class="w-full pl-5 pr-14 py-3.5 bg-white border border-gray-300 rounded-none text-base text-gray-900 focus:ring-2 focus:ring-[#1B365D] focus:border-[#1B365D] transition-all outline-none"
                             placeholder="••••••••" required>
                         <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-gray-600 transition-colors focus:outline-none">
                             <i class="fa-regular fa-eye text-lg" id="eye-icon"></i>
@@ -64,7 +64,7 @@
 
                 <!-- Submit Button -->
                 <div class="pt-4">
-                    <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-bold py-4 px-4 rounded-2xl text-lg transition-all shadow-md">
+                    <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-bold py-4 px-4 rounded-none text-lg transition-all shadow-md">
                         Masuk
                     </button>
                 </div>

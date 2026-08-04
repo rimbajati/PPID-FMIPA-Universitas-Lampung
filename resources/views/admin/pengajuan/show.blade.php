@@ -42,7 +42,7 @@
                 <span class="text-slate-500 font-medium"><i class="fa-regular fa-clock mr-1"></i> Diajukan: {{ $permohonan->created_at->translatedFormat('d F Y, H:i') }} WIB</span>
                 <span class="inline-block px-3 py-1 rounded text-xs font-bold uppercase tracking-wider border
                     {{ match($permohonan->status) {
-                        'DIAJUKAN' => 'bg-slate-100 text-slate-700 border-slate-300',
+                        'MENUNGGU' => 'bg-slate-100 text-slate-700 border-slate-300',
                         'DIPROSES' => 'bg-blue-100 text-blue-800 border-blue-300',
                         'PERBAIKAN' => 'bg-amber-100 text-amber-900 border-amber-300',
                         'DITERIMA' => 'bg-emerald-100 text-emerald-800 border-emerald-300',

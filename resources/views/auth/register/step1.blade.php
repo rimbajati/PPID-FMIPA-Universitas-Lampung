@@ -5,7 +5,7 @@
 @section('content')
 <main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-slate-50">
 
-    <div class="bg-white shadow-xl flex flex-col md:flex-row rounded-3xl overflow-hidden w-full max-w-5xl min-h-[600px]">
+    <div class="bg-white shadow-xl flex flex-col md:flex-row rounded-none overflow-hidden w-full max-w-5xl min-h-[600px]">
 
         <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden">
             <img src="{{ asset('images/FMIPA.jpg') }}" alt="Gedung FMIPA Unila" class="w-full h-full object-cover">
@@ -26,7 +26,7 @@
                 <p class="text-gray-500 mt-2 text-lg">Sudah punya akun? <a href="/login" class="text-gray-900 font-black hover:underline">Masuk</a></p>
             </div>
 
-            <a href="/auth/google" class="w-full flex justify-center items-center bg-white border-2 border-gray-300 text-gray-900 font-black py-3.5 px-4 hover:bg-slate-50 transition rounded-3xl shadow-sm text-base mb-6 uppercase tracking-widest">
+            <a href="/auth/google" class="w-full flex justify-center items-center bg-white border-2 border-gray-300 text-gray-900 font-black py-3.5 px-4 hover:bg-slate-50 transition rounded-none shadow-sm text-base mb-6 uppercase tracking-widest">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5 mr-3">
                 Google
             </a>
@@ -42,7 +42,7 @@
                 <div>
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Email</label>
                     <input type="email" name="email" value="{{ old('email') }}"
-                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none rounded-3xl text-base transition"
+                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none rounded-none text-base transition"
                         placeholder="contoh: nama@email.com" required autofocus>
                     @error('email')
                         <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
@@ -50,7 +50,7 @@
                         </p>
                     @enderror
                 </div>
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-black py-4 transition rounded-3xl shadow-md text-base mt-2 uppercase tracking-widest">
+                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-black py-4 transition rounded-none shadow-md text-base mt-2 uppercase tracking-widest">
                     Selanjutnya
                 </button>
             </form>
@@ -79,7 +79,7 @@
 
 @if($errors->has('email') && str_contains($errors->first('email'), 'terdaftar'))
     <div id="emailConflictModal" class="fixed inset-0 bg-[#1B365D]/60 z-50 flex items-center justify-center p-4">
-        <div class="bg-white p-8 max-w-sm w-full rounded-3xl shadow-2xl text-center">
+        <div class="bg-white p-8 max-w-sm w-full rounded-none shadow-2xl text-center">
             <div class="mb-4 text-orange-500 text-4xl">
                 <i class="fa-solid fa-circle-exclamation"></i>
             </div>
@@ -90,14 +90,14 @@
 
             <div class="flex gap-3">
                 <button type="button" onclick="document.getElementById('emailConflictModal').classList.add('hidden')"
-                        class="flex-1 py-3.5 text-sm font-black text-gray-600 border-2 border-gray-300 rounded-3xl hover:bg-gray-50 transition">
+                        class="flex-1 py-3.5 text-sm font-black text-gray-600 border-2 border-gray-300 rounded-none hover:bg-gray-50 transition">
                     Ubah
                 </button>
 
                 <form action="{{ route('login.with.email') }}" method="POST" class="flex-1">
                     @csrf
                     <input type="hidden" name="email" value="{{ old('email') }}">
-                    <button type="submit" class="w-full py-3.5 text-sm font-black bg-[#1B365D] text-white rounded-3xl hover:bg-[#1B365D] transition">
+                    <button type="submit" class="w-full py-3.5 text-sm font-black bg-[#1B365D] text-white rounded-none hover:bg-[#1B365D] transition">
                         Masuk
                     </button>
                 </form>

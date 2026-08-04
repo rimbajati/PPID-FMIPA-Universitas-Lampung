@@ -126,7 +126,7 @@ class LayananController extends Controller
                 'info_diminta'       => $request->info_diminta,
                 'tujuan_permohonan'  => $request->tujuan,
                 'cara_memperoleh'    => $request->cara_ambil,
-                'status'             => 'DIAJUKAN',
+                'status'             => 'MENUNGGU',
                 'no_tiket'           => 'TEMP',
             ]);
 
@@ -136,7 +136,7 @@ class LayananController extends Controller
             $data->update(['no_tiket' => $nomorTiket]);
 
             $data->statusHistories()->create([
-                'status' => 'DIAJUKAN',
+                'status' => 'MENUNGGU',
                 'catatan' => null,
             ]);
 
@@ -241,7 +241,7 @@ class LayananController extends Controller
                 'tujuan_keberatan'      => $request->tujuan_keberatan,
                 'alasan_keberatan'      => $request->alasan_keberatan,
                 'lampiran_pendukung'    => $filePath,
-                'status'                => 'DIAJUKAN',
+                'status'                => 'MENUNGGU',
                 'no_tiket'              => 'TEMP',
                 'nama'                  => Auth::user()->nama_lengkap,
                 'email'                 => Auth::user()->email,

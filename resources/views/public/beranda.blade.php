@@ -256,7 +256,7 @@
     </div>
 </section>
 
-<!-- SECTION: Pertanyaan Sering Diajukan (FAQ Accordion) -->
+<!-- SECTION: Pertanyaan Sering Diajukan (FAQ Accordion Dinamis dari Kelola Konten Prosedur/Layanan Admin) -->
 <section class="py-20 bg-white border-t border-slate-200">
     <div class="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24 max-w-4xl">
         <div class="text-center mb-14 space-y-2">
@@ -265,58 +265,26 @@
             <p class="text-sm sm:text-base text-slate-600">Temukan jawaban cepat atas pertanyaan yang sering diajukan mengenai layanan permohonan informasi publik.</p>
         </div>
 
+        @php
+            $faqs = $prosedurData['faqs'] ?? [];
+        @endphp
+
         <div class="space-y-4">
-            <!-- FAQ Item 1 -->
+            @forelse($faqs as $faq)
             <details class="group bg-slate-50 border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer transition-all duration-200">
                 <summary class="flex items-center justify-between gap-4 font-bold text-slate-900 text-lg group-open:text-[#07597b]">
-                    <span>Siapa saja yang berhak mengajukan permohonan informasi publik di PPID FMIPA Unila?</span>
+                    <span>{{ $faq['tanya'] ?? ($faq['question'] ?? '') }}</span>
                     <span class="transition-transform duration-300 group-open:-rotate-180 shrink-0 text-[#1B365D]">
                         <i class="fa-solid fa-chevron-down text-base"></i>
                     </span>
                 </summary>
-                <div class="mt-4 text-slate-600 text-sm leading-relaxed border-t border-slate-200 pt-4">
-                    Setiap Warga Negara Indonesia (WNI) individu, kelompok masyarakat, maupun badan hukum Indonesia berhak mengajukan permohonan informasi publik dengan melampirkan identitas resmi (KTP/KTM/Paspor) yang berlaku.
+                <div class="mt-4 text-slate-600 text-sm sm:text-base leading-relaxed border-t border-slate-200 pt-4">
+                    {!! nl2br(e($faq['jawab'] ?? ($faq['answer'] ?? ''))) !!}
                 </div>
             </details>
-
-            <!-- FAQ Item 2 -->
-            <details class="group bg-slate-50 border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer transition-all duration-200">
-                <summary class="flex items-center justify-between gap-4 font-bold text-slate-900 text-lg group-open:text-[#07597b]">
-                    <span>Berapa lama waktu penyelesaian permohonan informasi publik?</span>
-                    <span class="transition-transform duration-300 group-open:-rotate-180 shrink-0 text-[#1B365D]">
-                        <i class="fa-solid fa-chevron-down text-base"></i>
-                    </span>
-                </summary>
-                <div class="mt-4 text-slate-600 text-sm leading-relaxed border-t border-slate-200 pt-4">
-                    Sesuai ketentuan UU KIP, PPID FMIPA Unila wajib memberikan jawaban atas permohonan informasi selambat-lambatnya 10 (sepuluh) hari kerja sejak formulir diterima secara lengkap, dan dapat diperpanjang paling lambat 7 (tujuh) hari kerja berikutnya.
-                </div>
-            </details>
-
-            <!-- FAQ Item 3 -->
-            <details class="group bg-slate-50 border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer transition-all duration-200">
-                <summary class="flex items-center justify-between gap-4 font-bold text-slate-900 text-lg group-open:text-[#07597b]">
-                    <span>Apakah layanan permohonan informasi dipungut biaya?</span>
-                    <span class="transition-transform duration-300 group-open:-rotate-180 shrink-0 text-[#1B365D]">
-                        <i class="fa-solid fa-chevron-down text-base"></i>
-                    </span>
-                </summary>
-                <div class="mt-4 text-slate-600 text-sm leading-relaxed border-t border-slate-200 pt-4">
-                    Layanan permohonan informasi publik di PPID FMIPA Unila adalah <strong>GRATIS (bebas biaya)</strong>. Jika pemohon membutuhkan penggandaan dokumen fisik (fotokopi) atau pengiriman pos, biaya penggandaan/pengiriman ditanggung oleh pemohon.
-                </div>
-            </details>
-
-            <!-- FAQ Item 4 -->
-            <details class="group bg-slate-50 border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer transition-all duration-200">
-                <summary class="flex items-center justify-between gap-4 font-bold text-slate-900 text-lg group-open:text-[#07597b]">
-                    <span>Bagaimana jika permohonan informasi ditolak atau tidak ditanggapi?</span>
-                    <span class="transition-transform duration-300 group-open:-rotate-180 shrink-0 text-[#1B365D]">
-                        <i class="fa-solid fa-chevron-down text-base"></i>
-                    </span>
-                </summary>
-                <div class="mt-4 text-slate-600 text-sm leading-relaxed border-t border-slate-200 pt-4">
-                    Pemohon informasi berhak mengajukan <strong>Pengajuan Keberatan</strong> kepada Atasan PPID melalui menu Formulir Keberatan di website ini dalam kurun waktu maksimal 30 hari kerja sejak ditemukannya alasan keberatan.
-                </div>
-            </details>
+            @empty
+            <div class="text-center py-8 text-slate-400 text-sm">Belum ada FAQ yang ditambahkan.</div>
+            @endforelse
         </div>
     </div>
 </section>

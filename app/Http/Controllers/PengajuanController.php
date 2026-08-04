@@ -47,7 +47,7 @@ class PengajuanController extends Controller
         $totalPermohonan       = Pengajuan::count();
         $totalPermohonanJenis  = Pengajuan::where('jenis_layanan', 'Permohonan')->count();
         $totalKeberatanJenis   = Pengajuan::where('jenis_layanan', 'Keberatan')->count();
-        $totalDiajukan         = Pengajuan::where('status', 'DIAJUKAN')->count();
+        $totalDiajukan         = Pengajuan::where('status', 'MENUNGGU')->count();
         $totalDiproses         = Pengajuan::where('status', 'DIPROSES')->count();
         $totalPerbaikan        = Pengajuan::where('status', 'PERBAIKAN')->count();
         $totalDiterima         = Pengajuan::where('status', 'DITERIMA')->count();
@@ -72,8 +72,8 @@ class PengajuanController extends Controller
         // Mencari data pengajuan berdasarkan ID
         $permohonan = Pengajuan::findOrFail($id);
 
-        // Jika status pengajuan masih DIAJUKAN, otomatis ubah menjadi DIPROSES saat detail dibuka oleh Admin
-        if ($permohonan->status === 'DIAJUKAN') {
+        // Jika status pengajuan masih MENUNGGU, otomatis ubah menjadi DIPROSES saat detail dibuka oleh Admin
+        if ($permohonan->status === 'MENUNGGU') {
             $permohonan->status = 'DIPROSES';
             $permohonan->save();
 
@@ -102,8 +102,8 @@ class PengajuanController extends Controller
         $pengajuan = Pengajuan::findOrFail($id);
 
         // Validasi Alur Status tambahan
-        if ($pengajuan->status === 'DIPROSES' && $request->status === 'DIAJUKAN') {
-            return redirect()->back()->withErrors(['status' => 'Status tidak dapat dikembalikan ke DIAJUKAN setelah DIPROSES.'])->withInput();
+        if ($pengajuan->status === 'DIPROSES' && $request->status === 'MENUNGGU') {
+            return redirect()->back()->withErrors(['status' => 'Status tidak dapat dikembalikan ke MENUNGGU setelah DIPROSES.'])->withInput();
         }
 
         if (in_array($pengajuan->status, ['DITERIMA', 'DITOLAK']) && $request->status !== $pengajuan->status) {
@@ -111,7 +111,7 @@ class PengajuanController extends Controller
         }
 
         $rules = [
-            'status' => 'required|in:DIAJUKAN,DIPROSES,PERBAIKAN,DITERIMA,DITOLAK',
+            'status' => 'required|in:MENUNGGU,DIPROSES,PERBAIKAN,DITERIMA,DITOLAK',
             'catatan_admin' => in_array($request->status, ['DITOLAK', 'PERBAIKAN']) ? 'required|string' : 'nullable|string',
             'file_jawaban' => 'nullable|file|mimes:pdf,jpg,png,zip,docx|max:5120',
             'link_jawaban' => 'nullable|url|max:2048',

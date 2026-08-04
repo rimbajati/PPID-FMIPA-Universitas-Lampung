@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $totalPengajuan   = Pengajuan::count();
         $totalPermohonan  = Pengajuan::where('jenis_layanan', 'Permohonan')->count();
         $totalKeberatan   = Pengajuan::where('jenis_layanan', 'Keberatan')->count();
-        $pengajuanBaru    = Pengajuan::where('status', 'DIAJUKAN')->count();
+        $pengajuanBaru    = Pengajuan::where('status', 'MENUNGGU')->count();
         $pengajuanDiproses = Pengajuan::where('status', 'DIPROSES')->count();
 
         // 2. Mengambil data mentah permohonan dan keberatan menggunakan model Pengajuan

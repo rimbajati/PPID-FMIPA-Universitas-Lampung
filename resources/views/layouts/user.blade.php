@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ asset('logoPPID.png') }}">
     <link rel="icon" type="image/png" href="{{ asset('logoPPID.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('logoPPID.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('logoPPID.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,13 +18,8 @@
         /* Scrollbar kustom untuk sidebar agar lebih rapi */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 0px !important; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* Force 90-degree sharp corners globally across the entire system */
-        *, ::before, ::after {
-            border-radius: 0px !important;
-        }
 
         /* Siakad Table Style (Global Table Design) */
         table {

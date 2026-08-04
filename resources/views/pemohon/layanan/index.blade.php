@@ -31,54 +31,56 @@
         </button>
     </div>
 
-    <!-- Filter & Search Form -->
-    <form id="filterForm" action="{{ url('/layanan') }}" method="GET" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 grid grid-cols-1 md:grid-cols-3 gap-3 items-center" onsubmit="event.preventDefault(); performLiveSearch(this);">
+    <!-- Filter & Search Form (Simpel tanpa kotak besar) -->
+    <form id="filterForm" action="{{ url('/layanan') }}" method="GET" class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-3 items-center" onsubmit="event.preventDefault(); performLiveSearch(this);">
         <div>
-            <select name="jenis_layanan" onchange="performLiveSearch(this.form)" class="w-full border-slate-200 bg-slate-50 rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition">
+            <select name="jenis_layanan" onchange="performLiveSearch(this.form)" class="w-full border border-slate-200 bg-white rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm">
                 <option value="">Semua Jenis Layanan</option>
                 <option value="Permohonan" {{ request('jenis_layanan') == 'Permohonan' ? 'selected' : '' }}>Permohonan Informasi</option>
                 <option value="Keberatan" {{ request('jenis_layanan') == 'Keberatan' ? 'selected' : '' }}>Pengajuan Keberatan</option>
             </select>
         </div>
         <div>
-            <select name="status" onchange="performLiveSearch(this.form)" class="w-full border-slate-200 bg-slate-50 rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition">
+            <select name="status" onchange="performLiveSearch(this.form)" class="w-full border border-slate-200 bg-white rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm">
                 <option value="">Semua Status</option>
-                @foreach(['DIAJUKAN', 'DIPROSES', 'PERBAIKAN', 'DITERIMA', 'DITOLAK'] as $s)
+                @foreach(['MENUNGGU', 'DIPROSES', 'PERBAIKAN', 'DITERIMA', 'DITOLAK'] as $s)
                     <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
                 @endforeach
             </select>
         </div>
         <div class="relative">
-            <input type="text" name="search" value="{{ request('search') }}" id="searchInput" placeholder="Cari nomor tiket atau rincian..." class="w-full border-slate-200 bg-slate-50 rounded-lg pl-10 pr-3 py-2.5 text-sm font-medium outline-none hover:border-[#1B365D] focus:border-[#1B365D] transition" autocomplete="off">
+            <input type="text" name="search" value="{{ request('search') }}" id="searchInput" placeholder="Cari nomor tiket atau rincian..." class="w-full border border-slate-200 bg-white rounded-lg pl-10 pr-3 py-2.5 text-sm font-medium text-slate-700 outline-none hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm" autocomplete="off">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
         </div>
     </form>
 
-    <div id="data-table-container" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-opacity duration-200">
+    <div id="data-table-container" class="bg-white shadow-sm border border-slate-200 overflow-hidden transition-opacity duration-200">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead class="bg-slate-50 border-b border-slate-200">
                     <tr class="text-xs uppercase text-slate-600 font-bold tracking-wider">
-                        <th class="px-5 py-4">No. Tiket</th>
+                        <th class="px-5 py-4 text-center">Tiket</th>
                         <th class="px-5 py-4 whitespace-nowrap">Jenis Layanan</th>
                         <th class="px-5 py-4">Rincian Pengajuan</th>
                         <th class="px-5 py-4 whitespace-nowrap">Tanggal</th>
-                        <th class="px-5 py-4">Status</th>
+                        <th class="px-5 py-4 text-center">Status</th>
                         <th class="px-5 py-4 text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($pengajuans as $item)
                     <tr class="hover:bg-slate-50/80 transition-colors">
-                        @if(Str::startsWith($item->no_tiket, 'KEB'))
-                            <td class="px-5 py-4 font-bold text-sm whitespace-nowrap" style="color: #d97706 !important;">
-                                {{ $item->no_tiket }}
-                            </td>
-                        @else
-                            <td class="px-5 py-4 font-bold text-sm whitespace-nowrap" style="color: #2563eb !important;">
-                                {{ $item->no_tiket }}
-                            </td>
-                        @endif
+                        <td class="px-5 py-4 text-center text-slate-800 text-sm whitespace-nowrap">
+                            @if(Str::startsWith($item->no_tiket, 'KEB'))
+                                <span class="inline-block px-3.5 py-1.5 bg-[#d97706] text-white font-bold text-xs shadow-sm" style="border-radius: 12px !important;">
+                                    {{ $item->no_tiket }}
+                                </span>
+                            @else
+                                <span class="inline-block px-3.5 py-1.5 bg-[#2563eb] text-white font-bold text-xs shadow-sm" style="border-radius: 12px !important;">
+                                    {{ $item->no_tiket }}
+                                </span>
+                            @endif
+                        </td>
                         <td class="px-5 py-4 text-slate-800 text-sm font-medium whitespace-nowrap">
                             {{ $item->jenis_layanan == 'Keberatan' ? 'Pengajuan Keberatan' : 'Permohonan Informasi' }}
                         </td>
@@ -86,36 +88,36 @@
                             {{ $item->info_diminta ?? $item->tujuan_keberatan }}
                         </td>
                         <td class="px-5 py-4 text-slate-500 text-sm whitespace-nowrap">{{ $item->created_at->translatedFormat('j F Y') }}</td>
-                        <td class="px-5 py-4 whitespace-nowrap">
+                        <td class="px-5 py-4 text-center whitespace-nowrap">
                             @php
                                 $stClass = match($item->status) {
-                                    'DIAJUKAN'  => 'bg-slate-100 text-slate-700 border border-slate-200',
-                                    'DIPROSES'  => 'bg-blue-100 text-blue-700 border border-blue-200',
-                                    'PERBAIKAN' => 'bg-amber-100 text-amber-700 border border-amber-200',
-                                    'DITERIMA'  => 'bg-emerald-100 text-emerald-700 border border-emerald-200',
-                                    'DITOLAK'   => 'bg-rose-100 text-rose-700 border border-rose-200',
-                                    default     => 'bg-slate-100 text-slate-600 border border-slate-200',
+                                    'MENUNGGU'  => 'bg-[#64748b] text-white',
+                                    'DIPROSES'  => 'bg-[#60a5fa] text-white',
+                                    'PERBAIKAN' => 'bg-[#f59e0b] text-white',
+                                    'DITERIMA'  => 'bg-[#059669] text-white',
+                                    'DITOLAK'   => 'bg-[#dc2626] text-white',
+                                    default     => 'bg-[#64748b] text-white',
                                 };
                             @endphp
-                            <span class="px-3 py-1 rounded-full text-[11px] font-bold inline-block uppercase text-center {{ $stClass }}">
-                                {{ $item->status }}
+                            <span class="px-3.5 py-1.5 text-xs sm:text-sm font-bold inline-block text-center shadow-sm {{ $stClass }}" style="border-radius: 12px !important;">
+                                {{ ucfirst(strtolower($item->status)) }}
                             </span>
                         </td>
                         <td class="px-5 py-4 text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1.5">
                                 <button onclick="openSummaryModal({{ json_encode($item) }})"
-                                        class="inline-flex items-center justify-center px-3.5 py-1.5 bg-[#1B365D] hover:bg-[#162c4c] text-white text-xs font-semibold rounded-lg shadow-sm transition active:scale-95 cursor-pointer">
+                                        class="inline-flex items-center justify-center px-3.5 py-1.5 bg-[#1B365D] hover:bg-[#162c4c] text-white text-xs font-semibold shadow-sm transition active:scale-95 cursor-pointer" style="border-radius: 12px !important;">
                                     Detail
                                 </button>
                                 @if($item->file_jawaban)
                                     <a href="{{ asset('storage/' . $item->file_jawaban) }}" target="_blank" title="Unduh File Jawaban PPID"
-                                       class="inline-flex items-center justify-center px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition">
+                                       class="inline-flex items-center justify-center px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition" style="border-radius: 12px !important;">
                                         <i class="fa-solid fa-download mr-1"></i> File
                                     </a>
                                 @endif
                                 @if($item->link_jawaban)
                                     <a href="{{ $item->link_jawaban }}" target="_blank" title="Buka Link Jawaban PPID"
-                                       class="inline-flex items-center justify-center px-2.5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-semibold rounded-lg shadow-sm transition">
+                                       class="inline-flex items-center justify-center px-2.5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-semibold shadow-sm transition" style="border-radius: 12px !important;">
                                         <i class="fa-solid fa-up-right-from-square mr-1"></i> Link
                                     </a>
                                 @endif

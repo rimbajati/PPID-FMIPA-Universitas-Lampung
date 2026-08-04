@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('no_tiket');
             $table->enum('jenis_layanan', ['Permohonan', 'Keberatan']);
-            $table->string('status')->default('DIAJUKAN');
+            $table->string('status')->default('MENUNGGU');
 
             // --- DATA UMUM ---
             $table->string('nama');

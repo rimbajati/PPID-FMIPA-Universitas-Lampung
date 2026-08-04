@@ -10,6 +10,11 @@
             <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Daftar Informasi Publik</h1>
             <p class="text-sm text-gray-500 mt-1">Kelola repositori data informasi publik FMIPA Universitas Lampung</p>
         </div>
+        <div>
+            <button type="button" onclick="openModal('modal-create')" class="bg-[#0095e8] hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold transition shadow-md text-sm flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-plus text-base"></i> Tambah Informasi
+            </button>
+        </div>
     </div>
 
     <!-- Statistik Grid (4 Cards Siakad Style - Kompak & Siku 90 Deg) -->
@@ -62,48 +67,45 @@
     </div>
 
     <!-- Filter & Search Form -->
-    <form id="filterForm" action="{{ url('/admin/informasi-publik') }}" method="GET" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 items-center" onsubmit="event.preventDefault(); performLiveSearch(this);">
-        <div>
-            <select name="rincian" onchange="performLiveSearch(this.form)" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none">
-                <option value="">Semua Rincian Informasi</option>
-                @foreach($listRincian as $r) <option value="{{ $r }}" {{ request('rincian') == $r ? 'selected' : '' }}>{{ $r }}</option> @endforeach
-            </select>
-        </div>
-        <div>
-            <select name="kategori" onchange="performLiveSearch(this.form)" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none">
-                <option value="">Semua Jenis Informasi</option>
-                <option value="Informasi Tersedia Setiap Saat" {{ request('kategori') == 'Informasi Tersedia Setiap Saat' ? 'selected' : '' }}>Informasi Tersedia Setiap Saat</option>
-                <option value="Informasi Tersedia Secara Berkala" {{ request('kategori') == 'Informasi Tersedia Secara Berkala' ? 'selected' : '' }}>Informasi Tersedia Secara Berkala</option>
-                <option value="Informasi Diumumkan Serta-Merta" {{ request('kategori') == 'Informasi Diumumkan Serta-Merta' ? 'selected' : '' }}>Informasi Diumumkan Serta-Merta</option>
-            </select>
-        </div>
-        <div class="relative">
-            <input type="text" name="search" value="{{ request('search') }}" id="searchInput" placeholder="Masukan kata kunci informasi..." class="w-full border-slate-200 bg-slate-50 rounded-xl pl-12 pr-4 py-3.5 text-sm outline-none" autocomplete="off">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-400"></i>
-        </div>
-    </form>
-
-    <!-- Kontrol Hapus Terpilih & Tambah -->
-    <div class="mb-6 flex flex-wrap gap-4 justify-between items-center">
-        <div class="flex flex-wrap gap-3">
-            <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-2xl font-bold transition text-sm flex items-center gap-2">
+    <!-- Layout Di Atas Tabel: Pilih Banyak (Kiri) & Filter Search Form (Kanan) -->
+    <div class="mb-6 flex flex-col lg:flex-row gap-4 justify-between items-center">
+        <!-- Tombol Aksi Kiri (Pilih Banyak / Hapus Terpilih) -->
+        <div class="flex flex-wrap gap-2.5 w-full lg:w-auto shrink-0 items-center">
+            <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-bold transition text-sm flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-list-check text-base"></i> <span id="text-select-mode">Pilih Banyak</span>
             </button>
-            <button id="btn-bulk-delete" type="button" onclick="triggerBulkDelete()" class="hidden bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-bold transition shadow-lg text-sm flex items-center gap-2">
+            <button id="btn-bulk-delete" type="button" onclick="triggerBulkDelete()" class="hidden bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-bold transition shadow-md text-sm flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-trash text-base"></i> Hapus Terpilih
             </button>
         </div>
-        <div class="w-full sm:w-auto">
-            <button type="button" onclick="openModal('modal-create')" class="w-full sm:w-auto bg-[#0095e8] hover:bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold transition shadow-lg text-sm flex items-center justify-center gap-2">
-                <i class="fa-solid fa-plus text-base"></i> Tambah Informasi Baru
-            </button>
-        </div>
+
+        <!-- Filter & Search Form Simpel di Kanan -->
+        <form id="filterForm" action="{{ url('/admin/informasi-publik') }}" method="GET" class="w-full lg:w-auto flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3 items-center" onsubmit="event.preventDefault(); performLiveSearch(this);">
+            <div>
+                <select name="rincian" onchange="performLiveSearch(this.form)" class="w-full border border-slate-200 bg-white rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm">
+                    <option value="">Semua Rincian Informasi</option>
+                    @foreach($listRincian as $r) <option value="{{ $r }}" {{ request('rincian') == $r ? 'selected' : '' }}>{{ $r }}</option> @endforeach
+                </select>
+            </div>
+            <div>
+                <select name="kategori" onchange="performLiveSearch(this.form)" class="w-full border border-slate-200 bg-white rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm">
+                    <option value="">Semua Jenis Informasi</option>
+                    <option value="Informasi Tersedia Setiap Saat" {{ request('kategori') == 'Informasi Tersedia Setiap Saat' ? 'selected' : '' }}>Informasi Tersedia Setiap Saat</option>
+                    <option value="Informasi Tersedia Secara Berkala" {{ request('kategori') == 'Informasi Tersedia Secara Berkala' ? 'selected' : '' }}>Informasi Tersedia Secara Berkala</option>
+                    <option value="Informasi Diumumkan Serta-Merta" {{ request('kategori') == 'Informasi Diumumkan Serta-Merta' ? 'selected' : '' }}>Informasi Diumumkan Serta-Merta</option>
+                </select>
+            </div>
+            <div class="relative">
+                <input type="text" name="search" value="{{ request('search') }}" id="searchInput" placeholder="Masukan kata kunci..." class="w-full border border-slate-200 bg-white rounded-lg pl-9 pr-3 py-2.5 text-sm font-medium text-slate-700 outline-none hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm" autocomplete="off">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-400 text-xs"></i>
+            </div>
+        </form>
     </div>
 
     <!-- Table Section -->
     <form id="bulk-delete-form" action="{{ route('admin.informasi.bulk') }}" method="POST">
         @csrf @method('DELETE')
-        <div id="data-table-container" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-opacity duration-200">
+        <div id="data-table-container" class="bg-white border border-slate-100 shadow-sm overflow-hidden transition-opacity duration-200">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -111,7 +113,7 @@
                             <th class="col-checkbox p-6 pl-8 w-10 hidden"><input type="checkbox" id="select-all" class="rounded border-slate-300"></th>
                             <th class="p-6">Rincian Informasi</th>
                             <th class="p-6">Sub Informasi</th>
-                            <th class="p-6">Jenis Informasi</th>
+                            <th class="p-6 text-center">Jenis Informasi</th>
                             <th class="p-6">Tanggal</th>
                             <th class="p-6 text-center">Action</th>
                         </tr>
@@ -134,24 +136,30 @@
                                     <td class="p-6">
                                         <span class="text-[15px] text-slate-900">{{ $item->sub_informasi }}</span>
                                     </td>
-                                    <td class="p-6">
+                                    <td class="p-6 text-center whitespace-nowrap">
                                         @php
                                             $style = [
-                                                'Informasi Tersedia Setiap Saat' => 'bg-[#605ca8]/15 text-[#4e4a8e] border border-[#605ca8]/30',
-                                                'Informasi Tersedia Secara Berkala' => 'bg-blue-100 text-[#1d4ed8] border border-blue-200',
-                                                'Informasi Diumumkan Serta-Merta' => 'bg-sky-100 text-[#0369a1] border border-sky-200',
-                                            ][$item->kategori] ?? 'bg-slate-100 text-slate-600 border border-slate-200';
+                                                'Informasi Tersedia Setiap Saat' => 'bg-[#605ca8] text-white',
+                                                'Informasi Tersedia Secara Berkala' => 'bg-[#2563eb] text-white',
+                                                'Informasi Diumumkan Serta-Merta' => 'bg-[#0284c7] text-white',
+                                            ][$item->kategori] ?? 'bg-slate-600 text-white';
                                         @endphp
-                                        <span class="px-3 py-1 rounded-full text-[12px] font-bold {{ $style }}">{{ $item->kategori }}</span>
+                                        <span class="px-3.5 py-1.5 text-xs sm:text-sm font-bold inline-block text-center shadow-sm {{ $style }}" style="border-radius: 12px !important;">{{ $item->kategori }}</span>
                                     </td>
                                     <td class="p-6 text-slate-400">{{ $item->created_at->translatedFormat('j F Y') }}</td>
-                                    <td class="p-6 text-center">
-                                        <div class="flex items-center justify-center gap-1">
-                                            <a href="{{ $item->tipe_informasi === 'link' ? $item->jalur_informasi : route('informasi.file', ['id' => $item->id, 'slug' => \Illuminate\Support\Str::slug($item->sub_informasi)]) }}" target="_blank" class="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition"><i class="fa-solid fa-eye"></i></a>
-                                            <button type="button" onclick="editData({{ json_encode($item) }})" class="p-2.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition"><i class="fa-solid fa-pen-to-square"></i></button>
-                                            <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->sub_informasi) }}')" class="p-2.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition"><i class="fa-solid fa-trash"></i></button>
-                                        </div>
-                                    </td>
+                                     <td class="p-6 text-center">
+                                         <div class="flex items-center justify-center gap-1.5">
+                                             <a href="{{ $item->tipe_informasi === 'link' ? $item->jalur_informasi : route('informasi.file', ['id' => $item->id, 'slug' => \Illuminate\Support\Str::slug($item->sub_informasi)]) }}" target="_blank" title="Lihat Berkas" class="p-2.5 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition shadow-xs" style="border-radius: 12px !important;">
+                                                 <i class="fa-solid fa-eye text-sm"></i>
+                                             </a>
+                                             <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="p-2.5 text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-xs" style="border-radius: 12px !important;">
+                                                 <i class="fa-solid fa-pen-to-square text-sm"></i>
+                                             </button>
+                                             <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->sub_informasi) }}')" title="Hapus Data" class="p-2.5 text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-xs" style="border-radius: 12px !important;">
+                                                 <i class="fa-solid fa-trash text-sm"></i>
+                                             </button>
+                                         </div>
+                                     </td>
                                 </tr>
                             @endforeach
                         @empty

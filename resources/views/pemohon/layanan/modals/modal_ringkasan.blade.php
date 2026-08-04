@@ -1,6 +1,6 @@
 <!-- Modal Summary -->
-<div id="modal-summary" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-6xl shadow-xl overflow-hidden flex flex-col max-h-[92vh]">
+<div id="modal-summary" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-start justify-center p-4 pt-10 sm:pt-16">
+    <div class="bg-white rounded-2xl w-full max-w-6xl shadow-xl overflow-hidden flex flex-col max-h-[85vh]">
         <div class="px-8 py-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 flex-shrink-0">
             <h2 class="text-2xl font-bold text-slate-800">Detail Pengajuan Informasi</h2>
             <button onclick="toggleModal('modal-summary', false)" class="text-slate-400 hover:text-slate-600 text-2xl"><i class="fa-solid fa-xmark"></i></button>

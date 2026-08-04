@@ -48,36 +48,36 @@
     @endif
 @endauth
 
-<div class="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24 max-w-7xl pb-16">
+<div class="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24 max-w-7xl pt-10 sm:pt-12 pb-16">
 
-    <!-- Search Form -->
-    <form id="searchForm" action="{{ url('/informasi-serta-merta') }}" method="GET" class="bg-white p-4 md:p-6 border border-gray-100 shadow-xl mb-8 flex flex-col md:flex-row gap-4 items-center rounded-3xl" onsubmit="event.preventDefault(); performLiveSearch(this);">
+    <!-- Search Form (Live Search Otomatis Tanpa Tombol Manual) -->
+    <form id="searchForm" action="{{ url('/informasi-serta-merta') }}" method="GET" class="mb-8 flex flex-col md:flex-row gap-3 items-center" onsubmit="event.preventDefault(); performLiveSearch(this);">
         <input type="hidden" name="perPage" id="perPage_input" value="{{ request('perPage', 10) }}">
 
-        <div class="relative w-full md:w-auto flex-[2]">
+        <div class="relative w-full">
             <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Cari rincian atau sub informasi..."
-                class="w-full border border-gray-200 rounded-2xl p-3 outline-none text-sm text-gray-600 focus:border-blue-500 transition" autocomplete="off">
+                class="w-full border border-slate-200 bg-white rounded-lg pl-10 pr-4 py-3 outline-none text-sm text-slate-700 font-medium shadow-sm hover:border-[#1B365D] focus:border-[#1B365D] transition" autocomplete="off">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
         </div>
-        <button type="submit" class="w-full md:w-auto px-8 py-3 bg-[#1B365D] text-white rounded-2xl font-bold text-sm hover:bg-[#1B365D] transition">Cari</button>
     </form>
 
-    <!-- Data Table Container -->
+    <!-- Data Table Container (Sudut Siku 90 Deg) -->
     <div id="data-table-container" class="transition-opacity duration-200">
-        <div class="bg-white border border-gray-100 shadow-lg rounded-3xl overflow-hidden mb-10">
+        <div class="bg-white border border-gray-100 shadow-lg rounded-none overflow-hidden mb-10">
             <div class="overflow-x-auto w-full">
                 <table class="w-full min-w-[700px] text-left border-collapse">
-                    <thead class="bg-gray-100 border-b border-gray-200">
+                    <thead class="bg-[#1B365D] border-b border-gray-200">
                         <tr>
-                            <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider">Rincian Informasi</th>
-                            <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider">Sub Informasi</th>
-                            <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider">Tanggal Upload</th>
-                            <th class="px-8 py-5 text-[11px] font-bold text-gray-600 uppercase tracking-wider text-center">Action</th>
+                            <th class="px-8 py-5 text-[12px] font-extrabold text-white tracking-wider">Rincian Informasi</th>
+                            <th class="px-8 py-5 text-[12px] font-extrabold text-white tracking-wider">Sub Informasi</th>
+                            <th class="px-8 py-5 text-[12px] font-extrabold text-white tracking-wider">Tanggal Upload</th>
+                            <th class="px-8 py-5 text-[12px] font-extrabold text-white tracking-wider text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($informasi->groupBy('rincian_informasi') as $grup => $items)
                             @foreach($items as $index => $item)
-                                <tr class="hover:bg-gray-50 transition {{ $loop->last ? 'border-b-2 border-gray-300' : '' }}">
+                                <tr class="hover:bg-gray-50 transition border-b border-gray-100 {{ $loop->last ? 'border-b-2 border-gray-300' : '' }}">
 
                                     @if($index === 0)
                                         <td rowspan="{{ $items->count() }}" class="p-5 pl-8 font-bold text-gray-900 align-top">
@@ -89,7 +89,7 @@
                                     <td class="p-5 text-gray-500 text-sm">{{ $item->created_at->translatedFormat('j F Y') }}</td>
                                     <td class="p-5 text-center">
                                         <a href="{{ url('/informasi/akses/'.$item->id) }}" target="_blank" rel="noopener noreferrer"
-                                        class="inline-block bg-[#1B365D] text-white text-[11px] font-bold px-6 py-2.5 rounded-full hover:bg-[#1B365D] transition shadow-sm whitespace-nowrap">
+                                        class="inline-block bg-[#1B365D] text-white text-[12px] font-bold px-5 py-2 hover:bg-[#162c4c] transition shadow-xs whitespace-nowrap" style="border-radius: 12px !important;">
                                         LIHAT
                                         </a>
                                     </td>

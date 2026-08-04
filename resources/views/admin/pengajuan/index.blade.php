@@ -22,11 +22,11 @@
             </div>
         </div>
 
-        <!-- 2. Diajukan -->
+        <!-- 2. Menunggu -->
         <div class="relative bg-[#64748b] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalDiajukan ?? 0 }}</span>
-                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Diajukan</span>
+                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Menunggu</span>
             </div>
             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
                 <i class="fa-solid fa-paper-plane"></i>
@@ -34,7 +34,7 @@
         </div>
 
         <!-- 3. Diproses -->
-        <div class="relative bg-[#2563eb] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
+        <div class="relative bg-[#60a5fa] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
             <div class="z-10">
                 <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalDiproses ?? 0 }}</span>
                 <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Diproses</span>
@@ -68,32 +68,10 @@
 
     </div>
 
-    <!-- Filter & Search Form -->
-    <form id="filterForm" action="{{ url('/admin/pengajuan') }}" method="GET" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 items-center animate-fade-in" onsubmit="event.preventDefault(); performLiveSearch(this);">
-        <div>
-            <select name="jenis_layanan" onchange="performLiveSearch(this.form)" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none cursor-pointer hover:border-blue-500 transition shadow-sm">
-                <option value="">Semua Jenis Layanan</option>
-                <option value="Permohonan" {{ request('jenis_layanan') == 'Permohonan' ? 'selected' : '' }}>Permohonan Informasi</option>
-                <option value="Keberatan" {{ request('jenis_layanan') == 'Keberatan' ? 'selected' : '' }}>Pengajuan Keberatan</option>
-            </select>
-        </div>
-        <div>
-            <select name="status" onchange="performLiveSearch(this.form)" class="w-full border-slate-200 bg-slate-50 rounded-xl p-3.5 text-sm font-semibold text-slate-700 outline-none cursor-pointer hover:border-blue-500 transition shadow-sm">
-                <option value="">Semua Status</option>
-                @foreach(['DIAJUKAN', 'DIPROSES', 'PERBAIKAN', 'DITERIMA', 'DITOLAK'] as $s)
-                    <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="relative">
-            <input type="text" name="search" value="{{ request('search') }}" id="searchInput" placeholder="Cari nama, no. tiket, rincian..." class="w-full border-slate-200 bg-slate-50 rounded-xl pl-12 pr-4 py-3.5 text-sm outline-none hover:border-blue-500 focus:border-blue-500 transition shadow-sm" autocomplete="off">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-400"></i>
-        </div>
-    </form>
-
-    <!-- Kontrol Hapus Terpilih -->
-    <div class="mb-6 flex flex-wrap gap-4 justify-between items-center">
-        <div class="flex flex-wrap gap-3">
+    <!-- Form Filter & Kontrol Tindakan (Dalam 1 Baris Rapi) -->
+    <div class="mb-6 flex flex-col lg:flex-row gap-4 justify-between items-center">
+        <!-- Tombol Aksi Kiri (Pilih Banyak / Hapus Terpilih) -->
+        <div class="flex flex-wrap gap-3 w-full lg:w-auto shrink-0">
             <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2.5 rounded-xl font-bold transition text-sm flex items-center gap-2">
                 <i class="fa-solid fa-list-check text-base"></i> <span id="text-select-mode">Pilih Banyak</span>
             </button>
@@ -101,23 +79,46 @@
                 <i class="fa-solid fa-trash text-base"></i> Hapus Terpilih
             </button>
         </div>
+
+        <!-- Filter & Search Form Simpel Tanpa Kotak Besar di Sebelah Kanan -->
+        <form id="filterForm" action="{{ url('/admin/pengajuan') }}" method="GET" class="w-full lg:w-auto flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3 items-center" onsubmit="event.preventDefault(); performLiveSearch(this);">
+            <div>
+                <select name="jenis_layanan" onchange="performLiveSearch(this.form)" class="w-full border border-slate-200 bg-white rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm">
+                    <option value="">Semua Jenis Layanan</option>
+                    <option value="Permohonan" {{ request('jenis_layanan') == 'Permohonan' ? 'selected' : '' }}>Permohonan Informasi</option>
+                    <option value="Keberatan" {{ request('jenis_layanan') == 'Keberatan' ? 'selected' : '' }}>Pengajuan Keberatan</option>
+                </select>
+            </div>
+            <div>
+                <select name="status" onchange="performLiveSearch(this.form)" class="w-full border border-slate-200 bg-white rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm">
+                    <option value="">Semua Status</option>
+                    @foreach(['MENUNGGU', 'DIPROSES', 'PERBAIKAN', 'DITERIMA', 'DITOLAK'] as $s)
+                        <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="relative">
+                <input type="text" name="search" value="{{ request('search') }}" id="searchInput" placeholder="Cari nama, no. tiket, rincian..." class="w-full border border-slate-200 bg-white rounded-lg pl-10 pr-3 py-2.5 text-sm font-medium text-slate-700 outline-none hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm" autocomplete="off">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+            </div>
+        </form>
     </div>
 
     <!-- Data Table Section -->
     <form id="bulk-delete-form" action="{{ route('admin.pengajuan.bulk') }}" method="POST">
         @csrf @method('DELETE')
-        <div id="data-table-container" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-10 transition-opacity duration-200">
+        <div id="data-table-container" class="bg-white border border-slate-100 shadow-sm overflow-hidden mb-10 transition-opacity duration-200">
             <div class="overflow-x-auto w-full">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-200 text-[14px] font-extrabold text-slate-600 uppercase tracking-widest border-b border-slate-100">
                             <th class="col-checkbox p-6 pl-8 w-10 hidden"><input type="checkbox" id="select-all" class="rounded border-slate-300"></th>
-                            <th class="p-6 pl-8">No. Tiket</th>
+                            <th class="p-6 text-center">Tiket</th>
                             <th class="p-6">Jenis</th>
                             <th class="p-6">Pemohon</th>
                             <th class="p-6">Rincian</th>
                             <th class="p-6">Tanggal</th>
-                            <th class="p-6">Status</th>
+                            <th class="p-6 text-center">Status</th>
                             <th class="p-6 text-center">Action</th>
                         </tr>
                     </thead>
@@ -127,42 +128,40 @@
                                 <td class="col-checkbox p-6 pl-8 hidden">
                                     <input type="checkbox" name="ids[]" value="{{ $item->id }}" class="child-checkbox rounded border-slate-300">
                                 </td>
-                                @if(Str::startsWith($item->no_tiket, 'KEB'))
-                                    <td class="p-6 pl-8 font-bold text-[15px] whitespace-nowrap" style="color: #d97706 !important;">
-                                        {{ $item->no_tiket }}
-                                    </td>
-                                @else
-                                    <td class="p-6 pl-8 font-bold text-[15px] whitespace-nowrap" style="color: #2563eb !important;">
-                                        {{ $item->no_tiket }}
-                                    </td>
-                                @endif
-                                <td class="p-6 text-slate-900 font-bold text-[15px] whitespace-nowrap">
-                                    {{ $item->jenis_layanan == 'Keberatan' ? 'Pengajuan Keberatan' : 'Permohonan Informasi' }}
+                                <td class="p-6 text-center text-slate-800 text-sm whitespace-nowrap">
+                                    @if(Str::startsWith($item->no_tiket, 'KEB'))
+                                        <span class="inline-block px-3.5 py-1.5 bg-[#d97706] text-white font-bold text-xs shadow-sm" style="border-radius: 12px !important;">
+                                            {{ $item->no_tiket }}
+                                        </span>
+                                    @else
+                                        <span class="inline-block px-3.5 py-1.5 bg-[#2563eb] text-white font-bold text-xs shadow-sm" style="border-radius: 12px !important;">
+                                            {{ $item->no_tiket }}
+                                        </span>
+                                    @endif
                                 </td>
-                                <td class="p-6">
-                                    <div class="font-bold text-slate-900 text-[15px]">{{ $item->nama }}</div>
+                                <td class="p-6 font-semibold whitespace-nowrap">
+                                    {{ $item->jenis_layanan == 'Keberatan' ? 'Keberatan' : 'Permohonan' }}
                                 </td>
-                                <td class="p-6 text-slate-900 text-[15px]">
-                                    {{ $item->jenis_layanan == 'Permohonan' ? $item->info_diminta : $item->tujuan_keberatan }}
-                                </td>
-                                <td class="p-6 text-slate-400 text-[15px]">{{ $item->created_at->translatedFormat('j F Y') }}</td>
-                                <td class="p-6 whitespace-nowrap">
+                                <td class="p-6 font-semibold text-slate-900 whitespace-nowrap">{{ $item->nama }}</td>
+                                <td class="p-6 text-slate-600 max-w-xs truncate">{{ $item->info_diminta ?? $item->tujuan_keberatan }}</td>
+                                <td class="p-6 text-slate-500 whitespace-nowrap">{{ $item->created_at->translatedFormat('j F Y') }}</td>
+                                <td class="p-6 text-center whitespace-nowrap">
                                     @php
-                                        $statusStyle = match($item->status) {
-                                            'DIAJUKAN'  => 'bg-slate-100 text-slate-700 border border-slate-200',
-                                            'DIPROSES'  => 'bg-blue-100 text-blue-700 border border-blue-200',
-                                            'PERBAIKAN' => 'bg-amber-100 text-amber-700 border border-amber-200',
-                                            'DITERIMA'  => 'bg-emerald-100 text-emerald-700 border border-emerald-200',
-                                            'DITOLAK'   => 'bg-rose-100 text-rose-700 border border-rose-200',
-                                            default     => 'bg-slate-100 text-slate-600 border border-slate-200',
+                                        $stClass = match($item->status) {
+                                            'MENUNGGU'  => 'bg-[#64748b] text-white',
+                                            'DIPROSES'  => 'bg-[#60a5fa] text-white',
+                                            'PERBAIKAN' => 'bg-[#f59e0b] text-white',
+                                            'DITERIMA'  => 'bg-[#059669] text-white',
+                                            'DITOLAK'   => 'bg-[#dc2626] text-white',
+                                            default     => 'bg-[#64748b] text-white',
                                         };
                                     @endphp
-                                    <span class="px-3.5 py-1 rounded-full text-[12px] font-bold inline-block text-center {{ $statusStyle }}">
-                                        {{ $item->status }}
+                                    <span class="px-3.5 py-1.5 text-xs sm:text-sm font-bold inline-block text-center shadow-sm {{ $stClass }}" style="border-radius: 12px !important;">
+                                        {{ ucfirst(strtolower($item->status)) }}
                                     </span>
                                 </td>
-                                <td class="p-6 text-center">
-                                    <a href="{{ url('/admin/pengajuan/' . $item->id) }}" class="inline-flex items-center justify-center bg-[#1B365D] hover:bg-[#1B365D] text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow">
+                                <td class="p-6 text-center whitespace-nowrap">
+                                    <a href="{{ url('/admin/pengajuan/' . $item->id) }}" class="inline-flex items-center justify-center bg-[#1B365D] hover:bg-[#162c4c] text-white text-xs font-semibold px-4 py-2 shadow-sm transition active:scale-95 cursor-pointer" style="border-radius: 12px !important;">
                                         Detail
                                     </a>
                                 </td>

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ asset('logoPPID.png') }}">
     <link rel="icon" type="image/png" href="{{ asset('logoPPID.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('logoPPID.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('logoPPID.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,14 +30,6 @@
     <style>
         html { scroll-behavior: smooth; font-size: 17px; }
         body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; font-size: 1rem; }
-        /* Force 90-degree sharp corners globally except specifically requested rounded elements */
-        *, ::before, ::after {
-            border-radius: 0px !important;
-        }
-
-        .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl {
-            border-radius: 0.375rem !important;
-        }
 
         /* Siakad Table Style (Global Table Design) */
         table {

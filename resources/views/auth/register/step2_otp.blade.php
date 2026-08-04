@@ -5,7 +5,7 @@
 @section('content')
 <main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-slate-50">
 
-    <div class="bg-white shadow-xl flex flex-col md:flex-row rounded-3xl overflow-hidden w-full max-w-5xl min-h-[600px]">
+    <div class="bg-white shadow-xl flex flex-col md:flex-row rounded-none overflow-hidden w-full max-w-5xl min-h-[600px]">
 
         <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden">
             <img src="{{ asset('images/FMIPA.jpg') }}" alt="Gedung FMIPA Unila" class="w-full h-full object-cover">
@@ -26,7 +26,7 @@
             </a>
 
             <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-[#1B365D] text-white flex items-center justify-center rounded-3xl mx-auto mb-5 text-3xl">
+                <div class="w-16 h-16 bg-[#1B365D] text-white flex items-center justify-center rounded-none mx-auto mb-5 text-3xl">
                     <i class="fa-regular fa-envelope"></i>
                 </div>
                 <h2 class="text-3xl font-black text-gray-900 mb-3 uppercase tracking-tight">Verifikasi OTP</h2>
@@ -37,7 +37,7 @@
             </div>
 
             @if(session('success'))
-                <div class="mb-5 p-4 bg-green-50 text-green-800 border-2 border-green-700 font-black rounded-3xl text-sm text-center">
+                <div class="mb-5 p-4 bg-green-50 text-green-800 border-2 border-green-700 font-black rounded-none text-sm text-center">
                     {{ session('success') }}
                 </div>
             @endif
@@ -47,7 +47,7 @@
                 <div>
                     <input type="text" name="otp" maxlength="4"
                         value=""
-                        class="w-full text-center tracking-[1em] font-black text-4xl py-4 border-2 {{ $errors->has('otp') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} rounded-3xl outline-none transition"
+                        class="w-full text-center tracking-[1em] font-black text-4xl py-4 border-2 {{ $errors->has('otp') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} rounded-none outline-none transition"
                         placeholder="••••" required autofocus autocomplete="one-time-code">
 
                     @error('otp')
@@ -55,7 +55,7 @@
                     @enderror
                 </div>
 
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-black py-4 transition text-base mt-2 uppercase tracking-widest rounded-3xl">
+                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-black py-4 transition text-base mt-2 uppercase tracking-widest rounded-none">
                     Verifikasi
                 </button>
             </form>
