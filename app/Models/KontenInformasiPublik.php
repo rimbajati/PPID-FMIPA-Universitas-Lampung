@@ -19,13 +19,13 @@ class KontenInformasiPublik extends Model
             'informasi_publik_subjudul' => 'Penetapan Daftar Informasi Publik FMIPA Universitas Lampung mengacu pada aturan yang berlaku secara transparan, akuntabel, dan mudah diakses oleh masyarakat.',
 
             'setiap_saat_judul' => 'Informasi Tersedia Setiap Saat',
-            'setiap_saat_subjudul' => 'Daftar informasi publik yang dapat diakses dan diperoleh oleh publik kapan saja secara terbuka tanpa perlu melalui permohonan khusus.',
+            'setiap_saat_subjudul' => 'Informasi yang telah dikuasai dan disediakan oleh PPID yang dapat diakses dan diperoleh publik sewaktu-waktu saat dibutuhkan.',
 
             'berkala_judul' => 'Informasi Tersedia Secara Berkala',
-            'berkala_subjudul' => 'Daftar informasi publik yang diperbarui dan disediakan secara rutin (berkala) oleh FMIPA Universitas Lampung untuk publik.',
+            'berkala_subjudul' => 'Informasi yang wajib diperbarui dan disediakan secara rutin seperti profil lembaga, program kerja, laporan keuangan, dan kinerja tahunan FMIPA Unila.',
 
             'serta_merta_judul' => 'Informasi Diumumkan Serta Merta',
-            'serta_merta_subjudul' => 'Daftar informasi publik yang berkaitan dengan hajat hidup orang banyak dan ketertiban umum yang wajib diumumkan secara serta merta.',
+            'serta_merta_subjudul' => 'Informasi yang dapat mengancam hajat hidup orang banyak dan ketertiban umum yang perlu segera diumumkan tanpa penundaan.',
         ];
     }
 

@@ -96,7 +96,7 @@
                             </div>
                         </div>
                     @else
-                        <a href="/login" class="nav-auth-btn ml-4 px-8 py-2.5 bg-transparent border border-white/30 text-white text-sm font-bold uppercase tracking-wider transition-all shadow-sm hover:bg-white/10 rounded-3xl whitespace-nowrap">MASUK</a>
+                        <a href="/login" class="nav-auth-btn ml-4 px-8 py-2.5 bg-transparent border border-white/30 text-white text-sm font-bold uppercase tracking-wider transition-all shadow-sm hover:bg-white/10 whitespace-nowrap" style="border-radius: 12px !important;">MASUK</a>
                     @endauth
                 @endif
             </div>
@@ -104,7 +104,7 @@
     </div>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="md:hidden hidden bg-slate-900 border-t border-slate-800 px-6 py-4 transition-all">
+    <div id="mobile-menu" class="md:hidden hidden bg-slate-900 border-t border-slate-800 px-6 py-5 transition-all">
         <div class="flex flex-col space-y-4">
             @if(!request()->is('login*') && !request()->is('register*') && !request()->is('password*') && !request()->is('forgot-password') && !request()->is('reset-password*'))
                 <a href="/" class="text-white font-medium py-1">Beranda</a>
@@ -136,6 +136,34 @@
 
                 <a href="https://fmipa.unila.ac.id/berita" target="_blank" class="text-white font-medium py-1">Berita</a>
                 <a href="/statistik" class="text-white font-medium py-1">Statistik</a>
+
+                <div class="pt-4 border-t border-slate-800">
+                    @auth
+                        <div class="py-1">
+                            <button onclick="toggleMobileDropdown('dropdown-user-account', 'icon-user-account')" class="w-full flex items-center justify-between text-white font-extrabold text-base transition-colors py-1">
+                                <span class="truncate pr-2">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</span>
+                                <i id="icon-user-account" class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
+                            </button>
+                            <div id="dropdown-user-account" class="hidden mt-3 bg-white shadow-xl rounded-none border border-slate-100 overflow-hidden">
+                                <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('layanan.index') }}"
+                                   class="block px-6 py-3.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 transition-all">
+                                    Dashboard
+                                </a>
+                                <div class="border-t border-slate-100"></div>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="block w-full text-left px-6 py-3.5 text-sm font-semibold text-red-600 hover:bg-red-50 transition-all cursor-pointer">
+                                        Keluar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        <a href="/login" class="flex items-center justify-center w-full px-6 py-3 bg-[#1B365D] hover:bg-[#162c4c] text-white text-sm font-bold uppercase tracking-wider transition-all shadow-md" style="border-radius: 12px !important;">
+                            MASUK
+                        </a>
+                    @endauth
+                </div>
             @else
                 <a href="/" class="text-white font-medium py-1 inline-flex items-center gap-2">
                     <i class="fa-solid fa-arrow-left text-sm"></i> Kembali ke Beranda

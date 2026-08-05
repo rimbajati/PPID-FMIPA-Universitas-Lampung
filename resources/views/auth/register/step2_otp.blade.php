@@ -47,7 +47,7 @@
                 <div>
                     <input type="text" name="otp" maxlength="4"
                         value=""
-                        class="w-full text-center tracking-[1em] font-black text-4xl py-4 border-2 {{ $errors->has('otp') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} rounded-none outline-none transition"
+                        class="w-full text-center tracking-[1em] font-black text-4xl py-4 border-2 {{ $errors->has('otp') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none transition" style="border-radius: 12px !important;"
                         placeholder="••••" required autofocus autocomplete="one-time-code">
 
                     @error('otp')
@@ -55,7 +55,7 @@
                     @enderror
                 </div>
 
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-black py-4 transition text-base mt-2 uppercase tracking-widest rounded-none">
+                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition text-base mt-2 uppercase tracking-widest cursor-pointer" style="border-radius: 12px !important;">
                     Verifikasi
                 </button>
             </form>

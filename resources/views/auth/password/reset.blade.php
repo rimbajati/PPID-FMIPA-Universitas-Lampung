@@ -32,7 +32,7 @@
                 <div>
                     <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1.5">Email Akun</label>
                     <input type="email" value="{{ request()->email }}" disabled
-                        class="w-full px-5 py-3.5 border-2 border-gray-300 bg-gray-100 text-gray-600 text-base rounded-none cursor-not-allowed font-bold">
+                        class="w-full px-5 py-3.5 border-2 border-gray-300 bg-gray-100 text-gray-600 text-base cursor-not-allowed font-bold" style="border-radius: 12px !important;">
                     <input type="hidden" name="email" value="{{ request()->email }}">
                 </div>
 
@@ -40,7 +40,7 @@
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Kata Sandi Baru</label>
                     <div class="relative">
                         <input type="password" name="password" id="password" value=""
-                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} rounded-none outline-none text-base transition"
+                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 12px !important;"
                             placeholder="Minimal 8 karakter" required>
                         <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-3.5 text-gray-500 hover:text-gray-800 focus:outline-none cursor-pointer">
                             <i class="fa-solid fa-eye" id="password-icon"></i>
@@ -57,7 +57,7 @@
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Konfirmasi Kata Sandi</label>
                     <div class="relative">
                         <input type="password" name="password_confirmation" id="password_confirmation" value=""
-                            class="w-full px-5 py-3.5 border-2 border-[#1B365D] focus:border-[#1B365D] rounded-none outline-none text-base transition"
+                            class="w-full px-5 py-3.5 border-2 border-[#1B365D] focus:border-[#1B365D] outline-none text-base transition" style="border-radius: 12px !important;"
                             placeholder="Ulangi kata sandi baru" required>
                         <button type="button" onclick="togglePassword('password_confirmation')" class="absolute right-4 top-3.5 text-gray-500 hover:text-gray-800 focus:outline-none cursor-pointer">
                             <i class="fa-solid fa-eye" id="password_confirmation-icon"></i>
@@ -66,13 +66,13 @@
                 </div>
 
                 @if ($errors->has('email') && !$errors->has('password'))
-                    <div class="mt-4 p-4 text-sm text-red-800 bg-red-50 border-2 border-red-700 rounded-none font-bold text-center flex items-center justify-center gap-2">
+                    <div class="mt-4 p-4 text-sm text-red-800 bg-red-50 border-2 border-red-700 font-bold text-center flex items-center justify-center gap-2" style="border-radius: 12px !important;">
                         <i class="fa-solid fa-circle-exclamation text-red-600 text-base"></i>
                         <span>{{ $errors->first('email') }}</span>
                     </div>
                 @endif
 
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-black py-4 transition text-base mt-4 rounded-none uppercase tracking-widest cursor-pointer shadow-md">
+                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition text-base mt-4 uppercase tracking-widest cursor-pointer shadow-md" style="border-radius: 12px !important;">
                     Perbarui Kata Sandi
                 </button>
             </form>

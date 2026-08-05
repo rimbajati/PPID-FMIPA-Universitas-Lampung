@@ -26,7 +26,7 @@
             <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
                 {{ $konten['berkala_judul'] }}
             </h1>
-            <p class="text-slate-100 text-sm sm:text-lg md:text-xl leading-relaxed font-normal">
+            <p class="text-slate-100 text-sm sm:text-lg md:text-xl leading-relaxed font-normal break-words [word-break:break-word]">
                 {{ $konten['berkala_subjudul'] }}
             </p>
         </div>

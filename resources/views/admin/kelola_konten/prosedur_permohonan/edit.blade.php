@@ -10,7 +10,7 @@
             <span class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#07597b]">Manajemen Konten Publik</span>
             <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">Kelola Halaman Prosedur Permohonan</h1>
             <p class="text-sm md:text-base text-slate-600 mt-1">
-                Edit konten, teks header, alur tahapan, dokumen persyaratan, tabel SLA, dan FAQ yang tampil di halaman publik.
+                Edit konten prosedur permohonan informasi disini.
             </p>
         </div>
         <div>
@@ -26,13 +26,13 @@
         @csrf
         @method('PUT')
 
-        <!-- Card 1: Header Utama & Quick Info Metrics -->
+        <!-- Card 1: Header Utama Halaman -->
         <div class="bg-white border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
             <div class="border-b border-slate-200 pb-4">
                 <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-heading text-[#1B365D]"></i> Header Halaman & Kartu Ringkasan Info
+                    <i class="fa-solid fa-heading text-[#1B365D]"></i> Header Halaman Prosedur
                 </h2>
-                <p class="text-sm text-slate-600 mt-1">Ubah judul utama, subjudul banner, serta nilai ringkasan metric card.</p>
+                <p class="text-sm text-slate-600 mt-1">Ubah judul utama dan subjudul banner halaman prosedur.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -46,29 +46,6 @@
                     <label class="block text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-800 mb-2">Subjudul / Deskripsi Banner</label>
                     <textarea name="subjudul" rows="2"
                               class="w-full px-4 py-3 bg-slate-50 border border-slate-300 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-[#1B365D]">{{ old('subjudul', $prosedur['subjudul']) }}</textarea>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 border-t border-slate-100">
-                <div>
-                    <label class="block text-xs sm:text-sm font-extrabold text-slate-800 uppercase mb-2">Jangka Waktu</label>
-                    <input type="text" name="jangka_waktu" value="{{ old('jangka_waktu', $prosedur['jangka_waktu']) }}" required
-                           class="w-full px-3.5 py-3 bg-slate-50 border border-slate-300 text-sm sm:text-base font-bold text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-extrabold text-slate-800 uppercase mb-2">Biaya Layanan</label>
-                    <input type="text" name="biaya_layanan" value="{{ old('biaya_layanan', $prosedur['biaya_layanan']) }}" required
-                           class="w-full px-3.5 py-3 bg-slate-50 border border-slate-300 text-sm sm:text-base font-bold text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-extrabold text-slate-800 uppercase mb-2">Syarat Utama</label>
-                    <input type="text" name="syarat_utama" value="{{ old('syarat_utama', $prosedur['syarat_utama']) }}" required
-                           class="w-full px-3.5 py-3 bg-slate-50 border border-slate-300 text-sm sm:text-base font-bold text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-extrabold text-slate-800 uppercase mb-2">Hak Pemohon</label>
-                    <input type="text" name="hak_pemohon" value="{{ old('hak_pemohon', $prosedur['hak_pemohon']) }}" required
-                           class="w-full px-3.5 py-3 bg-slate-50 border border-slate-300 text-sm sm:text-base font-bold text-slate-900">
                 </div>
             </div>
         </div>
@@ -97,17 +74,13 @@
                                 {{ sprintf('%02d', $i + 1) }}
                             </span>
                         </div>
-                        <div class="md:col-span-3">
+                        <div class="md:col-span-4">
                             <input type="text" name="tahapan_permohonan[{{ $i }}][judul]" value="{{ $step['judul'] }}" placeholder="Judul Langkah" required
                                    class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-sm font-bold text-slate-900">
                         </div>
-                        <div class="md:col-span-5">
+                        <div class="md:col-span-6">
                             <input type="text" name="tahapan_permohonan[{{ $i }}][deskripsi]" value="{{ $step['deskripsi'] }}" placeholder="Deskripsi singkat langkah"
                                    class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-sm text-slate-800">
-                        </div>
-                        <div class="md:col-span-2">
-                            <input type="text" name="tahapan_permohonan[{{ $i }}][catatan]" value="{{ $step['catatan'] ?? '' }}" placeholder="Catatan/SLA"
-                                   class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-xs sm:text-sm font-medium text-slate-600">
                         </div>
                         <div class="md:col-span-1 text-right">
                             <button type="button" onclick="this.closest('.item-step-permohonan').remove(); reindexPermohonan();"
@@ -118,6 +91,14 @@
                     </div>
                 </div>
                 @endforeach
+            </div>
+
+            <div class="pt-6 border-t border-slate-200">
+                <label class="block text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-800 mb-2">
+                    <i class="fa-solid fa-circle-info text-[#1B365D] mr-1"></i> Catatan Waktu & Perpanjangan Permohonan
+                </label>
+                <textarea name="catatan_perpanjangan" rows="3"
+                          class="w-full px-4 py-3 bg-slate-50 border border-slate-300 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-[#1B365D]">{{ old('catatan_perpanjangan', $prosedur['catatan_perpanjangan'] ?? 'Apabila informasi yang diminta memerlukan pencarian mendalam atau koordinasi antar unit kerja, PPID FMIPA Unila berhak memperpanjang waktu penyampaian tanggapan paling lambat 7 (tujuh) hari kerja dengan memberitahukan secara tertulis beserta alasan kepada pemohon.') }}</textarea>
             </div>
         </div>
 
@@ -145,17 +126,13 @@
                                 {{ sprintf('%02d', $i + 1) }}
                             </span>
                         </div>
-                        <div class="md:col-span-3">
+                        <div class="md:col-span-4">
                             <input type="text" name="tahapan_keberatan[{{ $i }}][judul]" value="{{ $step['judul'] }}" placeholder="Judul Langkah" required
                                    class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-sm font-bold text-slate-900">
                         </div>
-                        <div class="md:col-span-5">
+                        <div class="md:col-span-6">
                             <input type="text" name="tahapan_keberatan[{{ $i }}][deskripsi]" value="{{ $step['deskripsi'] }}" placeholder="Deskripsi singkat langkah"
                                    class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-sm text-slate-800">
-                        </div>
-                        <div class="md:col-span-2">
-                            <input type="text" name="tahapan_keberatan[{{ $i }}][catatan]" value="{{ $step['catatan'] ?? '' }}" placeholder="Catatan/SLA"
-                                   class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-xs sm:text-sm font-medium text-slate-600">
                         </div>
                         <div class="md:col-span-1 text-right">
                             <button type="button" onclick="this.closest('.item-step-keberatan').remove(); reindexKeberatan();"
@@ -166,6 +143,36 @@
                     </div>
                 </div>
                 @endforeach
+            </div>
+
+            <div class="pt-6 border-t border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                    <label class="block text-xs sm:text-sm font-extrabold uppercase tracking-wider text-amber-900">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i> Poin Alasan Mengajukan Keberatan
+                    </label>
+                    <button type="button" onclick="addPoinAlasanKeberatan()" class="text-xs font-extrabold text-amber-700 hover:text-amber-900 hover:underline">
+                        <i class="fa-solid fa-plus mr-1"></i> Tambah
+                    </button>
+                </div>
+                <div id="wrapper-poin-alasan-keberatan" class="space-y-2.5">
+                    @php
+                        $alasanList = $prosedur['alasan_keberatan'] ?? [
+                            'Penolakan atas permintaan informasi berdasarkan alasan pengecualian.',
+                            'Tidak disediakannya informasi berkala.',
+                            'Permintaan informasi tidak ditanggapi sebagaimana mestinya.',
+                            'Permintaan informasi ditanggapi tidak sebagaimana yang diminta.',
+                            'Pengenaan biaya yang tidak makzul.'
+                        ];
+                    @endphp
+                    @foreach($alasanList as $p)
+                        <div class="flex items-center gap-2 item-poin-alasan">
+                            <input type="text" name="alasan_keberatan[]" value="{{ $p }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 text-sm text-slate-800 focus:outline-none focus:border-amber-600">
+                            <button type="button" onclick="this.closest('.item-poin-alasan').remove();" class="w-9 h-9 shrink-0 text-red-500 hover:bg-red-50 border border-red-200 flex items-center justify-center">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
 
@@ -193,7 +200,7 @@
                         <div class="flex items-center justify-between">
                             <label class="text-xs font-extrabold uppercase text-slate-700">Poin Syarat:</label>
                             <button type="button" onclick="addPoinSyarat('perorangan')" class="text-xs font-extrabold text-[#1B365D] hover:underline">
-                                <i class="fa-solid fa-plus mr-1"></i> Tambah Poin
+                                <i class="fa-solid fa-plus mr-1"></i> Tambah
                             </button>
                         </div>
                         <div id="wrapper-poin-perorangan" class="space-y-2.5">
@@ -223,7 +230,7 @@
                         <div class="flex items-center justify-between">
                             <label class="text-xs font-extrabold uppercase text-slate-700">Poin Syarat:</label>
                             <button type="button" onclick="addPoinSyarat('kelompok')" class="text-xs font-extrabold text-[#07597b] hover:underline">
-                                <i class="fa-solid fa-plus mr-1"></i> Tambah Poin
+                                <i class="fa-solid fa-plus mr-1"></i> Tambah    
                             </button>
                         </div>
                         <div id="wrapper-poin-kelompok" class="space-y-2.5">
@@ -253,7 +260,7 @@
                         <div class="flex items-center justify-between">
                             <label class="text-xs font-extrabold uppercase text-slate-700">Poin Syarat:</label>
                             <button type="button" onclick="addPoinSyarat('badan_hukum')" class="text-xs font-extrabold text-[#1B365D] hover:underline">
-                                <i class="fa-solid fa-plus mr-1"></i> Tambah Poin
+                                <i class="fa-solid fa-plus mr-1"></i> Tambah
                             </button>
                         </div>
                         <div id="wrapper-poin-badan_hukum" class="space-y-2.5">
@@ -344,17 +351,13 @@ function addPermohonanStep() {
             <div class="md:col-span-1 text-center">
                 <span class="w-9 h-9 bg-[#1B365D] text-white font-extrabold text-sm inline-flex items-center justify-center step-num">${numStr}</span>
             </div>
-            <div class="md:col-span-3">
+            <div class="md:col-span-4">
                 <input type="text" name="tahapan_permohonan[${index}][judul]" placeholder="Judul Langkah" required
                        class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-sm font-bold text-slate-900">
             </div>
-            <div class="md:col-span-5">
+            <div class="md:col-span-6">
                 <input type="text" name="tahapan_permohonan[${index}][deskripsi]" placeholder="Deskripsi singkat langkah"
                        class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-sm text-slate-800">
-            </div>
-            <div class="md:col-span-2">
-                <input type="text" name="tahapan_permohonan[${index}][catatan]" placeholder="Catatan/SLA"
-                       class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-xs sm:text-sm font-medium text-slate-600">
             </div>
             <div class="md:col-span-1 text-right">
                 <button type="button" onclick="this.closest('.item-step-permohonan').remove(); reindexPermohonan();"
@@ -384,17 +387,13 @@ function addKeberatanStep() {
             <div class="md:col-span-1 text-center">
                 <span class="w-9 h-9 bg-amber-600 text-white font-extrabold text-sm inline-flex items-center justify-center step-num-k">${numStr}</span>
             </div>
-            <div class="md:col-span-3">
+            <div class="md:col-span-4">
                 <input type="text" name="tahapan_keberatan[${index}][judul]" placeholder="Judul Langkah" required
                        class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-sm font-bold text-slate-900">
             </div>
-            <div class="md:col-span-5">
+            <div class="md:col-span-6">
                 <input type="text" name="tahapan_keberatan[${index}][deskripsi]" placeholder="Deskripsi singkat langkah"
                        class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-sm text-slate-800">
-            </div>
-            <div class="md:col-span-2">
-                <input type="text" name="tahapan_keberatan[${index}][catatan]" placeholder="Catatan/SLA"
-                       class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-xs sm:text-sm font-medium text-slate-600">
             </div>
             <div class="md:col-span-1 text-right">
                 <button type="button" onclick="this.closest('.item-step-keberatan').remove(); reindexKeberatan();"
@@ -445,6 +444,18 @@ function addPoinSyarat(type) {
     <div class="flex items-center gap-2 item-poin-syarat">
         <input type="text" name="${inputName}" placeholder="Tuliskan poin persyaratan..." class="w-full px-3.5 py-2.5 bg-white border border-slate-300 text-sm text-slate-800">
         <button type="button" onclick="this.closest('.item-poin-syarat').remove();" class="w-9 h-9 shrink-0 text-red-500 hover:bg-red-50 border border-red-200 flex items-center justify-center">
+            <i class="fa-solid fa-trash-can text-sm"></i>
+        </button>
+    </div>`;
+    wrapper.insertAdjacentHTML('beforeend', html);
+}
+
+function addPoinAlasanKeberatan() {
+    const wrapper = document.getElementById('wrapper-poin-alasan-keberatan');
+    const html = `
+    <div class="flex items-center gap-2 item-poin-alasan">
+        <input type="text" name="alasan_keberatan[]" placeholder="Tuliskan poin alasan mengajukan keberatan..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 text-sm text-slate-800 focus:outline-none focus:border-amber-600">
+        <button type="button" onclick="this.closest('.item-poin-alasan').remove();" class="w-9 h-9 shrink-0 text-red-500 hover:bg-red-50 border border-red-200 flex items-center justify-center">
             <i class="fa-solid fa-trash-can text-sm"></i>
         </button>
     </div>`;

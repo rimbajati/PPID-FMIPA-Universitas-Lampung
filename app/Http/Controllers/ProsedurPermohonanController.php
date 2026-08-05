@@ -58,10 +58,11 @@ class ProsedurPermohonanController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'subjudul' => 'nullable|string',
-            'jangka_waktu' => 'required|string|max:100',
-            'biaya_layanan' => 'required|string|max:100',
-            'syarat_utama' => 'required|string|max:100',
-            'hak_pemohon' => 'required|string|max:100',
+            'catatan_perpanjangan' => 'nullable|string',
+            'jangka_waktu' => 'nullable|string|max:100',
+            'biaya_layanan' => 'nullable|string|max:100',
+            'syarat_utama' => 'nullable|string|max:100',
+            'hak_pemohon' => 'nullable|string|max:100',
         ]);
 
         // Process Tahapan Permohonan JSON
@@ -148,14 +149,11 @@ class ProsedurPermohonanController extends Controller
         $prosedur = ProsedurPermohonan::first() ?? new ProsedurPermohonan();
         $prosedur->judul = $request->judul;
         $prosedur->subjudul = $request->subjudul;
-        $prosedur->jangka_waktu = $request->jangka_waktu;
-        $prosedur->biaya_layanan = $request->biaya_layanan;
-        $prosedur->syarat_utama = $request->syarat_utama;
-        $prosedur->hak_pemohon = $request->hak_pemohon;
+        $prosedur->catatan_perpanjangan = $request->catatan_perpanjangan;
+        $prosedur->alasan_keberatan = array_values(array_filter($request->input('alasan_keberatan', [])));
         $prosedur->tahapan_permohonan = $tahapanPermohonan;
         $prosedur->tahapan_keberatan = $tahapanKeberatan;
         $prosedur->syarat_dokumen = $syaratDokumen;
-        $prosedur->sla_matrix = $slaMatrix;
         $prosedur->faqs = $faqs;
         $prosedur->save();
 

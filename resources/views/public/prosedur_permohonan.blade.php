@@ -33,56 +33,7 @@
     </div>
 </div>
 
-<!-- Highlight Metrics / Quick Info -->
-<div class="bg-white border-b border-slate-200 py-8 sm:py-10 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-16 lg:px-24">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="flex items-start gap-4 p-5 border border-slate-200 bg-slate-50">
-                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#1B365D] text-white flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                    <i class="fa-solid fa-clock"></i>
-                </div>
-                <div>
-                    <h3 class="text-xs sm:text-sm font-extrabold text-slate-500 uppercase tracking-wider">Jangka Waktu</h3>
-                    <p class="text-lg sm:text-xl md:text-2xl font-black text-slate-900 mt-1">{{ $prosedur['jangka_waktu'] }}</p>
-                    <p class="text-xs sm:text-sm text-slate-500 mt-1">+ Perpanjangan 7 hari kerja</p>
-                </div>
-            </div>
 
-            <div class="flex items-start gap-4 p-5 border border-slate-200 bg-slate-50">
-                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#07597b] text-white flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                    <i class="fa-solid fa-coins"></i>
-                </div>
-                <div>
-                    <h3 class="text-xs sm:text-sm font-extrabold text-slate-500 uppercase tracking-wider">Biaya Layanan</h3>
-                    <p class="text-lg sm:text-xl md:text-2xl font-black text-emerald-600 mt-1">{{ $prosedur['biaya_layanan'] }}</p>
-                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Tidak dipungut biaya apapun</p>
-                </div>
-            </div>
-
-            <div class="flex items-start gap-4 p-5 border border-slate-200 bg-slate-50">
-                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#1B365D] text-white flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                    <i class="fa-solid fa-id-card"></i>
-                </div>
-                <div>
-                    <h3 class="text-xs sm:text-sm font-extrabold text-slate-500 uppercase tracking-wider">Syarat Utama</h3>
-                    <p class="text-lg sm:text-xl md:text-2xl font-black text-slate-900 mt-1">{{ $prosedur['syarat_utama'] }}</p>
-                    <p class="text-xs sm:text-sm text-slate-500 mt-1">KTP / KTM / Legalitas Badan</p>
-                </div>
-            </div>
-
-            <div class="flex items-start gap-4 p-5 border border-slate-200 bg-slate-50">
-                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#07597b] text-white flex items-center justify-center text-xl sm:text-2xl shrink-0">
-                    <i class="fa-solid fa-scale-balanced"></i>
-                </div>
-                <div>
-                    <h3 class="text-xs sm:text-sm font-extrabold text-slate-500 uppercase tracking-wider">Hak Pemohon</h3>
-                    <p class="text-lg sm:text-xl md:text-2xl font-black text-slate-900 mt-1">{{ $prosedur['hak_pemohon'] }}</p>
-                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Jika ditolak / tidak direspon</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Main Content Area -->
 <div class="py-12 sm:py-20 bg-slate-50 min-h-screen">
@@ -113,22 +64,16 @@
                     @foreach($prosedur['tahapan_permohonan'] as $step)
                     <div class="bg-white border border-slate-200 p-6 sm:p-7 flex flex-col justify-between hover:border-[#1B365D] transition-all group shadow-sm hover:shadow-md">
                         <div>
-                            <div class="flex items-center justify-between mb-5">
+                            <div class="mb-5">
                                 <span class="w-10 h-10 sm:w-12 sm:h-12 bg-[#1B365D] text-white font-black text-sm sm:text-base flex items-center justify-center">
                                     {{ $step['nomor'] }}
                                 </span>
-                                <i class="fa-solid {{ $step['ikon'] ?? 'fa-pen-to-square' }} text-xl sm:text-2xl text-slate-400 group-hover:text-[#1B365D] transition-colors"></i>
                             </div>
                             <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-3">{{ $step['judul'] }}</h3>
                             <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
                                 {{ $step['deskripsi'] }}
                             </p>
                         </div>
-                        @if(!empty($step['catatan']))
-                        <div class="mt-6 pt-4 border-t border-slate-100 text-xs sm:text-sm font-bold text-[#07597b]">
-                            <i class="fa-solid fa-circle-info mr-1.5"></i> {{ $step['catatan'] }}
-                        </div>
-                        @endif
                     </div>
                     @endforeach
                 </div>
@@ -137,8 +82,8 @@
                     <p class="font-extrabold text-[#1B365D] text-base sm:text-lg flex items-center gap-2">
                         <i class="fa-solid fa-circle-info text-xl"></i> Catatan Waktu & Perpanjangan Permohonan:
                     </p>
-                    <p class="text-sm sm:text-base text-slate-700 leading-relaxed">
-                        Apabila informasi yang diminta memerlukan pencarian mendalam atau koordinasi antar unit kerja, PPID FMIPA Unila berhak memperpanjang waktu penyampaian tanggapan paling lambat <strong class="text-slate-900 font-extrabold">7 (tujuh) hari kerja</strong> dengan memberitahukan secara tertulis beserta alasan kepada pemohon.
+                    <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
+                        {{ $prosedur['catatan_perpanjangan'] ?? 'Apabila informasi yang diminta memerlukan pencarian mendalam atau koordinasi antar unit kerja, PPID FMIPA Unila berhak memperpanjang waktu penyampaian tanggapan paling lambat 7 (tujuh) hari kerja dengan memberitahukan secara tertulis beserta alasan kepada pemohon.' }}
                     </p>
                 </div>
             </div>
@@ -149,22 +94,16 @@
                     @foreach($prosedur['tahapan_keberatan'] as $step)
                     <div class="bg-white border border-slate-200 p-6 sm:p-7 flex flex-col justify-between hover:border-amber-500 transition-all group shadow-sm hover:shadow-md">
                         <div>
-                            <div class="flex items-center justify-between mb-5">
+                            <div class="mb-5">
                                 <span class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-600 text-white font-black text-sm sm:text-base flex items-center justify-center">
                                     {{ $step['nomor'] }}
                                 </span>
-                                <i class="fa-solid {{ $step['ikon'] ?? 'fa-file-signature' }} text-xl sm:text-2xl text-slate-400 group-hover:text-amber-600 transition-colors"></i>
                             </div>
                             <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-3">{{ $step['judul'] }}</h3>
                             <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
                                 {{ $step['deskripsi'] }}
                             </p>
                         </div>
-                        @if(!empty($step['catatan']))
-                        <div class="mt-6 pt-4 border-t border-slate-100 text-xs sm:text-sm font-bold text-amber-800">
-                            <i class="fa-solid fa-clock mr-1.5"></i> {{ $step['catatan'] }}
-                        </div>
-                        @endif
                     </div>
                     @endforeach
                 </div>
@@ -174,11 +113,18 @@
                         <i class="fa-solid fa-triangle-exclamation text-xl"></i> Alasan Mengajukan Keberatan:
                     </p>
                     <ul class="list-disc list-inside text-sm sm:text-base text-slate-800 space-y-2 font-medium">
-                        <li>Penolakan atas permintaan informasi berdasarkan alasan pengecualian.</li>
-                        <li>Tidak disediakannya informasi berkala.</li>
-                        <li>Permintaan informasi tidak ditanggapi sebagaimana mestinya.</li>
-                        <li>Permintaan informasi ditanggapi tidak sebagaimana yang diminta.</li>
-                        <li>Pengenaan biaya yang tidak makzul.</li>
+                        @php
+                            $alasanList = $prosedur['alasan_keberatan'] ?? [
+                                'Penolakan atas permintaan informasi berdasarkan alasan pengecualian.',
+                                'Tidak disediakannya informasi berkala.',
+                                'Permintaan informasi tidak ditanggapi sebagaimana mestinya.',
+                                'Permintaan informasi ditanggapi tidak sebagaimana yang diminta.',
+                                'Pengenaan biaya yang tidak makzul.'
+                            ];
+                        @endphp
+                        @foreach($alasanList as $alasan)
+                            <li>{{ $alasan }}</li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -261,38 +207,7 @@
             </div>
         </div>
 
-        <!-- Section: Service Level Agreement (SLA) & Matrix Table -->
-        <div class="bg-white border border-slate-200 p-6 sm:p-10 md:p-12 shadow-lg">
-            <div class="mb-8">
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Standar Waktu Layanan & Biaya (SLA)</h2>
-                <p class="text-sm sm:text-base text-slate-600 mt-2">Matriks acuan batas waktu tanggapan serta ketentuan biaya layanan PPID FMIPA Unila.</p>
-            </div>
 
-            <div class="overflow-x-auto w-full">
-                <table class="min-w-[680px]">
-                    <thead>
-                        <tr>
-                            <th class="text-center w-14 text-sm sm:text-base">No</th>
-                            <th class="text-left text-sm sm:text-base">Jenis Layanan PPID</th>
-                            <th class="text-center w-44 text-sm sm:text-base">Batas Waktu Max</th>
-                            <th class="text-center w-40 text-sm sm:text-base">Biaya</th>
-                            <th class="text-left text-sm sm:text-base">Bentuk Output / Hasil</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($prosedur['sla_matrix'] as $row)
-                        <tr>
-                            <td class="text-center font-bold text-sm sm:text-base">{{ $row['no'] }}</td>
-                            <td class="font-extrabold text-slate-900 text-sm sm:text-base">{{ $row['layanan'] }}</td>
-                            <td class="text-center font-semibold text-sm sm:text-base">{{ $row['waktu'] }}</td>
-                            <td class="text-center font-black text-emerald-600 text-sm sm:text-base">{{ $row['biaya'] }}</td>
-                            <td class="text-sm sm:text-base text-slate-700 font-medium">{{ $row['output'] }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
         <!-- FAQ Accordion Section -->
         <div class="bg-white border border-slate-200 p-6 sm:p-10 md:p-12 shadow-lg">

@@ -46,6 +46,14 @@ class ProsedurPermohonan extends Model
             'biaya_layanan' => 'GRATIS / Rp 0',
             'syarat_utama' => 'Kartu Identitas (KTP/KTM)',
             'hak_pemohon' => 'Pengajuan Keberatan',
+            'catatan_perpanjangan' => 'Apabila informasi yang diminta memerlukan pencarian mendalam atau koordinasi antar unit kerja, PPID FMIPA Unila berhak memperpanjang waktu penyampaian tanggapan paling lambat 7 (tujuh) hari kerja dengan memberitahukan secara tertulis beserta alasan kepada pemohon.',
+            'alasan_keberatan' => [
+                'Penolakan atas permintaan informasi berdasarkan alasan pengecualian.',
+                'Tidak disediakannya informasi berkala.',
+                'Permintaan informasi tidak ditanggapi sebagaimana mestinya.',
+                'Permintaan informasi ditanggapi tidak sebagaimana yang diminta.',
+                'Pengenaan biaya yang tidak makzul.'
+            ],
 
             'tahapan_permohonan' => [
                 [

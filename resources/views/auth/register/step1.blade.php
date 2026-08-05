@@ -42,7 +42,7 @@
                 <div>
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Email</label>
                     <input type="email" name="email" value="{{ old('email') }}"
-                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none rounded-none text-base transition"
+                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 12px !important;"
                         placeholder="contoh: nama@email.com" required autofocus>
                     @error('email')
                         <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
@@ -50,7 +50,7 @@
                         </p>
                     @enderror
                 </div>
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#1B365D] text-white font-black py-4 transition rounded-none shadow-md text-base mt-2 uppercase tracking-widest">
+                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition shadow-md text-base mt-2 uppercase tracking-widest cursor-pointer" style="border-radius: 12px !important;">
                     Selanjutnya
                 </button>
             </form>
@@ -89,15 +89,12 @@
             </p>
 
             <div class="flex gap-3">
-                <button type="button" onclick="document.getElementById('emailConflictModal').classList.add('hidden')"
-                        class="flex-1 py-3.5 text-sm font-black text-gray-600 border-2 border-gray-300 rounded-none hover:bg-gray-50 transition">
-                    Ubah
-                </button>
+                <button type="button" onclick="document.getElementById('emailConflictModal').remove()" class="flex-1 py-3 bg-gray-100 font-bold text-sm text-gray-700 hover:bg-gray-200 transition" style="border-radius: 12px !important;">Batal</button>
 
                 <form action="{{ route('login.with.email') }}" method="POST" class="flex-1">
                     @csrf
                     <input type="hidden" name="email" value="{{ old('email') }}">
-                    <button type="submit" class="w-full py-3.5 text-sm font-black bg-[#1B365D] text-white rounded-none hover:bg-[#1B365D] transition">
+                    <button type="submit" class="w-full py-3 bg-[#1B365D] text-white font-bold text-sm hover:bg-[#162c4c] transition" style="border-radius: 12px !important;">
                         Masuk
                     </button>
                 </form>

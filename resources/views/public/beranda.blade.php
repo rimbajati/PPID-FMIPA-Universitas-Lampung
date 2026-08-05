@@ -124,6 +124,10 @@
             <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">PPID FMIPA Universitas Lampung menyediakan akses informasi publik sesuai Undang-Undang No. 14 Tahun 2008.</p>
         </div>
 
+        @php
+            $kontenInformasi = \App\Models\KontenInformasiPublik::getData();
+        @endphp
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Kartu 1: Informasi Secara Berkala -->
             <div class="bg-slate-50 border border-slate-200 p-8 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
@@ -132,8 +136,8 @@
                         <i class="fa-solid fa-calendar-check"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#07597b] transition-colors">Informasi Berkala</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        Informasi yang wajib diperbarui dan disediakan secara rutin seperti profil lembaga, program kerja, laporan keuangan, dan kinerja tahunan FMIPA Unila.
+                    <p class="text-sm text-slate-600 leading-relaxed break-words [word-break:break-word]">
+                        {{ $kontenInformasi['berkala_subjudul'] }}
                     </p>
                 </div>
                 <div class="pt-6 mt-6 border-t border-slate-200">
@@ -150,8 +154,8 @@
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#07597b] transition-colors">Informasi Serta Merta</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        Informasi yang dapat mengancam hajat hidup orang banyak dan ketertiban umum yang perlu segera diumumkan tanpa penundaan.
+                    <p class="text-sm text-slate-600 leading-relaxed break-words [word-break:break-word]">
+                        {{ $kontenInformasi['serta_merta_subjudul'] }}
                     </p>
                 </div>
                 <div class="pt-6 mt-6 border-t border-slate-200">
@@ -168,8 +172,8 @@
                         <i class="fa-solid fa-folder-open"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#07597b] transition-colors">Informasi Setiap Saat</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        Informasi yang telah dikuasai dan disediakan oleh PPID yang dapat diakses dan diperoleh publik sewaktu-waktu saat dibutuhkan.
+                    <p class="text-sm text-slate-600 leading-relaxed break-words [word-break:break-word]">
+                        {{ $kontenInformasi['setiap_saat_subjudul'] }}
                     </p>
                 </div>
                 <div class="pt-6 mt-6 border-t border-slate-200">
@@ -183,11 +187,11 @@
 </section>
 
 <section class="py-20 bg-slate-50">
-    <div class="container mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
+    <div class="max-w-[1600px] mx-auto px-6 sm:px-8 md:px-12">
         <div class="text-center mb-16 space-y-3">
             <span class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#07597b]">Langkah Mudah Layanan</span>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">{{ $beranda['alur_judul'] }}</h2>
-            <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">{{ $beranda['alur_subjudul'] }}</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900">{{ $beranda['alur_judul'] }}</h2>
+            <p class="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto">{{ $beranda['alur_subjudul'] }}</p>
         </div>
 
         @php
@@ -195,28 +199,28 @@
             $alurSteps = $prosedurData['tahapan_permohonan'] ?? $beranda['alur_steps'];
         @endphp
 
-        <div class="flex flex-wrap justify-center gap-6 sm:gap-7">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 sm:gap-7">
             @foreach($alurSteps as $index => $step)
-            <div class="relative bg-[#1B365D] hover:bg-[#162c4c] text-white p-7 sm:p-8 shadow-xl border border-white/10 flex flex-col justify-between overflow-hidden w-full md:w-[calc(50%-14px)] lg:w-[calc(33.333%-19px)] min-h-[220px] group transition-all duration-300 hover:-translate-y-1">
+            <div class="relative bg-[#1B365D] hover:bg-[#162c4c] text-white p-7 sm:p-8 shadow-xl border border-white/10 flex flex-col justify-between overflow-hidden group transition-all duration-300 hover:-translate-y-1.5 min-h-[280px]">
                 <!-- Decorative Top Geometric Shapes -->
-                <div class="flex items-center gap-1.5 opacity-40 mb-4">
+                <div class="flex items-center gap-1.5 opacity-50 mb-4">
                     <span class="w-2.5 h-2.5 rounded-full bg-cyan-300"></span>
                     <span class="w-2.5 h-2.5 rounded-full bg-cyan-100"></span>
                     <span class="w-2.5 h-2.5 rounded-full bg-white"></span>
                 </div>
 
                 <!-- Title & Description -->
-                <div class="relative z-10 space-y-2.5 pr-4 mb-4">
+                <div class="relative z-10 space-y-3 pr-2 mb-6">
                     <h3 class="text-lg sm:text-xl font-extrabold text-white leading-snug">
                         {{ $step['judul'] ?? $step['title'] }}
                     </h3>
-                    <p class="text-xs sm:text-sm text-cyan-100/90 leading-relaxed font-medium">
+                    <p class="text-sm sm:text-base text-cyan-50 leading-relaxed font-normal break-words [word-break:break-word]">
                         {{ $step['deskripsi'] ?? $step['desc'] }}
                     </p>
                 </div>
 
                 <!-- Balanced Watermark Step Number -->
-                <span class="absolute -right-2 -bottom-3 text-7xl sm:text-8xl font-black text-white/20 pointer-events-none select-none group-hover:text-white/30 transition-colors leading-none">
+                <span class="absolute -right-2 -bottom-4 text-8xl sm:text-9xl font-black text-white/20 pointer-events-none select-none group-hover:text-white/30 transition-colors leading-none">
                     {{ $index + 1 }}
                 </span>
             </div>
