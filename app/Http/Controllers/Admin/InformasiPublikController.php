@@ -76,8 +76,8 @@ class InformasiPublikController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul_informasi'     => 'required|string|max:100',
-            'deskripsi_informasi' => 'required|string|max:200',
+            'judul_informasi'     => 'required|string|max:255',
+            'deskripsi_informasi' => 'required|string',
             'tahun_terbit'        => 'required|string|max:255',
             'kategori_informasi'  => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta', 'Informasi Dikecualikan'])],
             'file_informasi'      => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
@@ -89,7 +89,7 @@ class InformasiPublikController extends Controller
 
         if ($request->hasFile('file_informasi')) {
             $file = $request->file('file_informasi');
-            $path = $file->store('informasi_publik', 'local');
+            $path = $file->store('informasi_publik', 'public');
             $validated['file_informasi'] = $path;
             $validated['link_informasi'] = null;
             $validated['nama_file_asli'] = $file->getClientOriginalName();
@@ -126,11 +126,11 @@ class InformasiPublikController extends Controller
 
         if ($inputFormat === 'file') {
             if ($request->hasFile('file_informasi')) {
-                if ($info->file_informasi && Storage::disk('local')->exists($info->file_informasi)) {
-                    Storage::disk('local')->delete($info->file_informasi);
+                if ($info->file_informasi && Storage::disk('public')->exists($info->file_informasi)) {
+                    Storage::disk('public')->delete($info->file_informasi);
                 }
                 $file = $request->file('file_informasi');
-                $path = $file->store('informasi_publik', 'local');
+                $path = $file->store('informasi_publik', 'public');
                 $validated['file_informasi'] = $path;
                 $validated['link_informasi'] = null;
                 $validated['nama_file_asli'] = $file->getClientOriginalName();
@@ -139,8 +139,8 @@ class InformasiPublikController extends Controller
                 $validated['link_informasi'] = null;
             }
         } else {
-            if ($info->file_informasi && Storage::disk('local')->exists($info->file_informasi)) {
-                Storage::disk('local')->delete($info->file_informasi);
+            if ($info->file_informasi && Storage::disk('public')->exists($info->file_informasi)) {
+                Storage::disk('public')->delete($info->file_informasi);
             }
             $validated['file_informasi'] = null;
             $validated['link_informasi'] = $request->link_informasi;
@@ -155,8 +155,8 @@ class InformasiPublikController extends Controller
     public function destroy($id)
     {
         $info = InformasiPublik::findOrFail($id);
-        if ($info->file_informasi && Storage::disk('local')->exists($info->file_informasi)) {
-            Storage::disk('local')->delete($info->file_informasi);
+        if ($info->file_informasi && Storage::disk('public')->exists($info->file_informasi)) {
+            Storage::disk('public')->delete($info->file_informasi);
         }
         $info->delete();
         return redirect()->back()->with('success', 'Data Informasi Publik berhasil dihapus.');
@@ -171,8 +171,8 @@ class InformasiPublikController extends Controller
 
         $items = InformasiPublik::whereIn('id', $ids)->get();
         foreach ($items as $item) {
-            if ($item->file_informasi && Storage::disk('local')->exists($item->file_informasi)) {
-                Storage::disk('local')->delete($item->file_informasi);
+            if ($item->file_informasi && Storage::disk('public')->exists($item->file_informasi)) {
+                Storage::disk('public')->delete($item->file_informasi);
             }
             $item->delete();
         }
