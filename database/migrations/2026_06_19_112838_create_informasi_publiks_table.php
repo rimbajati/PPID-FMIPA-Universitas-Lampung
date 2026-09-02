@@ -10,19 +10,19 @@ return new class extends Migration
     {
         Schema::create('informasi_publik', function (Blueprint $table) {
             $table->id();
-            $table->string('rincian_informasi')->index(); // Judul + Index
-            $table->text('sub_informasi')->nullable();
-            $table->enum('kategori', [
-                'Informasi Tersedia Setiap Saat',
-                'Informasi Tersedia Secara Berkala',
-                'Informasi Diumumkan Serta-Merta'
+            $table->string('judul_informasi')->index();
+            $table->text('deskripsi_informasi')->nullable();
+            $table->enum('kategori_informasi', [
+                'Informasi Setiap Saat',
+                'Informasi Berkala',
+                'Informasi Serta-Merta',
+                'Informasi Dikecualikan'
             ]);
-            $table->string('tipe_informasi');
-            $table->string('jalur_informasi');
-
-            // Kolom & Index dari migrasi yang digabung
+            $table->string('tahun_terbit')->nullable();
+            $table->string('file_informasi')->nullable();
+            $table->string('nama_file_asli')->nullable();
+            $table->text('link_informasi')->nullable();
             $table->integer('dilihat')->default(0)->index();
-
             $table->timestamps();
         });
     }

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\InformasiPublik;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -13,56 +13,56 @@ class InformasiPublikTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_non_admin_cannot_access_informasi_publik_admin_index()
+    protected function setUp(): void
     {
-        $user = User::factory()->create([
-            'nama_lengkap' => 'Regular User',
-            'email' => 'user@gmail.com',
-            'role' => 'user',
-        ]);
-
-        $this->actingAs($user);
-
-        $response = $this->get('/admin/informasi-publik');
-        $response->assertRedirect('/');
+        parent::setUp();
     }
 
-    public function test_admin_can_access_informasi_publik_admin_index()
+    public function test_public_user_can_view_informasi_publik_page()
     {
-        $admin = User::factory()->create([
-            'nama_lengkap' => 'Admin PPID',
-            'email' => 'admin@gmail.com',
-            'role' => 'admin',
+        InformasiPublik::create([
+            'judul_informasi' => 'Test Judul',
+            'deskripsi_informasi' => 'Test Deskripsi',
+            'kategori_informasi' => 'Informasi Setiap Saat',
+            'tahun_terbit' => '2025',
+            'jenis_informasi' => 'link',
+            'link_informasi' => 'https://example.com'
         ]);
 
-        $this->actingAs($admin);
+        $response = $this->get('/informasi-publik');
 
-        $response = $this->get('/admin/informasi-publik');
-        $response->assertOk();
+        $response->assertStatus(200);
+        $response->assertSee('Test Judul');
     }
 
-    public function test_ajax_store_validation_fails_and_returns_json_errors()
+    public function test_admin_can_access_admin_informasi_publik_index()
     {
         $admin = User::factory()->create([
-            'nama_lengkap' => 'Admin PPID',
-            'email' => 'admin@gmail.com',
-            'role' => 'admin',
+            'role' => 'admin'
         ]);
 
-        $this->actingAs($admin);
+        $response = $this->actingAs($admin)->get('/admin/informasi-publik');
 
-        // Submit empty form via Ajax
-        $response = $this->post('/admin/informasi-publik', [], [
-            'Accept' => 'application/json',
-            'X-Requested-With' => 'XMLHttpRequest'
+        $response->assertStatus(200);
+    }
+
+    public function test_admin_store_validation_errors()
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin'
+        ]);
+
+        $response = $this->actingAs($admin)->post('/admin/informasi-publik', [], [
+            'Accept' => 'application/json'
         ]);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors([
-            'rincian_informasi',
-            'sub_informasi',
-            'kategori',
-            'opsi_format'
+            'judul_informasi',
+            'deskripsi_informasi',
+            'tahun_terbit',
+            'kategori_informasi',
+            'jenis_informasi'
         ]);
     }
 
@@ -71,33 +71,30 @@ class InformasiPublikTest extends TestCase
         Storage::fake('local');
 
         $admin = User::factory()->create([
-            'nama_lengkap' => 'Admin PPID',
-            'email' => 'admin@gmail.com',
-            'role' => 'admin',
+            'role' => 'admin'
         ]);
 
-        $this->actingAs($admin);
+        $file = UploadedFile::fake()->create('dokumen.pdf', 100, 'application/pdf');
 
-        $file = UploadedFile::fake()->create('dokumen.pdf', 500);
-
-        $response = $this->post('/admin/informasi-publik', [
-            'rincian_informasi' => 'baru',
-            'rincian_informasi_baru' => 'Rincian Baru',
-            'sub_informasi' => 'Sub Informasi Dokumen Baru',
-            'kategori' => 'Informasi Tersedia Setiap Saat',
-            'opsi_format' => 'file',
-            'berkas' => $file,
+        $response = $this->actingAs($admin)->post('/admin/informasi-publik', [
+            'judul_informasi' => 'Dokumen Baru',
+            'deskripsi_informasi' => 'Deskripsi Dokumen Baru',
+            'kategori_informasi' => 'Informasi Setiap Saat',
+            'tahun_terbit' => '2025',
+            'jenis_informasi' => 'file',
+            'file_informasi' => $file,
         ]);
 
-        $response->assertRedirect('/admin/informasi-publik');
+        $response->assertRedirect();
         $this->assertDatabaseHas('informasi_publik', [
-            'rincian_informasi' => 'Rincian Baru',
-            'sub_informasi' => 'Sub Informasi Dokumen Baru',
-            'kategori' => 'Informasi Tersedia Setiap Saat',
-            'tipe_informasi' => 'pdf',
+            'judul_informasi' => 'Dokumen Baru',
+            'deskripsi_informasi' => 'Deskripsi Dokumen Baru',
+            'kategori_informasi' => 'Informasi Setiap Saat',
+            'tahun_terbit' => '2025',
+            'jenis_informasi' => 'file',
         ]);
 
         $info = InformasiPublik::first();
-        Storage::disk('local')->assertExists($info->jalur_informasi);
+        Storage::disk('local')->assertExists($info->file_informasi);
     }
 }

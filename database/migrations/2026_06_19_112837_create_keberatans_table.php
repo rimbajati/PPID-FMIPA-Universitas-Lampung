@@ -6,29 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('keberatans', function (Blueprint $table) {
             $table->id();
-            // Menghubungkan ke permohonan awal yang ditolak
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('permohonan_id')->constrained('permohonans')->onDelete('cascade');
-            // Menghubungkan ke user pemohon
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('no_tiket')->unique();
             $table->text('alasan_keberatan');
-            $table->string('dokumen_pendukung')->nullable();
-            $table->dateTime('tanggal_pengajuan');
-            $table->enum('status_putusan', ['menunggu', 'diproses', 'diterima', 'ditolak'])->default('menunggu');
-            $table->string('dokumen_putusan')->nullable();
+            $table->text('kronologi_keberatan')->nullable();
+            $table->string('file_pendukung')->nullable();
+            $table->string('status', 50)->default('Diajukan');
+            $table->text('pesan_diproses')->nullable();
+            $table->text('pesan_selesai')->nullable();
+            $table->text('alasan_ditolak')->nullable();
+            $table->string('file_jawaban')->nullable();
+            $table->text('link_jawaban')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('keberatans');

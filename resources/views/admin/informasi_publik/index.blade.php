@@ -1,463 +1,50 @@
-@extends('layouts.admin')
+@extends('components.layouts.admin')
 
-@section('title', 'Manajemen Informasi Publik - PPID FMIPA Unila')
+@section('title', 'Manajemen Informasi Publik - Admin PPID')
+@section('header_title', 'Informasi Publik')
 
 @section('content')
+<div class="space-y-6">
 
-    <!-- Header Section -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <!-- Section Header: Informasi Publik Overview & Tombol Tambah Informasi -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Daftar Informasi Publik</h1>
-            <p class="text-sm text-gray-500 mt-1">Kelola repositori data informasi publik FMIPA Universitas Lampung</p>
+            <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Informasi Publik</h1>
+            <p class="text-xs md:text-sm font-semibold text-slate-400 mt-1">Kelola dan publikasikan informasi publik PPID FMIPA Universitas Lampung</p>
         </div>
-        <div>
-            <button type="button" onclick="openModal('modal-create')" class="bg-[#0095e8] hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold transition shadow-md text-sm flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-plus text-base"></i> Tambah Informasi
-            </button>
-        </div>
+
+        <!-- Tombol Tambah Utama -->
+        <button type="button" onclick="openModalCreate()" 
+                class="inline-flex items-center justify-center gap-2.5 px-6 py-3 bg-[#1B365D] hover:bg-[#152a4a] text-white text-xs md:text-sm font-extrabold rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer shrink-0">
+            <i class="fa-solid fa-plus text-sm"></i>
+            <span>Tambah</span>
+        </button>
     </div>
 
-    <!-- Statistik Grid (4 Cards Siakad Style - Kompak & Siku 90 Deg) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+    <!-- 5 Summary Cards -->
+    <x-admin.informasi_publik.summary-cards 
+        :totalInformasi="$totalInformasi"
+        :totalBerkala="$totalBerkala"
+        :totalSertaMerta="$totalSertaMerta"
+        :totalSetiapSaat="$totalSetiapSaat"
+        :totalDikecualikan="$totalDikecualikan"
+        :lastUpdateTotal="$lastUpdateTotal"
+        :lastUpdateBerkala="$lastUpdateBerkala"
+        :lastUpdateSertaMerta="$lastUpdateSertaMerta"
+        :lastUpdateSetiapSaat="$lastUpdateSetiapSaat"
+        :lastUpdateDikecualikan="$lastUpdateDikecualikan"
+    />
 
-        <!-- 1. Total Informasi -->
-        <div class="relative bg-[#0d9488] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
-            <div class="z-10">
-                <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalInformasi }}</span>
-                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Total Informasi Publik</span>
-            </div>
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
-                <i class="fa-solid fa-folder-open"></i>
-            </div>
-        </div>
+    <!-- Table Container & Filter Bar -->
+    <x-admin.informasi_publik.table :informasi="$informasi" :listTahun="$listTahun" />
 
-        <!-- 2. Setiap Saat -->
-        <div class="relative bg-[#605ca8] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
-            <div class="z-10">
-                <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalSetiapSaat }}</span>
-                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Informasi Setiap Saat</span>
-            </div>
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
-                <i class="fa-solid fa-globe"></i>
-            </div>
-        </div>
-
-        <!-- 3. Secara Berkala -->
-        <div class="relative bg-[#2563EB] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
-            <div class="z-10">
-                <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalBerkala }}</span>
-                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Informasi Secara Berkala</span>
-            </div>
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
-                <i class="fa-solid fa-clock"></i>
-            </div>
-        </div>
-
-        <!-- 4. Serta-Merta -->
-        <div class="relative bg-[#0284C7] p-5 text-white overflow-hidden shadow-sm flex flex-col justify-between h-[115px]">
-            <div class="z-10">
-                <span class="text-3xl sm:text-4xl font-extrabold text-white leading-none block mb-1.5">{{ $totalSertaMerta }}</span>
-                <span class="text-xs sm:text-sm font-bold text-white/95 tracking-wide block uppercase">Informasi Serta-Merta</span>
-            </div>
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-5xl text-black/15 select-none pointer-events-none">
-                <i class="fa-solid fa-bullhorn"></i>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Filter & Search Form -->
-    <!-- Layout Di Atas Tabel: Pilih Banyak (Kiri) & Filter Search Form (Kanan) -->
-    <div class="mb-6 flex flex-col lg:flex-row gap-4 justify-between items-center">
-        <!-- Tombol Aksi Kiri (Pilih Banyak / Hapus Terpilih) -->
-        <div class="flex flex-wrap gap-2.5 w-full lg:w-auto shrink-0 items-center">
-            <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-bold transition text-sm flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-list-check text-base"></i> <span id="text-select-mode">Pilih Banyak</span>
-            </button>
-            <button id="btn-bulk-delete" type="button" onclick="triggerBulkDelete()" class="hidden bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-bold transition shadow-md text-sm flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-trash text-base"></i> Hapus Terpilih
-            </button>
-        </div>
-
-        <!-- Filter & Search Form Simpel di Kanan -->
-        <form id="filterForm" action="{{ url('/admin/informasi-publik') }}" method="GET" class="w-full lg:w-auto flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3 items-center" onsubmit="event.preventDefault(); performLiveSearch(this);">
-            <div>
-                <select name="rincian" onchange="performLiveSearch(this.form)" class="w-full border border-slate-200 bg-white rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm">
-                    <option value="">Semua Rincian Informasi</option>
-                    @foreach($listRincian as $r) <option value="{{ $r }}" {{ request('rincian') == $r ? 'selected' : '' }}>{{ $r }}</option> @endforeach
-                </select>
-            </div>
-            <div>
-                <select name="kategori" onchange="performLiveSearch(this.form)" class="w-full border border-slate-200 bg-white rounded-lg p-2.5 text-sm font-medium text-slate-700 outline-none cursor-pointer hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm">
-                    <option value="">Semua Jenis Informasi</option>
-                    <option value="Informasi Tersedia Setiap Saat" {{ request('kategori') == 'Informasi Tersedia Setiap Saat' ? 'selected' : '' }}>Informasi Tersedia Setiap Saat</option>
-                    <option value="Informasi Tersedia Secara Berkala" {{ request('kategori') == 'Informasi Tersedia Secara Berkala' ? 'selected' : '' }}>Informasi Tersedia Secara Berkala</option>
-                    <option value="Informasi Diumumkan Serta-Merta" {{ request('kategori') == 'Informasi Diumumkan Serta-Merta' ? 'selected' : '' }}>Informasi Diumumkan Serta-Merta</option>
-                </select>
-            </div>
-            <div class="relative">
-                <input type="text" name="search" value="{{ request('search') }}" id="searchInput" placeholder="Masukan kata kunci..." class="w-full border border-slate-200 bg-white rounded-lg pl-9 pr-3 py-2.5 text-sm font-medium text-slate-700 outline-none hover:border-[#1B365D] focus:border-[#1B365D] transition shadow-sm" autocomplete="off">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-400 text-xs"></i>
-            </div>
-        </form>
-    </div>
-
-    <!-- Table Section -->
-    <form id="bulk-delete-form" action="{{ route('admin.informasi.bulk') }}" method="POST">
-        @csrf @method('DELETE')
-        <div id="data-table-container" class="bg-white border border-slate-100 shadow-sm overflow-hidden transition-opacity duration-200">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-200 text-[14px] font-extrabold text-slate-600 uppercase tracking-widest border-b border-slate-100">
-                            <th class="col-checkbox p-6 pl-8 w-10 hidden"><input type="checkbox" id="select-all" class="rounded border-slate-300"></th>
-                            <th class="p-6">Rincian Informasi</th>
-                            <th class="p-6">Sub Informasi</th>
-                            <th class="p-6 text-center">Jenis Informasi</th>
-                            <th class="p-6">Tanggal</th>
-                            <th class="p-6 text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm text-slate-700">
-                        @forelse ($informasi->groupBy('rincian_informasi') as $rincian => $groupItems)
-                            @php $groupSlug = \Illuminate\Support\Str::slug($rincian); @endphp
-
-                            @foreach ($groupItems as $index => $item)
-                                <tr class="hover:bg-slate-50/50 transition-colors {{ $loop->last ? 'border-b-2 border-slate-300' : '' }}">
-                                    <td class="col-checkbox p-6 pl-8 hidden">
-                                        <input type="checkbox" name="ids[]" value="{{ $item->id }}" class="child-checkbox rounded border-slate-300" data-group="{{ $groupSlug }}">
-                                    </td>
-                                    @if ($index === 0)
-                                        <td rowspan="{{ $groupItems->count() }}" class="p-6 align-top">
-                                            <input type="checkbox" class="group-checkbox rounded border-slate-300 mr-2 hidden" data-group="{{ $groupSlug }}">
-                                            <span class="font-bold text-[17px] text-slate-900">{{ $rincian }}</span>
-                                        </td>
-                                    @endif
-                                    <td class="p-6">
-                                        <span class="text-[15px] text-slate-900">{{ $item->sub_informasi }}</span>
-                                    </td>
-                                    <td class="p-6 text-center whitespace-nowrap">
-                                        @php
-                                            $style = [
-                                                'Informasi Tersedia Setiap Saat' => 'bg-[#605ca8] text-white',
-                                                'Informasi Tersedia Secara Berkala' => 'bg-[#2563eb] text-white',
-                                                'Informasi Diumumkan Serta-Merta' => 'bg-[#0284c7] text-white',
-                                            ][$item->kategori] ?? 'bg-slate-600 text-white';
-                                        @endphp
-                                        <span class="px-3.5 py-1.5 text-xs sm:text-sm font-bold inline-block text-center shadow-sm {{ $style }}" style="border-radius: 12px !important;">{{ $item->kategori }}</span>
-                                    </td>
-                                    <td class="p-6 text-slate-400">{{ $item->created_at->translatedFormat('j F Y') }}</td>
-                                     <td class="p-6 text-center">
-                                         <div class="flex items-center justify-center gap-1.5">
-                                             <a href="{{ $item->tipe_informasi === 'link' ? $item->jalur_informasi : route('informasi.file', ['id' => $item->id, 'slug' => \Illuminate\Support\Str::slug($item->sub_informasi)]) }}" target="_blank" title="Lihat Berkas" class="p-2.5 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition shadow-xs" style="border-radius: 12px !important;">
-                                                 <i class="fa-solid fa-eye text-sm"></i>
-                                             </a>
-                                             <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="p-2.5 text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-xs" style="border-radius: 12px !important;">
-                                                 <i class="fa-solid fa-pen-to-square text-sm"></i>
-                                             </button>
-                                             <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->sub_informasi) }}')" title="Hapus Data" class="p-2.5 text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-xs" style="border-radius: 12px !important;">
-                                                 <i class="fa-solid fa-trash text-sm"></i>
-                                             </button>
-                                         </div>
-                                     </td>
-                                </tr>
-                            @endforeach
-                        @empty
-                            <tr><td colspan="6" class="p-12 text-center text-slate-400">Tidak ada data.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </form>
-
-    @include('admin.informasi_publik.modals.modal_form_informasi')
-    @include('admin.informasi_publik.modals.modal_hapus')
-
-    <script>
-        const selectAll = document.getElementById('select-all');
-        const groupCheckboxes = document.querySelectorAll('.group-checkbox');
-        const childCheckboxes = document.querySelectorAll('.child-checkbox');
-        const bulkBtn = document.getElementById('btn-bulk-delete');
-
-        let isSelectMode = false;
-        function toggleSelectMode() {
-            isSelectMode = !isSelectMode;
-            
-            const colCheckboxes = document.querySelectorAll('.col-checkbox');
-            const groupCheckboxesList = document.querySelectorAll('.group-checkbox');
-            const toggleBtn = document.getElementById('btn-toggle-select');
-            const textSelectMode = document.getElementById('text-select-mode');
-            
-            colCheckboxes.forEach(el => el.classList.toggle('hidden', !isSelectMode));
-            groupCheckboxesList.forEach(el => el.classList.toggle('hidden', !isSelectMode));
-            
-            if (isSelectMode) {
-                toggleBtn.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
-                toggleBtn.classList.add('bg-rose-50', 'text-rose-600', 'hover:bg-rose-100');
-                textSelectMode.innerText = "Batal";
-            } else {
-                selectAll.checked = false;
-                [...groupCheckboxes, ...childCheckboxes].forEach(cb => cb.checked = false);
-                
-                toggleBtn.classList.remove('bg-rose-50', 'text-rose-600', 'hover:bg-rose-100');
-                toggleBtn.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
-                textSelectMode.innerText = "Pilih Banyak";
-                
-                bulkBtn.classList.add('hidden');
-            }
-        }
-
-        function updateMasterCheckbox() {
-            const allChecked = Array.from(childCheckboxes).every(cb => cb.checked);
-            selectAll.checked = allChecked;
-        }
-
-        selectAll.addEventListener('change', function() {
-            [...groupCheckboxes, ...childCheckboxes].forEach(cb => cb.checked = this.checked);
-            toggleBulkBtn();
-        });
-
-        groupCheckboxes.forEach(cb => {
-            cb.addEventListener('change', function() {
-                const group = this.dataset.group;
-                const children = document.querySelectorAll(`.child-checkbox[data-group="${group}"]`);
-                children.forEach(child => child.checked = this.checked);
-                updateMasterCheckbox();
-                toggleBulkBtn();
-            });
-        });
-
-        childCheckboxes.forEach(cb => {
-            cb.addEventListener('change', function() {
-                const group = this.dataset.group;
-                const siblings = document.querySelectorAll(`.child-checkbox[data-group="${group}"]`);
-                const allSiblingsSelected = Array.from(siblings).every(s => s.checked);
-                const parentGroup = document.querySelector(`.group-checkbox[data-group="${group}"]`);
-                if (parentGroup) {
-                    parentGroup.checked = allSiblingsSelected;
-                }
-                updateMasterCheckbox();
-                toggleBulkBtn();
-            });
-        });
-
-        function toggleBulkBtn() {
-            const checkedCount = document.querySelectorAll('.child-checkbox:checked').length;
-            bulkBtn.classList.toggle('hidden', !isSelectMode || checkedCount === 0);
-        }
-
-        function triggerBulkDelete() {
-            const count = document.querySelectorAll('.child-checkbox:checked').length;
-            document.getElementById('bulk-count').innerText = count;
-            openModal('modal-bulk-delete');
-        }
-
-        function performLiveSearch(formElement) {
-            const url = new URL(formElement.action, window.location.origin);
-            const formData = new FormData(formElement);
-            for (const [key, value] of formData.entries()) {
-                if (value) url.searchParams.set(key, value);
-            }
-            
-            const dataContainer = document.getElementById('data-table-container');
-            if (dataContainer) dataContainer.classList.add('opacity-50', 'pointer-events-none');
-
-            fetch(url.toString(), {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(res => res.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                const newTable = doc.getElementById('data-table-container');
-                if (newTable && dataContainer) {
-                    dataContainer.innerHTML = newTable.innerHTML;
-                }
-                
-                window.history.replaceState(null, '', url.toString());
-            })
-            .catch(err => console.error("Search fetch failed:", err))
-            .finally(() => {
-                if (dataContainer) dataContainer.classList.remove('opacity-50', 'pointer-events-none');
-            });
-        }
-
-        const searchInput = document.getElementById('searchInput');
-        let timer = null;
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                clearTimeout(timer);
-                timer = setTimeout(() => { performLiveSearch(document.getElementById('filterForm')); }, 400);
-            });
-        }
-
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        function triggerDelete(url, name) {
-            document.getElementById('form-delete').action = url;
-            document.getElementById('delete-item-name').innerText = name;
-            openModal('modal-delete');
-        }
-
-        function toggleRincian(prefix, value) {
-            const inputBaru = document.getElementById(`${prefix}_rincian_baru`);
-            const selectElement = document.getElementById(`${prefix}_rincian_select`);
-            selectElement.name = "rincian_informasi";
-            if (value === 'baru') {
-                inputBaru.classList.remove('hidden'); inputBaru.required = true;
-                inputBaru.disabled = false; inputBaru.name = "rincian_informasi_baru";
-            } else {
-                inputBaru.classList.add('hidden'); inputBaru.required = false;
-                inputBaru.disabled = true; inputBaru.name = "rincian_informasi_baru";
-            }
-        }
-
-        function toggleFormat(prefix, jenis) {
-            const zonaFile = document.getElementById(`${prefix}_zona_file`);
-            const zonaLink = document.getElementById(`${prefix}_zona_link`);
-            const inputFile = document.getElementById(`${prefix}_input_file`);
-            const inputLink = document.getElementById(`${prefix}_input_link`);
-            if (jenis === 'file') {
-                zonaFile.classList.remove('hidden'); zonaLink.classList.add('hidden');
-                inputFile.disabled = false; inputLink.disabled = true;
-            } else {
-                zonaFile.classList.add('hidden'); zonaLink.classList.remove('hidden');
-                inputFile.disabled = true; inputLink.disabled = false;
-            }
-        }
-
-        function editData(item) {
-            const form = document.getElementById('form-edit');
-            form.action = `/admin/informasi-publik/${item.id}`;
-            const selectRincian = document.getElementById('edit_rincian_select');
-            let isExists = Array.from(selectRincian.options).some(opt => opt.value === item.rincian_informasi);
-            if (isExists) {
-                selectRincian.value = item.rincian_informasi;
-                toggleRincian('edit', item.rincian_informasi);
-            } else {
-                selectRincian.value = 'baru';
-                toggleRincian('edit', 'baru');
-                document.getElementById('edit_rincian_baru').value = item.rincian_informasi;
-            }
-            document.getElementById('edit_sub').value = item.sub_informasi;
-            document.getElementById('edit_kategori').value = item.kategori;
-            
-            if (item.tipe_informasi === 'link') {
-                document.getElementById('edit_format_link').checked = true;
-                document.getElementById('edit_input_link').value = item.jalur_informasi;
-                toggleFormat('edit', 'link');
-            } else {
-                document.getElementById('edit_format_file').checked = true;
-                toggleFormat('edit', 'file');
-            }
-            openModal('modal-edit');
-        }
-
-        function setupAjaxForm(formId, modalId) {
-            const form = document.getElementById(formId);
-            if (!form) return;
-
-            form.querySelectorAll('.input-field').forEach(input => {
-                input.addEventListener('input', function() {
-                    this.classList.remove('border-red-500');
-                    const nextElement = this.nextElementSibling;
-                    if (nextElement && nextElement.classList.contains('error-msg')) {
-                        nextElement.remove();
-                    }
-                });
-                input.addEventListener('change', function() {
-                    this.classList.remove('border-red-500');
-                    const nextElement = this.nextElementSibling;
-                    if (nextElement && nextElement.classList.contains('error-msg')) {
-                        nextElement.remove();
-                    }
-                });
-            });
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                form.querySelectorAll('.error-msg').forEach(el => el.remove());
-                form.querySelectorAll('.input-field').forEach(el => {
-                    el.classList.remove('border-red-500');
-                });
-
-                const submitBtn = form.querySelector('button[type="submit"]');
-                const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
-                if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirim...';
-                }
-
-                const formData = new FormData(form);
-
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(async response => {
-                    const isJson = response.headers.get('content-type')?.includes('application/json');
-                    const data = isJson ? await response.json() : null;
-
-                    if (response.status === 422) {
-                        if (submitBtn) {
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = originalBtnText;
-                        }
-
-                        if (data && data.errors) {
-                            for (const [field, messages] of Object.entries(data.errors)) {
-                                let inputEl = form.querySelector(`#${modalId.replace('modal-', '')}_${field}`) || 
-                                              form.querySelector(`[name="${field}"]`) ||
-                                              form.querySelector(`#${field}`);
-
-                                if (inputEl) {
-                                    inputEl.classList.add('border-red-500');
-
-                                    const errorP = document.createElement('p');
-                                    errorP.className = 'error-msg text-red-500 text-xs mt-1';
-                                    errorP.innerText = messages[0];
-
-                                    inputEl.after(errorP);
-                                }
-                            }
-
-                            const firstError = form.querySelector('.border-red-500');
-                            if (firstError) {
-                                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }
-                        }
-                    } else if (response.ok) {
-                        window.location.reload();
-                    } else {
-                        alert('Terjadi kesalahan pada server.');
-                        if (submitBtn) {
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = originalBtnText;
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert('Terjadi kesalahan jaringan.');
-                    if (submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = originalBtnText;
-                    }
-                });
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            setupAjaxForm('form-create', 'modal-create');
-            setupAjaxForm('form-edit', 'modal-edit');
-        });
-    </script>
+</div>
 @endsection
+
+@section('modals')
+<x-admin.informasi_publik.modal-add-edit />
+<x-modals.delete />
+@endsection
+
+<!-- Script Helper Admin Informasi Publik -->
+<x-admin.informasi_publik.script />

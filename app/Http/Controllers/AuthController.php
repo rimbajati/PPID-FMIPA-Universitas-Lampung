@@ -37,7 +37,7 @@ class AuthController extends Controller
         $request->validate(['email' => 'required|email', 'password' => 'required'], $this->getValidationMessages());
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 'admin'])) {
             $request->session()->regenerate();
-            return redirect('/admin/dashboard');
+            return redirect('/admin/informasi-publik');
         }
         return back()->withErrors(['login_gagal' => 'Akses ditolak. Kredensial salah.']);
     }
@@ -47,7 +47,7 @@ class AuthController extends Controller
         $request->validate(['email' => 'required|email', 'password' => 'required'], $this->getValidationMessages());
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 'masyarakat'])) {
             $request->session()->regenerate();
-            return redirect()->intended('/layanan');
+            return redirect()->route('login')->with('status', 'Berhasil login sebagai Pemohon (Iterasi 1).');
         }
         return back()->withErrors(['login_gagal' => 'Email atau kata sandi salah.']);
     }
@@ -92,7 +92,7 @@ class AuthController extends Controller
         Cache::put('otp_' . $email, $otp, now()->addMinutes(5));
         $urlStep2 = URL::temporarySignedRoute('register.step2', now()->addMinutes(15), ['email' => $email]);
         try {
-            Mail::send('email.otp', ['otp' => $otp], function($m) use ($email) {
+            Mail::send('emails.otp', ['otp' => $otp], function($m) use ($email) {
                 $m->to($email)->subject('Kode Verifikasi Pendaftaran PPID FMIPA Unila');
             });
         } catch (\Exception $e) { return back()->withErrors(['email' => 'Gagal mengirim email.']); }
@@ -122,7 +122,7 @@ class AuthController extends Controller
         if (!$email) return redirect()->route('register');
         $otp = rand(1000, 9999);
         Cache::put('otp_' . $email, $otp, now()->addMinutes(5));
-        Mail::send('email.otp', ['otp' => $otp], function($m) use ($email) {
+        Mail::send('emails.otp', ['otp' => $otp], function($m) use ($email) {
             $m->to($email)->subject('Kode Verifikasi Pendaftaran PPID FMIPA Unila');
         });
         return redirect()->back()->with('success', 'OTP baru telah dikirim.');

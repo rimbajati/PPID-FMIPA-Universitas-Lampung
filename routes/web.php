@@ -2,41 +2,36 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\InformasiPublikController;
-use App\Http\Controllers\LayananController;
-use App\Http\Controllers\StatistikController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\UserProfileController;
-use App\Http\Controllers\PengajuanController;
+use App\Http\Controllers\Masyarakat\InformasiPublikController as MasyarakatInformasiPublikController;
+use App\Http\Controllers\Masyarakat\PermohonanController as MasyarakatPermohonanController;
+use App\Http\Controllers\Masyarakat\KeberatanController as MasyarakatKeberatanController;
+use App\Http\Controllers\Admin\InformasiPublikController as AdminInformasiPublikController;
+use App\Http\Controllers\Admin\PermohonanController as AdminPermohonanController;
+use App\Http\Controllers\Admin\KeberatanController as AdminKeberatanController;
+use App\Http\Controllers\Masyarakat\RiwayatLayananController as MasyarakatRiwayatLayananController;
 use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
-| 1. RUTE PUBLIK
+| ITERASI 1: MODUL AUTENTIKASI (LOGIN & REGISTRASI)
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () { return view('public.beranda'); });
-Route::get('/informasi-publik', [InformasiPublikController::class, 'index']);
-Route::get('/informasi-setiap-saat', [App\Http\Controllers\InformasiPublikController::class, 'indexSetiapSaat']);
-Route::get('/informasi-berkala', [App\Http\Controllers\InformasiPublikController::class, 'indexBerkala']);
-Route::get('/informasi-serta-merta', [App\Http\Controllers\InformasiPublikController::class, 'indexSertaMerta']);
-Route::get('/informasi/akses/{id}', [InformasiPublikController::class, 'hitungAkses']);
-// Rute khusus untuk melihat berkas privat (Inline Streaming PDF)
-Route::get('/informasi/lihat/{id}/{slug?}', [App\Http\Controllers\InformasiPublikController::class, 'lihatFile'])->name('informasi.file');
 
-// Rute khusus untuk jembatan/proxy link luar (Redirect Gateway)
-Route::get('/informasi/kunjungi/{id}/{slug?}', [App\Http\Controllers\InformasiPublikController::class, 'kunjungiLink'])->name('informasi.link');
-Route::get('/statistik', [StatistikController::class, 'index'])->name('public.statistik.index');
-Route::get('/prosedur-permohonan', function () { return view('public.prosedur_permohonan'); })->name('prosedur.permohonan');
+// Rute Utama Beranda Publik
+Route::get('/', function () { return view('masyarakat.beranda.index'); })->name('beranda');
+Route::get('/home', function () { return redirect()->route('beranda'); });
 
-/*
-|--------------------------------------------------------------------------
-| 2. RUTE GUEST (Belum Login)
-|--------------------------------------------------------------------------
-*/
+// Rute Katalog Informasi Publik untuk Publik
+Route::get('/informasi-publik', [MasyarakatInformasiPublikController::class, 'index'])->name('informasi.publik');
+
+// Rute Halaman Hub Layanan PPID Online
+Route::get('/layanan', function () { return view('masyarakat.layanan.index'); })->name('layanan');
+
+// Rute Autentikasi Guest (Belum Login)
 Route::middleware('guest')->group(function () {
+    // Login Pemohon & Admin
     Route::get('/login', function () { return view('auth.login.index'); })->name('login');
-    Route::get('/admin-panel/login', function () { return view('admin.auth.login'); })->name('admin.login');
+    Route::get('/admin-panel/login', function () { return view('auth.admin_login'); })->name('admin.login');
 
     Route::controller(AuthController::class)->group(function () {
         Route::post('/login', 'publicLoginProcess');
@@ -45,18 +40,19 @@ Route::middleware('guest')->group(function () {
         Route::get('/auth/google/callback', 'handleGoogleCallback');
     });
 
+    // Lupa & Reset Kata Sandi
     Route::get('/forgot-password', function () { return view('auth.password.forgot'); })->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
     Route::get('/reset-password/{token}', function ($token) { return view('auth.password.reset', ['token' => $token]); })->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
+    // Registrasi Pemohon (3 Tahap)
     Route::controller(AuthController::class)->group(function () {
         Route::get('/register', 'showRegisterStep1')->name('register');
         Route::post('/register/step1', 'processRegisterStep1')->name('register.step1.process');
 
         Route::get('/register/verifikasi', 'showRegisterStep2')->name('register.step2')->middleware('signed');
         Route::post('/register/verifikasi', 'processRegisterStep2')->name('register.step2.process');
-
         Route::post('/register/resend-otp', 'resendOtp')->name('register.resend');
 
         Route::get('/register/lengkapi-profil', 'showRegisterStep3')->name('register.step3')->middleware('signed');
@@ -64,66 +60,99 @@ Route::middleware('guest')->group(function () {
     });
 });
 
-/*
-|--------------------------------------------------------------------------
-| 3. RUTE TERPROTEKSI (User Pemohon)
-|--------------------------------------------------------------------------
-*/
+// Rute Logout & Sesi Terproteksi Pemohon (Wajib Login)
 Route::middleware('auth')->group(function () {
-    Route::controller(AuthController::class)->group(function () {
-        Route::post('/logout', 'logout')->name('logout');
-        Route::post('/profil/buat-sandi-manual', 'buatSandiManual')->name('profil.buat-sandi');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/riwayat-layanan', [MasyarakatRiwayatLayananController::class, 'index'])->name('layanan.riwayat');
+
+    // Rute Formulir Permohonan Informasi Publik (Wajib Login)
+    Route::controller(MasyarakatPermohonanController::class)->group(function () {
+        Route::get('/permohonan', 'index')->name('layanan.permohonan');
+        Route::post('/permohonan', 'store')->name('layanan.permohonan.store');
+        Route::get('/permohonan-informasi', function () { return redirect('/permohonan'); });
     });
 
-    Route::middleware('redirect.admin')->group(function () {
-        Route::get('/profile', [UserProfileController::class, 'index'])->name('user.profile');
-        Route::post('/profile/update', [UserProfileController::class, 'updateProfile'])->name('user.profile.update');
-
-        Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
-        Route::post('/layanan', [LayananController::class, 'store'])->name('layanan.store');
-        Route::put('/layanan/{id}', [LayananController::class, 'update'])->name('layanan.update');
-        Route::delete('/layanan/{id}', [LayananController::class, 'destroy'])->name('layanan.destroy');
+    // Rute Formulir Pengajuan Keberatan Informasi (Wajib Login)
+    Route::controller(MasyarakatKeberatanController::class)->group(function () {
+        Route::get('/pengajuan-keberatan', 'index')->name('layanan.keberatan');
+        Route::post('/pengajuan-keberatan', 'store')->name('layanan.keberatan.store');
     });
 });
 
-/*
-|--------------------------------------------------------------------------
-| 4. RUTE ADMIN (Terproteksi Middleware 'admin')
-|--------------------------------------------------------------------------
-*/
+// Rute Lihat Berkas Dokumen Informasi Publik (Publik / Masyarakat)
+Route::get('/informasi/lihat/{id}', function (Request $request, $id) {
+    $info = \App\Models\InformasiPublik::findOrFail($id);
+    
+    // Increment Counter Dilihat hanya jika dibuka dari bagian masyarakat (BUKAN dari panel admin)
+    if (!$request->has('from_admin') && \Illuminate\Support\Facades\Schema::hasColumn('informasi_publik', 'dilihat')) {
+        $info->increment('dilihat');
+    }
+
+    if ($info->link_informasi && !$info->file_informasi) {
+        return redirect()->away($info->link_informasi);
+    }
+    if ($info->file_informasi && \Illuminate\Support\Facades\Storage::disk('local')->exists($info->file_informasi)) {
+        $path = storage_path('app/' . $info->file_informasi);
+        
+        // Gunakan nama file asli jika ada, atau fallback ke basename
+        $filename = $info->nama_file_asli ?: basename($path);
+        $mimeType = \Illuminate\Support\Facades\File::mimeType($path) ?? 'application/octet-stream';
+
+        return response()->file($path, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . addslashes($filename) . '"',
+        ]);
+    }
+    abort(404, 'File tidak ditemukan');
+})->name('informasi.lihat');
+
+// Rute alternatif dengan nama file asli pada URL (contoh: /informasi/file/20/Transkrip_Akademik.pdf)
+Route::get('/informasi/file/{id}/{filename}', function (Request $request, $id, $filename) {
+    $info = \App\Models\InformasiPublik::findOrFail($id);
+
+    // Increment Counter Dilihat hanya jika dibuka dari bagian masyarakat (BUKAN dari panel admin)
+    if (!$request->has('from_admin') && \Illuminate\Support\Facades\Schema::hasColumn('informasi_publik', 'dilihat')) {
+        $info->increment('dilihat');
+    }
+
+    if ($info->file_informasi && \Illuminate\Support\Facades\Storage::disk('local')->exists($info->file_informasi)) {
+        $path = storage_path('app/' . $info->file_informasi);
+        $mimeType = \Illuminate\Support\Facades\File::mimeType($path) ?? 'application/octet-stream';
+
+        return response()->file($path, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . addslashes($filename) . '"',
+        ]);
+    }
+    abort(404, 'File tidak ditemukan');
+})->name('informasi.lihat.file');
+
+// Rute Admin: Informasi Publik, Permohonan, & Keberatan
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/', function() { return redirect('/admin/informasi-publik'); })->name('admin.dashboard');
+    Route::get('/dashboard', function() { return redirect('/admin/informasi-publik'); });
 
-    // Manajemen Informasi Publik
-    Route::get('/informasi-publik', [InformasiPublikController::class, 'adminIndex']);
-    Route::get('/informasi-publik/create', [InformasiPublikController::class, 'create']);
-    Route::post('/informasi-publik', [InformasiPublikController::class, 'store']);
-    Route::get('/informasi-publik/{id}/edit', [InformasiPublikController::class, 'edit']);
-    Route::put('/informasi-publik/{id}', [InformasiPublikController::class, 'update']);
-    Route::delete('/informasi-publik/bulk-delete', [App\Http\Controllers\InformasiPublikController::class, 'destroyBulk'])->name('admin.informasi.bulk');
-    Route::delete('/informasi-publik/{id}', [InformasiPublikController::class, 'destroy']);
+    Route::get('/informasi-publik', [AdminInformasiPublikController::class, 'index']);
+    Route::post('/informasi-publik', [AdminInformasiPublikController::class, 'store']);
+    Route::put('/informasi-publik/{id}', [AdminInformasiPublikController::class, 'update']);
+    Route::delete('/informasi-publik/bulk-delete', [AdminInformasiPublikController::class, 'destroyBulk'])->name('admin.informasi.bulk');
+    Route::delete('/informasi-publik/{id}', [AdminInformasiPublikController::class, 'destroy']);
 
-    // Manajemen Pengajuan (Penyatuan Permohonan & Keberatan)
-    Route::get('/pengajuan', [PengajuanController::class, 'index']);
-    Route::get('/pengajuan/{id}', [PengajuanController::class, 'show']);
-    Route::put('/pengajuan/{id}/status', [PengajuanController::class, 'updateStatus']);
-    Route::delete('/pengajuan/bulk-delete', [PengajuanController::class, 'destroyBulk'])->name('admin.pengajuan.bulk');
-    Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('admin.pengajuan.destroy');
+    // Rute Admin: Permohonan Informasi
+    Route::get('/permohonan', [AdminPermohonanController::class, 'index'])->name('admin.permohonan.index');
+    Route::put('/permohonan/{id}/status', [AdminPermohonanController::class, 'updateStatus'])->name('admin.permohonan.update-status');
+    Route::delete('/permohonan/bulk-delete', [AdminPermohonanController::class, 'destroyBulk'])->name('admin.permohonan.bulk');
+    Route::delete('/permohonan/{id}', [AdminPermohonanController::class, 'destroy'])->name('admin.permohonan.destroy');
 
-    // Manajemen Prosedur Permohonan
-    Route::get('/prosedur-permohonan', [App\Http\Controllers\ProsedurPermohonanController::class, 'edit'])->name('admin.prosedur-permohonan.edit');
-    Route::put('/prosedur-permohonan', [App\Http\Controllers\ProsedurPermohonanController::class, 'update'])->name('admin.prosedur-permohonan.update');
-
-    // Manajemen Beranda Utama
-    Route::get('/beranda', [App\Http\Controllers\BerandaController::class, 'edit'])->name('admin.beranda.edit');
-    Route::put('/beranda', [App\Http\Controllers\BerandaController::class, 'update'])->name('admin.beranda.update');
-
-    // Manajemen Halaman Informasi Publik
-    Route::get('/halaman-informasi-publik', [App\Http\Controllers\KontenInformasiPublikController::class, 'edit'])->name('admin.halaman-informasi-publik.edit');
-    Route::put('/halaman-informasi-publik', [App\Http\Controllers\KontenInformasiPublikController::class, 'update'])->name('admin.halaman-informasi-publik.update');
+    // Rute Admin: Pengajuan Keberatan Informasi
+    Route::get('/keberatan', [AdminKeberatanController::class, 'index'])->name('admin.keberatan.index');
+    Route::put('/keberatan/{id}/status', [AdminKeberatanController::class, 'updateStatus'])->name('admin.keberatan.update-status');
+    Route::delete('/keberatan/bulk-delete', [AdminKeberatanController::class, 'destroyBulk'])->name('admin.keberatan.bulk');
+    Route::delete('/keberatan/{id}', [AdminKeberatanController::class, 'destroy'])->name('admin.keberatan.destroy');
 });
 
-/* --- UTILITY ROUTE --- */
+
+// Utility Route
 Route::post('/login/with-email', function (Request $request) {
     return redirect()->route('login')->with('auto_email', $request->input('email'));
 })->name('login.with.email');

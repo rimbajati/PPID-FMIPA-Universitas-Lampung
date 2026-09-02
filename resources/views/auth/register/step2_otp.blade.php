@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('components.layouts.app')
 
 @section('title', 'Verifikasi Kode OTP - PPID FMIPA Unila')
 
 @section('content')
 <main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-slate-50">
 
-    <div class="bg-white shadow-xl flex flex-col md:flex-row rounded-none overflow-hidden w-full max-w-5xl min-h-[600px]">
+    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-[600px]" style="border-radius: 6px !important;">
 
         <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden">
             <img src="{{ asset('images/FMIPA.jpg') }}" alt="Gedung FMIPA Unila" class="w-full h-full object-cover">
@@ -26,7 +26,7 @@
             </a>
 
             <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-[#1B365D] text-white flex items-center justify-center rounded-none mx-auto mb-5 text-3xl">
+                <div class="w-16 h-16 bg-[#1B365D] text-white flex items-center justify-center mx-auto mb-5 text-3xl" style="border-radius: 6px !important;">
                     <i class="fa-regular fa-envelope"></i>
                 </div>
                 <h2 class="text-3xl font-black text-gray-900 mb-3 uppercase tracking-tight">Verifikasi OTP</h2>
@@ -37,7 +37,7 @@
             </div>
 
             @if(session('success'))
-                <div class="mb-5 p-4 bg-green-50 text-green-800 border-2 border-green-700 font-black rounded-none text-sm text-center">
+                <div class="mb-5 p-4 bg-green-50 text-green-800 border-2 border-green-700 font-black text-sm text-center" style="border-radius: 6px !important;">
                     {{ session('success') }}
                 </div>
             @endif
@@ -47,7 +47,7 @@
                 <div>
                     <input type="text" name="otp" maxlength="4"
                         value=""
-                        class="w-full text-center tracking-[1em] font-black text-4xl py-4 border-2 {{ $errors->has('otp') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none transition" style="border-radius: 12px !important;"
+                        class="w-full text-center tracking-[1em] font-black text-4xl py-4 border-2 {{ $errors->has('otp') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none transition" style="border-radius: 6px !important;"
                         placeholder="••••" required autofocus autocomplete="one-time-code">
 
                     @error('otp')
@@ -55,7 +55,7 @@
                     @enderror
                 </div>
 
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition text-base mt-2 uppercase tracking-widest cursor-pointer" style="border-radius: 12px !important;">
+                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition text-base mt-2 uppercase tracking-widest cursor-pointer" style="border-radius: 6px !important;">
                     Verifikasi
                 </button>
             </form>

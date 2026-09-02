@@ -22,7 +22,7 @@ class CustomResetPasswordNotification extends ResetPassword
 
         return (new MailMessage)
             ->subject('Permintaan Atur Ulang Kata Sandi - PPID FMIPA Unila')
-            ->view('email.reset_password', [
+            ->view('emails.reset_password', [
                 'url'  => $url,
                 'user' => $notifiable,
             ]);

@@ -12,10 +12,13 @@ class InformasiPublik extends Model
     protected $table = 'informasi_publik';
 
     protected $fillable = [
-        'rincian_informasi',
-        'sub_informasi',
-        'kategori',
-        'tipe_informasi',
-        'jalur_informasi'
+        'judul_informasi',
+        'deskripsi_informasi',
+        'kategori_informasi',
+        'tahun_terbit',
+        'file_informasi',
+        'nama_file_asli',
+        'link_informasi',
+        'dilihat',
     ];
 }

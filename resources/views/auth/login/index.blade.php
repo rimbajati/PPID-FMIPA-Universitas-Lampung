@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('components.layouts.app')
 
 @section('title', 'Masuk - PPID FMIPA Unila')
 
@@ -11,7 +11,7 @@
 
 <main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-slate-50">
 
-    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden rounded-none w-full max-w-5xl min-h-[600px]">
+    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-[600px]" style="border-radius: 6px !important;">
 
         <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden">
             <img src="{{ asset('images/FMIPA.jpg') }}" alt="Gedung FMIPA Unila" class="w-full h-full object-cover">
@@ -33,7 +33,7 @@
             </div>
 
             @if (session('status'))
-                <div class="mb-6 p-4 text-sm text-green-800 bg-green-50 border-2 border-green-700 rounded-none font-bold text-center">
+                <div class="mb-6 p-4 text-sm text-green-800 bg-green-50 border-2 border-green-700 font-bold text-center" style="border-radius: 6px !important;">
                     {{ session('status') }}
                 </div>
             @endif
@@ -44,7 +44,7 @@
                 <div>
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Email</label>
                     <input type="email" name="email" id="email" value="{{ old('email', session('auto_email')) }}"
-                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 12px !important;"
+                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 6px !important;"
                         placeholder="Masukan email Anda" required autofocus>
                     @error('email')
                         <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
@@ -57,7 +57,7 @@
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Kata Sandi</label>
                     <div class="relative">
                         <input type="password" name="password" id="password"
-                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 12px !important;"
+                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 6px !important;"
                             placeholder="Masukan kata sandi Anda" required>
                         @error('password')
                             <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
@@ -77,12 +77,12 @@
                 </div>
 
                 @if ($errors->has('login_gagal'))
-                    <div class="mt-4 p-4 text-sm text-red-800 bg-red-50 border-2 border-red-700 font-bold text-center" style="border-radius: 12px !important;">
+                    <div class="mt-4 p-4 text-sm text-red-800 bg-red-50 border-2 border-red-700 font-bold text-center" style="border-radius: 6px !important;">
                         {{ $errors->first('login_gagal') }}
                     </div>
                 @endif
 
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition text-base mt-4 cursor-pointer uppercase tracking-widest shadow-md" style="border-radius: 12px !important;">
+                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition text-base mt-4 cursor-pointer uppercase tracking-widest shadow-md" style="border-radius: 6px !important;">
                     Masuk
                 </button>
             </form>
@@ -93,7 +93,7 @@
                 <div class="border-t-2 border-gray-300 flex-grow"></div>
             </div>
 
-            <a href="{{ url('/auth/google') }}" class="w-full flex justify-center items-center bg-white border-2 border-gray-300 text-gray-900 font-black py-3.5 px-4 hover:bg-slate-50 transition text-base cursor-pointer uppercase tracking-widest shadow-sm" style="border-radius: 12px !important;">
+            <a href="{{ url('/auth/google') }}" class="w-full flex justify-center items-center bg-white border-2 border-gray-300 text-gray-900 font-black py-4 px-4 hover:bg-slate-50 transition text-base cursor-pointer uppercase tracking-widest shadow-sm" style="border-radius: 6px !important;">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5 mr-3">
                 Masuk dengan Google
             </a>

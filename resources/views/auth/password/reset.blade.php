@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('components.layouts.app')
 
 @section('title', 'Reset Kata Sandi - PPID FMIPA Unila')
 
 @section('content')
 <main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-slate-50">
 
-    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden w-full rounded-none max-w-5xl min-h-[600px]">
+    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-[600px]" style="border-radius: 6px !important;">
 
         <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden">
             <img src="{{ asset('images/FMIPA.jpg') }}" alt="Gedung FMIPA Unila" class="w-full h-full object-cover">
@@ -32,7 +32,7 @@
                 <div>
                     <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1.5">Email Akun</label>
                     <input type="email" value="{{ request()->email }}" disabled
-                        class="w-full px-5 py-3.5 border-2 border-gray-300 bg-gray-100 text-gray-600 text-base cursor-not-allowed font-bold" style="border-radius: 12px !important;">
+                        class="w-full px-5 py-3.5 border-2 border-gray-300 bg-gray-100 text-gray-600 text-base cursor-not-allowed font-bold" style="border-radius: 6px !important;">
                     <input type="hidden" name="email" value="{{ request()->email }}">
                 </div>
 
@@ -40,7 +40,7 @@
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Kata Sandi Baru</label>
                     <div class="relative">
                         <input type="password" name="password" id="password" value=""
-                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 12px !important;"
+                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 6px !important;"
                             placeholder="Minimal 8 karakter" required>
                         <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-3.5 text-gray-500 hover:text-gray-800 focus:outline-none cursor-pointer">
                             <i class="fa-solid fa-eye" id="password-icon"></i>
@@ -57,7 +57,7 @@
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Konfirmasi Kata Sandi</label>
                     <div class="relative">
                         <input type="password" name="password_confirmation" id="password_confirmation" value=""
-                            class="w-full px-5 py-3.5 border-2 border-[#1B365D] focus:border-[#1B365D] outline-none text-base transition" style="border-radius: 12px !important;"
+                            class="w-full px-5 py-3.5 border-2 border-[#1B365D] focus:border-[#1B365D] outline-none text-base transition" style="border-radius: 6px !important;"
                             placeholder="Ulangi kata sandi baru" required>
                         <button type="button" onclick="togglePassword('password_confirmation')" class="absolute right-4 top-3.5 text-gray-500 hover:text-gray-800 focus:outline-none cursor-pointer">
                             <i class="fa-solid fa-eye" id="password_confirmation-icon"></i>
