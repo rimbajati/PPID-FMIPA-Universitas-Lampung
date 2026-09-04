@@ -1,5 +1,14 @@
 @props(['info', 'isLink', 'viewUrl', 'embedUrl' => null, 'isDriveFolder' => false])
 
+@php
+    $fileExtension = strtolower(pathinfo($info->file_informasi ?? ($info->nama_file_asli ?? ''), PATHINFO_EXTENSION));
+    $isPdf = $fileExtension === 'pdf';
+    $isWord = in_array($fileExtension, ['doc', 'docx']);
+    $isExcel = in_array($fileExtension, ['xls', 'xlsx']);
+    $isPpt = in_array($fileExtension, ['ppt', 'pptx']);
+    $isOfficeDoc = $isWord || $isExcel || $isPpt;
+@endphp
+
 <div class="bg-white border border-slate-200/90 rounded-3xl p-6 md:p-8 shadow-sm space-y-4">
     
     <div class="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -10,7 +19,7 @@
             </h2>
         </div>
 
-        @if($info->kategori_informasi !== 'Informasi Dikecualikan' && !$isLink)
+        @if($info->kategori_informasi !== 'Informasi Dikecualikan' && !$isLink && $isPdf)
             <a href="{{ $viewUrl }}" target="_blank" class="text-xs font-extrabold text-sky-600 hover:text-sky-700 flex items-center gap-1.5 cursor-pointer">
                 <span>Full Screen</span>
                 <i class="fa-solid fa-up-right-and-down-left-from-center text-[10px]"></i>
@@ -44,15 +53,32 @@
                     </p>
                 </div>
             </div>
+        @elseif(!$isLink && $isOfficeDoc)
+            <!-- Elegant Card Preview untuk Berkas Office (DOCX / XLSX / PPTX) -->
+            <div class="w-full flex flex-col items-center justify-center p-8 md:p-12 bg-slate-50 text-center space-y-4 min-h-[500px]">
+                <div class="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl shadow-sm border transition-transform duration-300 hover:scale-105 {{ $isWord ? 'bg-blue-50 text-blue-600 border-blue-200' : ($isExcel ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200') }}">
+                    <i class="{{ $isWord ? 'fa-solid fa-file-word' : ($isExcel ? 'fa-solid fa-file-excel' : 'fa-solid fa-file-powerpoint') }}"></i>
+                </div>
+
+                <div class="space-y-2.5 max-w-md">
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider border shadow-2xs {{ $isWord ? 'bg-blue-100/80 text-blue-700 border-blue-200' : ($isExcel ? 'bg-emerald-100/80 text-emerald-700 border-emerald-200' : 'bg-amber-100/80 text-amber-700 border-amber-200') }}">
+                        Dokumen Microsoft {{ $isWord ? 'Word (.docx)' : ($isExcel ? 'Excel (.xlsx)' : 'PowerPoint (.pptx)') }}
+                    </span>
+                    <h3 class="text-lg md:text-xl font-black text-slate-800 break-all leading-snug">
+                        {{ $info->nama_file_asli ?: basename($info->file_informasi) }}
+                    </h3>
+                </div>
+            </div>
         @elseif($isLink)
             <div class="w-full bg-white min-h-[550px] md:min-h-[650px] relative">
                 <iframe src="{{ $embedUrl ?: $viewUrl }}" class="w-full h-full min-h-[550px] md:min-h-[650px] border-0 bg-white"></iframe>
             </div>
         @else
-            <div class="w-full bg-slate-900 min-h-[550px] md:min-h-[650px]">
+            <div class="w-full bg-slate-100 min-h-[550px] md:min-h-[650px]">
                 <iframe src="{{ $viewUrl }}" class="w-full h-full min-h-[550px] md:min-h-[650px] border-0"></iframe>
             </div>
         @endif
     </div>
 
 </div>
+
