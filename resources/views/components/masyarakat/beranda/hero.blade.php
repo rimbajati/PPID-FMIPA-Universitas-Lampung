@@ -29,7 +29,7 @@
                     <span>Mulai Cari Informasi</span>
                 </a>
                 
-                <a href="{{ url('/layanan/permohonan-informasi') }}" class="px-8 py-4 bg-white hover:bg-sky-50/60 text-slate-800 hover:text-sky-600 text-sm sm:text-base font-extrabold rounded-full border-2 border-slate-300 hover:border-sky-500 transition-all shadow-2xs hover:shadow-md hover:-translate-y-0.5 inline-flex items-center justify-center gap-2 cursor-pointer">
+                <a href="{{ url('/permohonan') }}" class="px-8 py-4 bg-white hover:bg-sky-50/60 text-slate-800 hover:text-sky-600 text-sm sm:text-base font-extrabold rounded-full border-2 border-slate-300 hover:border-sky-500 transition-all shadow-2xs hover:shadow-md hover:-translate-y-0.5 inline-flex items-center justify-center gap-2 cursor-pointer">
                     <span>Ajukan Permohonan</span>
                     <i class="fa-solid fa-arrow-right text-xs"></i>
                 </a>

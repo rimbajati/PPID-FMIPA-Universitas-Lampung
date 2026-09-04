@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/permohonan', 'index')->name('layanan.permohonan');
         Route::post('/permohonan', 'store')->name('layanan.permohonan.store');
         Route::get('/permohonan-informasi', function () { return redirect('/permohonan'); });
+        Route::get('/layanan/permohonan-informasi', function () { return redirect('/permohonan'); });
     });
 
     // Rute Formulir Pengajuan Keberatan Informasi (Wajib Login)
