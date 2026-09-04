@@ -47,13 +47,14 @@
             </div>
 
             <!-- Input Searchbar Penuh -->
-            <div class="relative flex-1 min-w-[240px] h-[48px]">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari tiket keberatan, nama, NIK..." class="w-full h-full pl-11 pr-26 bg-slate-50 border border-slate-200 text-xs md:text-sm font-semibold text-slate-800 placeholder-slate-400 rounded-xl focus:outline-none focus:bg-white focus:border-[#1B365D] transition-all shadow-xs" autocomplete="off">
-                <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#1B365D] hover:bg-[#152a4a] text-white text-xs font-extrabold rounded-lg transition cursor-pointer shadow-xs">
-                    <i class="fa-solid fa-magnifying-glass text-xs"></i> Cari
-                </button>
+            <div class="flex-1 min-w-[200px] h-[48px]">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari tiket keberatan, nama, NIK..." class="w-full h-full px-4 bg-slate-50 border border-slate-200 text-xs md:text-sm font-semibold text-slate-800 placeholder-slate-400 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500 transition-all shadow-xs" autocomplete="off">
             </div>
+
+            <!-- Tombol Cari Terpisah -->
+            <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-xl transition cursor-pointer shadow-xs h-[48px] shrink-0 whitespace-nowrap">
+                <i class="fa-solid fa-magnifying-glass text-xs"></i> <span>Cari</span>
+            </button>
         </form>
     </div>
 
@@ -66,9 +67,9 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-[#1B365D] text-white text-xs md:text-sm font-extrabold tracking-wide whitespace-nowrap">
+                    <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide whitespace-nowrap">
                         <th id="col-checkbox-header" class="hidden px-4 py-4 w-10 text-center col-checkbox">
-                            <input type="checkbox" id="select-all" class="w-4 h-4 rounded border-white/30 text-[#1B365D] focus:ring-0 cursor-pointer">
+                            <input type="checkbox" id="select-all" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                         </th>
                         <th class="px-6 py-4 whitespace-nowrap">No. Tiket</th>
                         <th class="px-6 py-4 whitespace-nowrap">No. Tiket Asal</th>
@@ -81,12 +82,12 @@
                 </thead>
                 <tbody class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
                     @forelse($keberatans as $item)
-                        <tr class="hover:bg-slate-50/80 transition-colors">
+                        <tr class="hover:bg-sky-50/70 transition-colors">
                             <td class="px-4 py-4 text-center hidden col-checkbox">
                                 <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" class="child-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                             </td>
 
-                            <td class="px-6 py-4 font-black text-[#1B365D] whitespace-nowrap">
+                            <td class="px-6 py-4 font-black text-sky-600 whitespace-nowrap">
                                 {{ $item->no_tiket ?? '-' }}
                             </td>
 
@@ -181,7 +182,7 @@
     <!-- Pagination Footer -->
     <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="text-xs md:text-sm font-semibold text-slate-500">
-            Menampilkan <span class="font-extrabold text-slate-900">{{ $keberatans->firstItem() ?? 0 }}–{{ $keberatans->lastItem() ?? 0 }}</span> dari <span class="font-black text-[#1B365D]">{{ $keberatans->total() }}</span> pengajuan keberatan
+            Menampilkan <span class="font-extrabold text-slate-900">{{ $keberatans->firstItem() ?? 0 }}–{{ $keberatans->lastItem() ?? 0 }}</span> dari <span class="font-black text-sky-600">{{ $keberatans->total() }}</span> pengajuan keberatan
         </div>
 
         <!-- Pagination Nomor Angka -->
@@ -200,7 +201,7 @@
             {{-- Angka-angka Halaman --}}
             @foreach (range(1, $keberatans->lastPage()) as $page)
                 @if ($page == $keberatans->currentPage())
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#1B365D] text-white text-xs font-black shadow-xs">
+                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-sky-500 text-white text-xs font-black shadow-xs">
                         {{ $page }}
                     </span>
                 @else

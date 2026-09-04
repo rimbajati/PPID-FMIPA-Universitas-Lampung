@@ -9,7 +9,7 @@
     <x-masyarakat.layanan.hero-header />
 
     <!-- Container Utama Grid Pilihan Layanan & Helpdesk -->
-    <div class="max-w-7xl mx-auto px-6 md:px-16 lg:px-24 pt-12">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 pt-8">
         <x-masyarakat.layanan.cards-grid />
     </div>
 

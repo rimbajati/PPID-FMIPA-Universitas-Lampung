@@ -98,7 +98,7 @@ class PermohonanController extends Controller
                     $m->to($recipientEmail)->subject('Permohonan Informasi Berhasil Masuk ke Sistem PPID FMIPA Universitas Lampung');
                 });
             } catch (\Exception $e) {
-                // Ignore jika SMTP gagal
+                \Illuminate\Support\Facades\Log::error('Gagal mengirim email permohonan baru: ' . $e->getMessage());
             }
         }
 

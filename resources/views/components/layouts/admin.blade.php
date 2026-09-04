@@ -44,12 +44,11 @@
 
 <body class="bg-[#f1f5f9] text-slate-800 antialiased overflow-hidden flex flex-col h-screen relative">
 
-    <!-- 1. Header Topbar Biru Tua Navy Sistem (#1B365D) -->
-    <header class="bg-[#1B365D] h-[64px] flex items-center justify-between px-6 text-white shadow-md w-full flex-shrink-0">
+    <!-- 1. Header Topbar Biru Muda Sistem (bg-sky-600) -->
+    <header class="bg-sky-600 h-[64px] flex items-center justify-between px-6 text-white shadow-md w-full flex-shrink-0">
         <!-- Sisi Kiri: Logo PPID FMIPA + Tombol Hamburger Berjarak Lega -->
         <div class="flex items-center gap-6 md:gap-8">
             <a href="/" class="flex items-center shrink-0 gap-3 group">
-                <img src="{{ asset('images/logoPPID.png') }}" alt="Logo Unila" class="h-9 max-h-9 w-auto shrink-0 object-contain">
                 <div class="text-left leading-snug">
                     <span class="block text-white font-extrabold text-base tracking-tight">PPID FMIPA</span>
                     <span class="block text-white/80 font-bold text-[10px] tracking-wider uppercase">Universitas Lampung</span>

@@ -89,15 +89,21 @@ class KeberatanController extends Controller
             return redirect()->back()->withErrors(['pesan_diproses' => 'Pesan untuk pemohon wajib diisi saat memproses pengajuan keberatan.'])->withInput();
         }
 
-        // Jika Selesai/Dikabulkan, Pesan Selesai Wajib Diisi
-        if ($statusInput === 'Selesai' && empty(trim($request->input('pesan_selesai')))) {
-            return redirect()->back()->withErrors(['pesan_selesai' => 'Pesan untuk pemohon wajib diisi sebelum menyelesaikan keberatan.'])->withInput();
+        // Jika Selesai/Dikabulkan, Pesan Selesai Wajib Diisi (otomatis terisi default jika tidak diubah)
+        $pesanSelesaiInput = $validated['pesan_selesai'] ?? null;
+        if ($statusInput === 'Selesai') {
+            if (empty(trim($pesanSelesaiInput ?? ''))) {
+                $pesanSelesaiInput = 'Pengajuan keberatan Anda telah dikabulkan dan diselesaikan oleh PPID FMIPA Universitas Lampung.';
+            }
+            if (empty(trim($pesanSelesaiInput))) {
+                return redirect()->back()->withErrors(['pesan_selesai' => 'Pesan untuk pemohon wajib diisi sebelum menyelesaikan keberatan.'])->withInput();
+            }
         }
 
         $updateData = [
             'status'         => $statusInput,
             'pesan_diproses' => $validated['pesan_diproses'] ?? $keberatan->pesan_diproses,
-            'pesan_selesai'  => $validated['pesan_selesai'] ?? $keberatan->pesan_selesai,
+            'pesan_selesai'  => $pesanSelesaiInput ?: $keberatan->pesan_selesai,
             'alasan_ditolak'  => $validated['alasan_ditolak'] ?? $keberatan->alasan_ditolak,
             'link_jawaban'   => $validated['link_jawaban'] ?? null,
         ];
@@ -116,7 +122,13 @@ class KeberatanController extends Controller
         $recipientEmail = $keberatan->permohonan->email ?? ($keberatan->user->email ?? null);
         if ($recipientEmail) {
             try {
-                $pesanAktif = $keberatan->pesan_selesai ?: ($keberatan->alasan_ditolak ?: $keberatan->pesan_diproses);
+                if ($keberatan->status === 'Selesai') {
+                    $pesanAktif = $keberatan->pesan_selesai;
+                } elseif ($keberatan->status === 'Ditolak') {
+                    $pesanAktif = $keberatan->alasan_ditolak;
+                } else {
+                    $pesanAktif = $keberatan->pesan_diproses;
+                }
                 
                 // Cek cara memperoleh informasi dari permohonan terkait
                 $caraPeroleh = strtolower($keberatan->permohonan->cara_memperoleh_informasi ?? '');
@@ -139,7 +151,7 @@ class KeberatanController extends Controller
                     $m->to($recipientEmail)->subject('Pembaruan Status Pengajuan Keberatan ' . $keberatan->no_tiket . ' - PPID FMIPA Unila');
                 });
             } catch (\Exception $e) {
-                // Ignore mail sending failure
+                \Illuminate\Support\Facades\Log::error('Gagal mengirim email keberatan status: ' . $e->getMessage());
             }
         }
 

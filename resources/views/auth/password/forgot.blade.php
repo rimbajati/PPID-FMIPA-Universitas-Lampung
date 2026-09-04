@@ -1,84 +1,109 @@
-@extends('components.layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lupa Kata Sandi - PPID FMIPA Unila</title>
+    <link rel="shortcut icon" href="{{ asset('images/logoPPID.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logoPPID.png') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="relative min-h-screen bg-[#1B365D] flex flex-col items-center justify-center p-4 sm:p-6 select-none overflow-x-hidden">
 
-@section('title', 'Lupa Kata Sandi - PPID FMIPA Unila')
+    <!-- Background Layer Gedung Dekanat FMIPA -->
+    <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#1B365D]/90 via-[#1B365D]/50 to-transparent"></div>
 
-@section('content')
-<main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-slate-50">
+    <!-- Container Utama -->
+    <div class="relative z-10 w-full max-w-xl mx-auto flex flex-col items-center py-6 space-y-6">
 
-    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-[600px]" style="border-radius: 6px !important;">
+        <!-- Top Navigation Link (Beranda) -->
+        <a href="{{ url('/') }}" class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-sm font-extrabold text-white transition-all border border-white/20">
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+            <span>Beranda</span>
+        </a>
 
-        <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden">
-            <img src="{{ asset('images/FMIPA.jpg') }}" alt="Gedung FMIPA Unila" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#1B365D]/85 via-[#1B365D]/45 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 w-full p-10 md:p-12 text-left">
-                <h2 class="text-white text-3xl md:text-4xl font-black leading-tight">
-                    Pejabat Pengelola <br> Informasi & Dokumentasi (PPID)
-                </h2>
-                <div class="w-16 h-1.5 bg-white mt-4 mb-4"></div>
-                <p class="text-cyan-100 text-lg font-medium">FMIPA Universitas Lampung</p>
+        <!-- Floating Clean White Card -->
+        <div class="w-full bg-white border border-slate-200/90 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-7">
+
+            <!-- Title & Subtitle Inside Card -->
+            <div class="text-center space-y-2.5">
+                <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">Lupa Kata Sandi</h1>
+                <p class="text-sm sm:text-base text-slate-600 font-semibold pt-1">
+                    Masukkan email Anda untuk menerima tautan reset kata sandi.
+                </p>
             </div>
-        </div>
 
-        <div class="w-full md:w-1/2 p-10 md:p-16 flex flex-col justify-center">
-            <div class="mb-8">
-                <h2 class="text-3xl font-black text-gray-900 uppercase tracking-tight">Lupa Kata Sandi</h2>
-                <p class="text-gray-500 mt-2 text-sm">Masukan email Anda dan kami akan mengirimkan link untuk mereset kata sandi.</p>
-            </div>
+            @if (session('status'))
+                <div class="p-4 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-2xl font-bold flex items-start gap-2.5">
+                    <i class="fa-solid fa-circle-check text-emerald-600 text-base mt-0.5 shrink-0"></i>
+                    <div class="space-y-0.5">
+                        <p class="font-extrabold text-base">{{ session('status') }}</p>
+                        <p class="text-xs sm:text-sm text-emerald-700 font-medium">Periksa inbox atau folder spam email Anda.</p>
+                    </div>
+                </div>
+            @endif
 
-            <form action="{{ route('password.email') }}" method="POST" class="space-y-4" novalidate autocomplete="off">
+            <form action="{{ route('password.email') }}" method="POST" class="space-y-5" novalidate autocomplete="off">
                 @csrf
-                <div>
-                    <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Email</label>
-                    <input type="email" name="email" value="{{ session('status') ? '' : old('email') }}" required autofocus
-                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 6px !important;"
-                        placeholder="Masukan email akun Anda">
+
+                <!-- Input Email -->
+                <div class="space-y-2 text-left">
+                    <label class="block text-sm font-black text-slate-800 tracking-wide uppercase">Email</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
+                        <input type="email" name="email" id="email" value="{{ session('status') ? '' : old('email') }}"
+                            class="w-full pl-12 pr-4 py-3.5 border {{ $errors->has('email') ? 'border-red-500 ring-2 ring-red-100' : 'border-slate-300 focus:border-sky-500 focus:ring-4 focus:ring-sky-100' }} rounded-2xl bg-slate-50/50 focus:bg-white text-base font-semibold text-slate-800 outline-none transition"
+                            placeholder="Masukan email akun Anda" required autofocus>
+                    </div>
                     @error('email')
-                        <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
+                        <p class="text-red-600 text-xs sm:text-sm font-bold flex items-center gap-1.5 pt-1">
                             <i class="fa-solid fa-circle-exclamation text-xs"></i> {{ $message }}
                         </p>
                     @enderror
                 </div>
 
-                @if (session('status'))
-                    <div class="mt-4 p-4 text-sm text-emerald-900 bg-emerald-50 border-2 border-emerald-600 font-bold text-center flex items-center justify-center gap-3 shadow-sm" style="border-radius: 6px !important;">
-                        <i class="fa-solid fa-circle-check text-emerald-600 text-xl shrink-0"></i>
-                        <div class="text-left">
-                            <p class="font-extrabold text-emerald-950">{{ session('status') }}</p>
-                            <p class="text-xs text-emerald-700 font-medium mt-0.5">Periksa folder Inbox atau Spam. Belum menerima? Klik kirim ulang di bawah.</p>
-                        </div>
-                    </div>
-                @endif
-
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition text-base mt-4 uppercase tracking-widest cursor-pointer shadow-md" style="border-radius: 6px !important;">
-                    {{ session('status') ? 'Kirim Ulang Link Reset' : 'Kirim Link Reset' }}
-                </button>
+                <!-- Submit Button -->
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-4 px-6 bg-sky-500 hover:bg-sky-600 text-white text-base font-black rounded-full shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        <span>{{ session('status') ? 'Kirim Ulang Link Reset' : 'Kirim Link Reset' }}</span>
+                        <i class="fa-solid fa-paper-plane text-sm"></i>
+                    </button>
+                </div>
             </form>
 
-            <div class="mt-8 text-center">
-                <a href="{{ route('login') }}" class="text-gray-900 font-black text-sm hover:underline uppercase tracking-widest">
+            <div class="pt-2 text-center">
+                <a href="{{ route('login') }}" class="text-sm font-extrabold text-sky-600 hover:underline">
                     Kembali ke Login
                 </a>
             </div>
-        </div>
-    </div>
-</main>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const inputs = document.querySelectorAll('input');
-        inputs.forEach(input => {
-            input.addEventListener('input', function() {
-                this.classList.remove('border-red-700', 'border-red-500');
-                this.classList.add('border-[#1B365D]');
-                const container = this.closest('div');
-                if (container) {
-                    const errorMsg = container.querySelector('.text-red-700, .text-red-600, .text-red-500');
-                    if (errorMsg) {
-                        errorMsg.style.display = 'none';
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.classList.remove('border-red-500', 'ring-2', 'ring-red-100');
+                    this.classList.add('border-slate-200');
+                    const container = this.closest('div');
+                    if (container) {
+                        const errorMsg = container.querySelector('.text-red-600, .text-red-500');
+                        if (errorMsg) {
+                            errorMsg.style.display = 'none';
+                        }
                     }
-                }
+                });
             });
         });
-    });
-</script>
-@endsection
+    </script>
+</body>
+</html>

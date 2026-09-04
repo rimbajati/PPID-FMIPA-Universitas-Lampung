@@ -7,7 +7,7 @@
             </h3>
             <p class="text-xs md:text-sm text-slate-500 font-medium mt-1">Pilih salah satu kartu di bawah ini untuk melihat detail dan status pelacakannya</p>
         </div>
-        <span class="px-4 py-1.5 bg-sky-50 text-[#1B365D] font-black text-xs md:text-sm rounded-full border border-sky-200" x-text="allLayans.length + ' Total Layanan'"></span>
+        <span class="px-4 py-1.5 bg-emerald-50 text-emerald-800 font-black text-xs md:text-sm rounded-full border border-emerald-200" x-text="allLayans.length + ' Total Layanan'"></span>
     </div>
 
     <!-- Grid Card Riwayat -->
@@ -15,12 +15,12 @@
         <template x-for="item in allLayans" :key="item.no_tiket">
             <div @click="selectTiket(item)" 
                  class="bg-white border p-6 rounded-3xl shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-6 group relative overflow-hidden"
-                 :class="activeItem && activeItem.no_tiket === item.no_tiket ? 'ring-2 ring-[#1B365D] border-[#1B365D] bg-sky-50/30' : 'border-slate-200/90 hover:border-[#1B365D]'">
+                 :class="activeItem && activeItem.no_tiket === item.no_tiket ? 'ring-2 ring-emerald-500 border-emerald-500 bg-emerald-50/20' : 'border-slate-200/90 hover:border-emerald-500'">
                 
                 <div class="space-y-4">
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-xl"
-                              :class="item.type === 'keberatan' ? 'bg-orange-100 text-orange-950 border border-orange-200' : 'bg-sky-100 text-sky-950 border border-sky-200'"
+                        <span class="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-xl border"
+                              :class="item.type === 'keberatan' ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-blue-50 text-blue-600 border-blue-200'"
                               x-text="item.jenis_label">
                         </span>
 
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="space-y-2">
-                        <h4 class="text-base font-black text-slate-900 group-hover:text-[#1B365D] transition-colors leading-snug line-clamp-2" 
+                        <h4 class="text-base font-black text-slate-900 group-hover:text-emerald-700 transition-colors leading-snug line-clamp-2" 
                             x-text="item.judul || item.deskripsi || item.informasi_yang_diminta"></h4>
                         <p class="text-xs text-slate-500 font-medium leading-relaxed line-clamp-2" 
                            x-text="item.deskripsi || item.tujuan_penggunaan_informasi || '-'"></p>
@@ -44,7 +44,7 @@
 
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-semibold">
                     <span x-text="item.created_at_formatted || '-'"></span>
-                    <span class="font-mono font-black text-[#1B365D] bg-slate-100 group-hover:bg-[#1B365D] group-hover:text-white transition-colors px-2.5 py-1 rounded-lg border border-slate-200" 
+                    <span class="font-mono font-black text-emerald-800 bg-slate-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors px-2.5 py-1 rounded-lg border border-slate-200" 
                           x-text="'#' + item.no_tiket"></span>
                 </div>
 
@@ -53,7 +53,7 @@
 
         <template x-if="allLayans.length === 0">
             <div class="col-span-full bg-white border border-slate-200 p-12 md:p-16 text-center space-y-5 rounded-3xl shadow-xs">
-                <div class="w-20 h-20 bg-sky-50 text-[#1B365D] rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-xs border border-sky-100">
+                <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-xs border border-emerald-100">
                     <i class="fa-solid fa-folder-open"></i>
                 </div>
                 <div class="space-y-2 max-w-md mx-auto">

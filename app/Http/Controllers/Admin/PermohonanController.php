@@ -105,9 +105,23 @@ class PermohonanController extends Controller
         $fileUploaded = $request->file('file_jawaban');
         $linkInput = $request->input('link_jawaban');
 
-        // Logika 2: Jika Selesai, Wajib ada Pesan untuk Pemohon
+        // Logika 2: Jika Selesai, Wajib ada Pesan untuk Pemohon (otomatis terisi default jika tidak diubah)
+        $pesanSelesaiInput = $request->input('pesan_selesai');
         if ($statusBaru === 'Selesai') {
-            if (empty(trim($request->input('pesan_selesai')))) {
+            if (empty(trim($pesanSelesaiInput ?? ''))) {
+                $cara = strtolower($permohonan->cara_memperoleh_informasi ?? '');
+                if (str_contains($cara, 'email')) {
+                    $pesanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam/Junk) untuk mengunduh dokumen atau mengakses tautan jawaban informasi yang diminta.';
+                } elseif (str_contains($cara, 'dekanat') || str_contains($cara, 'langsung')) {
+                    $pesanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke kantor Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan dokumen informasi yang diminta.';
+                } elseif (str_contains($cara, 'whatsapp') || str_contains($cara, 'wa')) {
+                    $pesanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Jawaban informasi yang diminta telah dikirimkan ke nomor WhatsApp Anda.';
+                } else {
+                    $pesanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi.';
+                }
+            }
+
+            if (empty(trim($pesanSelesaiInput))) {
                 return redirect()->back()->withErrors(['pesan_selesai' => 'Pesan untuk pemohon wajib diisi sebelum menyelesaikan permohonan.'])->withInput();
             }
         }
@@ -125,7 +139,7 @@ class PermohonanController extends Controller
         $permohonan->update([
             'status'                  => $statusBaru,
             'pesan_diproses'          => $request->input('pesan_diproses', $permohonan->pesan_diproses),
-            'pesan_selesai'           => $request->input('pesan_selesai', $permohonan->pesan_selesai),
+            'pesan_selesai'           => $pesanSelesaiInput ?: $permohonan->pesan_selesai,
             'alasan_ditolak'          => $alasanDitolak ?: $permohonan->alasan_ditolak,
             'file_jawaban'            => $filePath ?: $permohonan->file_jawaban,
             'link_jawaban'            => $linkInput ?: $permohonan->link_jawaban,
@@ -135,7 +149,13 @@ class PermohonanController extends Controller
         $recipientEmail = $permohonan->email ?? ($permohonan->user->email ?? null);
         if ($recipientEmail) {
             try {
-                $pesanAktif = $permohonan->pesan_selesai ?: ($permohonan->alasan_ditolak ?: $permohonan->pesan_diproses);
+                if ($permohonan->status === 'Selesai') {
+                    $pesanAktif = $permohonan->pesan_selesai;
+                } elseif ($permohonan->status === 'Ditolak') {
+                    $pesanAktif = $permohonan->alasan_ditolak;
+                } else {
+                    $pesanAktif = $permohonan->pesan_diproses;
+                }
                 
                 // Cek cara memperoleh informasi
                 $caraPeroleh = strtolower($permohonan->cara_memperoleh_informasi ?? '');
@@ -146,19 +166,21 @@ class PermohonanController extends Controller
                 $linkJawabanEmail = $isKirimEmail ? $permohonan->link_jawaban : null;
 
                 $emailData = [
-                    'nama'          => $permohonan->nama_lengkap ?? 'Pemohon',
-                    'no_tiket'      => $permohonan->no_tiket,
-                    'status'        => $permohonan->status,
-                    'pesan'         => $pesanAktif,
-                    'file_jawaban'  => $fileJawabanEmail,
-                    'link_jawaban'  => $linkJawabanEmail,
+                    'nama'              => $permohonan->nama_lengkap ?? ($permohonan->user->nama_lengkap ?? 'Pemohon'),
+                    'no_tiket'          => $permohonan->no_tiket,
+                    'status'            => $permohonan->status,
+                    'pesan'             => $pesanAktif,
+                    'info_diminta'      => $permohonan->informasi_yang_diminta ?? ($permohonan->info_diminta ?? '-'),
+                    'tujuan_permohonan' => $permohonan->tujuan_penggunaan_informasi ?? ($permohonan->tujuan_permohonan ?? '-'),
+                    'file_jawaban'      => $fileJawabanEmail,
+                    'link_jawaban'      => $linkJawabanEmail,
                 ];
 
                 \Illuminate\Support\Facades\Mail::send('emails.permohonan_status_berubah', ['permohonan' => $emailData], function($m) use ($recipientEmail, $permohonan) {
-                    $m->to($recipientEmail)->subject('Pembaruan Status Permohonan Informasi ' . $permohonan->no_tiket . ' - PPID FMIPA Unila');
+                    $m->to($recipientEmail)->subject('Pembaruan Status Permohonan Informasi ' . $permohonan->no_tiket . ' - PPID FMIPA Universitas Lampung');
                 });
             } catch (\Exception $e) {
-                // Ignore mail sending failure
+                \Illuminate\Support\Facades\Log::error('Gagal mengirim email permohonan status: ' . $e->getMessage());
             }
         }
 

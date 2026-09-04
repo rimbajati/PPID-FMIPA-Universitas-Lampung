@@ -23,20 +23,20 @@
             $lastUpdateDitolak = \App\Models\Permohonan::where('status', 'Ditolak')->max('updated_at');
         @endphp
 
-        <!-- Card 0: Total (Biru Muda Segar) -->
+        <!-- Card 0: Total (Biru Royal Vivid) -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
             <div class="p-5 flex justify-between items-center min-h-[105px]">
                 <div>
-                    <span class="text-4xl md:text-5xl font-black block tracking-tight text-[#0284c7]">{{ $totalPermohonan }}</span>
+                    <span class="text-4xl md:text-5xl font-black block tracking-tight text-[#2563eb]">{{ $totalPermohonan }}</span>
                     <p class="text-xs md:text-sm font-extrabold text-slate-500 mt-1">Total</p>
                 </div>
-                <div class="text-[#0284c7]/80 group-hover:scale-110 transition-transform duration-300">
+                <div class="text-[#2563eb]/80 group-hover:scale-110 transition-transform duration-300">
                     <svg class="w-12 h-12 md:w-14 md:h-14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
                     </svg>
                 </div>
             </div>
-            <div class="bg-[#0284c7] text-white text-xs font-bold px-4 py-2 flex items-center justify-between">
+            <div class="bg-[#2563eb] text-white text-xs font-bold px-4 py-2 flex items-center justify-between">
                 <span class="truncate">Terakhir Masuk: {{ $lastUpdateTotal ? \Carbon\Carbon::parse($lastUpdateTotal)->translatedFormat('d M Y') : '-' }}</span>
                 <i class="fa-solid fa-rotate text-xs shrink-0 ml-1"></i>
             </div>

@@ -34,7 +34,7 @@
 
             <!-- Dropdown Filter Tahun Terbit Dinamis -->
             <select name="tahun" onchange="document.getElementById('filter-search-form').submit()" 
-                    class="bg-slate-50 border border-slate-200 text-slate-700 text-xs md:text-sm font-bold px-4 py-2 rounded-xl focus:outline-none focus:bg-white focus:border-[#1B365D] transition-all cursor-pointer h-[48px] shrink-0">
+                    class="bg-slate-50 border border-slate-200 text-slate-700 text-xs md:text-sm font-bold px-4 py-2 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500 transition-all cursor-pointer h-[48px] shrink-0">
                 <option value="">Semua Tahun</option>
                 @if(isset($listTahun) && count($listTahun) > 0)
                     @foreach($listTahun as $y)
@@ -43,14 +43,15 @@
                 @endif
             </select>
 
-            <!-- Input Searchbar Penuh (Mengisi Seluruh Sisa Ruang Gap) -->
-            <div class="relative flex-1 min-w-[240px] h-[48px]">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul atau deskripsi..." class="w-full h-full pl-11 pr-26 bg-slate-50 border border-slate-200 text-xs md:text-sm font-semibold text-slate-800 placeholder-slate-400 rounded-xl focus:outline-none focus:bg-white focus:border-[#1B365D] transition-all shadow-xs" autocomplete="off">
-                <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#1B365D] hover:bg-[#152a4a] text-white text-xs font-extrabold rounded-lg transition cursor-pointer shadow-xs">
-                    <i class="fa-solid fa-magnifying-glass text-xs"></i> Cari
-                </button>
+            <!-- Input Searchbar Penuh -->
+            <div class="flex-1 min-w-[200px] h-[48px]">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul atau deskripsi..." class="w-full h-full px-4 bg-slate-50 border border-slate-200 text-xs md:text-sm font-semibold text-slate-800 placeholder-slate-400 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500 transition-all shadow-xs" autocomplete="off">
             </div>
+
+            <!-- Tombol Cari Terpisah -->
+            <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-xl transition cursor-pointer shadow-xs h-[48px] shrink-0 whitespace-nowrap">
+                <i class="fa-solid fa-magnifying-glass text-xs"></i> <span>Cari</span>
+            </button>
         </form>
     </div>
 
@@ -62,12 +63,12 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-[#1B365D] text-white text-xs md:text-sm font-extrabold tracking-wide whitespace-nowrap">
+                    <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide whitespace-nowrap">
                         <th id="col-checkbox-header" class="hidden px-4 py-4 w-10 text-center">
-                            <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-[#1B365D] focus:ring-0 cursor-pointer">
+                            <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                         </th>
-                        <th class="px-6 py-4 whitespace-nowrap">Judul Informasi</th>
-                        <th class="px-6 py-4 whitespace-nowrap">Deskripsi Informasi</th>
+                        <th class="px-6 py-4 whitespace-nowrap min-w-[220px] max-w-[320px]">Judul Informasi</th>
+                        <th class="px-6 py-4 whitespace-nowrap min-w-[220px] max-w-[320px]">Deskripsi Informasi</th>
                         <th class="px-6 py-4 whitespace-nowrap">Kategori Informasi</th>
                         <th class="px-6 py-4 whitespace-nowrap text-center">Tahun Terbit</th>
                         <th class="px-6 py-4 text-center whitespace-nowrap">Action</th>
@@ -75,31 +76,37 @@
                 </thead>
                 <tbody class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
                     @forelse($informasi as $item)
-                        <tr class="hover:bg-slate-50/80 transition-colors">
+                        <tr class="hover:bg-sky-50/70 transition-colors">
                             <td class="col-checkbox-cell hidden px-4 py-4 text-center">
                                 <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                             </td>
 
-                            <td class="p-6 font-extrabold text-slate-900 break-words leading-relaxed">
-                                {{ $item->judul_informasi }}
+                            <td class="p-6 font-extrabold text-slate-900 min-w-[200px] max-w-[320px] leading-snug">
+                                <div class="line-clamp-3 [word-break:break-word] break-all" title="{{ $item->judul_informasi }}">
+                                    {{ $item->judul_informasi }}
+                                </div>
                             </td>
 
-                            <td class="p-6 font-semibold text-slate-700 break-words leading-relaxed">{{ $item->deskripsi_informasi }}</td>
+                            <td class="p-6 font-semibold text-slate-700 min-w-[200px] max-w-[380px] leading-snug">
+                                <div class="line-clamp-5 [word-break:break-word] break-all" title="{{ $item->deskripsi_informasi }}">
+                                    {{ $item->deskripsi_informasi }}
+                                </div>
+                            </td>
                             <td class="p-6 whitespace-nowrap">
                                 @if($item->kategori_informasi === 'Informasi Setiap Saat')
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-[6px] text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white shadow-2xs whitespace-nowrap">
                                         Informasi Setiap Saat
                                     </span>
                                 @elseif($item->kategori_informasi === 'Informasi Berkala')
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-[6px] text-xs font-bold bg-cyan-100 text-cyan-800 border border-cyan-200 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#1B365D] text-white shadow-2xs whitespace-nowrap">
                                         Informasi Berkala
                                     </span>
                                 @elseif($item->kategori_informasi === 'Informasi Serta-Merta')
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-[6px] text-xs font-bold bg-red-100 text-red-800 border border-red-200 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-500 text-white shadow-2xs whitespace-nowrap">
                                         Informasi Serta-Merta
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-[6px] text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-600 text-white shadow-2xs whitespace-nowrap">
                                         Informasi Dikecualikan
                                     </span>
                                 @endif
@@ -113,7 +120,7 @@
                                          $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
                                          $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->judul_informasi) . ($ext ? '.' . $ext : '.pdf'));
                                      @endphp
-                                     <a href="{{ ($item->link_informasi && !$item->file_informasi) ? $item->link_informasi : url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') }}" target="_blank" title="Lihat Berkas" class="p-2.5 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition shadow-xs" style="border-radius: 6px !important;">
+                                     <a href="{{ ($item->link_informasi && !$item->file_informasi) ? $item->link_informasi : url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') }}" target="_blank" title="Lihat Berkas" class="p-2.5 text-sky-600 bg-sky-50 hover:bg-sky-500 hover:text-white transition shadow-xs" style="border-radius: 6px !important;">
                                         <i class="fa-solid fa-eye text-sm"></i>
                                     </a>
                                     <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="p-2.5 text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-xs cursor-pointer" style="border-radius: 6px !important;">
@@ -134,7 +141,7 @@
         <!-- Pagination Footer -->
         <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="text-xs md:text-sm font-semibold text-slate-500">
-                Menampilkan <span class="font-extrabold text-slate-900">{{ $informasi->firstItem() ?? 0 }}–{{ $informasi->lastItem() ?? 0 }}</span> dari <span class="font-black text-[#1B365D]">{{ $informasi->total() }}</span> informasi publik
+                Menampilkan <span class="font-extrabold text-slate-900">{{ $informasi->firstItem() ?? 0 }}–{{ $informasi->lastItem() ?? 0 }}</span> dari <span class="font-black text-sky-600">{{ $informasi->total() }}</span> informasi publik
             </div>
 
             <!-- Pagination Nomor Angka -->
@@ -153,7 +160,7 @@
                 {{-- Angka-angka Halaman --}}
                 @foreach (range(1, $informasi->lastPage()) as $page)
                     @if ($page == $informasi->currentPage())
-                        <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#1B365D] text-white text-xs font-black shadow-xs">
+                        <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-sky-500 text-white text-xs font-black shadow-xs">
                             {{ $page }}
                         </span>
                     @else

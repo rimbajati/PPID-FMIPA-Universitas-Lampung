@@ -26,12 +26,22 @@ class InformasiPublikController extends Controller
 
         // Filter berdasarkan kategori informasi
         if ($request->filled('kategori')) {
-            $query->where('kategori_informasi', $request->kategori);
+            $kat = $request->kategori;
+            if (is_array($kat)) {
+                $query->whereIn('kategori_informasi', array_filter($kat));
+            } else {
+                $query->where('kategori_informasi', $kat);
+            }
         }
 
         // Filter berdasarkan tahun terbit
         if ($request->filled('tahun')) {
-            $query->where('tahun_terbit', $request->tahun);
+            $thn = $request->tahun;
+            if (is_array($thn)) {
+                $query->whereIn('tahun_terbit', array_filter($thn));
+            } else {
+                $query->where('tahun_terbit', $thn);
+            }
         }
 
         // Filter berdasarkan format file (pdf, docx, xlsx, link)
@@ -61,7 +71,7 @@ class InformasiPublikController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $informasiList = $query->paginate(8)->withQueryString();
+        $informasiList = $query->paginate(25)->withQueryString();
 
         // Data untuk filter dropdown & pill tabs
         $years = InformasiPublik::select('tahun_terbit')
@@ -86,5 +96,25 @@ class InformasiPublikController extends Controller
             'totalCount',
             'kategoryCounts'
         ));
+    }
+
+    /**
+     * Menampilkan Halaman Detail & Preview Informasi Publik (Layout 2 Kolom)
+     */
+    public function show($id)
+    {
+        $info = InformasiPublik::findOrFail($id);
+        
+        // Increment dilihat count
+        if (\Illuminate\Support\Facades\Schema::hasColumn('informasi_publik', 'dilihat')) {
+            $info->increment('dilihat');
+        }
+
+        $relatedList = InformasiPublik::where('id', '<>', $id)
+            ->where('kategori_informasi', $info->kategori_informasi)
+            ->take(5)
+            ->get();
+
+        return view('masyarakat.informasi_publik.detail', compact('info', 'relatedList'));
     }
 }

@@ -13,12 +13,12 @@
 
         <!-- 1. Grup Kelola Data -->
         <div class="space-y-2">
-            <div class="px-2 text-[11px] font-black text-[#1B365D] uppercase tracking-wider">
+            <div class="px-2 text-[11px] font-black text-sky-600 uppercase tracking-wider">
                 Pengelolaan Data
             </div>
 
             <a href="{{ url('/admin/informasi-publik') }}"
-               class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isInformasiActive ? 'bg-[#1B365D] text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-[#1B365D]' }}">
+               class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isInformasiActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
                 <i class="fa-regular fa-folder-open text-base w-5 text-center shrink-0 {{ $isInformasiActive ? 'text-white' : 'text-slate-400' }}"></i>
                 <span class="whitespace-nowrap">Informasi Publik</span>
             </a>
@@ -26,13 +26,13 @@
 
         <!-- 2. Grup Layanan PPID -->
         <div class="space-y-2 pt-1">
-            <div class="px-2 text-[11px] font-black text-[#1B365D] uppercase tracking-wider">
+            <div class="px-2 text-[11px] font-black text-sky-600 uppercase tracking-wider">
                 Layanan Informasi 
             </div>
 
             <!-- Submenu 1: Permohonan Informasi -->
             <a href="{{ url('/admin/permohonan') }}"
-               class="flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isPermohonanActive ? 'bg-[#1B365D] text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-[#1B365D]' }}">
+               class="flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isPermohonanActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
                 <div class="flex items-center gap-3 min-w-0">
                     <i class="fa-regular fa-file-lines text-base w-5 text-center shrink-0 {{ $isPermohonanActive ? 'text-white' : 'text-slate-400' }}"></i>
                     <span class="whitespace-nowrap">Permohonan Informasi</span>
@@ -46,7 +46,7 @@
 
             <!-- Submenu 2: Pengajuan Keberatan -->
             <a href="{{ url('/admin/keberatan') }}"
-               class="flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isKeberatanActive ? 'bg-[#1B365D] text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-[#1B365D]' }}">
+               class="flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isKeberatanActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
                 <div class="flex items-center gap-3 min-w-0">
                     <i class="fa-regular fa-circle-question text-base w-5 text-center shrink-0 {{ $isKeberatanActive ? 'text-white' : 'text-slate-400' }}"></i>
                     <span class="whitespace-nowrap">Pengajuan Keberatan</span>
@@ -65,7 +65,7 @@
     <div class="p-3.5 border-t border-slate-100 bg-slate-50/50 relative" x-data="{ userMenuOpen: false }">
         <button type="button" @click="userMenuOpen = !userMenuOpen" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-white transition-all border border-transparent hover:border-slate-200 cursor-pointer group">
             <div class="flex items-center gap-3 min-w-0">
-                <div class="w-9 h-9 rounded-full bg-[#1B365D] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
+                <div class="w-9 h-9 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
                     <i class="fa-solid fa-user-gear text-xs"></i>
                 </div>
                 <div class="text-left min-w-0">

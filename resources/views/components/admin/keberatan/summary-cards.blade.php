@@ -23,20 +23,20 @@
 
     <!-- 5 Summary Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <!-- Card 0: Total (Orange Keberatan) -->
+        <!-- Card 0: Total (Amber Keberatan) -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
             <div class="p-5 flex justify-between items-center min-h-[105px]">
                 <div>
-                    <span class="text-4xl md:text-5xl font-black block tracking-tight text-[#ea580c]">{{ $totalKeberatan }}</span>
+                    <span class="text-4xl md:text-5xl font-black block tracking-tight text-[#f59e0b]">{{ $totalKeberatan }}</span>
                     <p class="text-xs md:text-sm font-extrabold text-slate-500 mt-1">Total</p>
                 </div>
-                <div class="text-[#ea580c]/80 group-hover:scale-110 transition-transform duration-300">
+                <div class="text-[#f59e0b]/80 group-hover:scale-110 transition-transform duration-300">
                     <svg class="w-12 h-12 md:w-14 md:h-14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"></path>
                     </svg>
                 </div>
             </div>
-            <div class="bg-[#ea580c] text-white text-xs font-bold px-4 py-2 flex items-center justify-between">
+            <div class="bg-[#f59e0b] text-white text-xs font-bold px-4 py-2 flex items-center justify-between">
                 <span class="truncate">Terakhir Masuk: {{ $lastUpdateTotal ? \Carbon\Carbon::parse($lastUpdateTotal)->translatedFormat('d M Y') : '-' }}</span>
                 <i class="fa-solid fa-rotate text-xs shrink-0 ml-1"></i>
             </div>

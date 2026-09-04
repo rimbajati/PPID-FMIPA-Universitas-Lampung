@@ -15,7 +15,7 @@
 
         <!-- Tombol Tambah Utama -->
         <button type="button" onclick="openModalCreate()" 
-                class="inline-flex items-center justify-center gap-2.5 px-6 py-3 bg-[#1B365D] hover:bg-[#152a4a] text-white text-xs md:text-sm font-extrabold rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer shrink-0">
+                class="inline-flex items-center justify-center gap-2.5 px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer shrink-0">
             <i class="fa-solid fa-plus text-sm"></i>
             <span>Tambah</span>
         </button>

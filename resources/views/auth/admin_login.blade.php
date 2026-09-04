@@ -29,7 +29,6 @@
 
             <!-- Header Section -->
             <div class="text-center mb-8">
-                <img src="{{ asset('images/logoPPID.png') }}" alt="Logo PPID FMIPA" class="h-16 w-auto mx-auto mb-4 object-contain">
                 <h1 class="text-3xl font-extrabold text-gray-900 mb-1.5">Login Admin</h1>
                 <p class="text-base text-gray-500">PPID FMIPA Universitas Lampung</p>
             </div>
@@ -41,7 +40,7 @@
                 <div>
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Email Admin</label>
                     <input type="email" name="email" value="{{ old('email') }}"
-                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 6px !important;"
+                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('email') ? 'border-red-700' : 'border-sky-500 focus:border-sky-600' }} outline-none text-base transition" style="border-radius: 6px !important;"
                         placeholder="Masukan email admin Anda" required autofocus>
                     @error('email')
                         <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
@@ -55,7 +54,7 @@
                     <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Kata Sandi</label>
                     <div class="relative">
                         <input type="password" name="password" id="password"
-                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 6px !important;"
+                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-sky-500 focus:border-sky-600' }} outline-none text-base transition" style="border-radius: 6px !important;"
                             placeholder="Masukan kata sandi Anda" required>
                         @error('password')
                             <p class="text-red-700 text-xs mt-2 font-bold flex items-center gap-1.5">
@@ -75,13 +74,13 @@
                 @endif
 
                 <!-- Button Submit -->
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition text-base mt-4 cursor-pointer uppercase tracking-widest shadow-md" style="border-radius: 6px !important;">
+                <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-black py-4 transition text-base mt-4 cursor-pointer uppercase tracking-widest shadow-md" style="border-radius: 6px !important;">
                     Masuk
                 </button>
             </form>
 
             <div class="mt-6 text-center">
-                <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-[#1B365D] transition">
+                <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-sky-600 transition">
                     <i class="fa-solid fa-arrow-left text-xs"></i> Kembali ke Beranda
                 </a>
             </div>

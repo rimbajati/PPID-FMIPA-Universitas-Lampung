@@ -23,6 +23,7 @@ Route::get('/home', function () { return redirect()->route('beranda'); });
 
 // Rute Katalog Informasi Publik untuk Publik
 Route::get('/informasi-publik', [MasyarakatInformasiPublikController::class, 'index'])->name('informasi.publik');
+Route::get('/informasi-publik/{id}', [MasyarakatInformasiPublikController::class, 'show'])->name('informasi.detail');
 
 // Rute Halaman Hub Layanan PPID Online
 Route::get('/layanan', function () { return view('masyarakat.layanan.index'); })->name('layanan');
@@ -91,17 +92,26 @@ Route::get('/informasi/lihat/{id}', function (Request $request, $id) {
     if ($info->link_informasi && !$info->file_informasi) {
         return redirect()->away($info->link_informasi);
     }
-    if ($info->file_informasi && \Illuminate\Support\Facades\Storage::disk('local')->exists($info->file_informasi)) {
-        $path = storage_path('app/' . $info->file_informasi);
-        
-        // Gunakan nama file asli jika ada, atau fallback ke basename
-        $filename = $info->nama_file_asli ?: basename($path);
-        $mimeType = \Illuminate\Support\Facades\File::mimeType($path) ?? 'application/octet-stream';
+    
+    if ($info->file_informasi) {
+        $path = null;
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($info->file_informasi)) {
+            $path = storage_path('app/public/' . $info->file_informasi);
+        } elseif (\Illuminate\Support\Facades\Storage::disk('local')->exists($info->file_informasi)) {
+            $path = storage_path('app/' . $info->file_informasi);
+        } elseif (file_exists(public_path('storage/' . $info->file_informasi))) {
+            $path = public_path('storage/' . $info->file_informasi);
+        }
 
-        return response()->file($path, [
-            'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="' . addslashes($filename) . '"',
-        ]);
+        if ($path && file_exists($path)) {
+            $filename = $info->nama_file_asli ?: basename($path);
+            $mimeType = \Illuminate\Support\Facades\File::mimeType($path) ?? 'application/octet-stream';
+
+            return response()->file($path, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . addslashes($filename) . '"',
+            ]);
+        }
     }
     abort(404, 'File tidak ditemukan');
 })->name('informasi.lihat');
@@ -115,14 +125,24 @@ Route::get('/informasi/file/{id}/{filename}', function (Request $request, $id, $
         $info->increment('dilihat');
     }
 
-    if ($info->file_informasi && \Illuminate\Support\Facades\Storage::disk('local')->exists($info->file_informasi)) {
-        $path = storage_path('app/' . $info->file_informasi);
-        $mimeType = \Illuminate\Support\Facades\File::mimeType($path) ?? 'application/octet-stream';
+    if ($info->file_informasi) {
+        $path = null;
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($info->file_informasi)) {
+            $path = storage_path('app/public/' . $info->file_informasi);
+        } elseif (\Illuminate\Support\Facades\Storage::disk('local')->exists($info->file_informasi)) {
+            $path = storage_path('app/' . $info->file_informasi);
+        } elseif (file_exists(public_path('storage/' . $info->file_informasi))) {
+            $path = public_path('storage/' . $info->file_informasi);
+        }
 
-        return response()->file($path, [
-            'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="' . addslashes($filename) . '"',
-        ]);
+        if ($path && file_exists($path)) {
+            $mimeType = \Illuminate\Support\Facades\File::mimeType($path) ?? 'application/octet-stream';
+
+            return response()->file($path, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . addslashes($filename) . '"',
+            ]);
+        }
     }
     abort(404, 'File tidak ditemukan');
 })->name('informasi.lihat.file');

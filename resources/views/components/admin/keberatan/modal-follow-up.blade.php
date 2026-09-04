@@ -16,17 +16,20 @@
              x-transition:leave="transition ease-in duration-200 transform"
              x-transition:leave-start="opacity-100 translate-y-0 scale-100"
              x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-             class="bg-white shadow-2xl w-full max-w-6xl max-h-[92vh] rounded-2xl overflow-hidden border border-slate-200/90 flex flex-col">
+             class="bg-white shadow-2xl w-full max-w-6xl max-h-[92vh] rounded-2xl overflow-hidden border-0 flex flex-col">
             
             <form :action="'/admin/keberatan/' + (selectedKeberatan ? selectedKeberatan.id : '') + '/status'" method="POST" enctype="multipart/form-data" class="flex flex-col h-full overflow-hidden">
                 @csrf
                 @method('PUT')
 
-                <!-- Header Modal Premium Aksen Dark Navy Unila (#1B365D) -->
-                <div class="bg-[#1B365D] text-white px-8 py-5 flex items-center justify-between shrink-0 shadow-md">
+                <!-- Header Modal Sky-Blue tanpa celah/garis tepi -->
+                <div class="bg-sky-500 text-white px-8 py-5 flex items-center justify-between shrink-0 rounded-t-2xl w-full">
                     <div>
-                        <h3 class="text-xl sm:text-2xl font-black tracking-tight text-sky-200" x-text="selectedKeberatan ? 'Nomor Tiket: ' + selectedKeberatan.no_tiket : ''"></h3>
+                        <h3 class="text-xl sm:text-2xl font-black tracking-tight text-white" x-text="selectedKeberatan ? 'Nomor Tiket: ' + selectedKeberatan.no_tiket : ''"></h3>
                     </div>
+                    <button type="button" @click="closeModal()" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition cursor-pointer shrink-0 ml-4">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
                 </div>
 
                 <!-- Body Content (Scrollable) -->
@@ -123,11 +126,11 @@
                                <div class="space-y-4 text-sm sm:text-base">
                                    <div>
                                        <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Alasan Keberatan</span>
-                                       <p class="font-bold text-slate-900 leading-relaxed whitespace-pre-line break-words" x-text="selectedKeberatan.alasan_keberatan"></p>
+                                       <p class="font-bold text-slate-900 leading-relaxed whitespace-pre-line break-words [word-break:break-word] break-all" x-text="selectedKeberatan.alasan_keberatan"></p>
                                    </div>
                                    <div class="pt-3 border-t border-slate-100">
                                        <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Kronologi Keberatan</span>
-                                       <p class="font-bold text-slate-900 leading-relaxed whitespace-pre-line break-words" x-text="selectedKeberatan.kronologi_keberatan || selectedKeberatan.kasus_posisi || '-'"></p>
+                                       <p class="font-bold text-slate-900 leading-relaxed whitespace-pre-line break-words [word-break:break-word] break-all" x-text="selectedKeberatan.kronologi_keberatan || selectedKeberatan.kasus_posisi || '-'"></p>
                                    </div>
                                </div>
                             </div>
@@ -158,7 +161,7 @@
                             </template>
 
                             <!-- BARIS 3: FORM PEMROSESAN TINDAKLANJUT ATASAN PPID (hanya tampil jika status belum final) -->
-                            <div x-show="!['Selesai','Ditolak'].includes(selectedKeberatan.status)" class="bg-white rounded-2xl border-2 border-[#1B365D]/30 shadow-md p-6 sm:p-8 space-y-6">
+                            <div x-show="!['Selesai','Ditolak'].includes(selectedKeberatan.status)" class="bg-white rounded-2xl border-2 border-sky-500/30 shadow-md p-6 sm:p-8 space-y-6">
                                 <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                                     <div>
                                         <h4 class="font-black text-slate-900 text-xl sm:text-xl">Tindak Lanjut Keberatan</h4>
@@ -242,10 +245,21 @@
                                     </div>
 
                                      <!-- SECTION JIKA KEPUTUSAN: SELESAI / DIKABULKAN -->
-                                     <div x-show="statusSelect === 'Selesai'" x-cloak class="p-5 bg-emerald-50/80 rounded-2xl border border-emerald-200/90 space-y-4" x-data="{ tipeJawaban: 'file' }">
+                                     <div x-show="statusSelect === 'Selesai'" x-cloak class="p-5 bg-emerald-50/80 rounded-2xl border border-emerald-200/90 space-y-4" 
+                                          x-data="{ 
+                                              tipeJawaban: 'file',
+                                              pesanSelesai: '',
+                                              initDefaultPesan() {
+                                                  if (selectedKeberatan) {
+                                                      this.pesanSelesai = selectedKeberatan.pesan_selesai || 'Pengajuan keberatan Anda telah dikabulkan dan diselesaikan oleh PPID FMIPA Universitas Lampung.';
+                                                  }
+                                              }
+                                          }"
+                                          x-init="initDefaultPesan()"
+                                          x-effect="if (statusSelect === 'Selesai' && selectedKeberatan) { initDefaultPesan(); }">
                                          <div class="space-y-1.5">
                                              <label class="block font-black text-emerald-950 text-md tracking-wider">Pesan Untuk Pemohon <span class="text-rose-500">*</span></label>
-                                             <textarea name="pesan_selesai" rows="3" placeholder="Tuliskan pesan untuk pemohon mengenai keberatan yang telah dikabulkan. Contoh: Keberatan anda telah dikabulkan, silahkan unduh dokumen SK terlampir..."
+                                             <textarea name="pesan_selesai" x-model="pesanSelesai" rows="3" placeholder="Tuliskan pesan untuk pemohon..."
                                                        class="w-full p-3.5 bg-white border border-emerald-300 rounded-xl text-xs sm:text-sm font-normal text-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-400"></textarea>
                                          </div>
 
@@ -285,28 +299,28 @@
                                          </div>
                                      </div>
 
-                                    <!-- SECTION JIKA KEPUTUSAN: DITOLAK -->
-                                    <div x-show="statusSelect === 'Ditolak'" x-cloak class="p-5 bg-rose-50/80 rounded-2xl border border-rose-200/90 space-y-3">
-                                        <label class="block font-black text-rose-950 text-md tracking-wider">Alasan Penolakan <span class="text-rose-600">*</span></label>
-                                        <textarea name="alasan_ditolak" rows="3" placeholder="Jelaskan alasan penetapan pertimbangan penolakan keberatan..."
-                                                  class="w-full p-3.5 bg-white border border-rose-300 rounded-xl text-xs sm:text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-400"></textarea>
-                                    </div>
-                                </div>
-                            </div>
+                                     <!-- SECTION JIKA KEPUTUSAN: DITOLAK -->
+                                     <div x-show="statusSelect === 'Ditolak'" x-cloak class="p-5 bg-rose-50/80 rounded-2xl border border-rose-200/90 space-y-3">
+                                         <label class="block font-black text-rose-950 text-md tracking-wider">Alasan Penolakan <span class="text-rose-600">*</span></label>
+                                         <textarea name="alasan_ditolak" rows="3" placeholder="Jelaskan alasan penetapan pertimbangan penolakan keberatan..."
+                                                   class="w-full p-3.5 bg-white border border-rose-300 rounded-xl text-xs sm:text-sm font-normal text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-400"></textarea>
+                                     </div>
+                                 </div>
+                             </div>
 
-                        </div>
-                    </template>
-                </div>
+                         </div>
+                     </template>
+                 </div>
 
-                <!-- Footer Action Buttons -->
-                <div class="p-6 bg-white border-t border-slate-200 flex items-center justify-end gap-3 shrink-0">
-                    <button type="button" @click="closeModal()" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs sm:text-sm rounded-xl transition cursor-pointer">
-                        <span x-text="selectedKeberatan && ['Selesai','Ditolak'].includes(selectedKeberatan.status) ? 'Tutup' : 'Batal'"></span>
-                    </button>
-                    <button x-show="selectedKeberatan && !['Selesai','Ditolak'].includes(selectedKeberatan.status)" type="submit" class="px-8 py-3 bg-[#1B365D] hover:bg-[#152a4a] text-white font-black text-xs sm:text-sm rounded-xl transition shadow-md cursor-pointer flex items-center gap-2">
-                        Simpan
-                    </button>
-                </div>
+                 <!-- Footer Action Buttons -->
+                 <div class="p-6 bg-white border-t border-slate-200 flex items-center justify-end gap-3 shrink-0">
+                     <button type="button" @click="closeModal()" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs sm:text-sm rounded-xl transition cursor-pointer">
+                         <span x-text="selectedKeberatan && ['Selesai','Ditolak'].includes(selectedKeberatan.status) ? 'Tutup' : 'Batal'"></span>
+                     </button>
+                     <button x-show="selectedKeberatan && !['Selesai','Ditolak'].includes(selectedKeberatan.status)" type="submit" class="px-8 py-3 bg-sky-500 hover:bg-sky-600 text-white font-black text-xs sm:text-sm rounded-xl transition shadow-md cursor-pointer flex items-center gap-2">
+                         Simpan
+                     </button>
+                 </div></div>
 
             </form>
         </div>

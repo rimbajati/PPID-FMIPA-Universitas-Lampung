@@ -1,6 +1,6 @@
 <!-- Modal Konfirmasi Hapus Data (Single / Bulk) -->
 <div id="modalConfirmDelete" class="hidden fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity">
-    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-200/90 space-y-6 text-center animate-in fade-in zoom-in duration-200">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border-0 space-y-6 text-center animate-in fade-in zoom-in duration-200">
         <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-inner">
             <i class="fa-solid fa-triangle-exclamation"></i>
         </div>

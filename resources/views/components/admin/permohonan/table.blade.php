@@ -49,14 +49,15 @@
                 </div>
 
                 <!-- Input Searchbar -->
-                <div class="relative flex-1 min-w-[240px]">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <div class="flex-1 min-w-[200px]">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari no. tiket, nama pemohon, NIK pemohon..." 
-                           class="w-full pl-11 pr-24 py-3 bg-slate-50 border border-slate-200 text-xs md:text-sm font-semibold text-slate-800 placeholder-slate-400 rounded-xl focus:bg-white focus:outline-none focus:border-[#1B365D] transition shadow-xs" autocomplete="off">
-                    <button type="submit" onclick="event.preventDefault(); this.closest('form').action='{{ route('admin.permohonan.index') }}'; this.closest('form').method='GET'; this.closest('form').submit();" class="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#1B365D] hover:bg-[#152a4a] text-white text-xs font-extrabold rounded-lg transition cursor-pointer shadow-xs">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i> Cari
-                    </button>
+                           class="w-full px-4 py-3 bg-slate-50 border border-slate-200 text-xs md:text-sm font-semibold text-slate-800 placeholder-slate-400 rounded-xl focus:bg-white focus:outline-none focus:border-sky-500 transition shadow-xs" autocomplete="off">
                 </div>
+
+                <!-- Tombol Cari Terpisah -->
+                <button type="submit" onclick="event.preventDefault(); this.closest('form').action='{{ route('admin.permohonan.index') }}'; this.closest('form').method='GET'; this.closest('form').submit();" class="inline-flex items-center justify-center gap-1.5 px-5 py-3 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-xl transition cursor-pointer shadow-xs shrink-0 whitespace-nowrap">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i> <span>Cari</span>
+                </button>
             </div>
         </div>
 
@@ -64,9 +65,9 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-[#1B365D] text-white text-xs md:text-sm font-extrabold tracking-wide whitespace-nowrap">
+                    <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide whitespace-nowrap">
                         <th id="col-checkbox-header" class="hidden px-4 py-4 w-10 text-center">
-                            <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-[#1B365D] focus:ring-0 cursor-pointer">
+                            <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                         </th>
                         <th class="px-6 py-4 whitespace-nowrap">No. Tiket</th>
                         <th class="px-6 py-4 whitespace-nowrap">Pemohon</th>
@@ -78,7 +79,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs md:text-sm">
                     @forelse($permohonans as $item)
-                        <tr class="hover:bg-slate-50/80 transition-colors">
+                        <tr class="hover:bg-sky-50/70 transition-colors">
                             <td class="col-checkbox-cell hidden px-4 py-4 text-center">
                                 <input type="checkbox" name="ids[]" value="{{ $item->id }}" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                             </td>
@@ -150,7 +151,7 @@
                                         <button type="button" 
                                                 data-permohonan='@json(array_merge($item->toArray(), ["has_keberatan" => !empty($item->keberatan)]))'
                                                 onclick="openPermohonanDetail(this)"
-                                                class="w-9 h-9 flex items-center justify-center rounded-xl text-[#1B365D] bg-sky-100/90 hover:bg-[#1B365D] hover:text-white transition cursor-pointer shadow-2xs border border-sky-300/80"
+                                                class="w-9 h-9 flex items-center justify-center rounded-xl text-sky-700 bg-sky-50 hover:bg-sky-500 hover:text-white transition cursor-pointer shadow-2xs border border-sky-300"
                                                 title="Tindaklanjuti">
                                             <i class="fa-solid fa-pen-to-square text-sm"></i>
                                         </button>
@@ -186,7 +187,7 @@
         <!-- Pagination Footer -->
         <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="text-xs md:text-sm font-semibold text-slate-500">
-                Menampilkan <span class="font-extrabold text-slate-900">{{ $permohonans->firstItem() ?? 0 }}–{{ $permohonans->lastItem() ?? 0 }}</span> dari <span class="font-black text-[#1B365D]">{{ $permohonans->total() }}</span> permohonan
+                Menampilkan <span class="font-extrabold text-slate-900">{{ $permohonans->firstItem() ?? 0 }}–{{ $permohonans->lastItem() ?? 0 }}</span> dari <span class="font-black text-sky-600">{{ $permohonans->total() }}</span> permohonan
             </div>
 
             <!-- Pagination Nomor Angka -->
@@ -203,7 +204,7 @@
 
                 @foreach (range(1, $permohonans->lastPage()) as $page)
                     @if ($page == $permohonans->currentPage())
-                        <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#1B365D] text-white text-xs font-black shadow-xs">
+                        <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-sky-500 text-white text-xs font-black shadow-xs">
                             {{ $page }}
                         </span>
                     @else

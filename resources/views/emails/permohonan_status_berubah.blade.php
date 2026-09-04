@@ -235,15 +235,15 @@
             <table class="details-table">
                 <tr>
                     <td class="label-col">Nomor Tiket</td>
-                    <td class="value-col">{{ $permohonan['no_tiket'] }}</td>
+                    <td class="value-col">{{ $permohonan['no_tiket'] ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label-col">Informasi yang Diminta</td>
-                    <td class="value-col">{{ $permohonan->info_diminta }}</td>
+                    <td class="value-col">{{ $permohonan['info_diminta'] ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label-col">Tujuan Penggunaan Informasi</td>
-                    <td class="value-col">{{ $permohonan->tujuan_permohonan }}</td>
+                    <td class="value-col">{{ $permohonan['tujuan_permohonan'] ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label-col">Tanggal Update</td>

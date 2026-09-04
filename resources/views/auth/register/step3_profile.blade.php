@@ -1,108 +1,150 @@
-@extends('components.layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lengkapi Profil - PPID FMIPA Unila</title>
+    <link rel="shortcut icon" href="{{ asset('images/logoPPID.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logoPPID.png') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        input::-ms-reveal, input::-ms-clear { display: none; }
+        input[type="password"]::-webkit-credentials-auto-fill-button { display: none !important; }
+        input[type="password"]::-webkit-eye-off-button, input[type="password"]::-webkit-eye-button { display: none !important; }
+    </style>
+</head>
+<body class="relative min-h-screen bg-[#1B365D] flex flex-col items-center justify-center p-4 sm:p-6 select-none overflow-x-hidden">
 
-@section('title', 'Lengkapi Profil - PPID FMIPA Unila')
+    <!-- Background Layer Gedung Dekanat FMIPA -->
+    <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#1B365D]/90 via-[#1B365D]/50 to-transparent"></div>
 
-@section('content')
-<main class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-slate-50">
+    <!-- Container Utama -->
+    <div class="relative z-10 w-full max-w-lg mx-auto flex flex-col items-center py-6 space-y-6">
 
-    <div class="bg-white shadow-xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl min-h-[600px]" style="border-radius: 6px !important;">
+        <!-- Top Navigation Link (Beranda) -->
+        <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-xs font-extrabold text-white transition-all border border-white/20">
+            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+            <span>Beranda</span>
+        </a>
 
-        <div class="w-full md:w-1/2 h-72 md:h-auto relative overflow-hidden">
-            <img src="{{ asset('images/FMIPA.jpg') }}" alt="Gedung FMIPA Unila" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#1B365D]/85 via-[#1B365D]/45 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 w-full p-10 md:p-12 text-left">
-                <h2 class="text-white text-3xl md:text-4xl font-black leading-tight">
-                    Pejabat Pengelola <br> Informasi & Dokumentasi (PPID)
-                </h2>
-                <div class="w-16 h-1.5 bg-white mt-4 mb-4"></div>
-                <p class="text-cyan-100 text-lg font-medium">FMIPA Universitas Lampung</p>
-            </div>
-        </div>
+        <!-- Floating Clean White Card -->
+        <div class="w-full bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
 
-        <div class="w-full md:w-1/2 p-10 md:p-16 flex flex-col justify-center">
-
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center space-x-1 bg-green-50 text-green-800 px-4 py-1.5 border-2 border-green-700 font-black text-xs mb-4" style="border-radius: 6px !important;">
-                    <i class="fa-solid fa-check-circle mr-1.5"></i> EMAIL TERVERIFIKASI
+            <!-- Title & Subtitle Inside Card -->
+            <div class="text-center space-y-1">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full font-bold text-xs border border-emerald-200 mb-2">
+                    <i class="fa-solid fa-circle-check text-xs"></i>
+                    <span>EMAIL TERVERIFIKASI</span>
                 </div>
-                <h2 class="text-3xl font-black text-gray-900 uppercase tracking-tight">Lengkapi Profil</h2>
-                <p class="text-sm text-gray-500">Lengkapi identitas Anda untuk mengaktifkan akun.</p>
+                <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Lengkapi Profil</h1>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium">Lengkapi identitas Anda untuk mengaktifkan akun.</p>
             </div>
 
-            <form action="{{ route('register.step3.process', ['email' => $email]) }}" method="POST" class="space-y-5" novalidate autocomplete="off">
+            <form action="{{ route('register.step3.process', ['email' => $email]) }}" method="POST" class="space-y-4" novalidate autocomplete="off">
                 @csrf
 
-                <div>
-                    <label class="block text-xs font-black text-gray-400 uppercase tracking-wider mb-1.5">Email</label>
-                    <input type="text" value="{{ $email }}" class="w-full px-5 py-3.5 border-2 border-gray-300 bg-gray-100 text-gray-500 text-base cursor-not-allowed font-black" style="border-radius: 6px !important;" disabled>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
-                    <input type="text" name="nama_lengkap" value=""
-                        class="w-full px-5 py-3.5 border-2 {{ $errors->has('nama_lengkap') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 6px !important;"
-                        placeholder="Masukkan nama lengkap" required autofocus>
-                    @error('nama_lengkap') <p class="text-red-700 text-xs mt-1 font-black">{{ $message }}</p> @enderror
-                </div>
-
-                <div>
-                    <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                <!-- Email (Disabled) -->
+                <div class="space-y-1.5 text-left">
+                    <label class="block text-xs font-black text-slate-400 tracking-wide uppercase">Email Terverifikasi</label>
                     <div class="relative">
+                        <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" value="{{ $email }}" class="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-2xl bg-slate-100/70 text-slate-500 text-sm font-semibold cursor-not-allowed" disabled>
+                    </div>
+                </div>
+
+                <!-- Input Nama Lengkap -->
+                <div class="space-y-1.5 text-left">
+                    <label class="block text-xs font-black text-slate-700 tracking-wide uppercase">Nama Lengkap</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}"
+                            class="w-full pl-11 pr-4 py-3 border {{ $errors->has('nama_lengkap') ? 'border-red-500 ring-2 ring-red-100' : 'border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100' }} rounded-2xl bg-slate-50/50 focus:bg-white text-sm font-semibold text-slate-800 outline-none transition"
+                            placeholder="Masukkan nama lengkap" required autofocus>
+                    </div>
+                    @error('nama_lengkap')
+                        <p class="text-red-600 text-xs font-bold flex items-center gap-1.5 pt-1">
+                            <i class="fa-solid fa-circle-exclamation text-xs"></i> {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+
+                <!-- Input Kata Sandi -->
+                <div class="space-y-1.5 text-left">
+                    <label class="block text-xs font-black text-slate-700 tracking-wide uppercase">Kata Sandi</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                         <input type="password" name="password" id="password"
-                            class="w-full px-5 py-3.5 border-2 {{ $errors->has('password') ? 'border-red-700' : 'border-[#1B365D] focus:border-[#1B365D]' }} outline-none text-base transition" style="border-radius: 6px !important;"
+                            class="w-full pl-11 pr-11 py-3 border {{ $errors->has('password') ? 'border-red-500 ring-2 ring-red-100' : 'border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100' }} rounded-2xl bg-slate-50/50 focus:bg-white text-sm font-semibold text-slate-800 outline-none transition"
                             placeholder="Minimal 8 karakter" required>
-                        <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-3.5 text-gray-500 hover:text-gray-800">
-                            <i class="fa-solid fa-eye" id="password-icon"></i>
+                        <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 focus:outline-none cursor-pointer">
+                            <i class="fa-solid fa-eye text-sm" id="password-icon"></i>
                         </button>
                     </div>
-                    @error('password') <p class="text-red-700 text-xs mt-1 font-black">{{ $message }}</p> @enderror
+                    @error('password')
+                        <p class="text-red-600 text-xs font-bold flex items-center gap-1.5 pt-1">
+                            <i class="fa-solid fa-circle-exclamation text-xs"></i> {{ $message }}
+                        </p>
+                    @enderror
                 </div>
 
-                <div>
-                    <label class="block text-xs font-black text-gray-900 uppercase tracking-wider mb-1.5">Konfirmasi Kata Sandi</label>
-                    <input type="password" name="password_confirmation"
-                        class="w-full px-5 py-3.5 border-2 border-[#1B365D] focus:border-[#1B365D] outline-none text-base transition" style="border-radius: 6px !important;"
-                        placeholder="Ulangi kata sandi" required>
+                <!-- Input Konfirmasi Kata Sandi -->
+                <div class="space-y-1.5 text-left">
+                    <label class="block text-xs font-black text-slate-700 tracking-wide uppercase">Konfirmasi Kata Sandi</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="password" name="password_confirmation" id="password_confirmation"
+                            class="w-full pl-11 pr-11 py-3 border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 rounded-2xl bg-slate-50/50 focus:bg-white text-sm font-semibold text-slate-800 outline-none transition"
+                            placeholder="Ulangi kata sandi" required>
+                    </div>
                 </div>
 
-                <button type="submit" class="w-full bg-[#1B365D] hover:bg-[#162c4c] text-white font-black py-4 transition text-base mt-4 uppercase tracking-widest cursor-pointer shadow-md" style="border-radius: 6px !important;">
-                    Lengkapi Profil
-                </button>
+                <!-- Submit Button -->
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3.5 px-6 bg-sky-500 hover:bg-sky-600 text-white text-xs sm:text-sm font-extrabold rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        <span>Lengkapi Profil</span>
+                        <i class="fa-solid fa-check text-xs"></i>
+                    </button>
+                </div>
             </form>
         </div>
+
     </div>
-</main>
 
-<script>
-    function togglePassword(id) {
-        const input = document.getElementById(id);
-        const icon = document.getElementById(id + '-icon');
-        if (input.type === "password") {
-            input.type = "text";
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            input.type = "password";
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
+    <script>
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const icon = document.getElementById(id + '-icon');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
         }
-    }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const inputs = document.querySelectorAll('input');
-        inputs.forEach(input => {
-            input.addEventListener('input', function() {
-                this.classList.remove('border-red-700', 'border-red-500');
-                this.classList.add('border-[#1B365D]');
-                const container = this.closest('div');
-                if (container) {
-                    const errorMsg = container.querySelector('.text-red-700, .text-red-600, .text-red-500');
-                    if (errorMsg) {
-                        errorMsg.style.display = 'none';
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.classList.remove('border-red-500', 'ring-2', 'ring-red-100');
+                    this.classList.add('border-slate-200');
+                    const container = this.closest('div');
+                    if (container) {
+                        const errorMsg = container.querySelector('.text-red-600, .text-red-500');
+                        if (errorMsg) {
+                            errorMsg.style.display = 'none';
+                        }
                     }
-                }
+                });
             });
         });
-    });
-</script>
-@endsection
+    </script>
+</body>
+</html>

@@ -3,7 +3,10 @@
 @section('title', 'Ajukan Permohonan Informasi - PPID FMIPA Unila')
 
 @section('content')
-<main class="pt-[64px] md:pt-[70px] bg-slate-50 min-h-screen pb-24">
+<main class="pt-[75px] md:pt-[85px] bg-slate-50 min-h-screen pb-24">
+
+    <!-- Breadcrumb Bar Component -->
+    <x-masyarakat.permohonan.breadcrumb />
 
     <!-- Header Hero Banner Permohonan Informasi -->
     <x-masyarakat.permohonan.hero-header />
