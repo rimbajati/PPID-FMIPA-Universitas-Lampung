@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ asset('images/logoPPID.png') }}">
-    <link rel="icon" type="image/png" href="{{ asset('images/logoPPID.png') }}">
-    <link rel="icon" type="image/x-icon" href="{{ asset('images/logoPPID.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logoPPID.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logoPPID.png') }}?v=2.0">
+    <link rel="icon" type="image/png" href="{{ asset('images/logoPPID.png') }}?v=2.0">
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/logoPPID.png') }}?v=2.0">
+    <link rel="apple-touch-icon" href="{{ asset('images/logoPPID.png') }}?v=2.0">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

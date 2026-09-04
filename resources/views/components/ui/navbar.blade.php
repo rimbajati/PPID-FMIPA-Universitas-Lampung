@@ -1,7 +1,7 @@
 <div id="main-header" class="fixed top-0 left-0 w-full z-[999] transition-transform duration-300 ease-out translate-y-0">
     @if(request()->is('/'))
         <div id="homepage-header-banner" class="relative w-full h-[64px] md:h-[80px] bg-white flex justify-center items-center border-b border-slate-100">
-            <img src="{{ asset('images/header_logo.png') }}" class="h-10 md:h-14 w-auto object-contain" alt="Header Logo">
+            <img src="{{ asset('images/header_logo.png') }}?v=2.0" class="h-10 md:h-14 w-auto object-contain" alt="Header Logo">
         </div>
     @endif
 
@@ -10,7 +10,7 @@
             <div class="flex justify-between items-center">
                 <!-- Left: Logo -->
                 <a href="/" class="flex items-center shrink-0 gap-3 group">
-                    <img id="navbar-logo" src="{{ asset('images/logoPPID.png') }}" alt="Logo Unila" class="h-9 md:h-11 w-auto object-contain">
+                    <img id="navbar-logo" src="{{ asset('images/logoPPID.png') }}?v=2.0" alt="Logo Unila" class="h-9 md:h-11 w-auto object-contain">
                     <div class="text-left leading-tight hidden sm:block">
                         <span id="navbar-logo-text1" class="block text-white font-extrabold text-sm md:text-base tracking-wide">PPID FMIPA</span>
                         <span id="navbar-logo-text2" class="block text-sky-100 font-semibold text-[10px] md:text-[11px] tracking-wide uppercase">Universitas Lampung</span>
