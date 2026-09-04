@@ -50,16 +50,15 @@
                 </div>
 
                 <!-- Ajukan Permohonan Card -->
-                <!-- <div class="bg-gradient-to-br from-[#1B365D] to-sky-600 text-white rounded-3xl p-6 shadow-md space-y-3">
+                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white rounded-3xl p-6 shadow-lg shadow-blue-600/20 space-y-3 border border-blue-500/20">
                     <h4 class="font-extrabold text-base">Tidak Menemukan Informasi?</h4>
-                    <p class="text-xs text-sky-100 leading-relaxed">
+                    <p class="text-xs text-blue-100 leading-relaxed">
                         Anda dapat mengajukan permohonan informasi publik secara online melalui formulir permohonan resmi.
                     </p>
-                    <a href="{{ url('/permohonan') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#1B365D] hover:bg-slate-100 font-extrabold text-xs rounded-full transition shadow-sm cursor-pointer">
+                    <a href="{{ url('/permohonan') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-blue-600 hover:bg-blue-50 font-extrabold text-xs rounded-full transition shadow-sm cursor-pointer">
                         <i class="fa-solid fa-file-circle-plus"></i> Ajukan Permohonan
                     </a>
-                </div> -->
-
+                </div>
             </div>
 
         </div>

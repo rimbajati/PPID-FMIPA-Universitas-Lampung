@@ -59,15 +59,12 @@
                 <div class="space-y-2 max-w-md mx-auto">
                     <h4 class="text-lg md:text-xl font-black text-slate-900">Belum Ada Riwayat Layanan</h4>
                     <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">
-                        Anda belum mengajukan permohonan informasi publik maupun keberatan. Silakan ajukan layanan baru di bawah ini.
+                        Anda belum memiliki riwayat permohonan informasi publik. Silakan ajukan permohonan baru di bawah ini.
                     </p>
                 </div>
-                <div class="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
-                    <a href="{{ url('/permohonan') }}" class="w-full sm:w-auto px-7 py-3.5 bg-sky-500 hover:bg-sky-600 text-white text-xs font-black uppercase tracking-wider transition shadow-md rounded-2xl flex items-center justify-center gap-2">
+                <div class="pt-3 flex justify-center">
+                    <a href="{{ url('/permohonan') }}" class="w-full sm:w-auto px-7 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-wider transition-all duration-200 shadow-md shadow-blue-600/20 rounded-2xl flex items-center justify-center gap-2">
                         <i class="fa-solid fa-plus text-xs"></i> Buat Permohonan Informasi
-                    </a>
-                    <a href="{{ url('/pengajuan-keberatan') }}" class="w-full sm:w-auto px-7 py-3.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-black uppercase tracking-wider transition shadow-md rounded-2xl flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-scale-balanced text-xs"></i> Pengajuan Keberatan
                     </a>
                 </div>
             </div>
