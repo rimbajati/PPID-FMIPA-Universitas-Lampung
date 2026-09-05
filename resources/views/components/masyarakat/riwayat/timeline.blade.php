@@ -42,7 +42,7 @@
                 <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">Informasi sedang disiapkan</p>
 
                 <template x-if="activeItem.pesan_diproses">
-                    <div class="p-4 bg-amber-50/70 rounded-2xl text-xs md:text-sm text-amber-950 space-y-1.5 border border-amber-200/80 border-l-4 border-l-amber-500 shadow-xs font-medium">
+                    <div class="p-4 bg-amber-50/70 rounded-2xl text-xs md:text-sm text-amber-950 space-y-1.5 border border-amber-200/80 shadow-xs font-medium">
                         <div class="text-[11px] font-black text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-comment-dots text-amber-600"></i> PESAN PPID:
                         </div>
@@ -66,7 +66,7 @@
                 </div>
                 <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">Permohonan dipenuhi.</p>
 
-                <div class="p-4 bg-emerald-50/70 rounded-2xl text-xs md:text-sm text-emerald-950 space-y-1.5 border border-emerald-200/80 border-l-4 border-l-emerald-500 shadow-xs font-medium">
+                <div class="p-4 bg-emerald-50/70 rounded-2xl text-xs md:text-sm text-emerald-950 space-y-1.5 border border-emerald-200/80 shadow-xs font-medium">
                     <div class="text-[11px] font-black text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-comment-dots text-emerald-600"></i> PESAN PPID:
                     </div>
@@ -96,7 +96,7 @@
                 </div>
                 <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">Permohonan tidak dipenuhi</p>
 
-                <div class="p-4 bg-rose-50/70 rounded-2xl text-xs md:text-sm text-rose-950 space-y-1.5 border border-rose-200/80 border-l-4 border-l-rose-500 shadow-xs font-medium">
+                <div class="p-4 bg-rose-50/70 rounded-2xl text-xs md:text-sm text-rose-950 space-y-1.5 border border-rose-200/80 shadow-xs font-medium">
                     <div class="text-[11px] font-black text-rose-900 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> ALASAN PENOLAKAN:
                     </div>

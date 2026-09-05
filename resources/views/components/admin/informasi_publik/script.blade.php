@@ -94,6 +94,12 @@
 
         // Reset default 
         document.getElementById('inputTahun').value = new Date().getFullYear();
+        
+        const topikData = getTopikComponentData();
+        if (topikData && typeof topikData.resetAll === 'function') {
+            topikData.resetAll();
+        }
+
         toggleInputType('file');
         document.getElementById('modalAddEdit').classList.remove('hidden');
 
@@ -144,6 +150,11 @@
         document.getElementById('inputKategori').value = item.kategori_informasi || '';
         document.getElementById('inputTahun').value = item.tahun_terbit || (item.created_at ? new Date(item.created_at).getFullYear() : new Date().getFullYear());
 
+        const topikData = getTopikComponentData();
+        if (topikData && typeof topikData.setValue === 'function') {
+            topikData.setValue(item.topik_informasi || '');
+        }
+
         const fileBox = document.getElementById('currentFileBox');
         const fileNameSpan = document.getElementById('currentFileName');
         const fileLink = document.getElementById('currentFileLink');
@@ -178,8 +189,30 @@
         document.getElementById('inputDeskripsi').dispatchEvent(new Event('input'));
     }
 
+    function getTopikComponentData() {
+        const comp = document.getElementById('topikSelectComponent');
+        if (!comp) return null;
+        if (window.Alpine && typeof window.Alpine.$data === 'function') {
+            try { return window.Alpine.$data(comp); } catch (e) {}
+        }
+        if (comp._x_dataStack && comp._x_dataStack[0]) {
+            return comp._x_dataStack[0];
+        }
+        return null;
+    }
+
     function handleFormSubmit(event) {
-        // Form submit standar
+        const inputFinal = document.getElementById('inputTopikFinal');
+        const topikData = getTopikComponentData();
+        const val = inputFinal && inputFinal.value ? inputFinal.value : (topikData && topikData.value ? topikData.value : '');
+
+        if (!val || !val.trim()) {
+            event.preventDefault();
+            alert('Topik / Bidang Informasi wajib dipilih atau diisi!');
+            const topikComp = document.getElementById('topikSelectComponent');
+            if (topikComp) topikComp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+        }
     }
 
     function submitFilterForm() {

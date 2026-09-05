@@ -1,4 +1,4 @@
-@props(['informasi', 'listTahun' => []])
+@props(['informasi', 'listTahun' => [], 'listTopik' => []])
 
 <!-- Table Container -->
 <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
@@ -32,16 +32,27 @@
                 <a href="{{ request()->fullUrlWithQuery(['kategori' => 'Informasi Dikecualikan']) }}" class="px-4 py-2 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('kategori') == 'Informasi Dikecualikan' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">Dikecualikan</a>
             </div>
 
+            <!-- Dropdown Filter Topik Dinamis -->
+            <select name="topik" onchange="document.getElementById('filter-search-form').submit()" 
+                    class="bg-slate-50 border border-slate-200 text-slate-700 text-xs md:text-sm font-bold px-4 py-2 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500 transition-all cursor-pointer h-[48px] shrink-0">
+                <option value="">Topik/Bidang</option>
+                @if(isset($listTopik) && count($listTopik) > 0)
+                    @foreach($listTopik as $topik)
+                        <option value="{{ $topik }}" {{ request('topik') == $topik ? 'selected' : '' }}>{{ $topik }}</option>
+                    @endforeach
+                @endif
+            </select>
+            
             <!-- Dropdown Filter Tahun Terbit Dinamis -->
             <select name="tahun" onchange="document.getElementById('filter-search-form').submit()" 
                     class="bg-slate-50 border border-slate-200 text-slate-700 text-xs md:text-sm font-bold px-4 py-2 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500 transition-all cursor-pointer h-[48px] shrink-0">
-                <option value="">Semua Tahun</option>
+                <option value="">Tahun</option>
                 @if(isset($listTahun) && count($listTahun) > 0)
                     @foreach($listTahun as $y)
                         <option value="{{ $y }}" {{ request('tahun') == $y ? 'selected' : '' }}>{{ $y }}</option>
                     @endforeach
                 @endif
-            </select>
+            </select>   
 
             <!-- Input Searchbar Penuh -->
             <div class="flex-1 min-w-[200px] h-[48px]">
@@ -67,9 +78,10 @@
                         <th id="col-checkbox-header" class="hidden px-4 py-4 w-10 text-center">
                             <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                         </th>
-                        <th class="px-6 py-4 whitespace-nowrap min-w-[220px] max-w-[320px]">Judul Informasi</th>
-                        <th class="px-6 py-4 whitespace-nowrap min-w-[220px] max-w-[320px]">Deskripsi Informasi</th>
-                        <th class="px-6 py-4 whitespace-nowrap">Kategori Informasi</th>
+                        <th class="px-6 py-4 whitespace-nowrap min-w-[220px] max-w-[320px]">Judul</th>
+                        <th class="px-6 py-4 whitespace-nowrap min-w-[220px] max-w-[320px]">Deskripsi</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Topik/Bidang</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Kategori</th>
                         <th class="px-6 py-4 whitespace-nowrap text-center">Tahun Terbit</th>
                         <th class="px-6 py-4 text-center whitespace-nowrap">Action</th>
                     </tr>
@@ -91,6 +103,15 @@
                                 <div class="line-clamp-5 [word-break:break-word] break-all" title="{{ $item->deskripsi_informasi }}">
                                     {{ $item->deskripsi_informasi }}
                                 </div>
+                            </td>
+                            <td class="p-6 whitespace-nowrap">
+                                @if(!empty($item->topik_informasi))
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200/80 shadow-2xs whitespace-nowrap">
+                                        {{ $item->topik_informasi }}
+                                    </span>
+                                @else
+                                    <span class="text-slate-400 font-semibold text-xs">-</span>
+                                @endif
                             </td>
                             <td class="p-6 whitespace-nowrap">
                                 @if($item->kategori_informasi === 'Informasi Setiap Saat')
@@ -133,54 +154,14 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik.</td></tr>
+                        <tr><td colspan="7" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik.</td></tr>
                     @endforelse
                 </tbody>
             </table>
         
         <!-- Pagination Footer -->
-        <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="text-xs md:text-sm font-semibold text-slate-500">
-                Menampilkan <span class="font-extrabold text-slate-900">{{ $informasi->firstItem() ?? 0 }}–{{ $informasi->lastItem() ?? 0 }}</span> dari <span class="font-black text-sky-600">{{ $informasi->total() }}</span> informasi publik
-            </div>
-
-            <!-- Pagination Nomor Angka -->
-            <div class="flex items-center gap-1.5 flex-wrap">
-                {{-- Tombol Prev --}}
-                @if ($informasi->onFirstPage())
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-300 text-xs font-bold cursor-not-allowed select-none border border-slate-200/50">
-                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                    </span>
-                @else
-                    <a href="{{ $informasi->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold border border-slate-200 transition shadow-2xs">
-                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                    </a>
-                @endif
-
-                {{-- Angka-angka Halaman --}}
-                @foreach (range(1, $informasi->lastPage()) as $page)
-                    @if ($page == $informasi->currentPage())
-                        <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-sky-500 text-white text-xs font-black shadow-xs">
-                            {{ $page }}
-                        </span>
-                    @else
-                        <a href="{{ $informasi->url($page) }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold border border-slate-200 transition shadow-2xs">
-                            {{ $page }}
-                        </a>
-                    @endif
-                @endforeach
-
-                {{-- Tombol Next --}}
-                @if ($informasi->hasMorePages())
-                    <a href="{{ $informasi->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold border border-slate-200 transition shadow-2xs">
-                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                    </a>
-                @else
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-300 text-xs font-bold cursor-not-allowed select-none border border-slate-200/50">
-                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                    </span>
-                @endif
-            </div>
+        <div class="p-6 border-t border-slate-100">
+            <x-ui.pagination :paginator="$informasi" label="informasi publik" />
         </div>
     </div>
 </form>

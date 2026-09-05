@@ -25,6 +25,7 @@
                                 $baseClass = "nav-link text-[14.5px] font-semibold text-white hover:bg-white/20 px-5 py-2 rounded-full transition-all duration-200 flex items-center gap-1";
                                 $activeClass = "bg-white/25 text-white font-bold shadow-sm";
                             @endphp
+                           
                             <a href="/" class="{{ $baseClass }} {{ request()->is('/') ? $activeClass : '' }}">Beranda</a>
 
                             <a href="/informasi-publik" class="{{ $baseClass }} {{ request()->is('informasi-publik*') ? $activeClass : '' }}">Informasi Publik</a>

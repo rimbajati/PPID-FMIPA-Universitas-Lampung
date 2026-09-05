@@ -87,7 +87,7 @@
                                 <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" class="child-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                             </td>
 
-                            <td class="px-6 py-4 font-black text-sky-600 whitespace-nowrap">
+                            <td class="px-6 py-4 font-black text-slate-600 whitespace-nowrap">
                                 {{ $item->no_tiket ?? '-' }}
                             </td>
 
@@ -180,47 +180,7 @@
     </form>
 
     <!-- Pagination Footer -->
-    <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="text-xs md:text-sm font-semibold text-slate-500">
-            Menampilkan <span class="font-extrabold text-slate-900">{{ $keberatans->firstItem() ?? 0 }}–{{ $keberatans->lastItem() ?? 0 }}</span> dari <span class="font-black text-sky-600">{{ $keberatans->total() }}</span> pengajuan keberatan
-        </div>
-
-        <!-- Pagination Nomor Angka -->
-        <div class="flex items-center gap-1.5 flex-wrap">
-            {{-- Tombol Prev --}}
-            @if ($keberatans->onFirstPage())
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-300 text-xs font-bold cursor-not-allowed select-none border border-slate-200/50">
-                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                </span>
-            @else
-                <a href="{{ $keberatans->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold border border-slate-200 transition shadow-2xs">
-                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                </a>
-            @endif
-
-            {{-- Angka-angka Halaman --}}
-            @foreach (range(1, $keberatans->lastPage()) as $page)
-                @if ($page == $keberatans->currentPage())
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-sky-500 text-white text-xs font-black shadow-xs">
-                        {{ $page }}
-                    </span>
-                @else
-                    <a href="{{ $keberatans->url($page) }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold border border-slate-200 transition shadow-2xs">
-                        {{ $page }}
-                    </a>
-                @endif
-            @endforeach
-
-            {{-- Tombol Next --}}
-            @if ($keberatans->hasMorePages())
-                <a href="{{ $keberatans->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold border border-slate-200 transition shadow-2xs">
-                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                </a>
-            @else
-                <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-300 text-xs font-bold cursor-not-allowed select-none border border-slate-200/50">
-                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                </span>
-            @endif
-        </div>
+    <div class="p-6 border-t border-slate-100">
+        <x-ui.pagination :paginator="$keberatans" label="pengajuan keberatan" />
     </div>
 </div>

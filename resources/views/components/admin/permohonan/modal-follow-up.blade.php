@@ -26,9 +26,9 @@
                     <div>
                         <h3 class="text-xl sm:text-2xl font-black tracking-tight text-white" x-text="selectedPermohonan ? 'Nomor Tiket: ' + selectedPermohonan.no_tiket : ''"></h3>
                     </div>
-                    <button type="button" @click="closeModal()" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition cursor-pointer shrink-0 ml-4">
+                    <!-- <button type="button" @click="closeModal()" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition cursor-pointer shrink-0 ml-4">
                         <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
+                    </button> -->
                 </div>
 
                 <!-- Body Content (Scrollable) -->
@@ -36,97 +36,75 @@
                     <template x-if="selectedPermohonan">
                         <div class="space-y-7">
 
-                            <!-- BARIS 1: GRID DATA DIRI (8/12) & LAMPIRAN (4/12) -->
-                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-                                
-                                <!-- KIRI (8/12): DATA DIRI PEMOHON -->
-                                <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-6 flex flex-col justify-between">
-                                    <div>
-                                        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
-                                            <h4 class="font-black text-slate-900 text-base sm:text-[1.15rem]">Data Diri Pemohon</h4>
-                                            <span class="px-4 py-1.5 bg-slate-100 text-slate-800 text-xs sm:text-sm font-extrabold rounded-full uppercase tracking-wider" x-text="selectedPermohonan.kategori_pemohon"></span>
-                                        </div>
-
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm sm:text-base">
-                                            <div>
-                                                <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Nama Lengkap</span>
-                                                <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.nama_lengkap"></span>
-                                            </div>
-                                            <div>
-                                                <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">No. Identitas (NIK)</span>
-                                                <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.no_identitas || selectedPermohonan.nik || '-'"></span>
-                                            </div>
-                                            <div>
-                                                <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Pekerjaan</span>
-                                                <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.pekerjaan"></span>
-                                            </div>
-
-                                            <div>
-                                                <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Email</span>
-                                                <span class="font-extrabold text-slate-900 text-base break-all block leading-snug" x-text="selectedPermohonan.email || '-'"></span>
-                                            </div>
-                                            <div>
-                                                <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">No. Telp / WhatsApp</span>
-                                                <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.no_telepon || selectedPermohonan.no_hp"></span>
-                                            </div>
-                                            <template x-if="selectedPermohonan.nama_organisasi_lembaga">
-                                                <div>
-                                                    <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm" x-text="'Nama ' + selectedPermohonan.kategori_pemohon"></span>
-                                                    <span class="font-black text-slate-800 text-base block leading-snug" x-text="selectedPermohonan.nama_organisasi_lembaga"></span>
-                                                </div>
-                                            </template>
-
-                                            <div class="sm:col-span-2 lg:col-span-3 pt-3 border-t border-slate-100">
-                                                <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Alamat Lengkap</span>
-                                                <span class="font-semibold text-slate-900 leading-relaxed block text-base" x-text="selectedPermohonan.alamat_lengkap || selectedPermohonan.alamat"></span>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <!-- CARD 1: DATA DIRI PEMOHON -->
+                            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-5">
+                                <!-- Header Card Data Diri Pemohon -->
+                                <div class="border-b border-slate-100 pb-4">
+                                    <h4 class="font-black text-slate-900 text-base sm:text-[1.15rem]">Data Diri Pemohon</h4>
                                 </div>
 
-                                <!-- KANAN (4/12): LAMPIRAN PEMOHON -->
-                                <div class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-6 flex flex-col justify-between">
-                                    <div>
-                                        <div class="border-b border-slate-100 pb-4 mb-5">
-                                            <h4 class="font-black text-slate-900 text-base sm:text-[1.15rem]">Lampiran</h4>
+                                <div class="space-y-4 text-sm sm:text-base">
+                                    <!-- BARIS PERTAMA: Nama Lengkap, No. Identitas, No. Telepon, Email (4 Kolom) -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                        <div>
+                                            <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Nama Lengkap</span>
+                                            <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.nama_lengkap"></span>
                                         </div>
-
-                                        <div class="space-y-4">
-                                            <div>
-                                                <span class="text-slate-500 font-extrabold block mb-1.5 text-xs sm:text-sm">Identitas (KTP /SIM)</span>
-                                                <template x-if="selectedPermohonan.file_identitas">
-                                                    <a :href="'/storage/' + selectedPermohonan.file_identitas" target="_blank" class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-sky-50 hover:border-sky-300 transition group cursor-pointer">
-                                                        <span class="font-black text-sky-700 group-hover:underline text-xs sm:text-sm flex items-center gap-2">
-                                                            <i class="fa-solid fa-id-card"></i> Lihat lampiran
-                                                        </span>
-                                                        <i class="fa-solid fa-arrow-up-right-from-square text-sky-500 text-xs"></i>
-                                                    </a>
-                                                </template>
-                                                <template x-if="!selectedPermohonan.file_identitas">
-                                                    <span class="text-xs text-slate-400 italic">-</span>
-                                                </template>
-                                            </div>
-
-                                            <div>
-                                                <span class="text-slate-500 font-extrabold block mb-1.5 text-xs sm:text-sm">Dokumen Pendukung</span>
-                                                <template x-if="selectedPermohonan.file_pendukung">
-                                                    <a :href="'/storage/' + selectedPermohonan.file_pendukung" target="_blank" class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-sky-50 hover:border-sky-300 transition group cursor-pointer">
-                                                        <span class="font-black text-sky-700 group-hover:underline text-xs sm:text-sm flex items-center gap-2">
-                                                            <i class="fa-solid fa-file-lines"></i> Lihat lampiran
-                                                        </span>
-                                                        <i class="fa-solid fa-arrow-up-right-from-square text-sky-500 text-xs"></i>
-                                                    </a>
-                                                </template>
-                                                <template x-if="!selectedPermohonan.file_pendukung">
-                                                    <span class="text-xs text-slate-400 italic">-</span>
-                                                </template>
-                                            </div>
+                                        <div>
+                                            <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">No. Identitas</span>
+                                            <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.no_identitas || selectedPermohonan.nik || '-'"></span>
                                         </div>
+                                        <div>
+                                            <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">No. Telepon / WhatsApp</span>
+                                            <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.no_telepon || selectedPermohonan.no_hp || '-'"></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Email</span>
+                                            <span class="font-extrabold text-slate-900 text-base break-all block leading-snug" x-text="selectedPermohonan.email || '-'"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- BARIS KEDUA: Kategori Pemohon, Nama Lembaga/Organisasi (Kondisional), Pekerjaan, Lampiran Identitas -->
+                                    <div class="pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+                                        <div>
+                                            <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Kategori Pemohon</span>
+                                            <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.kategori_pemohon || 'Perorangan'"></span>
+                                        </div>
+                                        <template x-if="['Lembaga', 'Organisasi'].includes(selectedPermohonan.kategori_pemohon) || (selectedPermohonan.nama_organisasi_lembaga && !['Perorangan', 'Kelompok'].includes(selectedPermohonan.kategori_pemohon))">
+                                            <div>
+                                                <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm" x-text="selectedPermohonan.kategori_pemohon === 'Lembaga' ? 'Nama Lembaga' : 'Nama Organisasi'"></span>
+                                                <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.nama_organisasi_lembaga || '-'"></span>
+                                            </div>
+                                        </template>
+                                        <div>
+                                            <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Pekerjaan</span>
+                                            <span class="font-extrabold text-slate-900 text-base block leading-snug" x-text="selectedPermohonan.pekerjaan || '-'"></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-slate-500 font-extrabold block mb-1.5 text-xs sm:text-sm">Lampiran Identitas</span>
+                                            <template x-if="selectedPermohonan.file_identitas">
+                                                <a :href="'/storage/' + selectedPermohonan.file_identitas" target="_blank" class="inline-flex items-center justify-between p-2.5 bg-sky-50 border border-sky-200 rounded-xl hover:bg-sky-100 hover:border-sky-300 transition group cursor-pointer w-full">
+                                                    <span class="font-black text-sky-800 group-hover:underline text-xs flex items-center gap-1.5">
+                                                        <i class="fa-solid fa-id-card text-sky-600"></i> Lihat lampiran
+                                                    </span>
+                                                    <i class="fa-solid fa-arrow-up-right-from-square text-sky-500 text-[11px]"></i>
+                                                </a>
+                                            </template>
+                                            <template x-if="!selectedPermohonan.file_identitas">
+                                                <span class="text-xs text-slate-400 italic block">-</span>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                    <!-- BARIS KETIGA: Alamat -->
+                                    <div class="pt-4 border-t border-slate-100">
+                                        <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Alamat Lengkap</span>
+                                        <p class="font-bold text-slate-900 leading-relaxed whitespace-pre-line break-words [word-break:break-word] break-all" x-text="selectedPermohonan.alamat_lengkap || selectedPermohonan.alamat || '-'"></p>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- BARIS 2: RINCIAN PERMOHONAN -->
+                            <!-- CARD 2: RINCIAN PERMOHONAN INFORMASI -->
                             <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-4">
                                 <div class="border-b border-slate-100 pb-3">
                                     <h4 class="font-black text-slate-900 text-base sm:text-[1.15rem]">Rincian Permohonan Informasi</h4>
@@ -144,6 +122,20 @@
                                     <div class="pt-3 border-t border-slate-100">
                                         <span class="text-slate-500 font-extrabold block mb-1 text-xs sm:text-sm">Cara Memperoleh Informasi</span>
                                         <p class="font-bold text-slate-900 leading-relaxed whitespace-pre-line break-words [word-break:break-word] break-all" x-text="selectedPermohonan.cara_memperoleh_informasi || '-'"></p>
+                                    </div>
+                                    <div class="pt-3 border-t border-slate-100">
+                                        <span class="text-slate-500 font-extrabold block mb-1.5 text-xs sm:text-sm">Dokumen Pendukung Permohonan</span>
+                                        <template x-if="selectedPermohonan.file_pendukung">
+                                            <a :href="'/storage/' + selectedPermohonan.file_pendukung" target="_blank" class="inline-flex items-center justify-between p-3.5 bg-sky-50 border border-sky-200 rounded-xl hover:bg-sky-100 hover:border-sky-300 transition group cursor-pointer w-full sm:w-auto min-w-[240px]">
+                                                <span class="font-black text-sky-800 group-hover:underline text-xs sm:text-sm flex items-center gap-2">
+                                                    <i class="fa-solid fa-file-lines text-sky-600"></i> Lihat lampiran
+                                                </span>
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-sky-500 text-xs ml-3"></i>
+                                            </a>
+                                        </template>
+                                        <template x-if="!selectedPermohonan.file_pendukung">
+                                            <span class="text-xs text-slate-400 italic block">-</span>
+                                        </template>
                                     </div>
                                 </div>
                             </div>

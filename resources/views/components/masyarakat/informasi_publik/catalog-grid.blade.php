@@ -1,117 +1,104 @@
 @props(['informasiList'])
 
-<!-- Table Catalog View (Matching Reference UI Style) -->
-<div class="space-y-4">
-    <!-- Header Counter Text -->
-    <div class="flex items-center justify-between px-1">
-        <p class="text-xs md:text-sm text-slate-500 font-normal">
-            Menampilkan {{ $informasiList->count() }} dari {{ $informasiList->total() }} informasi
-        </p>
-    </div>
-
+<!-- Card Grid Catalog View (Matching Reference UI Style) -->
+<div class="space-y-5">
     @if($informasiList->count() > 0)
-        
-        <!-- TABLE CONTAINER WITH SKY BLUE HEADER BAR -->
-        <div class="bg-white border border-slate-200/90 rounded-2xl shadow-xs overflow-hidden">
-            
-            <!-- Table Sky Blue Header Bar -->
-            <div class="bg-sky-500 text-white px-6 py-4 text-sm font-bold tracking-wider grid grid-cols-12 gap-4 items-center shadow-xs">
-                <div class="col-span-7">Informasi</div>
-                <div class="col-span-3 text-center">Kategori</div>
-                <div class="col-span-2 text-center">Tahun Terbit</div>
-            </div>
+        @php
+            $kategoriStyles = [
+                'Informasi Berkala'      => 'bg-[#1B365D] text-white',
+                'Informasi Serta-Merta'  => 'bg-rose-500 text-white',
+                'Informasi Setiap Saat'  => 'bg-emerald-500 text-white',
+                'Informasi Dikecualikan' => 'bg-slate-600 text-white',
+            ];
+        @endphp
 
-            <!-- Table Body Rows -->
-            <div class="divide-y divide-slate-100">
+        <!-- 3-COLUMN CARD GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            @foreach($informasiList as $info)
                 @php
-                    $kategoriStyles = [
-                        'Informasi Berkala'      => 'bg-[#1B365D] text-white',
-                        'Informasi Serta-Merta'  => 'bg-rose-500 text-white',
-                        'Informasi Setiap Saat'  => 'bg-emerald-500 text-white',
-                        'Informasi Dikecualikan' => 'bg-slate-600 text-white',
-                    ];
+                    $fileUrl = route('informasi.lihat', $info->id);
+                    $fileExt = 'PDF';
+                    
+                    if (!empty($info->nama_file_asli) && !empty($info->file_informasi)) {
+                        $fileUrl = url('/informasi/file/' . $info->id . '/' . rawurlencode($info->nama_file_asli));
+                        $fileExt = strtoupper(pathinfo($info->nama_file_asli, PATHINFO_EXTENSION) ?: 'FILE');
+                    } elseif (!empty($info->link_informasi)) {
+                        $fileUrl = $info->link_informasi;
+                        $fileExt = 'LINK';
+                    }
+                    
+                    $badgeStyle = $kategoriStyles[$info->kategori_informasi] ?? 'bg-sky-500 text-white';
+
+                    $extUpper = strtoupper($fileExt);
+                    $extBadgeStyle = 'bg-slate-100 text-slate-600 border-slate-200/80';
+                    
+                    if ($extUpper === 'PDF') {
+                        $extBadgeStyle = 'bg-rose-50 text-rose-600 border-rose-200/80';
+                    } elseif (in_array($extUpper, ['DOC', 'DOCX', 'WORD'])) {
+                        $extBadgeStyle = 'bg-blue-50 text-blue-600 border-blue-200/80';
+                    } elseif (in_array($extUpper, ['XLS', 'XLSX', 'CSV', 'EXCEL', 'SPREADSHEET'])) {
+                        $extBadgeStyle = 'bg-emerald-50 text-emerald-600 border-emerald-200/80';
+                    } elseif ($extUpper === 'LINK') {
+                        $extBadgeStyle = 'bg-slate-100 text-slate-600 border-slate-200/80';
+                    }
                 @endphp
 
-                @foreach($informasiList as $info)
-                    @php
-                        $detailUrl = route('informasi.detail', $info->id);
-                        $badgeStyle = $kategoriStyles[$info->kategori_informasi] ?? 'bg-sky-500 text-white';
-                    @endphp
+                <!-- INDIVIDUAL CARD (Clickable Container) -->
+                <a href="{{ $fileUrl }}" target="_blank" 
+                   class="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between h-full group cursor-pointer">
+                    
+                    <!-- Top Content Section (Judul, Deskripsi, Kategori Badge) -->
+                    <div class="space-y-2.5">
+                        <!-- Title -->
+                        <h3 class="text-base font-extrabold text-slate-900 group-hover:text-sky-600 transition-colors leading-snug block break-words [word-break:break-word]">
+                            {{ $info->judul_informasi }}
+                        </h3>
 
-                    <div class="px-6 py-4 hover:bg-sky-50/70 transition-colors grid grid-cols-12 gap-4 items-center group">
-                        <!-- 1. INFORMASI -->
-                        <div class="col-span-7 min-w-0 space-y-1">
-                            <a href="{{ $detailUrl }}" 
-                               class="text-sm font-extrabold text-slate-900 group-hover:text-slate-900 group-hover:underline group-hover:decoration-slate-900 transition-colors leading-snug block break-words [word-break:break-word]">
-                                {{ $info->judul_informasi }}
-                            </a>
-                        </div>
+                        <!-- Description -->
+                        <p class="text-xs md:text-sm text-slate-500 font-normal leading-relaxed break-words [word-break:break-word]">
+                            {{ $info->deskripsi_informasi ?: 'Dokumen dan informasi publik resmi PPID Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Lampung.' }}
+                        </p>
 
-                        <!-- 2. KATEGORI -->
-                        <div class="col-span-3 flex items-center justify-center">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold {{ $badgeStyle }} shadow-2xs inline-block text-center whitespace-nowrap">
+                        <!-- Tag Pills Row (Kategori UU KIP & Topik Informasi) -->
+                        <div class="flex flex-wrap items-center gap-1.5 pt-1 pb-1.5 mb-1">
+                            <span class="px-3 py-1 rounded-full text-xs font-extrabold {{ $badgeStyle }} shadow-2xs inline-block">
                                 {{ $info->kategori_informasi }}
                             </span>
+                            @if(!empty($info->topik_informasi))
+                                <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200/80 shadow-2xs inline-block">
+                                    {{ $info->topik_informasi }}
+                                </span>
+                            @endif
                         </div>
+                    </div>
 
-                        <!-- 3. TAHUN TERBIT -->
-                        <div class="col-span-2 flex items-center justify-center">
-                            <span class="px-2.5 py-1 bg-sky-100 text-sky-700 text-[11px] font-extrabold rounded-full whitespace-nowrap">
-                                {{ $info->tahun_terbit ?? '2026' }}
+                    <!-- Bottom Card Footer Line (Pushed to Bottom) -->
+                    <div class="mt-auto pt-3.5 mt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span class="flex items-center gap-1.5 text-slate-500 font-medium">
+                            <i class="fa-regular fa-eye text-sky-500 text-[11px]"></i>
+                            <span>Dilihat {{ $info->dilihat ?? 0 }} kali</span>
+                        </span>
+
+                        <!-- Format File & Tahun Terbit -->
+                        <div class="flex items-center gap-2.5">
+                            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold border shadow-2xs {{ $extBadgeStyle }}">
+                                {{ $fileExt }}
+                            </span>
+
+                            <span class="flex items-center gap-1 text-[11px] font-bold text-slate-500">
+                                <i class="fa-regular fa-calendar text-slate-400 text-[11px]"></i>
+                                <span>{{ $info->tahun_terbit ?? '2026' }}</span>
                             </span>
                         </div>
                     </div>
-                @endforeach
-            </div>
 
+                </a>
+            @endforeach
         </div>
 
-        <!-- Pagination Footer (Matching Reference UI) -->
-        <div class="pt-3 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <!-- Page Indicator Left -->
-            <p class="text-xs text-slate-500 font-medium">
-                Halaman {{ $informasiList->currentPage() }} dari {{ $informasiList->lastPage() }}
-            </p>
-
-            <!-- Pagination Controls Right (Always Displayed) -->
-            <div class="inline-flex items-center p-1 bg-slate-200/60 rounded-xl gap-1 text-xs font-semibold text-slate-600">
-                {{-- First Page --}}
-                @if($informasiList->onFirstPage())
-                    <span class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 cursor-not-allowed">«</span>
-                @else
-                    <a href="{{ $informasiList->url(1) }}" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/80 transition text-slate-700">«</a>
-                @endif
-
-                {{-- Previous Page --}}
-                @if($informasiList->onFirstPage())
-                    <span class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 cursor-not-allowed">‹</span>
-                @else
-                    <a href="{{ $informasiList->previousPageUrl() }}" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/80 transition text-slate-700">‹</a>
-                @endif
-
-                {{-- Page Numbers --}}
-                @foreach($informasiList->getUrlRange(max(1, $informasiList->currentPage() - 2), min($informasiList->lastPage(), $informasiList->currentPage() + 2)) as $page => $url)
-                    @if($page == $informasiList->currentPage())
-                        <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-white text-slate-900 font-extrabold shadow-2xs border border-slate-300/60">{{ $page }}</span>
-                    @else
-                        <a href="{{ $url }}" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/80 transition text-slate-700">{{ $page }}</a>
-                    @endif
-                @endforeach
-
-                {{-- Next Page --}}
-                @if($informasiList->hasMorePages())
-                    <a href="{{ $informasiList->nextPageUrl() }}" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/80 transition text-slate-700">›</a>
-                @else
-                    <span class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 cursor-not-allowed">›</span>
-                @endif
-
-                {{-- Last Page --}}
-                @if($informasiList->currentPage() == $informasiList->lastPage())
-                    <span class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 cursor-not-allowed">»</span>
-                @else
-                    <a href="{{ $informasiList->url($informasiList->lastPage()) }}" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/80 transition text-slate-700">»</a>
-                @endif
-            </div>
+        <!-- Pagination Footer -->
+        <div class="pt-4">
+            <x-ui.pagination :paginator="$informasiList" label="informasi publik" />
         </div>
 
     @else

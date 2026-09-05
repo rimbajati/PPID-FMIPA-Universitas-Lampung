@@ -21,6 +21,12 @@ class InformasiPublikController extends Controller
                         ->orderBy('tahun_terbit', 'desc')
                         ->pluck('tahun_terbit');
 
+        $listTopik = InformasiPublik::whereNotNull('topik_informasi')
+                        ->where('topik_informasi', '!=', '')
+                        ->distinct()
+                        ->orderBy('topik_informasi', 'asc')
+                        ->pluck('topik_informasi');
+
         if ($request->filled('kategori')) {
             $query->where('kategori_informasi', $request->kategori);
         }
@@ -31,6 +37,10 @@ class InformasiPublikController extends Controller
 
         if ($request->filled('tahun')) {
             $query->where('tahun_terbit', $request->tahun);
+        }
+
+        if ($request->filled('topik')) {
+            $query->where('topik_informasi', $request->topik);
         }
 
         if ($request->filled('search')) {
@@ -68,7 +78,7 @@ class InformasiPublikController extends Controller
         $informasi = $query->paginate(10)->appends($request->all());
 
         return view('admin.informasi_publik.index', compact(
-            'informasi', 'listJudul', 'listTahun', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
+            'informasi', 'listJudul', 'listTahun', 'listTopik', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
             'lastUpdateTotal', 'lastUpdateBerkala', 'lastUpdateSertaMerta', 'lastUpdateSetiapSaat', 'lastUpdateDikecualikan'
         ));
     }
@@ -80,6 +90,7 @@ class InformasiPublikController extends Controller
             'deskripsi_informasi' => 'required|string',
             'tahun_terbit'        => 'required|string|max:255',
             'kategori_informasi'  => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta', 'Informasi Dikecualikan'])],
+            'topik_informasi'     => 'required|string|max:100',
             'file_informasi'      => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
             'link_informasi'      => 'nullable|url',
         ], [
@@ -115,6 +126,7 @@ class InformasiPublikController extends Controller
             'deskripsi_informasi' => 'required|string',
             'tahun_terbit'        => 'required|string|max:255',
             'kategori_informasi'  => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta', 'Informasi Dikecualikan'])],
+            'topik_informasi'     => 'required|string|max:100',
             'file_informasi'      => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
             'link_informasi'      => 'nullable|url',
         ], [

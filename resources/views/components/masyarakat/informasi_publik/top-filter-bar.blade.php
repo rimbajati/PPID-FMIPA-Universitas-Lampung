@@ -1,4 +1,4 @@
-@props(['years', 'totalCount', 'kategoryCounts'])
+@props(['years' => [], 'topiks' => [], 'totalCount', 'kategoryCounts'])
 
 @php
     $reqKategori = request('kategori');
@@ -8,6 +8,15 @@
         $selectedKategori = array_values(array_filter($reqKategori));
     } else {
         $selectedKategori = [];
+    }
+
+    $reqTopik = request('topik');
+    if (is_string($reqTopik)) {
+        $selectedTopik = [$reqTopik];
+    } elseif (is_array($reqTopik)) {
+        $selectedTopik = array_values(array_filter($reqTopik));
+    } else {
+        $selectedTopik = [];
     }
 
     $reqTahun = request('tahun');
@@ -26,6 +35,7 @@
 <div x-data="{
         openDropdown: null,
         selectedKategori: {{ json_encode($selectedKategori) }},
+        selectedTopik: {{ json_encode($selectedTopik) }},
         selectedTahun: {{ json_encode($selectedTahun) }},
         selectedSort: '{{ $selectedSort }}',
         searchQuery: '{{ $searchVal }}',
@@ -40,6 +50,10 @@
             this.selectedKategori = this.selectedKategori.filter(k => k !== item);
             this.submitForm();
         },
+        removeTopik(item) {
+            this.selectedTopik = this.selectedTopik.filter(t => t !== item);
+            this.submitForm();
+        },
         removeTahun(item) {
             this.selectedTahun = this.selectedTahun.filter(t => String(t) !== String(item));
             this.submitForm();
@@ -47,6 +61,7 @@
         submitForm() {
             const params = new URLSearchParams();
             this.selectedKategori.forEach(k => params.append('kategori[]', k));
+            this.selectedTopik.forEach(tp => params.append('topik[]', tp));
             this.selectedTahun.forEach(t => params.append('tahun[]', t));
             if (this.selectedSort && this.selectedSort !== 'terbaru') {
                 params.append('sort', this.selectedSort);
@@ -58,6 +73,7 @@
         },
         resetAll() {
             this.selectedKategori = [];
+            this.selectedTopik = [];
             this.selectedTahun = [];
             this.selectedSort = 'terbaru';
             this.searchQuery = '';
@@ -67,6 +83,11 @@
             if (this.selectedKategori.length === 0) return 'Kategori';
             if (this.selectedKategori.length === 1) return this.selectedKategori[0];
             return this.selectedKategori.length + ' Kategori';
+        },
+        get topikLabel() {
+            if (this.selectedTopik.length === 0) return 'Topik/Bidang';
+            if (this.selectedTopik.length === 1) return this.selectedTopik[0];
+            return this.selectedTopik.length + ' Topik/Bidang';
         },
         get tahunLabel() {
             if (this.selectedTahun.length === 0) return 'Tahun';
@@ -84,8 +105,8 @@
 
     <form x-ref="filterForm" action="{{ url('/informasi-publik') }}" method="GET" @submit.prevent="submitForm()" class="space-y-4">
         
-        <!-- ROW 1: Pill Dropdown Buttons (Full Width 3 Columns) -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full relative">
+        <!-- ROW 1: Pill Dropdown Buttons (Full Width 4 Columns) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full relative">
             
             <!-- 1. KATEGORI PILL DROPDOWN -->
             <div class="relative w-full">
@@ -130,7 +151,43 @@
                 </div>
             </div>
 
-            <!-- 2. TAHUN PILL DROPDOWN -->
+            <!-- 2. TOPIK PILL DROPDOWN -->
+            <div class="relative w-full">
+                <button type="button" 
+                        @click="toggleDropdown('topik')"
+                        :class="selectedTopik.length > 0 ? 'border-2 border-sky-500 bg-sky-50 text-sky-700' : 'border border-slate-300 bg-white text-slate-700 hover:border-slate-400'"
+                        class="w-full px-5 py-2.5 rounded-full text-xs md:text-sm font-bold flex items-center justify-between gap-2.5 transition shadow-2xs cursor-pointer select-none">
+                    <span x-text="topikLabel"></span>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-500 transition-transform duration-200" :class="openDropdown === 'topik' ? 'rotate-180' : ''"></i>
+                </button>
+
+                <!-- Floating Dropdown Modal -->
+                <div x-show="openDropdown === 'topik'" 
+                     x-transition:enter="transition ease-out duration-150"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     x-cloak
+                     class="absolute left-0 mt-2 w-full min-w-[220px] bg-white border border-slate-200 rounded-2xl shadow-xl z-50 p-3 space-y-1 max-h-56 overflow-y-auto">
+                    
+                    @if(isset($topiks) && count($topiks) > 0)
+                        @foreach($topiks as $tp)
+                            <label class="flex items-center gap-3 p-2.5 hover:bg-slate-50 rounded-xl cursor-pointer text-xs font-bold text-slate-700">
+                                <input type="checkbox" 
+                                       name="topik[]" 
+                                       value="{{ $tp }}" 
+                                       x-model="selectedTopik"
+                                       @change="submitForm()"
+                                       class="w-4 h-4 text-sky-600 rounded border-slate-300 focus:ring-sky-500 cursor-pointer">
+                                <span>{{ $tp }}</span>
+                            </label>
+                        @endforeach
+                    @else
+                        <div class="p-2 text-xs font-semibold text-slate-400 italic text-center">Belum ada topik</div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- 3. TAHUN PILL DROPDOWN -->
             <div class="relative w-full">
                 <button type="button" 
                         @click="toggleDropdown('tahun')"
@@ -162,7 +219,7 @@
                 </div>
             </div>
 
-            <!-- 3. URUTKAN PILL DROPDOWN (Matching Floating Design) -->
+            <!-- 4. URUTKAN PILL DROPDOWN (Matching Floating Design) -->
             <div class="relative w-full">
                 <button type="button" 
                         @click="toggleDropdown('sort')"
@@ -203,7 +260,7 @@
         </div>
 
         <!-- ROW 2: Active Filter Chips (Tags dengan warna spesifik & tombol 'x') -->
-        <div x-show="selectedKategori.length > 0 || selectedTahun.length > 0" class="flex flex-wrap items-center gap-2 pt-1">
+        <div x-show="selectedKategori.length > 0 || selectedTopik.length > 0 || selectedTahun.length > 0" class="flex flex-wrap items-center gap-2 pt-1">
             
             <!-- Kategori Chips -->
             <template x-for="cat in selectedKategori" :key="cat">
@@ -216,6 +273,16 @@
                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-full shadow-2xs">
                     <span x-text="cat"></span>
                     <button type="button" @click.stop.prevent="removeKategori(cat)" class="hover:opacity-70 transition cursor-pointer p-0.5">
+                        <i class="fa-solid fa-xmark text-[11px]"></i>
+                    </button>
+                </span>
+            </template>
+
+            <!-- Topik Chips (Biru Sky Soft) -->
+            <template x-for="tp in selectedTopik" :key="tp">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-sky-50 text-sky-700 border border-sky-200/80 text-xs font-extrabold rounded-full shadow-2xs">
+                    <span x-text="tp"></span>
+                    <button type="button" @click.stop.prevent="removeTopik(tp)" class="hover:text-sky-900 transition cursor-pointer p-0.5">
                         <i class="fa-solid fa-xmark text-[11px]"></i>
                     </button>
                 </span>
@@ -251,7 +318,7 @@
             <!-- Tombol Hapus Semua (Reset) -->
             <button type="button" 
                     @click="resetAll()"
-                    x-show="selectedKategori.length > 0 || selectedTahun.length > 0 || searchQuery !== ''"
+                    x-show="selectedKategori.length > 0 || selectedTopik.length > 0 || selectedTahun.length > 0 || searchQuery !== ''"
                     class="text-xs font-extrabold text-slate-700 hover:text-red-600 transition whitespace-nowrap px-2 cursor-pointer">
                 Hapus Semua
             </button>

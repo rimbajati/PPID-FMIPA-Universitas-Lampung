@@ -185,45 +185,8 @@
         </div>
 
         <!-- Pagination Footer -->
-        <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="text-xs md:text-sm font-semibold text-slate-500">
-                Menampilkan <span class="font-extrabold text-slate-900">{{ $permohonans->firstItem() ?? 0 }}–{{ $permohonans->lastItem() ?? 0 }}</span> dari <span class="font-black text-sky-600">{{ $permohonans->total() }}</span> permohonan
-            </div>
-
-            <!-- Pagination Nomor Angka -->
-            <div class="flex items-center gap-1.5 flex-wrap">
-                @if ($permohonans->onFirstPage())
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-300 text-xs font-bold cursor-not-allowed select-none border border-slate-200/50">
-                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                    </span>
-                @else
-                    <a href="{{ $permohonans->previousPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold border border-slate-200 transition shadow-2xs">
-                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                    </a>
-                @endif
-
-                @foreach (range(1, $permohonans->lastPage()) as $page)
-                    @if ($page == $permohonans->currentPage())
-                        <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-sky-500 text-white text-xs font-black shadow-xs">
-                            {{ $page }}
-                        </span>
-                    @else
-                        <a href="{{ $permohonans->url($page) }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold border border-slate-200 transition shadow-2xs">
-                            {{ $page }}
-                        </a>
-                    @endif
-                @endforeach
-
-                @if ($permohonans->hasMorePages())
-                    <a href="{{ $permohonans->nextPageUrl() }}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-extrabold border border-slate-200 transition shadow-2xs">
-                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                    </a>
-                @else
-                    <span class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-300 text-xs font-bold cursor-not-allowed select-none border border-slate-200/50">
-                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                    </span>
-                @endif
-            </div>
+        <div class="p-6 border-t border-slate-100">
+            <x-ui.pagination :paginator="$permohonans" label="permohonan" />
         </div>
     </form>
 </div>

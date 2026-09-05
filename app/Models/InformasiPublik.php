@@ -15,6 +15,7 @@ class InformasiPublik extends Model
         'judul_informasi',
         'deskripsi_informasi',
         'kategori_informasi',
+        'topik_informasi',
         'tahun_terbit',
         'file_informasi',
         'nama_file_asli',

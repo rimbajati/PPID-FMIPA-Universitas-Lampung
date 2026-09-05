@@ -15,13 +15,24 @@ class InformasiPublikController extends Controller
     {
         $query = InformasiPublik::query();
 
-        // Filter pencarian berdasarkan judul atau deskripsi
+        // Filter pencarian berdasarkan judul, deskripsi, atau topik
         if ($request->filled('search')) {
             $term = strtolower(trim($request->search));
             $query->where(function($q) use ($term) {
                 $q->whereRaw('LOWER(judul_informasi) LIKE ?', ["%{$term}%"])
-                  ->orWhereRaw('LOWER(deskripsi_informasi) LIKE ?', ["%{$term}%"]);
+                  ->orWhereRaw('LOWER(deskripsi_informasi) LIKE ?', ["%{$term}%"])
+                  ->orWhereRaw('LOWER(topik_informasi) LIKE ?', ["%{$term}%"]);
             });
+        }
+
+        // Filter berdasarkan topik informasi
+        if ($request->filled('topik')) {
+            $tp = $request->topik;
+            if (is_array($tp)) {
+                $query->whereIn('topik_informasi', array_filter($tp));
+            } else {
+                $query->where('topik_informasi', $tp);
+            }
         }
 
         // Filter berdasarkan kategori informasi
@@ -71,7 +82,7 @@ class InformasiPublikController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $informasiList = $query->paginate(25)->withQueryString();
+        $informasiList = $query->paginate(12)->withQueryString();
 
         // Data untuk filter dropdown & pill tabs
         $years = InformasiPublik::select('tahun_terbit')
@@ -80,6 +91,21 @@ class InformasiPublikController extends Controller
             ->where('tahun_terbit', '<>', '')
             ->orderBy('tahun_terbit', 'desc')
             ->pluck('tahun_terbit');
+
+        $topiks = InformasiPublik::select('topik_informasi')
+            ->distinct()
+            ->whereNotNull('topik_informasi')
+            ->where('topik_informasi', '<>', '')
+            ->orderBy('topik_informasi', 'asc')
+            ->pluck('topik_informasi');
+
+        $topikCounts = InformasiPublik::select('topik_informasi', \DB::raw('count(*) as count'))
+            ->whereNotNull('topik_informasi')
+            ->where('topik_informasi', '<>', '')
+            ->groupBy('topik_informasi')
+            ->orderBy('count', 'desc')
+            ->pluck('count', 'topik_informasi')
+            ->toArray();
 
         $totalCount = InformasiPublik::count();
 
@@ -93,8 +119,10 @@ class InformasiPublikController extends Controller
         return view('masyarakat.informasi_publik.index', compact(
             'informasiList',
             'years',
+            'topiks',
             'totalCount',
-            'kategoryCounts'
+            'kategoryCounts',
+            'topikCounts'
         ));
     }
 

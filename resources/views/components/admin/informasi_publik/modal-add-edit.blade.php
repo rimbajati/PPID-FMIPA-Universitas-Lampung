@@ -1,3 +1,5 @@
+@props(['listTopik' => []])
+
 <!-- Modal Tambah / Edit Informasi Publik -->
 <div id="modalAddEdit" class="hidden fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity">
     <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border-0 overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[92vh]">
@@ -8,9 +10,9 @@
                 <h3 id="modalTitle" class="text-xl sm:text-2xl font-extrabold text-white tracking-tight leading-snug">Tambah Informasi Publik</h3>
                 <p id="modalSubtitle" class="text-xs sm:text-sm text-white font-medium mt-1 leading-normal">Isi data dibawah ini untuk menambahkan informasi publik baru</p>
             </div>
-            <button type="button" onclick="closeAddEditModal()" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition cursor-pointer shrink-0 ml-4">
+            <!-- <button type="button" onclick="closeAddEditModal()" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition cursor-pointer shrink-0 ml-4">
                 <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
+            </button> -->
         </div>
 
         <!-- Form Body -->
@@ -46,16 +48,75 @@
                               class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition leading-relaxed resize-none"></textarea>
                 </div>
 
-                <!-- 3. Kategori Informasi -->
-                <div class="space-y-1.5">
-                    <label class="block text-xs md:text-sm font-bold text-slate-800">Kategori Informasi <span class="text-rose-500">*</span></label>
-                    <select id="inputKategori" name="kategori_informasi" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-semibold focus:bg-white focus:outline-none focus:border-sky-500 transition cursor-pointer">
-                        <option value="">-- Pilih Kategori Informasi --</option>
-                        <option value="Informasi Berkala">Informasi Berkala</option>
-                        <option value="Informasi Serta-Merta">Informasi Serta-Merta</option>
-                        <option value="Informasi Setiap Saat">Informasi Setiap Saat</option>
-                        <option value="Informasi Dikecualikan">Informasi Dikecualikan</option>
-                    </select>
+                <!-- 3. Kategori (UU KIP) & Topik / Bidang Informasi (Grid 2 Kolom) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+                    <!-- Kategori UU KIP -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs md:text-sm font-bold text-slate-800">Kategori (UU KIP) <span class="text-rose-500">*</span></label>
+                        <select id="inputKategori" name="kategori_informasi" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-semibold focus:bg-white focus:outline-none focus:border-sky-500 transition cursor-pointer">
+                            <option value="">-- Pilih Kategori UU KIP --</option>
+                            <option value="Informasi Berkala">Informasi Berkala</option>
+                            <option value="Informasi Serta-Merta">Informasi Serta-Merta</option>
+                            <option value="Informasi Setiap Saat">Informasi Setiap Saat</option>
+                            <option value="Informasi Dikecualikan">Informasi Dikecualikan</option>
+                        </select>
+                    </div>
+
+                    <!-- Topik / Bidang Informasi (Combobox: Ketik langsung & Dropdown Pilihan) -->
+                    <div x-data="{
+                        open: false,
+                        value: '',
+                        options: {{ json_encode(array_values(($listTopik ?? []) instanceof \Illuminate\Support\Collection ? $listTopik->toArray() : ($listTopik ?? []))) }},
+                        get filteredOptions() {
+                            if (!this.value) return this.options;
+                            return this.options.filter(i => i.toLowerCase().includes(this.value.toLowerCase()));
+                        },
+                        selectOption(opt) {
+                            this.value = opt;
+                            this.open = false;
+                        },
+                        resetAll() {
+                            this.value = '';
+                            this.open = false;
+                        },
+                        setValue(val) {
+                            this.value = val || '';
+                            this.open = false;
+                        }
+                    }" id="topikSelectComponent" class="relative space-y-1.5" @click.outside="open = false">
+                        <label class="block text-xs md:text-sm font-bold text-slate-800">Topik / Bidang Informasi <span class="text-rose-500">*</span></label>
+                        
+                        <div class="relative">
+                            <input type="text" 
+                                   name="topik_informasi" 
+                                   id="inputTopikFinal" 
+                                   required 
+                                   x-model="value" 
+                                   @focus="open = true" 
+                                   @click="open = true"
+                                   placeholder="Ketik topik baru atau pilih..." 
+                                   autocomplete="off"
+                                   class="w-full p-3 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-semibold focus:bg-white focus:outline-none focus:border-sky-500 transition shadow-2xs">
+                            
+                            <button type="button" @click="open = !open" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1">
+                                <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                            </button>
+                        </div>
+
+                        <!-- Dropdown List Options -->
+                        <div x-show="open && filteredOptions.length > 0" 
+                             x-transition
+                             class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-[10050] overflow-hidden p-1.5 space-y-0.5 max-h-48 overflow-y-auto text-xs md:text-sm font-semibold text-slate-700 [scrollbar-width:thin]">
+                            <template x-for="opt in filteredOptions" :key="opt">
+                                <div @click="selectOption(opt)" 
+                                     class="px-3.5 py-2.5 rounded-lg hover:bg-sky-50 hover:text-sky-600 cursor-pointer flex items-center justify-between transition-colors"
+                                     :class="value === opt ? 'bg-sky-50 text-sky-600 font-bold' : ''">
+                                    <span x-text="opt"></span>
+                                    <i x-show="value === opt" class="fa-solid fa-check text-xs"></i>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 4 & 5. Grid 2 Kolom: Tahun Terbit Informasi & Jenis Informasi -->

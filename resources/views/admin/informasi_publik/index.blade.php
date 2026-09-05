@@ -36,13 +36,13 @@
     />
 
     <!-- Table Container & Filter Bar -->
-    <x-admin.informasi_publik.table :informasi="$informasi" :listTahun="$listTahun" />
+    <x-admin.informasi_publik.table :informasi="$informasi" :listTahun="$listTahun" :listTopik="$listTopik" />
 
 </div>
 @endsection
 
 @section('modals')
-<x-admin.informasi_publik.modal-add-edit />
+<x-admin.informasi_publik.modal-add-edit :listTopik="$listTopik" />
 <x-modals.delete />
 @endsection
 
