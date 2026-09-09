@@ -46,5 +46,6 @@
 <x-modals.delete />
 @endsection
 
-<!-- Script Helper Admin Informasi Publik -->
+@push('scripts')
 <x-admin.informasi_publik.script />
+@endpush

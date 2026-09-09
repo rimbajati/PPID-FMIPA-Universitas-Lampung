@@ -41,12 +41,12 @@
                 </div>
                 <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">Informasi sedang disiapkan</p>
 
-                <template x-if="activeItem.pesan_diproses">
+                <template x-if="activeItem.catatan_diproses">
                     <div class="p-4 bg-amber-50/70 rounded-2xl text-xs md:text-sm text-amber-950 space-y-1.5 border border-amber-200/80 shadow-xs font-medium">
                         <div class="text-[11px] font-black text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-comment-dots text-amber-600"></i> PESAN PPID:
+                            <i class="fa-solid fa-comment-dots text-amber-600"></i> CATATAN PPID:
                         </div>
-                        <p class="leading-relaxed text-slate-800 font-semibold whitespace-pre-line" x-text="activeItem.pesan_diproses"></p>
+                        <p class="leading-relaxed text-slate-800 font-semibold whitespace-pre-line" x-text="activeItem.catatan_diproses"></p>
                     </div>
                 </template>
             </div>
@@ -68,15 +68,13 @@
 
                 <div class="p-4 bg-emerald-50/70 rounded-2xl text-xs md:text-sm text-emerald-950 space-y-1.5 border border-emerald-200/80 shadow-xs font-medium">
                     <div class="text-[11px] font-black text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-comment-dots text-emerald-600"></i> PESAN PPID:
+                        <i class="fa-solid fa-comment-dots text-emerald-600"></i> CATATAN PPID:
                     </div>
                     <p class="leading-relaxed text-slate-800 font-semibold whitespace-pre-line" 
-                       x-text="activeItem.pesan_selesai ? activeItem.pesan_selesai : (
+                       x-text="activeItem.catatan_selesai ? activeItem.catatan_selesai : (
                            activeItem.cara_memperoleh_informasi && activeItem.cara_memperoleh_informasi.toLowerCase().includes('email') 
-                           ? 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam/Junk) untuk mengunduh dokumen atau mengakses tautan jawaban informasi yang diminta.' 
-                           : (activeItem.cara_memperoleh_informasi && (activeItem.cara_memperoleh_informasi.toLowerCase().includes('dekanat') || activeItem.cara_memperoleh_informasi.toLowerCase().includes('langsung'))
-                               ? 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke kantor Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan dokumen informasi yang diminta.'
-                               : 'Permohonan Anda telah selesai dipenuhi.')
+                           ? 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam) untuk mengakses informasi yang diminta.' 
+                           : 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan informasi.'
                        )"></p>
                 </div>
             </div>

@@ -34,9 +34,9 @@ class RiwayatLayananController extends Controller
             $item->file_pendukung_url = $item->file_pendukung ? asset('storage/' . $item->file_pendukung) : null;
             
             // Pesan Tanggapan Admin berdasarkan standar 4 status
-            $item->pesan_diproses = $item->pesan_diproses ?? null;
-            $item->pesan_selesai  = $item->pesan_selesai ?? null;
-            $item->alasan_ditolak = $item->alasan_ditolak ?? $item->pesan_ditolak ?? null;
+            $item->catatan_diproses = $item->catatan_diproses ?? null;
+            $item->catatan_selesai  = $item->catatan_selesai ?? null;
+            $item->alasan_ditolak   = $item->alasan_ditolak ?? $item->pesan_ditolak ?? null;
 
             $item->has_keberatan = Keberatan::where('permohonan_id', $item->id)->exists();
             return $item;
@@ -62,9 +62,9 @@ class RiwayatLayananController extends Controller
             $item->file_pendukung_url = $item->file_pendukung ? asset('storage/' . $item->file_pendukung) : ($item->pendukung_file ? asset('storage/' . $item->pendukung_file) : null);
             
             // Pesan Tanggapan Admin berdasarkan standar 4 status
-            $item->pesan_diproses = $item->pesan_diproses ?? null;
-            $item->pesan_selesai  = $item->pesan_selesai ?? null;
-            $item->alasan_ditolak = $item->alasan_ditolak ?? $item->pesan_ditolak ?? null;
+            $item->catatan_diproses = $item->catatan_diproses ?? null;
+            $item->catatan_selesai  = $item->catatan_selesai ?? null;
+            $item->alasan_ditolak   = $item->alasan_ditolak ?? $item->pesan_ditolak ?? null;
 
             return $item;
         });

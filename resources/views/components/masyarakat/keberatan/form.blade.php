@@ -1,6 +1,6 @@
 <!-- WIDE LAYOUT SINGLE FORM CONTAINER (/keberatan) -->
 <main class="w-full bg-white border border-slate-200/90 rounded-3xl shadow-xl overflow-hidden">
-    
+
     <form action="{{ route('layanan.keberatan.store') }}" method="POST" enctype="multipart/form-data"
           @submit="if(!isValidForm()) { $event.preventDefault(); scrollToFirstError(); }">
         @csrf
@@ -31,7 +31,7 @@
 
             <!-- LAYOUT 2 KOLOM PARALEL UNTUK MENGHEMAT VERTIKAL SCROLLING -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                
+
                 <!-- KOLOM KIRI: TIKET ASAL & ALASAN KEBERATAN -->
                 <div class="space-y-5">
 
@@ -41,32 +41,34 @@
                             <label class="block text-xs font-black text-slate-700 tracking-wide uppercase">
                                 Nomor Tiket Permohonan Asal <span class="text-rose-500">*</span>
                             </label>
-                            <span class="text-[11px] font-bold text-slate-400">Pilih dari permohonan Anda atau ketik manual</span>
                         </div>
 
                         <div class="relative">
-                            <input type="text" name="nomor_tracking_asal" x-model="nomor_tracking_asal" required
-                                   @focus="dropdownOpen = true"
-                                   @input="onTrackingInput(); dropdownOpen = true"
-                                   class="w-full p-3.5 text-sm bg-slate-50/50 border border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 focus:bg-white focus:outline-none transition rounded-2xl font-mono text-slate-800 font-bold pr-10"
-                                   :class="submitted && !nomor_tracking_asal.trim() ? 'border-rose-500 ring-2 ring-rose-100' : ''"
-                                   placeholder="Pilih atau masukkan nomor tiket permohonan Anda...">
-                            
-                            <button type="button" @click="dropdownOpen = !dropdownOpen" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition">
-                                <i class="fa-solid fa-chevron-down text-xs" :class="dropdownOpen ? 'rotate-180' : ''"></i>
+                            <input type="hidden" name="nomor_tracking_asal" :value="nomor_tracking_asal" required>
+
+                            <!-- Tombol Trigger Dropdown Murni (Tanpa Input Teks / Autofill Browser) -->
+                            <button type="button"
+                                    @click="dropdownOpen = !dropdownOpen"
+                                    class="w-full p-3.5 text-left text-sm bg-slate-50/50 border border-slate-200 hover:bg-slate-100/60 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 focus:outline-none transition rounded-2xl flex items-center justify-between gap-2 cursor-pointer"
+                                    :class="submitted && !nomor_tracking_asal.trim() ? 'border-rose-500 ring-2 ring-rose-100' : ''">
+                                <span class="font-mono font-bold"
+                                      :class="nomor_tracking_asal ? 'text-slate-800 text-sm md:text-base' : 'text-slate-400 font-sans font-medium text-xs md:text-sm'"
+                                      x-text="nomor_tracking_asal ? ('#' + nomor_tracking_asal) : '-- Pilih Tiket Permohonan Asal --'"></span>
+                                <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0" :class="dropdownOpen ? 'rotate-180' : ''"></i>
                             </button>
 
                             <!-- Dropdown List Tiket Permohonan User -->
                             <div x-show="dropdownOpen" x-transition
-                                 class="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 shadow-xl max-h-72 overflow-y-auto rounded-2xl">
+                                 class="absolute z-30 left-0 right-0 mt-1.5 bg-white border border-slate-200 shadow-xl max-h-72 overflow-y-auto rounded-2xl divide-y divide-slate-100">
                                 <template x-if="permohonanList.length === 0">
-                                    <div class="p-4 text-center text-xs sm:text-sm text-slate-400 italic">
-                                        Belum ada permohonan informasi yang diajukan.
+                                    <div class="p-5 text-center text-xs sm:text-sm text-slate-400 italic">
+                                        Belum ada permohonan informasi yang memenuhi syarat untuk diajukan keberatan.
                                     </div>
                                 </template>
                                 <template x-for="item in permohonanList" :key="item.id">
                                      <div @click="selectPermohonan(item)"
-                                          class="p-4 hover:bg-slate-50 cursor-pointer border-b border-slate-100 transition flex items-center justify-between gap-3">
+                                          class="p-4 hover:bg-amber-50/60 cursor-pointer transition flex items-center justify-between gap-3"
+                                          :class="nomor_tracking_asal === item.no_tiket ? 'bg-amber-50/80' : ''">
                                          <div class="flex-1 min-w-0">
                                              <div class="flex items-center gap-2 flex-wrap">
                                                  <span class="font-extrabold text-slate-900 font-mono text-sm sm:text-base" x-text="'#' + item.no_tiket"></span>
@@ -86,16 +88,18 @@
                                  </template>
                             </div>
                         </div>
+                        <p x-show="submitted && !nomor_tracking_asal.trim()" x-cloak class="text-xs font-bold text-rose-500 mt-1 flex items-center gap-1">
+                            <i class="fa-solid fa-circle-exclamation text-xs"></i> Silakan pilih nomor tiket permohonan terlebih dahulu.
+                        </p>
                     </div>
 
                     <!-- Detail Informasi Yang Diminta Permohonan Asal -->
-                    <div x-show="rincian_informasi_asal" x-transition class="space-y-2">
-                        <label class="block text-xs font-black text-slate-700 tracking-wide uppercase">
+                    <div x-show="rincian_informasi_asal" x-transition class="space-y-1.5 pt-1">
+                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase">
                             Permohonan Asal yang Akan Diajukan Keberatan
                         </label>
-                        <textarea readonly rows="3"
-                                  class="w-full p-3.5 text-sm bg-slate-100/70 border border-slate-200 text-slate-600 font-semibold rounded-2xl cursor-not-allowed resize-none focus:outline-none"
-                                  x-text="rincian_informasi_asal"></textarea>
+                        <p class="text-sm text-slate-800 font-medium leading-relaxed"
+                           x-text="rincian_informasi_asal"></p>
                     </div>
 
                     <!-- Alasan Pengajuan Keberatan -->

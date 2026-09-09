@@ -68,8 +68,8 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide whitespace-nowrap">
-                        <th id="col-checkbox-header" class="hidden px-4 py-4 w-10 text-center col-checkbox">
-                            <input type="checkbox" id="select-all" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
+                        <th id="col-checkbox-header" class="hidden px-4 py-4 w-10 text-center">
+                            <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                         </th>
                         <th class="px-6 py-4 whitespace-nowrap">No. Tiket</th>
                         <th class="px-6 py-4 whitespace-nowrap">No. Tiket Asal</th>
@@ -83,86 +83,80 @@
                 <tbody class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
                     @forelse($keberatans as $item)
                         <tr class="hover:bg-sky-50/70 transition-colors">
-                            <td class="px-4 py-4 text-center hidden col-checkbox">
-                                <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" class="child-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
+                            <td class="col-checkbox-cell hidden px-4 py-2.5 text-center">
+                                <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                             </td>
 
-                            <td class="px-6 py-4 font-black text-slate-600 whitespace-nowrap">
+                            <td class="px-6 py-2.5 font-black text-slate-600 whitespace-nowrap">
                                 {{ $item->no_tiket ?? '-' }}
                             </td>
 
-                            <td class="px-6 py-4 font-bold text-slate-600 whitespace-nowrap">
+                            <td class="px-6 py-2.5 font-bold text-slate-600 whitespace-nowrap">
                                 {{ $item->permohonan->no_tiket ?? '-' }}
                             </td>
 
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-2.5">
                                 <div class="text-xs md:text-sm font-extrabold text-slate-900">{{ $item->permohonan->nama_lengkap ?? ($item->user->nama_lengkap ?? '-') }}</div>
                                 <div class="text-xs text-slate-400 font-semibold">NIK: {{ $item->permohonan->no_identitas ?? '-' }}</div>
                             </td>
 
-                            <td class="px-6 py-4 text-slate-500 whitespace-nowrap font-semibold">
+                            <td class="px-6 py-2.5 text-slate-500 whitespace-nowrap font-semibold">
                                 {{ $item->created_at ? $item->created_at->translatedFormat('d M Y') : '-' }}
                             </td>
 
-                            <td class="px-6 py-4 font-semibold text-slate-700 max-w-xs truncate" title="{{ $item->alasan_keberatan }}">
+                            <td class="px-6 py-2.5 font-semibold text-slate-700 max-w-xs truncate" title="{{ $item->alasan_keberatan }}">
                                 {{ $item->alasan_keberatan ?? '-' }}
                             </td>
 
-                            <td class="px-6 py-4 text-center whitespace-nowrap">
+                            <td class="px-6 py-2.5 text-center whitespace-nowrap">
                                 @if($item->status === 'Diajukan' || $item->status === 'Menunggu')
-                                    <span class="inline-block px-3.5 py-1.5 text-xs font-extrabold bg-slate-100 text-slate-700 rounded-lg border border-slate-200">
+                                    <span class="inline-block px-3.5 py-1 text-xs font-extrabold bg-slate-100 text-slate-700 rounded-lg border border-slate-200">
                                         Diajukan
                                     </span>
                                 @elseif($item->status === 'Perlu Tindakan' || $item->status === 'Diproses' || $item->status === 'Proses')
-                                    <span class="inline-block px-3.5 py-1.5 text-xs font-extrabold bg-amber-50 text-amber-700 rounded-lg border border-amber-200">
+                                    <span class="inline-block px-3.5 py-1 text-xs font-extrabold bg-amber-50 text-amber-700 rounded-lg border border-amber-200">
                                         Diproses
                                     </span>
                                 @elseif($item->status === 'Terima' || $item->status === 'Selesai' || $item->status === 'Disetujui')
-                                     <span class="inline-block px-3.5 py-1.5 text-xs font-extrabold bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-200">
+                                     <span class="inline-block px-3.5 py-1 text-xs font-extrabold bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-200">
                                          Selesai
                                      </span>
                                  @elseif($item->status === 'Ditolak')
-                                     <span class="inline-block px-3.5 py-1.5 text-xs font-extrabold bg-rose-50 text-rose-700 rounded-lg border border-rose-200">
+                                     <span class="inline-block px-3.5 py-1 text-xs font-extrabold bg-rose-50 text-rose-700 rounded-lg border border-rose-200">
                                          Ditolak
                                      </span>
                                  @endif
                              </td>
-                             <td class="px-6 py-4 text-center whitespace-nowrap">
+                             <td class="px-6 py-2.5 text-center whitespace-nowrap">
                                  <div class="flex items-center justify-center gap-2">
                                      @php
                                          $statusAwal = $item->status;
                                      @endphp
 
                                      @if($statusAwal === 'Diajukan' || $statusAwal === 'Menunggu')
-                                         <button type="button" 
-                                                 data-keberatan='@json($item)'
-                                                 onclick="openKeberatanDetail(this)"
-                                                 class="w-9 h-9 flex items-center justify-center rounded-xl text-amber-700 bg-amber-50 hover:bg-amber-500 hover:text-white transition cursor-pointer shadow-2xs border border-amber-200"
-                                                 title="Proses Keberatan">
-                                             <i class="fa-solid fa-gears text-sm"></i>
-                                         </button>
+                                         <a href="{{ route('admin.keberatan.show', $item->id) }}"
+                                            class="w-8 h-8 flex items-center justify-center rounded-xl text-amber-700 bg-amber-50 hover:bg-amber-500 hover:text-white transition cursor-pointer shadow-2xs border border-amber-200"
+                                            title="Proses Keberatan">
+                                             <i class="fa-solid fa-gears text-xs"></i>
+                                         </a>
                                      @elseif($statusAwal === 'Perlu Tindakan' || $statusAwal === 'Diproses' || $statusAwal === 'Proses')
-                                         <button type="button" 
-                                                 data-keberatan='@json($item)'
-                                                 onclick="openKeberatanDetail(this)"
-                                                 class="w-9 h-9 flex items-center justify-center rounded-xl text-sky-700 bg-sky-50 hover:bg-sky-500 hover:text-white transition cursor-pointer shadow-2xs border border-sky-200"
-                                                 title="Tindaklanjuti">
-                                             <i class="fa-solid fa-reply text-sm"></i>
-                                         </button>
+                                         <a href="{{ route('admin.keberatan.show', $item->id) }}"
+                                            class="w-8 h-8 flex items-center justify-center rounded-xl text-sky-700 bg-sky-50 hover:bg-sky-500 hover:text-white transition cursor-pointer shadow-2xs border border-sky-200"
+                                            title="Tindaklanjuti">
+                                             <i class="fa-solid fa-reply text-xs"></i>
+                                         </a>
                                      @else
-                                         <button type="button" 
-                                                 data-keberatan='@json($item)'
-                                                 onclick="openKeberatanDetail(this)"
-                                                 class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer shadow-2xs border border-slate-200"
-                                                 title="Lihat Detail Tanggapan">
-                                             <i class="fa-solid fa-eye text-sm"></i>
-                                         </button>
+                                         <a href="{{ route('admin.keberatan.show', $item->id) }}"
+                                            class="w-8 h-8 flex items-center justify-center rounded-xl text-slate-500 bg-slate-100 hover:bg-slate-200 hover:text-slate-800 transition cursor-pointer shadow-2xs border border-slate-200"
+                                            title="Lihat Detail">
+                                             <i class="fa-solid fa-eye text-xs"></i>
+                                         </a>
                                      @endif
 
                                      <button type="button" onclick="triggerDelete('{{ route('admin.keberatan.destroy', $item->id) }}', '{{ addslashes($item->no_tiket ?? $item->id) }}')"
-                                             class="w-9 h-9 flex items-center justify-center rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white transition cursor-pointer shadow-2xs border border-rose-200"
+                                             class="w-8 h-8 flex items-center justify-center rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white transition cursor-pointer shadow-2xs border border-rose-200"
                                              title="Hapus Data Keberatan">
-                                         <i class="fa-solid fa-trash text-sm"></i>
+                                         <i class="fa-solid fa-trash text-xs"></i>
                                      </button>
                                  </div>
                              </td>

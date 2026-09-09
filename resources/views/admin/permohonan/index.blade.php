@@ -4,7 +4,7 @@
 @section('header_title', 'Permohonan Informasi')
 
 @section('content')
-<div x-data="permohonanModalData" class="space-y-6">
+<div class="space-y-6">
 
     <!-- Section Header & 5 Summary Overview Cards -->
     <x-admin.permohonan.summary-cards :totalPermohonan="$totalPermohonan" :totalMenunggu="$totalMenunggu" :totalDiproses="$totalDiproses" :totalSelesai="$totalSelesai" :totalDitolak="$totalDitolak" />
@@ -16,14 +16,5 @@
     <x-modals.delete />
 </div>
 @endsection
-
-@section('modals')
-<div x-data="permohonanModalData">
-    <!-- Modal Tindak Lanjut / Detail Permohonan -->
-    <x-admin.permohonan.modal-follow-up />
-</div>
-@endsection
-
-<x-admin.permohonan.script />
 
 

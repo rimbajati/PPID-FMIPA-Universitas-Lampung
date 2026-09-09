@@ -89,22 +89,22 @@
                 <tbody class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
                     @forelse($informasi as $item)
                         <tr class="hover:bg-sky-50/70 transition-colors">
-                            <td class="col-checkbox-cell hidden px-4 py-4 text-center">
+                            <td class="col-checkbox-cell hidden px-4 py-2.5 text-center">
                                 <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                             </td>
 
-                            <td class="p-6 font-extrabold text-slate-900 min-w-[200px] max-w-[320px] leading-snug">
-                                <div class="line-clamp-3 [word-break:break-word] break-all" title="{{ $item->judul_informasi }}">
+                            <td class="px-6 py-2.5 font-extrabold text-slate-900 min-w-[200px] max-w-[320px] leading-snug">
+                                <div class="line-clamp-2 [word-break:break-word] break-all" title="{{ $item->judul_informasi }}">
                                     {{ $item->judul_informasi }}
                                 </div>
                             </td>
 
-                            <td class="p-6 font-semibold text-slate-700 min-w-[200px] max-w-[380px] leading-snug">
-                                <div class="line-clamp-5 [word-break:break-word] break-all" title="{{ $item->deskripsi_informasi }}">
+                            <td class="px-6 py-2.5 font-semibold text-slate-700 min-w-[200px] max-w-[380px] leading-snug">
+                                <div class="line-clamp-2 [word-break:break-word] break-all" title="{{ $item->deskripsi_informasi }}">
                                     {{ $item->deskripsi_informasi }}
                                 </div>
                             </td>
-                            <td class="p-6 whitespace-nowrap">
+                            <td class="px-6 py-2.5 whitespace-nowrap">
                                 @if(!empty($item->topik_informasi))
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200/80 shadow-2xs whitespace-nowrap">
                                         {{ $item->topik_informasi }}
@@ -113,7 +113,7 @@
                                     <span class="text-slate-400 font-semibold text-xs">-</span>
                                 @endif
                             </td>
-                            <td class="p-6 whitespace-nowrap">
+                            <td class="px-6 py-2.5 whitespace-nowrap">
                                 @if($item->kategori_informasi === 'Informasi Setiap Saat')
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white shadow-2xs whitespace-nowrap">
                                         Informasi Setiap Saat
@@ -132,23 +132,23 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="p-6 text-center font-bold text-slate-700 whitespace-nowrap">
+                            <td class="px-6 py-2.5 text-center font-bold text-slate-700 whitespace-nowrap">
                                 {{ $item->tahun_terbit ?? date('Y', strtotime($item->created_at ?? now())) }}
                             </td>
-                            <td class="p-6 text-center">
+                            <td class="px-6 py-2.5 text-center">
                                 <div class="flex items-center justify-center gap-1.5">
                                      @php
                                          $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
                                          $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->judul_informasi) . ($ext ? '.' . $ext : '.pdf'));
                                      @endphp
-                                     <a href="{{ ($item->link_informasi && !$item->file_informasi) ? $item->link_informasi : url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') }}" target="_blank" title="Lihat Berkas" class="p-2.5 text-sky-600 bg-sky-50 hover:bg-sky-500 hover:text-white transition shadow-xs" style="border-radius: 6px !important;">
-                                        <i class="fa-solid fa-eye text-sm"></i>
+                                     <a href="{{ ($item->link_informasi && !$item->file_informasi) ? $item->link_informasi : url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') }}" target="_blank" title="Lihat Berkas" class="w-8 h-8 flex items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-500 hover:text-white transition shadow-xs rounded-xl">
+                                        <i class="fa-solid fa-eye text-xs"></i>
                                     </a>
-                                    <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="p-2.5 text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-xs cursor-pointer" style="border-radius: 6px !important;">
-                                        <i class="fa-solid fa-pen-to-square text-sm"></i>
+                                    <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="w-8 h-8 flex items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-xs cursor-pointer rounded-xl">
+                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
                                     </button>
-                                    <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->judul_informasi) }}')" title="Hapus Data" class="p-2.5 text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-xs cursor-pointer" style="border-radius: 6px !important;">
-                                        <i class="fa-solid fa-trash text-sm"></i>
+                                    <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->judul_informasi) }}')" title="Hapus Data" class="w-8 h-8 flex items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-xs cursor-pointer rounded-xl">
+                                        <i class="fa-solid fa-trash text-xs"></i>
                                     </button>
                                 </div>
                             </td>

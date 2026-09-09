@@ -17,7 +17,7 @@ class KeberatanController extends Controller
     {
         $user = Auth::user();
 
-        // Pemohon hanya boleh mengajukan keberatan jika permohonan sudah Selesai, Ditolak, 
+        // Pemohon hanya boleh mengajukan keberatan jika permohonan sudah Selesai, Ditolak,
         // ATAU berstatus Diajukan/Diproses tetapi sudah melampaui batas waktu 10 hari kerja.
         $permohonanUser = Permohonan::where('user_id', Auth::id())
             ->whereDoesntHave('keberatans')
@@ -83,8 +83,11 @@ class KeberatanController extends Controller
         }
 
         $pendukungPath = null;
+        $namaPendukungAsli = null;
         if ($request->hasFile('pendukung_file')) {
-            $pendukungPath = $request->file('pendukung_file')->store('pendukung', 'public');
+            $filePendukung = $request->file('pendukung_file');
+            $pendukungPath = $filePendukung->store('pendukung', 'public');
+            $namaPendukungAsli = $filePendukung->getClientOriginalName();
         }
 
         $todayStr = date('Ymd');
@@ -97,13 +100,14 @@ class KeberatanController extends Controller
         } while (Keberatan::where('no_tiket', $noTiket)->exists());
 
         $keberatan = Keberatan::create([
-            'user_id'             => Auth::id() ?? $permohonan->user_id,
-            'permohonan_id'       => $permohonan->id,
-            'no_tiket'            => $noTiket,
-            'alasan_keberatan'    => $request->alasan_keberatan,
-            'kronologi_keberatan' => $request->kronologi_keberatan,
-            'file_pendukung'      => $pendukungPath,
-            'status'              => 'Diajukan',
+            'user_id'                  => Auth::id() ?? $permohonan->user_id,
+            'permohonan_id'            => $permohonan->id,
+            'no_tiket'                 => $noTiket,
+            'alasan_keberatan'         => $request->alasan_keberatan,
+            'kronologi_keberatan'      => $request->kronologi_keberatan,
+            'file_pendukung'           => $pendukungPath,
+            'nama_file_pendukung_asli' => $namaPendukungAsli,
+            'status'                   => 'Diajukan',
         ]);
 
         // Kirim Email Bukti Pengajuan Keberatan Baru
@@ -125,6 +129,8 @@ class KeberatanController extends Controller
             }
         }
 
-        return redirect()->route('layanan.riwayat')->with('success', 'Pengajuan keberatan Anda dengan Nomor Tiket ' . $noTiket . ' berhasil dikirim!');
+        return redirect()->route('layanan')
+            ->with('success_keberatan_tiket', $noTiket)
+            ->with('success', 'Pengajuan keberatan Anda dengan Nomor Tiket ' . $noTiket . ' berhasil dikirim!');
     }
 }

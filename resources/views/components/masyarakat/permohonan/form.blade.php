@@ -25,7 +25,7 @@
                 <!-- KOLOM KIRI: BAGIAN 1 - DATA DIRI PEMOHON & BERKAS IDENTITAS -->
                 <div class="space-y-5">
 
-                    <!-- Kategori Pemohon & Nama Lengkap -->
+                    <!-- Kategori Pemohon & Nama Lengkap / Nama Organisasi -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-black text-slate-700 tracking-wide uppercase mb-2">
@@ -41,24 +41,40 @@
                             </select>
                         </div>
 
+                        <!-- Kolom Sebelah Kanan Kategori: Jika Organisasi/Lembaga, tampilkan Nama Organisasi/Lembaga di sini -->
                         <div>
-                            <label class="block text-xs font-black text-slate-700 tracking-wide uppercase mb-2">
-                                Nama Lengkap <span class="text-rose-500">*</span>
-                            </label>
-                            <input type="text" name="nama_lengkap" x-model="nama_lengkap" readonly
-                                   class="w-full p-3.5 text-sm bg-slate-100/70 border border-slate-200 text-slate-600 font-semibold focus:outline-none rounded-2xl cursor-not-allowed"
-                                   placeholder="Nama Pemohon">
+                            <template x-if="['Organisasi', 'Lembaga'].includes(selectedKategori)">
+                                <div>
+                                    <label class="block text-xs font-black text-slate-700 tracking-wide uppercase mb-2">
+                                        <span x-text="'Nama ' + (selectedKategori || 'Organisasi / Lembaga')"></span> <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="text" name="nama_organisasi_lembaga" x-model="nama_organisasi_lembaga" required
+                                           class="w-full p-3.5 text-sm bg-slate-50/50 border border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:bg-white focus:outline-none transition rounded-2xl font-semibold text-slate-800"
+                                           :placeholder="'Masukkan Nama ' + (selectedKategori || 'Organisasi / Lembaga')">
+                                </div>
+                            </template>
+
+                            <template x-if="!['Organisasi', 'Lembaga'].includes(selectedKategori)">
+                                <div>
+                                    <label class="block text-xs font-black text-slate-700 tracking-wide uppercase mb-2">
+                                        Nama Lengkap <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="text" name="nama_lengkap" x-model="nama_lengkap" readonly
+                                           class="w-full p-3.5 text-sm bg-slate-100/70 border border-slate-200 text-slate-600 font-semibold focus:outline-none rounded-2xl cursor-not-allowed"
+                                           placeholder="Nama Pemohon">
+                                </div>
+                            </template>
                         </div>
                     </div>
 
-                    <!-- Nama Organisasi / Lembaga (Opsional jika dipilih) -->
+                    <!-- Jika Organisasi/Lembaga dipilih, Nama Lengkap (Pemohon/Penanggung Jawab) berpindah ke baris ini -->
                     <div x-show="['Organisasi', 'Lembaga'].includes(selectedKategori)" x-cloak x-transition>
                         <label class="block text-xs font-black text-slate-700 tracking-wide uppercase mb-2">
-                            <span x-text="'Nama ' + (selectedKategori || 'Organisasi / Lembaga')"></span> <span class="text-rose-500">*</span>
+                            Nama Lengkap <span class="text-rose-500">*</span>
                         </label>
-                        <input type="text" name="nama_organisasi_lembaga" x-model="nama_organisasi_lembaga"
-                               class="w-full p-3.5 text-sm bg-slate-50/50 border border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-100 focus:bg-white focus:outline-none transition rounded-2xl font-semibold text-slate-800"
-                               :placeholder="'Masukkan Nama ' + (selectedKategori || 'Organisasi / Lembaga')">
+                        <input type="text" :name="['Organisasi', 'Lembaga'].includes(selectedKategori) ? 'nama_lengkap' : ''" x-model="nama_lengkap" readonly
+                               class="w-full p-3.5 text-sm bg-slate-100/70 border border-slate-200 text-slate-600 font-semibold focus:outline-none rounded-2xl cursor-not-allowed"
+                               placeholder="Nama Pemohon">
                     </div>
 
                     <!-- NIK & UPLOAD KTP/SIM (DISEBALAHKAN LANGSUNG PARALEL) -->
@@ -196,15 +212,27 @@
                         </div>
                     </div>
 
-                    <!-- Dokumen Pendukung (Opsional) -->
+                    <!-- Dokumen Pendukung (Wajib jika Organisasi/Lembaga, Opsional jika lainnya) -->
                     <div>
                         <label class="block text-xs font-black text-slate-700 tracking-wide uppercase mb-2">
-                            Dokumen Pendukung <span class="text-slate-400 font-semibold uppercase">(Opsional)</span>
+                            Dokumen Pendukung 
+                            <template x-if="['Organisasi', 'Lembaga'].includes(selectedKategori)">
+                                <span class="text-rose-500">*</span>
+                            </template>
+                            <template x-if="!['Organisasi', 'Lembaga'].includes(selectedKategori)">
+                                <span class="text-slate-400 font-semibold uppercase">(Opsional)</span>
+                            </template>
                         </label>
                         <input type="file" id="pendukung_file_input" name="file_pendukung" accept=".pdf,.docx"
+                               :required="['Organisasi', 'Lembaga'].includes(selectedKategori)"
                                @change="handlePendukungFileChange($event)"
                                class="w-full text-xs text-slate-600 font-semibold file:mr-3 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-extrabold file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer border border-slate-200 rounded-2xl bg-slate-50/50 p-1.5 focus:outline-none">
-                        <span class="block text-[10px] text-slate-400 mt-1 font-medium">Format: PDF, DOCX (Maksimal 5 MB)</span>
+                        <div class="flex items-center justify-between text-[10px] text-slate-400 mt-1 font-medium">
+                            <span>Format: PDF, DOCX (Maksimal 5 MB)</span>
+                            <template x-if="['Organisasi', 'Lembaga'].includes(selectedKategori)">
+                                <span class="text-amber-600 font-bold">Wajib melampirkan AD/ART atau Akta Pendirian</span>
+                            </template>
+                        </div>
                     </div>
 
                 </div>

@@ -111,6 +111,9 @@ Route::get('/informasi/lihat/{id}', function (Request $request, $id) {
             return response()->file($path, [
                 'Content-Type' => $mimeType,
                 'Content-Disposition' => 'inline; filename="' . addslashes($filename) . '"',
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
             ]);
         }
     }
@@ -142,11 +145,76 @@ Route::get('/informasi/file/{id}/{filename}', function (Request $request, $id, $
             return response()->file($path, [
                 'Content-Type' => $mimeType,
                 'Content-Disposition' => 'inline; filename="' . addslashes($filename) . '"',
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
             ]);
         }
     }
     abort(404, 'File tidak ditemukan');
 })->name('informasi.lihat.file');
+
+// Rute preview berkas permohonan dengan nama file asli pada URL
+Route::get('/permohonan/file/{id}/{type}/{filename}', function (Request $request, $id, $type, $filename) {
+    $permohonan = \App\Models\Permohonan::findOrFail($id);
+    
+    $filePath = ($type === 'identitas') ? $permohonan->file_identitas : $permohonan->file_pendukung;
+    $namaAsli = ($type === 'identitas') ? $permohonan->nama_file_identitas_asli : $permohonan->nama_file_pendukung_asli;
+
+    if ($filePath) {
+        $path = null;
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($filePath)) {
+            $path = storage_path('app/public/' . $filePath);
+        } elseif (\Illuminate\Support\Facades\Storage::disk('local')->exists($filePath)) {
+            $path = storage_path('app/' . $filePath);
+        } elseif (file_exists(public_path('storage/' . $filePath))) {
+            $path = public_path('storage/' . $filePath);
+        }
+
+        if ($path && file_exists($path)) {
+            $mimeType = \Illuminate\Support\Facades\File::mimeType($path) ?? 'application/octet-stream';
+            $displayName = $namaAsli ?: $filename;
+
+            return response()->file($path, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . addslashes($displayName) . '"',
+            ]);
+        }
+    }
+
+    abort(404, 'File lampiran tidak ditemukan');
+})->name('permohonan.file');
+
+// Rute preview berkas lampiran keberatan dengan nama file asli pada URL
+Route::get('/keberatan/file/{id}/{filename}', function (Request $request, $id, $filename) {
+    $keberatan = \App\Models\Keberatan::findOrFail($id);
+    
+    $filePath = $keberatan->file_pendukung;
+    $namaAsli = $keberatan->nama_file_pendukung_asli;
+
+    if ($filePath) {
+        $path = null;
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($filePath)) {
+            $path = storage_path('app/public/' . $filePath);
+        } elseif (\Illuminate\Support\Facades\Storage::disk('local')->exists($filePath)) {
+            $path = storage_path('app/' . $filePath);
+        } elseif (file_exists(public_path('storage/' . $filePath))) {
+            $path = public_path('storage/' . $filePath);
+        }
+
+        if ($path && file_exists($path)) {
+            $mimeType = \Illuminate\Support\Facades\File::mimeType($path) ?? 'application/octet-stream';
+            $displayName = $namaAsli ?: $filename;
+
+            return response()->file($path, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . addslashes($displayName) . '"',
+            ]);
+        }
+    }
+
+    abort(404, 'File lampiran keberatan tidak ditemukan');
+})->name('keberatan.file');
 
 // Rute Admin: Informasi Publik, Permohonan, & Keberatan
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
@@ -161,12 +229,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     // Rute Admin: Permohonan Informasi
     Route::get('/permohonan', [AdminPermohonanController::class, 'index'])->name('admin.permohonan.index');
+    Route::get('/permohonan/{id}', [AdminPermohonanController::class, 'show'])->name('admin.permohonan.show');
     Route::put('/permohonan/{id}/status', [AdminPermohonanController::class, 'updateStatus'])->name('admin.permohonan.update-status');
     Route::delete('/permohonan/bulk-delete', [AdminPermohonanController::class, 'destroyBulk'])->name('admin.permohonan.bulk');
     Route::delete('/permohonan/{id}', [AdminPermohonanController::class, 'destroy'])->name('admin.permohonan.destroy');
 
     // Rute Admin: Pengajuan Keberatan Informasi
     Route::get('/keberatan', [AdminKeberatanController::class, 'index'])->name('admin.keberatan.index');
+    Route::get('/keberatan/{id}', [AdminKeberatanController::class, 'show'])->name('admin.keberatan.show');
     Route::put('/keberatan/{id}/status', [AdminKeberatanController::class, 'updateStatus'])->name('admin.keberatan.update-status');
     Route::delete('/keberatan/bulk-delete', [AdminKeberatanController::class, 'destroyBulk'])->name('admin.keberatan.bulk');
     Route::delete('/keberatan/{id}', [AdminKeberatanController::class, 'destroy'])->name('admin.keberatan.destroy');

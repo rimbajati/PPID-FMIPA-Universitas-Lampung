@@ -3,7 +3,7 @@
 @section('title', 'Lacak & Riwayat Layanan - PPID FMIPA Unila')
 
 @section('content')
-<main class="pt-[75px] md:pt-[85px] bg-slate-50 min-h-screen pb-24" 
+<main class="pt-[75px] md:pt-[85px] bg-slate-50 min-h-screen pb-24"
       x-data="lacakRiwayatApp({{ json_encode($allLayans) }})">
 
     <!-- Breadcrumb Bar Component -->
@@ -27,4 +27,7 @@
 
 <!-- Helper Script Lacak Riwayat -->
 <x-masyarakat.riwayat.script />
+
+<!-- Modal Notifikasi Sukses Pengajuan Tiket (Permohonan / Keberatan) -->
+<x-masyarakat.layanan.modal-success-tiket />
 @endsection

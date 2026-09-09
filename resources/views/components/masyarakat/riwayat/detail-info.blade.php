@@ -22,9 +22,7 @@
                   x-text="!activeItem.cara_memperoleh_informasi ? '-' : (
                       activeItem.cara_memperoleh_informasi.toLowerCase().includes('email') 
                       ? 'Dikirim melalui Email' 
-                      : (activeItem.cara_memperoleh_informasi.toLowerCase().includes('dekanat') || activeItem.cara_memperoleh_informasi.toLowerCase().includes('langsung')
-                          ? 'Datang langsung ke Dekanat FMIPA Universitas Lampung' 
-                          : activeItem.cara_memperoleh_informasi)
+                      : 'Datang langsung ke Dekanat FMIPA Universitas Lampung'
                   )"></span>
         </div>
     </template>

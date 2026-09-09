@@ -55,6 +55,16 @@ class KeberatanController extends Controller
     }
 
     /**
+     * Halaman Detail Pengajuan Keberatan
+     */
+    public function show($id)
+    {
+        $keberatan = Keberatan::with(['user', 'permohonan'])->findOrFail($id);
+
+        return view('admin.keberatan.show', compact('keberatan'));
+    }
+
+    /**
      * Dashboard Admin - Update Status & Tanggapan Keberatan (Diajukan, Diproses, Selesai, Ditolak)
      */
     public function updateStatus(Request $request, $id)
@@ -69,12 +79,12 @@ class KeberatanController extends Controller
         }
 
         $validated = $request->validate([
-            'status'         => 'required|string|in:Diajukan,Diproses,Selesai,Ditolak',
-            'pesan_diproses' => 'nullable|string',
-            'pesan_selesai'  => 'nullable|string',
-            'alasan_ditolak' => 'nullable|string',
-            'file_jawaban'   => 'nullable|file|mimes:pdf,docx,xlsx|max:5120',
-            'link_jawaban'   => 'nullable|url|max:255',
+            'status'           => 'required|string|in:Diajukan,Diproses,Selesai,Ditolak',
+            'catatan_diproses' => 'nullable|string',
+            'catatan_selesai'  => 'nullable|string',
+            'alasan_ditolak'   => 'nullable|string',
+            'file_jawaban'     => 'nullable|file|mimes:pdf,docx,xlsx|max:5120',
+            'link_jawaban'     => 'nullable|url|max:255',
         ]);
 
         $statusInput = $validated['status'];
@@ -84,28 +94,37 @@ class KeberatanController extends Controller
             return redirect()->back()->withErrors(['alasan_ditolak' => 'Alasan penolakan wajib diisi sebelum menolak pengajuan keberatan.'])->withInput();
         }
 
-        // Jika Diproses, Pesan Diproses Wajib Diisi
-        if ($statusInput === 'Diproses' && empty(trim($request->input('pesan_diproses')))) {
-            return redirect()->back()->withErrors(['pesan_diproses' => 'Pesan untuk pemohon wajib diisi saat memproses pengajuan keberatan.'])->withInput();
+        // Jika Diproses, Catatan Diproses Wajib Diisi
+        if ($statusInput === 'Diproses' && empty(trim($request->input('catatan_diproses')))) {
+            return redirect()->back()->withErrors(['catatan_diproses' => 'Catatan untuk pemohon wajib diisi saat memproses pengajuan keberatan.'])->withInput();
         }
 
-        // Jika Selesai/Dikabulkan, Pesan Selesai Wajib Diisi (otomatis terisi default jika tidak diubah)
-        $pesanSelesaiInput = $validated['pesan_selesai'] ?? null;
+        // Jika Selesai/Dikabulkan, Catatan Selesai Wajib Diisi (otomatis terisi default jika tidak diubah)
+        $catatanSelesaiInput = $validated['catatan_selesai'] ?? null;
         if ($statusInput === 'Selesai') {
-            if (empty(trim($pesanSelesaiInput ?? ''))) {
-                $pesanSelesaiInput = 'Pengajuan keberatan Anda telah dikabulkan dan diselesaikan oleh PPID FMIPA Universitas Lampung.';
+            if (empty(trim($catatanSelesaiInput ?? ''))) {
+                $catatanSelesaiInput = 'Pengajuan keberatan Anda telah dikabulkan dan diselesaikan oleh PPID FMIPA Universitas Lampung.';
             }
-            if (empty(trim($pesanSelesaiInput))) {
-                return redirect()->back()->withErrors(['pesan_selesai' => 'Pesan untuk pemohon wajib diisi sebelum menyelesaikan keberatan.'])->withInput();
+            if (empty(trim($catatanSelesaiInput))) {
+                return redirect()->back()->withErrors(['catatan_selesai' => 'Catatan untuk pemohon wajib diisi sebelum menyelesaikan keberatan.'])->withInput();
+            }
+
+            // Validasi Putusan / Berkas Jawaban Keberatan: Wajib ada file atau tautan jika belum ada sebelumnya
+            $hasFile = $request->hasFile('file_jawaban') || !empty($keberatan->file_jawaban);
+            $hasLink = !empty(trim($request->input('link_jawaban') ?? '')) || !empty($keberatan->link_jawaban);
+            if (!$hasFile && !$hasLink) {
+                return redirect()->back()->withErrors([
+                    'file_jawaban' => 'Berkas surat keputusan / file jawaban atau tautan link wajib dilampirkan sebelum menyelesaikan keberatan.'
+                ])->withInput();
             }
         }
 
         $updateData = [
-            'status'         => $statusInput,
-            'pesan_diproses' => $validated['pesan_diproses'] ?? $keberatan->pesan_diproses,
-            'pesan_selesai'  => $pesanSelesaiInput ?: $keberatan->pesan_selesai,
-            'alasan_ditolak'  => $validated['alasan_ditolak'] ?? $keberatan->alasan_ditolak,
-            'link_jawaban'   => $validated['link_jawaban'] ?? null,
+            'status'           => $statusInput,
+            'catatan_diproses' => $validated['catatan_diproses'] ?? $keberatan->catatan_diproses,
+            'catatan_selesai'  => $catatanSelesaiInput ?: $keberatan->catatan_selesai,
+            'alasan_ditolak'   => $validated['alasan_ditolak'] ?? $keberatan->alasan_ditolak,
+            'link_jawaban'     => $validated['link_jawaban'] ?? null,
         ];
 
         if ($request->hasFile('file_jawaban')) {
@@ -123,11 +142,11 @@ class KeberatanController extends Controller
         if ($recipientEmail) {
             try {
                 if ($keberatan->status === 'Selesai') {
-                    $pesanAktif = $keberatan->pesan_selesai;
+                    $pesanAktif = $keberatan->catatan_selesai;
                 } elseif ($keberatan->status === 'Ditolak') {
                     $pesanAktif = $keberatan->alasan_ditolak;
                 } else {
-                    $pesanAktif = $keberatan->pesan_diproses;
+                    $pesanAktif = $keberatan->catatan_diproses;
                 }
                 
                 // Cek cara memperoleh informasi dari permohonan terkait

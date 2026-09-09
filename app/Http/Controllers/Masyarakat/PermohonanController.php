@@ -35,21 +35,27 @@ class PermohonanController extends Controller
             'pekerjaan'              => 'required|string|max:255',
             'tujuan_penggunaan_informasi' => 'required|string',
             'informasi_yang_diminta' => 'required|string',
-            'cara_memperoleh_informasi'   => 'required|string|max:255',
+            'cara_memperoleh_informasi'   => 'required|string|in:Dikirim melalui Email,Datang langsung ke Dekanat FMIPA Universitas Lampung',
             'file_identitas'         => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'file_pendukung'         => 'nullable|file|mimes:pdf,docx|max:5120',
+            'file_pendukung'         => 'nullable|required_if:kategori_pemohon,Organisasi,Lembaga|file|mimes:pdf,docx|max:5120',
         ]);
 
         // Upload File Identitas (KTP/SIM) - Maks 2MB
         $identitasPath = null;
+        $namaIdentitasAsli = null;
         if ($request->hasFile('file_identitas')) {
-            $identitasPath = $request->file('file_identitas')->store('identitas', 'public');
+            $fileId = $request->file('file_identitas');
+            $identitasPath = $fileId->store('identitas', 'public');
+            $namaIdentitasAsli = $fileId->getClientOriginalName();
         }
 
         // Upload File Pendukung (Opsional) - Maks 5MB
         $pendukungPath = null;
+        $namaPendukungAsli = null;
         if ($request->hasFile('file_pendukung')) {
-            $pendukungPath = $request->file('file_pendukung')->store('pendukung', 'public');
+            $filePendukung = $request->file('file_pendukung');
+            $pendukungPath = $filePendukung->store('pendukung', 'public');
+            $namaPendukungAsli = $filePendukung->getClientOriginalName();
         }
 
         // Generate Nomor Tiket Otomatis yang Dijamin Unik (Format: PER-YYYYMMDD-XXX)
@@ -78,7 +84,9 @@ class PermohonanController extends Controller
             'informasi_yang_diminta'         => $validated['informasi_yang_diminta'],
             'cara_memperoleh_informasi'      => $validated['cara_memperoleh_informasi'],
             'file_identitas'                 => $identitasPath,
+            'nama_file_identitas_asli'       => $namaIdentitasAsli,
             'file_pendukung'                 => $pendukungPath,
+            'nama_file_pendukung_asli'       => $namaPendukungAsli,
             'status'                         => 'Diajukan',
         ]);
 

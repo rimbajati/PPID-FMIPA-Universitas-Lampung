@@ -60,6 +60,16 @@ class PermohonanController extends Controller
     }
 
     /**
+     * Halaman Detail Permohonan Informasi
+     */
+    public function show($id)
+    {
+        $permohonan = Permohonan::with(['user', 'keberatan'])->findOrFail($id);
+
+        return view('admin.permohonan.show', compact('permohonan'));
+    }
+
+    /**
      * Update Status Permohonan oleh Admin (Diajukan, Diproses, Selesai, Ditolak)
      */
     public function updateStatus(Request $request, $id)
@@ -81,8 +91,8 @@ class PermohonanController extends Controller
 
         $validated = $request->validate([
             'status'                  => 'required|in:Diproses,Selesai,Ditolak',
-            'pesan_diproses'          => 'nullable|string',
-            'pesan_selesai'           => 'nullable|string',
+            'catatan_diproses'        => 'nullable|string',
+            'catatan_selesai'         => 'nullable|string',
             'alasan_ditolak'          => 'nullable|string',
             'pesan_ditolak'           => 'nullable|string',
             'file_jawaban'            => 'nullable|file|mimes:pdf,docx,xlsx,zip,rar|max:5120',
@@ -97,32 +107,37 @@ class PermohonanController extends Controller
             return redirect()->back()->withErrors(['alasan_ditolak' => 'Alasan penolakan (pesan ditolak) wajib diisi sebelum menolak permohonan.'])->withInput();
         }
 
-        // Logika 1b: Jika Diproses, Pesan Diproses Wajib Diisi
-        if ($statusBaru === 'Diproses' && empty(trim($request->input('pesan_diproses')))) {
-            return redirect()->back()->withErrors(['pesan_diproses' => 'Pesan untuk pemohon wajib diisi saat memproses permohonan.'])->withInput();
+        // Logika 1b: Jika Diproses, Catatan Diproses Wajib Diisi
+        if ($statusBaru === 'Diproses' && empty(trim($request->input('catatan_diproses')))) {
+            return redirect()->back()->withErrors(['catatan_diproses' => 'Catatan untuk pemohon wajib diisi saat memproses permohonan.'])->withInput();
         }
 
         $fileUploaded = $request->file('file_jawaban');
         $linkInput = $request->input('link_jawaban');
 
-        // Logika 2: Jika Selesai, Wajib ada Pesan untuk Pemohon (otomatis terisi default jika tidak diubah)
-        $pesanSelesaiInput = $request->input('pesan_selesai');
+        // Logika 2: Jika Selesai, Wajib ada Catatan untuk Pemohon (otomatis terisi default jika tidak diubah)
+        $catatanSelesaiInput = $request->input('catatan_selesai');
         if ($statusBaru === 'Selesai') {
-            if (empty(trim($pesanSelesaiInput ?? ''))) {
+            if (empty(trim($catatanSelesaiInput ?? ''))) {
                 $cara = strtolower($permohonan->cara_memperoleh_informasi ?? '');
                 if (str_contains($cara, 'email')) {
-                    $pesanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam/Junk) untuk mengunduh dokumen atau mengakses tautan jawaban informasi yang diminta.';
-                } elseif (str_contains($cara, 'dekanat') || str_contains($cara, 'langsung')) {
-                    $pesanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke kantor Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan dokumen informasi yang diminta.';
-                } elseif (str_contains($cara, 'whatsapp') || str_contains($cara, 'wa')) {
-                    $pesanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Jawaban informasi yang diminta telah dikirimkan ke nomor WhatsApp Anda.';
+                    $catatanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam/Junk) untuk mengunduh dokumen atau mengakses tautan jawaban informasi yang diminta.';
                 } else {
-                    $pesanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi.';
+                    $catatanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan dokumen informasi yang diminta.';
                 }
             }
 
-            if (empty(trim($pesanSelesaiInput))) {
-                return redirect()->back()->withErrors(['pesan_selesai' => 'Pesan untuk pemohon wajib diisi sebelum menyelesaikan permohonan.'])->withInput();
+            if (empty(trim($catatanSelesaiInput))) {
+                return redirect()->back()->withErrors(['catatan_selesai' => 'Catatan untuk pemohon wajib diisi sebelum menyelesaikan permohonan.'])->withInput();
+            }
+
+            // Validasi Jawaban: Wajib ada file atau tautan informasi yang diinputkan jika belum ada sebelumnya
+            $hasFile = !empty($fileUploaded) || !empty($permohonan->file_jawaban);
+            $hasLink = !empty(trim($linkInput ?? '')) || !empty($permohonan->link_jawaban);
+            if (!$hasFile && !$hasLink) {
+                return redirect()->back()->withErrors([
+                    'file_jawaban' => 'Berkas file jawaban atau tautan link informasi wajib dilampirkan sebelum menyelesaikan permohonan.'
+                ])->withInput();
             }
         }
 
@@ -138,8 +153,8 @@ class PermohonanController extends Controller
         // Update Database dengan nama kolom baru
         $permohonan->update([
             'status'                  => $statusBaru,
-            'pesan_diproses'          => $request->input('pesan_diproses', $permohonan->pesan_diproses),
-            'pesan_selesai'           => $pesanSelesaiInput ?: $permohonan->pesan_selesai,
+            'catatan_diproses'        => $request->input('catatan_diproses', $permohonan->catatan_diproses),
+            'catatan_selesai'         => $catatanSelesaiInput ?: $permohonan->catatan_selesai,
             'alasan_ditolak'          => $alasanDitolak ?: $permohonan->alasan_ditolak,
             'file_jawaban'            => $filePath ?: $permohonan->file_jawaban,
             'link_jawaban'            => $linkInput ?: $permohonan->link_jawaban,
@@ -150,11 +165,11 @@ class PermohonanController extends Controller
         if ($recipientEmail) {
             try {
                 if ($permohonan->status === 'Selesai') {
-                    $pesanAktif = $permohonan->pesan_selesai;
+                    $pesanAktif = $permohonan->catatan_selesai;
                 } elseif ($permohonan->status === 'Ditolak') {
                     $pesanAktif = $permohonan->alasan_ditolak;
                 } else {
-                    $pesanAktif = $permohonan->pesan_diproses;
+                    $pesanAktif = $permohonan->catatan_diproses;
                 }
                 
                 // Cek cara memperoleh informasi

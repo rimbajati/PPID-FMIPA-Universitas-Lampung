@@ -24,16 +24,14 @@
         @endphp
 
         <!-- Card 0: Total (Biru Royal Vivid) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-5 flex justify-between items-center min-h-[105px]">
                 <div>
                     <span class="text-4xl md:text-5xl font-black block tracking-tight text-[#2563eb]">{{ $totalPermohonan }}</span>
                     <p class="text-xs md:text-sm font-extrabold text-slate-500 mt-1">Total</p>
                 </div>
-                <div class="text-[#2563eb]/80 group-hover:scale-110 transition-transform duration-300">
-                    <svg class="w-12 h-12 md:w-14 md:h-14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
-                    </svg>
+                <div class="text-[#2563eb]/80">
+                    <i class="fa-regular fa-file-lines text-4xl md:text-5xl"></i>
                 </div>
             </div>
             <div class="bg-[#2563eb] text-white text-xs font-bold px-4 py-2 flex items-center justify-between">
@@ -43,13 +41,13 @@
         </div>
 
         <!-- Card 1: Diajukan (Slate/Abu) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-5 flex justify-between items-center min-h-[105px]">
                 <div>
                     <span class="text-4xl md:text-5xl font-black block tracking-tight text-[#475569]">{{ $totalMenunggu }}</span>
                     <p class="text-xs md:text-sm font-extrabold text-slate-500 mt-1">Diajukan</p>
                 </div>
-                <div class="text-[#475569]/80 group-hover:scale-110 transition-transform duration-300">
+                <div class="text-[#475569]/80">
                     <i class="fa-regular fa-paper-plane text-4xl md:text-5xl"></i>
                 </div>
             </div>
@@ -59,34 +57,31 @@
             </div>
         </div>
 
-        <!-- Card 2: Diproses (Orange/Amber) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
+        <!-- Card 2: Diproses (Orange) -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-5 flex justify-between items-center min-h-[105px]">
                 <div>
-                    <span class="text-4xl md:text-5xl font-black block tracking-tight text-[#d97706]">{{ $totalDiproses }}</span>
+                    <span class="text-4xl md:text-5xl font-black block tracking-tight text-orange-500">{{ $totalDiproses }}</span>
                     <p class="text-xs md:text-sm font-extrabold text-slate-500 mt-1">Diproses</p>
                 </div>
-                <div class="text-[#d97706]/80 group-hover:scale-110 transition-transform duration-300">
-                    <svg class="w-12 h-12 md:w-14 md:h-14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
+                <div class="text-orange-500/80">
+                    <i class="fa-solid fa-gears text-4xl md:text-5xl"></i>
                 </div>
             </div>
-            <div class="bg-[#d97706] text-white text-xs font-bold px-4 py-2 flex items-center justify-between">
+            <div class="bg-orange-500 text-white text-xs font-bold px-4 py-2 flex items-center justify-between">
                 <span class="truncate">Terakhir Direspons: {{ $lastUpdateDiproses ? \Carbon\Carbon::parse($lastUpdateDiproses)->translatedFormat('d M Y') : '-' }}</span>
                 <i class="fa-solid fa-rotate text-xs shrink-0 ml-1"></i>
             </div>
         </div>
 
-        <!-- Card 3: Selesai (Hijau) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
+        <!-- Card 3: Selesai (Hijau Emerald) -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-5 flex justify-between items-center min-h-[105px]">
                 <div>
                     <span class="text-4xl md:text-5xl font-black block tracking-tight text-[#059669]">{{ $totalSelesai }}</span>
                     <p class="text-xs md:text-sm font-extrabold text-slate-500 mt-1">Selesai</p>
                 </div>
-                <div class="text-[#059669]/80 group-hover:scale-110 transition-transform duration-300">
+                <div class="text-[#059669]/80">
                     <i class="fa-regular fa-circle-check text-4xl md:text-5xl"></i>
                 </div>
             </div>
@@ -96,14 +91,14 @@
             </div>
         </div>
 
-        <!-- Card 4: Ditolak (Merah) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
+        <!-- Card 4: Ditolak (Merah Rose) -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-5 flex justify-between items-center min-h-[105px]">
                 <div>
                     <span class="text-4xl md:text-5xl font-black block tracking-tight text-[#e11d48]">{{ $totalDitolak }}</span>
                     <p class="text-xs md:text-sm font-extrabold text-slate-500 mt-1">Ditolak</p>
                 </div>
-                <div class="text-[#e11d48]/80 group-hover:scale-110 transition-transform duration-300">
+                <div class="text-[#e11d48]/80">
                     <i class="fa-regular fa-circle-xmark text-4xl md:text-5xl"></i>
                 </div>
             </div>

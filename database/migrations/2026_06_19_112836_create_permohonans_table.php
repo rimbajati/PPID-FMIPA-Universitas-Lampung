@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('cara_memperoleh_informasi');
             $table->string('file_pendukung')->nullable();
             $table->string('status', 50)->default('Diajukan');
-            $table->text('pesan_diproses')->nullable();
-            $table->text('pesan_selesai')->nullable();
+            $table->text('catatan_diproses')->nullable();
+            $table->text('catatan_selesai')->nullable();
             $table->text('alasan_ditolak')->nullable();
             $table->string('file_jawaban')->nullable();
             $table->text('link_jawaban')->nullable();

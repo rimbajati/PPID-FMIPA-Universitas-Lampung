@@ -45,6 +45,7 @@
 
                 <!-- INDIVIDUAL CARD (Clickable Container) -->
                 <a href="{{ $fileUrl }}" target="_blank" 
+                   onclick="incrementCounter({{ $info->id }})"
                    class="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between h-full group cursor-pointer">
                     
                     <!-- Top Content Section (Judul, Deskripsi, Kategori Badge) -->
@@ -76,7 +77,7 @@
                     <div class="mt-auto pt-3.5 mt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
                         <span class="flex items-center gap-1.5 text-slate-500 font-medium">
                             <i class="fa-regular fa-eye text-sky-500 text-[11px]"></i>
-                            <span>Dilihat {{ $info->dilihat ?? 0 }} kali</span>
+                            <span>Dilihat <span id="click-count-{{ $info->id }}">{{ $info->dilihat ?? 0 }}</span> kali</span>
                         </span>
 
                         <!-- Format File & Tahun Terbit -->

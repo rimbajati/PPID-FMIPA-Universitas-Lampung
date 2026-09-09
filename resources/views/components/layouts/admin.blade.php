@@ -33,6 +33,16 @@
                 extend: {
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'DEFAULT': '0.625rem',
+                        'sm': '0.375rem',
+                        'md': '0.5rem',
+                        'lg': '0.625rem',
+                        'xl': '0.625rem',
+                        '2xl': '0.625rem',
+                        '3xl': '0.625rem',
+                        'full': '9999px',
                     }
                 }
             }
@@ -122,6 +132,87 @@
         // Shared delete modal state (window-scoped agar bisa diakses dari komponen script mana pun)
         window.currentDeleteType = window.currentDeleteType || null;
         window.currentDeleteUrl  = window.currentDeleteUrl  || null;
+        window.isSelectMode      = false;
+
+        window.toggleSelectMode = function() {
+            window.isSelectMode = !window.isSelectMode;
+            const isSelectMode = window.isSelectMode;
+            const colHeader = document.getElementById('col-checkbox-header');
+            const colCells = document.querySelectorAll('.col-checkbox-cell');
+            const toggleBtn = document.getElementById('btn-toggle-select');
+            const textSelectMode = document.getElementById('text-select-mode');
+            const checkAll = document.getElementById('check-all');
+
+            if (colHeader) colHeader.classList.toggle('hidden', !isSelectMode);
+            colCells.forEach(cell => cell.classList.toggle('hidden', !isSelectMode));
+
+            if (toggleBtn && textSelectMode) {
+                if (isSelectMode) {
+                    toggleBtn.classList.remove('bg-slate-100', 'text-slate-700');
+                    toggleBtn.classList.add('bg-rose-50', 'text-rose-600');
+                    textSelectMode.innerText = 'Batal';
+                } else {
+                    toggleBtn.classList.remove('bg-rose-50', 'text-rose-600');
+                    toggleBtn.classList.add('bg-slate-100', 'text-slate-700');
+                    textSelectMode.innerText = 'Pilih';
+                    
+                    if (checkAll) checkAll.checked = false;
+                    document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = false);
+                    window.updateBulkState();
+                }
+            }
+        };
+
+        window.toggleCheckAll = function(master) {
+            const checkboxes = document.querySelectorAll('.item-checkbox');
+            checkboxes.forEach(cb => cb.checked = master.checked);
+            window.updateBulkState();
+        };
+
+        window.updateBulkState = function() {
+            const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            const bulkBtn = document.getElementById('btn-bulk-delete');
+            const selectedCount = document.getElementById('selected-count');
+            const checkAll = document.getElementById('check-all');
+            const totalItems = document.querySelectorAll('.item-checkbox').length;
+
+            if (selectedCount) selectedCount.innerText = checkedCount;
+
+            if (bulkBtn) {
+                if (checkedCount > 0 && window.isSelectMode) {
+                    bulkBtn.classList.remove('hidden');
+                } else {
+                    bulkBtn.classList.add('hidden');
+                }
+            }
+
+            if (checkAll && totalItems > 0) {
+                checkAll.checked = (checkedCount === totalItems);
+            }
+        };
+
+        window.triggerBulkDelete = function() {
+            const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            if (checkedCount === 0) return;
+            const confirmText = document.getElementById('deleteConfirmText');
+            if (confirmText) {
+                confirmText.innerHTML = 'Apakah Anda yakin ingin menghapus <b>' + checkedCount + '</b> data yang dipilih?';
+            }
+            window.currentDeleteType = 'bulk';
+            const modal = document.getElementById('modalConfirmDelete');
+            if (modal) modal.classList.remove('hidden');
+        };
+
+        window.triggerDelete = function(url, title) {
+            const confirmText = document.getElementById('deleteConfirmText');
+            if (confirmText) {
+                confirmText.innerHTML = 'Apakah Anda yakin ingin menghapus <b>"' + title + '"</b> ini?';
+            }
+            window.currentDeleteType = 'single';
+            window.currentDeleteUrl = url;
+            const modal = document.getElementById('modalConfirmDelete');
+            if (modal) modal.classList.remove('hidden');
+        };
 
         function closeDeleteModal() {
             const modal = document.getElementById('modalConfirmDelete');

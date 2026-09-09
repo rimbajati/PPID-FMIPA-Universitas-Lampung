@@ -56,31 +56,25 @@
         }
     }
 
-    let pendingDeleteAction = null;
-
-    function closeDeleteModal() {
-        document.getElementById('modalConfirmDelete').classList.add('hidden');
-        pendingDeleteAction = null;
-    }
-
+    // Modal confirm delete & bulk delete sudah ditangani secara global di layout admin.blade.php
     function triggerBulkDelete() {
         const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
         if (checkedCount === 0) return;
         document.getElementById('deleteConfirmText').innerHTML = 'Apakah Anda yakin ingin menghapus <b>' + checkedCount + '</b> informasi publik yang dipilih?';
-        currentDeleteType = 'bulk';
+        window.currentDeleteType = 'bulk';
         document.getElementById('modalConfirmDelete').classList.remove('hidden');
     }
 
     function triggerDelete(url, title) {
         document.getElementById('deleteConfirmText').innerHTML = 'Apakah Anda yakin ingin menghapus informasi <b>"' + title + '"</b> ini?';
-        currentDeleteType = 'single';
-        currentDeleteUrl = url;
+        window.currentDeleteType = 'single';
+        window.currentDeleteUrl = url;
         document.getElementById('modalConfirmDelete').classList.remove('hidden');
     }
 
     function openModalCreate() {
         document.getElementById('modalTitle').innerText = 'Tambah Informasi Publik';
-        document.getElementById('modalSubtitle').innerText = 'Isi data dibawah ini untuk menambahkan informasi publik baru';
+        document.getElementById('modalSubtitle').innerText = 'Isi data dibawah ini untuk menambahkan informasi baru';
         document.getElementById('formAddEdit').action = "{{ url('/admin/informasi-publik') }}";
         document.getElementById('formMethod').value = 'POST';
         document.getElementById('formAddEdit').reset();

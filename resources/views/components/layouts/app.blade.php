@@ -23,6 +23,16 @@
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'DEFAULT': '0.625rem',
+                        'sm': '0.375rem',
+                        'md': '0.5rem',
+                        'lg': '0.625rem',
+                        'xl': '0.625rem',
+                        '2xl': '0.625rem',
+                        '3xl': '0.625rem',
+                        'full': '9999px',
                     }
                 }
             }

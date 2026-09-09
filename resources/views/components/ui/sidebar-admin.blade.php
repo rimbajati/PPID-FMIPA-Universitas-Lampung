@@ -48,7 +48,7 @@
             <a href="{{ url('/admin/keberatan') }}"
                class="flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isKeberatanActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
                 <div class="flex items-center gap-3 min-w-0">
-                    <i class="fa-regular fa-circle-question text-base w-5 text-center shrink-0 {{ $isKeberatanActive ? 'text-white' : 'text-slate-400' }}"></i>
+                    <i class="fa-solid fa-scale-balanced text-base w-5 text-center shrink-0 {{ $isKeberatanActive ? 'text-white' : 'text-slate-400' }}"></i>
                     <span class="whitespace-nowrap">Pengajuan Keberatan</span>
                 </div>
                 @if($sidebarPendingKeberatan > 0)
