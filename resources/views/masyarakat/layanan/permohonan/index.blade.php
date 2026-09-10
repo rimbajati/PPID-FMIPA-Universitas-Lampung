@@ -5,8 +5,7 @@
 @section('content')
 <main class="pt-[75px] md:pt-[85px] bg-slate-50 min-h-screen pb-24">
 
-    <!-- Breadcrumb Bar Component -->
-    <x-masyarakat.permohonan.breadcrumb />
+
 
     <!-- Header Hero Banner Permohonan Informasi -->
     <x-masyarakat.permohonan.hero-header />

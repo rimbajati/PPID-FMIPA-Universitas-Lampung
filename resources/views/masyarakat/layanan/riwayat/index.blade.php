@@ -6,8 +6,7 @@
 <main class="pt-[75px] md:pt-[85px] bg-slate-50 min-h-screen pb-24"
       x-data="lacakRiwayatApp({{ json_encode($allLayans) }})">
 
-    <!-- Breadcrumb Bar Component -->
-    <x-masyarakat.riwayat.breadcrumb />
+
 
     <!-- Hero Header Pelacakan Terpadu -->
     <x-masyarakat.riwayat.hero-header />

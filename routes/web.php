@@ -18,15 +18,105 @@ use Illuminate\Http\Request;
 */
 
 // Rute Utama Beranda Publik
-Route::get('/', function () { return view('masyarakat.beranda.index'); })->name('beranda');
+Route::get('/', function () {
+    $totalDokumen = \App\Models\InformasiPublik::count();
+    $totalPermohonan = \App\Models\Permohonan::count();
+    $totalPermohonanSelesai = \App\Models\Permohonan::where('status', 'selesai')->count();
+    $totalPermohonanDitolak = \App\Models\Permohonan::where('status', 'ditolak')->count();
+    $totalKeberatan = \App\Models\Keberatan::count();
+    $totalDilihat = \Illuminate\Support\Facades\Schema::hasColumn('informasi_publik', 'dilihat') 
+        ? \App\Models\InformasiPublik::sum('dilihat') 
+        : 0;
+
+    $kategoriCount = [
+        'setiap_saat' => \App\Models\InformasiPublik::where('kategori_informasi', 'Informasi Setiap Saat')->count(),
+        'berkala' => \App\Models\InformasiPublik::where('kategori_informasi', 'Informasi Berkala')->count(),
+        'serta_merta' => \App\Models\InformasiPublik::where('kategori_informasi', 'Informasi Serta-Merta')->count(),
+        'dikecualikan' => \App\Models\InformasiPublik::where('kategori_informasi', 'Informasi Dikecualikan')->count(),
+    ];
+
+    // Data Tren Tahunan (Permintaan, Disetujui/Selesai, Ditolak, Keberatan)
+    $currentYear = (int) date('Y');
+    $years = range($currentYear - 4, $currentYear);
+    $chartTahunan = [
+        'years' => $years,
+        'permintaan' => [],
+        'disetujui' => [],
+        'ditolak' => [],
+        'keberatan' => [],
+    ];
+
+    foreach ($years as $year) {
+        $chartTahunan['permintaan'][] = \App\Models\Permohonan::whereYear('created_at', $year)->count();
+        $chartTahunan['disetujui'][] = \App\Models\Permohonan::whereYear('created_at', $year)->where('status', 'selesai')->count();
+        $chartTahunan['ditolak'][] = \App\Models\Permohonan::whereYear('created_at', $year)->where('status', 'ditolak')->count();
+        $chartTahunan['keberatan'][] = \App\Models\Keberatan::whereYear('created_at', $year)->count();
+    }
+
+    // Data Tren Bulanan untuk setiap tahun yang tersedia
+    $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    $chartBulananPerTahun = [];
+    foreach ($years as $year) {
+        $chartBulananPerTahun[$year] = [
+            'months' => $months,
+            'year' => $year,
+            'permintaan' => [],
+            'disetujui' => [],
+            'ditolak' => [],
+            'keberatan' => [],
+        ];
+        for ($m = 1; $m <= 12; $m++) {
+            $chartBulananPerTahun[$year]['permintaan'][] = \App\Models\Permohonan::whereYear('created_at', $year)->whereMonth('created_at', $m)->count();
+            $chartBulananPerTahun[$year]['disetujui'][] = \App\Models\Permohonan::whereYear('created_at', $year)->whereMonth('created_at', $m)->where('status', 'selesai')->count();
+            $chartBulananPerTahun[$year]['ditolak'][] = \App\Models\Permohonan::whereYear('created_at', $year)->whereMonth('created_at', $m)->where('status', 'ditolak')->count();
+            $chartBulananPerTahun[$year]['keberatan'][] = \App\Models\Keberatan::whereYear('created_at', $year)->whereMonth('created_at', $m)->count();
+        }
+    }
+    $chartBulanan = $chartBulananPerTahun[$currentYear];
+
+    // Hitung Rata-Rata Waktu Pemrosesan (Durasi dari tiket dibuat 'created_at' hingga ditindaklanjuti 'updated_at')
+    // Mengambil tiket permohonan dan keberatan yang sudah pernah ditindaklanjuti (bukan lagi 'diajukan')
+    $tiketSelesaiPermohonan = \App\Models\Permohonan::whereIn('status', ['diproses', 'selesai', 'ditolak'])->get(['created_at', 'updated_at']);
+    $tiketSelesaiKeberatan = \App\Models\Keberatan::whereIn('status', ['diproses', 'selesai', 'ditolak'])->get(['created_at', 'updated_at']);
+    $semuaTiketProses = $tiketSelesaiPermohonan->concat($tiketSelesaiKeberatan);
+
+    $rataRataWaktuTeks = '1 Hari'; // Default standar layanan KIP
+    if ($semuaTiketProses->isNotEmpty()) {
+        $totalDetik = 0;
+        foreach ($semuaTiketProses as $tiket) {
+            $totalDetik += $tiket->created_at->diffInSeconds($tiket->updated_at);
+        }
+        $avgDetik = $totalDetik / $semuaTiketProses->count();
+        // Pembulatan ke atas (ceil) ke satuan hari penuh, minimal 1 hari
+        $avgHari = max(1, (int) ceil($avgDetik / 86400));
+        $rataRataWaktuTeks = $avgHari . ' Hari';
+    }
+
+    $dokumenTerbaru = \App\Models\InformasiPublik::latest()->take(4)->get();
+
+    return view('masyarakat.beranda.index', compact(
+        'totalDokumen',
+        'totalPermohonan',
+        'totalPermohonanSelesai',
+        'totalPermohonanDitolak',
+        'totalKeberatan',
+        'totalDilihat',
+        'kategoriCount',
+        'chartTahunan',
+        'chartBulanan',
+        'chartBulananPerTahun',
+        'rataRataWaktuTeks',
+        'dokumenTerbaru'
+    ));
+})->name('beranda');
 Route::get('/home', function () { return redirect()->route('beranda'); });
 
 // Rute Katalog Informasi Publik untuk Publik
 Route::get('/informasi-publik', [MasyarakatInformasiPublikController::class, 'index'])->name('informasi.publik');
 Route::get('/informasi-publik/{id}', [MasyarakatInformasiPublikController::class, 'show'])->name('informasi.detail');
 
-// Rute Halaman Hub Layanan PPID Online
-Route::get('/layanan', function () { return view('masyarakat.layanan.index'); })->name('layanan');
+// Rute Halaman Hub Layanan PPID Online (Dialihkan langsung ke Permohonan)
+Route::get('/layanan', function () { return redirect()->route('layanan.permohonan'); })->name('layanan');
 
 // Rute Autentikasi Guest (Belum Login)
 Route::middleware('guest')->group(function () {
