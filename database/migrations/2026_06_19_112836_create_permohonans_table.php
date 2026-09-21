@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nama_lengkap');
             $table->string('no_identitas', 50);
             $table->string('file_identitas')->nullable();
+            $table->string('nama_file_identitas_asli')->nullable();
             $table->string('email');
             $table->string('no_telepon', 20);
             $table->string('pekerjaan');
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->text('tujuan_penggunaan_informasi');
             $table->string('cara_memperoleh_informasi');
             $table->string('file_pendukung')->nullable();
+            $table->string('nama_file_pendukung_asli')->nullable();
             $table->string('status', 50)->default('Diajukan');
             $table->text('catatan_diproses')->nullable();
             $table->text('catatan_selesai')->nullable();

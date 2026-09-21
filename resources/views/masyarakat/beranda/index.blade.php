@@ -3,18 +3,10 @@
 @section('title', 'Beranda - PPID FMIPA Universitas Lampung')
 
 @section('content')
-<main class="pt-[124px] md:pt-[140px] bg-slate-50/50">
+<main class="pt-[6.875rem] md:pt-32 bg-slate-50/50">
 
     <!-- 1. Hero Section Banner: Dekanat FMIPA & Konten Modern -->
     <x-masyarakat.beranda.hero />
-
-    <!-- 1. Kategori Klasifikasi Dokumen UU KIP -->
-    <x-masyarakat.beranda.kategori-section 
-        :kategoriCount="$kategoriCount"
-    />
-
-    <!-- 2. Layanan Utama & Akses Cepat Online -->
-    <x-masyarakat.beranda.layanan-utama />
 
     <!-- 3. Alur & Prosedur Permohonan Layanan -->
     <x-masyarakat.beranda.alur-prosedur />
@@ -35,7 +27,7 @@
     />
 
     <!-- 5. Tanya Jawab / FAQ Seputar PPID (Accordion) -->
-    <x-masyarakat.beranda.faq-section />
+    <x-masyarakat.beranda.faq-section :faqs="$faqs" />
 
     <!-- Banner Call to Action & Bantuan Helpdesk -->
     <x-masyarakat.beranda.cta-helpdesk />

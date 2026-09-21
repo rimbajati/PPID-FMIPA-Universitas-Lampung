@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('alasan_keberatan');
             $table->text('kronologi_keberatan')->nullable();
             $table->string('file_pendukung')->nullable();
+            $table->string('nama_file_pendukung_asli')->nullable();
             $table->string('status', 50)->default('Diajukan');
             $table->text('catatan_diproses')->nullable();
             $table->text('catatan_selesai')->nullable();

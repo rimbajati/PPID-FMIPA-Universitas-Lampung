@@ -12,20 +12,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        html { 
+            font-size: 15px; 
+        }
+        @media (min-width: 1600px) {
+            html { font-size: 16px; }
+        }
+        @media (max-width: 1280px) {
+            html { font-size: 14px; }
+        }
         body { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
     </style>
 </head>
-<body class="relative flex items-center justify-center min-h-screen bg-[#1B365D]">
+<body class="relative flex items-center justify-center min-h-screen bg-[#1B365D] p-4 sm:p-6 overflow-y-auto">
 
     <!-- Background Layer -->
     <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-[#1B365D]/85 via-[#1B365D]/45 to-transparent"></div>
 
     <!-- Login Container -->
-    <div class="relative z-10 w-full max-w-lg px-6">
+    <div class="relative z-10 w-full max-w-md mx-auto my-auto">
 
         <!-- White Card -->
-        <div class="bg-white p-10 sm:p-12 shadow-2xl border border-gray-100" style="border-radius: 6px !important;">
+        <div class="bg-white p-7 sm:p-10 shadow-2xl border border-gray-100 rounded-2xl">
 
             <!-- Header Section -->
             <div class="text-center mb-8">

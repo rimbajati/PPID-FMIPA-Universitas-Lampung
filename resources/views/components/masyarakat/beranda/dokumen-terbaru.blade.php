@@ -27,7 +27,8 @@
                     <div class="space-y-3">
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             @php
-                                $badgeColor = match($doc->kategori_informasi) {
+                                $jenisDoc = $doc->jenis_informasi ?: $doc->kategori_informasi;
+                                $badgeColor = match($jenisDoc) {
                                     'Informasi Berkala' => 'bg-sky-50 text-sky-700 border-sky-200',
                                     'Informasi Setiap Saat' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
                                     'Informasi Serta-Merta' => 'bg-rose-50 text-rose-700 border-rose-200',
@@ -35,23 +36,17 @@
                                 };
                             @endphp
                             <span class="px-3 py-1 rounded-full text-[11px] font-bold border {{ $badgeColor }}">
-                                {{ $doc->kategori_informasi }}
+                                {{ $jenisDoc }}
                             </span>
                             <span class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
                                 <i class="fa-regular fa-calendar text-slate-400"></i>
-                                Tahun {{ $doc->tahun_terbit ?? '-' }}
+                                Tahun {{ $doc->waktu_pembuatan_informasi ?? '-' }}
                             </span>
                         </div>
 
                         <h3 class="text-base sm:text-lg font-black text-slate-900 group-hover:text-sky-600 transition-colors line-clamp-2">
-                            {{ $doc->judul_informasi }}
+                            {{ $doc->ringkasan_isi_informasi }}
                         </h3>
-
-                        @if($doc->deskripsi_informasi)
-                            <p class="text-xs text-slate-600 font-medium line-clamp-2 leading-relaxed">
-                                {{ $doc->deskripsi_informasi }}
-                            </p>
-                        @endif
                     </div>
 
                     <div class="pt-5 mt-5 border-t border-slate-100 flex items-center justify-between gap-3">

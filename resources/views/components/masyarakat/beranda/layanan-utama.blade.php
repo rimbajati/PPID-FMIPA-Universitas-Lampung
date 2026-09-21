@@ -1,12 +1,12 @@
 <!-- Layanan Utama & Akses Cepat Section (3 Kartu Layanan Inti PPID) -->
-<section class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 mb-24">
-    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-3">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200/80 shadow-2xs">
+<section class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 mb-16 sm:mb-20">
+    <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10 space-y-2.5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200/80 shadow-2xs">
             <i class="fa-solid fa-bolt-lightning text-amber-500"></i>
             <span>Akses Cepat</span>
         </div>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-            Layanan <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">PPID Online</span>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+            Layanan <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">PPID</span>
         </h2>
         <p class="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
             Pusat terpadu pengajuan permohonan informasi, penanganan keberatan, hingga pemantauan status tiket secara daring, transparan, dan akuntabel.
@@ -14,7 +14,7 @@
     </div>
 
     <!-- Grid 3 Card Layanan Elegan & Berimbang -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
         
         <!-- CARD 1: Permohonan Informasi -->
         <div class="bg-white border border-slate-200/80 rounded-3xl p-7 lg:p-8 shadow-sm hover:shadow-xl hover:shadow-sky-900/10 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">

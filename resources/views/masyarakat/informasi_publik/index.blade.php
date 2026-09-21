@@ -3,141 +3,75 @@
 @section('title', 'Katalog Informasi Publik - PPID FMIPA Universitas Lampung')
 
 @section('content')
-<main class="pt-[64px] md:pt-[70px] bg-slate-100/70 min-h-screen pb-20">
+<main class="pt-16 md:pt-[4.5rem] bg-slate-100/70 min-h-screen pb-20">
 
     <!-- Header Hero Banner (Matching Reference UI Title & Subtitle) -->
     <x-masyarakat.informasi_publik.hero-header />
 
-    <!-- Main 2-Column Grid Container (Matching Reference Layout) -->
-    <div class="px-4 sm:px-8 md:px-12 lg:px-16 mt-4">
-        <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Main Content Container: Tabel Informasi Publik (Matching Admin DIP Table) -->
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div class="space-y-4">
 
-            <!-- LEFT COLUMN: Filter Bar & Table View (lg:col-span-9) -->
-            <div class="lg:col-span-9 space-y-6">
-                
-                <!-- Pill Filter Bar & Search Box Card -->
-                <x-masyarakat.informasi_publik.top-filter-bar :years="$years" :topiks="$topiks" :totalCount="$totalCount" :kategoryCounts="$kategoryCounts" />
+            <!-- Bar Kontrol Tabel: Show Entries di Kiri & Search di Kanan (DataTables Style) -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
+                <!-- Dropdown Show Entries -->
+                <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                    <span>Show</span>
+                    <select id="select-per-page-dip" onchange="changePerPageDip(this.value)" 
+                            class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
+                        <option value="10" {{ (int)request('per_page', 10) === 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ (int)request('per_page', 10) === 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ (int)request('per_page', 10) === 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ (int)request('per_page', 10) === 100 ? 'selected' : '' }}>100</option>
+                    </select>
+                    <span>entries</span>
+                </div>
 
-                <!-- Catalog Table List with Dark Navy Header Bar -->
-                <x-masyarakat.informasi_publik.catalog-grid :informasiList="$informasiList" />
-
+                <!-- Search Bar Pencarian Seluruh Isi Tabel (Format DataTables Style: Search: [_____ x]) -->
+                <form id="form-search-dip" onsubmit="event.preventDefault();" class="flex items-center gap-2">
+                    <label for="input-search-dip" class="text-sm font-semibold text-slate-800 select-none cursor-pointer">
+                        Search:
+                    </label>
+                    <div class="relative">
+                        <input type="text" 
+                               name="search" 
+                               id="input-search-dip"
+                               value="{{ request('search') }}" 
+                               autocomplete="off"
+                               oninput="debounceSearchDip()"
+                               class="w-48 sm:w-56 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-2xl text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
+                        <button type="button" id="btn-clear-search" onclick="clearSearchDip()" title="Hapus pencarian" 
+                                class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            <!-- RIGHT COLUMN: Tag Cloud & Permohonan (lg:col-span-3) -->
-            <div class="lg:col-span-3 space-y-6">
-                
-                <!-- Sidebar Card: Tag Cloud Quick Filter (Matching Reference Images 2 & 3) -->
-                @php
-                    $allTags = [];
-                    $currentKategori = array_values(array_filter((array) request('kategori', [])));
-                    $currentTopik    = array_values(array_filter((array) request('topik', [])));
+            <!-- Tabel Informasi Publik dengan Filter Terpadu (Akses Hanya Tautan Berkas) -->
+            <div id="table-dip-wrapper" class="relative transition-opacity duration-150">
+                <x-masyarakat.informasi_publik.table 
+                    :informasi="$informasiList" 
+                    :listJenis="$listJenis ?? []" 
+                    :listTahun="$listTahun ?? []" 
+                    :listSatker="$listSatker ?? []" 
+                    :listBentuk="$listBentuk ?? []" 
+                    :listRetensi="$listRetensi ?? []" 
+                />
+            </div>
 
-                    // 1. Tag Kategori
-                    foreach ($kategoryCounts as $cName => $cCount) {
-                        $shortName = Str::replace('Informasi ', '', $cName);
-                        $isAct = in_array($cName, $currentKategori);
-
-                        // Build toggle URL for Kategori (Multi-select)
-                        $params = request()->query();
-                        $list = $currentKategori;
-                        if ($isAct) {
-                            $list = array_values(array_diff($list, [$cName]));
-                        } else {
-                            $list[] = $cName;
-                        }
-                        if (empty($list)) {
-                            unset($params['kategori']);
-                        } else {
-                            $params['kategori'] = $list;
-                        }
-                        unset($params['page']);
-
-                        $allTags[] = [
-                            'label'  => $shortName,
-                            'count'  => $cCount,
-                            'url'    => url('/informasi-publik') . ($params ? '?' . http_build_query($params) : ''),
-                            'active' => $isAct
-                        ];
-                    }
-
-                    // 2. Tag Topik/Bidang
-                    if (isset($topikCounts) && is_array($topikCounts)) {
-                        foreach ($topikCounts as $tName => $tCount) {
-                            $isAct = in_array($tName, $currentTopik);
-
-                            // Build toggle URL for Topik (Multi-select)
-                            $params = request()->query();
-                            $list = $currentTopik;
-                            if ($isAct) {
-                                $list = array_values(array_diff($list, [$tName]));
-                            } else {
-                                $list[] = $tName;
-                            }
-                            if (empty($list)) {
-                                unset($params['topik']);
-                            } else {
-                                $params['topik'] = $list;
-                            }
-                            unset($params['page']);
-
-                            $allTags[] = [
-                                'label'  => $tName,
-                                'count'  => $tCount,
-                                'url'    => url('/informasi-publik') . ($params ? '?' . http_build_query($params) : ''),
-                                'active' => $isAct
-                            ];
-                        }
-                    }
-
-                    $totalTagsCount = count($allTags);
-                    $initialLimit = 10;
-                @endphp
-
-                <div x-data="{ expanded: false }" class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-xs space-y-4">
-                    <h3 class="text-md font-extrabold text-slate-800 tracking-tight">
-                        Tag
-                    </h3>
-
-                    <!-- Tag List Container -->
-                    <div :class="expanded ? 'max-h-72 overflow-y-auto pr-1 [scrollbar-width:thin]' : ''" class="transition-all duration-300">
-                        <div class="flex flex-wrap gap-2">
-                            @foreach($allTags as $index => $tag)
-                                <a href="{{ $tag['url'] }}" 
-                                   @if($index >= $initialLimit) x-show="expanded" x-cloak @endif
-                                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition shadow-2xs group cursor-pointer
-                                          {{ $tag['active'] ? 'bg-sky-500 text-white border-sky-500 font-extrabold' : 'bg-slate-50 hover:bg-sky-50 text-slate-700 hover:text-sky-700 border-slate-200/80 hover:border-sky-200' }}">
-                                    <span>{{ $tag['label'] }}</span>
-                                    <span class="text-[11px] font-medium {{ $tag['active'] ? 'text-white/80' : 'text-slate-400 group-hover:text-sky-600' }}">
-                                        {{ $tag['count'] }}
-                                    </span>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Expand / Collapse Button -->
-                    @if($totalTagsCount > $initialLimit)
-                        <div class="pt-1 border-t border-slate-100 flex items-center justify-between">
-                            <button type="button" 
-                                    @click="expanded = !expanded" 
-                                    class="text-xs font-bold text-slate-500 hover:text-sky-600 transition cursor-pointer flex items-center gap-1.5">
-                                <span x-text="expanded ? 'Sembunyikan' : 'Lihat semua tag ({{ $totalTagsCount }})'"></span>
-                                <i class="fa-solid text-[10px]" :class="expanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-                            </button>
-                        </div>
-                    @endif
-                </div>
-
-                <!-- Ajukan Permohonan Card -->
-                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white rounded-3xl p-6 shadow-lg shadow-blue-600/20 space-y-3 border border-blue-500/20">
-                    <h4 class="font-extrabold text-base">Tidak Menemukan Informasi?</h4>
-                    <p class="text-xs text-blue-100 leading-relaxed">
-                        Anda dapat mengajukan permohonan informasi publik secara online melalui formulir permohonan resmi.
+            <!-- Card Bantuan / Ajukan Permohonan Jika Tidak Menemukan Informasi -->
+            <div class="bg-gradient-to-r from-sky-600 via-sky-700 to-blue-800 text-white rounded-2xl p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="space-y-1 text-center sm:text-left">
+                    <h4 class="font-extrabold text-base sm:text-lg">Tidak Menemukan Informasi yang Anda Cari?</h4>
+                    <p class="text-xs sm:text-sm text-sky-100">
+                        Anda dapat mengajukan permohonan informasi publik secara online melalui formulir permohonan resmi PPID FMIPA Unila.
                     </p>
-                    <a href="{{ url('/permohonan') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-blue-600 hover:bg-blue-50 font-extrabold text-xs rounded-full transition shadow-sm cursor-pointer">
-                        <i class="fa-solid fa-file-circle-plus"></i> Ajukan Permohonan
-                    </a>
                 </div>
+                <a href="{{ url('/permohonan') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-sky-700 hover:bg-sky-50 font-extrabold text-xs sm:text-sm rounded-xl transition shadow-sm cursor-pointer shrink-0 whitespace-nowrap">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    <span>Ajukan Permohonan</span>
+                </a>
             </div>
 
         </div>

@@ -29,8 +29,8 @@
 
 <div class="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
     <!-- Counter Left -->
-    <div class="text-xs md:text-sm font-semibold text-slate-500">
-        Menampilkan <span class="font-extrabold text-slate-900">{{ $paginator->firstItem() ?? 0 }}–{{ $paginator->lastItem() ?? 0 }}</span> dari <span class="font-black text-sky-600">{{ $paginator->total() }}</span> {{ $label }}
+    <div class="text-xs md:text-sm text-slate-800">
+        Menampilkan {{ $paginator->firstItem() ?? 0 }} sampai {{ $paginator->lastItem() ?? 0 }} dari {{ $paginator->total() }} entri
     </div>
 
     <!-- Unified Connected Pagination Box (Matching Reference Image) -->

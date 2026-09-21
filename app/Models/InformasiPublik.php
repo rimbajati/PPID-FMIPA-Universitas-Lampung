@@ -9,14 +9,18 @@ class InformasiPublik extends Model
 {
     use HasFactory;
 
-    protected $table = 'informasi_publik';
+    protected $table = 'informasi_publiks';
 
     protected $fillable = [
-        'judul_informasi',
-        'deskripsi_informasi',
-        'kategori_informasi',
-        'topik_informasi',
-        'tahun_terbit',
+        'rincian_informasi',
+        'sub_informasi',
+        'ringkasan_isi_informasi',
+        'jenis_informasi',
+        'pejabat_unit_yang_menguasai_informasi',
+        'penanggung_jawab_pembuatan_informasi',
+        'waktu_pembuatan_informasi',
+        'bentuk_informasi_yang_tersedia',
+        'retensi_arsip',
         'file_informasi',
         'nama_file_asli',
         'link_informasi',

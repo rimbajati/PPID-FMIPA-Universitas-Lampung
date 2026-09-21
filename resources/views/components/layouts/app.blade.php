@@ -43,54 +43,22 @@
 
     <style>
         [x-cloak] { display: none !important; }
-        html { scroll-behavior: smooth; font-size: 17px; }
-        body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; font-size: 1rem; }
-
-        /* Siakad Table Style (Global Table Design) */
-        table {
-            width: 100% !important;
-            border-collapse: collapse !important;
-            border-spacing: 0 !important;
-            border: 1px solid #cbd5e1 !important;
-            background-color: #ffffff !important;
-            border-radius: 0px !important;
+        html { 
+            scroll-behavior: smooth; 
+            font-size: 14px; 
         }
-        table thead tr {
-            background-color: #2c3e50 !important;
-            color: #ffffff !important;
+        @media (min-width: 1700px) {
+            html { font-size: 16px; }
         }
-        table thead th {
-            background-color: #2c3e50 !important;
-            color: #ffffff !important;
-            font-weight: 700 !important;
-            padding: 12px 14px !important;
-            font-size: 0.9rem !important;
-            border: 1px solid #cbd5e1 !important;
+        @media (min-width: 1400px) and (max-width: 1699px) {
+            html { font-size: 14.5px; }
         }
-        table tbody tr:nth-child(odd) {
-            background-color: #f8fafc !important;
+        @media (max-width: 1200px) {
+            html { font-size: 13.5px; }
         }
-        table tbody tr:nth-child(even) {
-            background-color: #ffffff !important;
-        }
-        table tbody tr:hover {
-            background-color: #e2e8f0 !important;
-        }
-        table tbody td {
-            padding: 10px 14px !important;
-            border: 1px solid #cbd5e1 !important;
-            color: #334155 !important;
-            font-size: 0.875rem !important;
-            vertical-align: middle !important;
-        }
-        table th.text-center, table td.text-center {
-            text-align: center !important;
-        }
-        table th.text-right, table td.text-right {
-            text-align: right !important;
-        }
-        table th.text-left, table td.text-left {
-            text-align: left !important;
+        body { 
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; 
+            font-size: 1rem; 
         }
     </style>
 </head>

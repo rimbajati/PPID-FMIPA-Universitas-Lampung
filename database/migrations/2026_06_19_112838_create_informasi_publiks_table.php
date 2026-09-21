@@ -8,17 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('informasi_publik', function (Blueprint $table) {
+        Schema::create('informasi_publiks', function (Blueprint $table) {
             $table->id();
-            $table->string('judul_informasi')->index();
-            $table->text('deskripsi_informasi')->nullable();
-            $table->enum('kategori_informasi', [
+            $table->string('ringkasan_isi_informasi')->index();
+            $table->enum('jenis_informasi', [
                 'Informasi Setiap Saat',
                 'Informasi Berkala',
-                'Informasi Serta-Merta',
-                'Informasi Dikecualikan'
+                'Informasi Serta-Merta'
             ]);
-            $table->string('tahun_terbit')->nullable();
+            $table->string('pejabat_unit_yang_menguasai_informasi')->nullable();
+            $table->string('waktu_pembuatan_informasi')->nullable();
+            $table->string('bentuk_informasi_yang_tersedia')->nullable();
+            $table->string('retensi_arsip')->nullable();
             $table->string('file_informasi')->nullable();
             $table->string('nama_file_asli')->nullable();
             $table->text('link_informasi')->nullable();
@@ -29,6 +30,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('informasi_publik');
+        Schema::dropIfExists('informasi_publiks');
     }
 };

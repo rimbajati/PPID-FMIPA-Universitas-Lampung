@@ -131,7 +131,6 @@
                             'Informasi Berkala'      => 'bg-[#1B365D] text-white',
                             'Informasi Serta-Merta'  => 'bg-rose-500 text-white',
                             'Informasi Setiap Saat'  => 'bg-emerald-500 text-white',
-                            'Informasi Dikecualikan' => 'bg-slate-600 text-white',
                         ];
                     @endphp
 

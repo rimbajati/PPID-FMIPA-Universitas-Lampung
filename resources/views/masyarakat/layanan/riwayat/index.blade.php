@@ -3,7 +3,7 @@
 @section('title', 'Lacak & Riwayat Layanan - PPID FMIPA Unila')
 
 @section('content')
-<main class="pt-[75px] md:pt-[85px] bg-slate-50 min-h-screen pb-24"
+<main class="pt-[4.75rem] md:pt-[5.25rem] bg-slate-50 min-h-screen pb-24"
       x-data="lacakRiwayatApp({{ json_encode($allLayans) }})">
 
 

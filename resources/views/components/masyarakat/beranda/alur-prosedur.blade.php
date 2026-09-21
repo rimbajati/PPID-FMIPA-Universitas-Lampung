@@ -1,13 +1,13 @@
 <!-- Prosedur & Alur Layanan Sistem PPID Terpadu (Permohonan, Cek Riwayat, hingga Keberatan) -->
-<section id="alur-layanan" class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 mb-24 relative z-20 scroll-mt-24 sm:scroll-mt-28">
+<section id="alur-layanan" class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-16 sm:pt-24 mb-16 sm:mb-20 relative z-20 scroll-mt-24 sm:scroll-mt-28">
     <!-- Header Section -->
-    <div class="text-center max-w-3xl mx-auto mb-14 sm:mb-16 space-y-3">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200/80 shadow-2xs">
+    <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-2.5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200/80 shadow-2xs">
             <i class="fa-solid fa-arrows-split-up-and-left text-sky-500"></i>
             <span>Mekanisme Layanan Terpadu</span>
         </div>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-            Alur Layanan <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">PPID FMIPA Unila</span>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+            Alur Layanan <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">PPID FMIPA</span>
         </h2>
         <p class="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
             Panduan lengkap siklus layanan sistem mulai dari registrasi tiket, pelacakan riwayat real-time, penerimaan dokumen, hingga hak pengajuan keberatan.
@@ -20,7 +20,7 @@
         <div class="hidden lg:block absolute top-1/2 -translate-y-12 left-[12%] right-[12%] h-1 bg-gradient-to-r from-sky-300 via-blue-300 via-emerald-300 to-amber-300 z-0"></div>
 
         <!-- 4 Steps Grid Sesuai Alur Sistem Nyata -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 relative z-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 relative z-10">
             
             <!-- Langkah 1: Ajukan Permohonan -->
             <div class="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-sm hover:shadow-xl hover:shadow-sky-900/10 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">

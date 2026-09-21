@@ -1,6 +1,6 @@
 <!-- Hero Header Pelacakan Terpadu -->
 <section class="bg-slate-100/80 text-slate-800 py-10 border-b border-slate-200/80">
-    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 relative z-10">
+    <div class="max-w-[100rem] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <!-- Text Header -->
             <div class="lg:col-span-7 space-y-2">

@@ -131,11 +131,11 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-3.5 relative z-10 w-full md:w-auto justify-end">
-            <a href="https://wa.me/6282176666544" target="_blank" 
+            <a href="https://wa.me/6281320178069" target="_blank" 
                class="px-6 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs md:text-sm font-extrabold rounded-full transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 cursor-pointer hover:scale-102">
                 <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
             </a>
-            <a href="mailto:ppid@fmipa.unila.ac.id" 
+            <a href="mailto:ppid.fmipa@unila.ac.id" 
                class="px-6 py-3.5 bg-white/20 hover:bg-white/30 border border-white/40 text-white text-xs md:text-sm font-extrabold rounded-full transition-all flex items-center justify-center gap-2.5 cursor-pointer hover:scale-102">
                 <i class="fa-solid fa-envelope text-xs"></i> Hubungi Kami
             </a>

@@ -133,54 +133,55 @@
                 </div>
             </div>
 
-            <!-- BAGIAN BAWAH: WADAH CHART ELEGAN DENGAN TINGGI LEGA & LEGENDA DI ATAS -->
-            <div class="bg-white p-4 sm:p-5 lg:p-6 rounded-xl sm:rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between w-full">
+            <!-- BAGIAN BAWAH: WADAH CHART ELEGAN RAMPING DENGAN LEGENDA RATA TENGAH DI BAWAH -->
+            <div class="bg-white p-3.5 sm:p-4.5 lg:p-5 rounded-xl sm:rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between w-full">
                 
-                <!-- Chart Top Bar: Keterangan Legenda Warna (Kiri) & Toggle Rentang Waktu (Kanan) -->
-                <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100 gap-3">
-                    <!-- Keterangan Legenda Warna (Di Posisi Kiri Menggantikan Tulisan Tren) -->
-                    <div class="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs font-bold text-slate-700">
-                        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 shadow-2xs">
-                            <span class="w-2.5 h-2.5 rounded-sm bg-[#2563eb] inline-block"></span>
+                <!-- Canvas Grafik Batang Tahunan / Bulanan -->
+                <div class="relative h-[260px] sm:h-[290px] lg:h-[320px] w-full">
+                    <canvas id="chartLaporanTahunan"></canvas>
+                </div>
+
+                <!-- Baris Keterangan Saat Mode Bulan Aktif (Dengan Tombol Kembali ke Tahunan) -->
+                <div id="containerModeBulan" class="hidden items-center justify-between px-4 sm:px-6 pt-2.5 pb-1 border-t border-slate-100">
+                    <div class="flex items-center gap-2 text-xs font-bold text-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Rincian Bulanan: <span id="labelTahunAktif" class="text-sky-600 font-extrabold">Tahun 2026</span></span>
+                    </div>
+                    <button type="button" 
+                            onclick="kembaliKeTahunan()" 
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer">
+                        <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        <span>Kembali ke Tahunan</span>
+                    </button>
+                </div>
+
+                <!-- Keterangan Legenda & Petunjuk Interaksi di Luar Grafik -->
+                <div class="mt-3 pt-3 border-t border-slate-100 flex flex-col items-center gap-2">
+                    <!-- Keterangan Legenda Warna Rata Tengah Sempurna -->
+                    <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-xs font-bold text-slate-700">
+                        <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 shadow-2xs">
+                            <span class="w-3 h-3 rounded-md bg-[#2563eb] inline-block"></span>
                             <span>Permohonan</span>
                         </div>
-                        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 shadow-2xs">
-                            <span class="w-2.5 h-2.5 rounded-sm bg-[#059669] inline-block"></span>
+                        <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 shadow-2xs">
+                            <span class="w-3 h-3 rounded-md bg-[#059669] inline-block"></span>
                             <span>Selesai</span>
                         </div>
-                        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 shadow-2xs">
-                            <span class="w-2.5 h-2.5 rounded-sm bg-[#e11d48] inline-block"></span>
+                        <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 shadow-2xs">
+                            <span class="w-3 h-3 rounded-md bg-[#e11d48] inline-block"></span>
                             <span>Ditolak</span>
                         </div>
-                        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 shadow-2xs">
-                            <span class="w-2.5 h-2.5 rounded-sm bg-[#f59e0b] inline-block"></span>
+                        <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 shadow-2xs">
+                            <span class="w-3 h-3 rounded-md bg-[#f59e0b] inline-block"></span>
                             <span>Keberatan</span>
                         </div>
                     </div>
 
-                    <!-- Bagian Kanan: Badge Periode Tahun (saat mode Bulan) & Tombol Toggle Switch -->
-                    <div class="flex items-center gap-2 shrink-0">
-                        <!-- Badge Penunjuk Tahun (Otomatis tampil dinamis saat mode Bulan aktif) -->
-                        <span id="chartYearBadge" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-50 text-sky-700 border border-sky-200/70 text-xs font-bold transition-all duration-200">
-                            <i class="fa-regular fa-calendar text-[11px] text-sky-500"></i>
-                            <span id="chartYearText">Tahun {{ $chartBulanan['year'] ?? date('Y') }}</span>
-                        </span>
-
-                        <!-- Tombol Toggle Switch (Tahun / Bulan) di Kanan -->
-                        <div class="inline-flex p-0.5 bg-slate-100/90 rounded-lg border border-slate-200/80 text-xs font-bold">
-                            <button type="button" id="btnModeTahun" class="px-3.5 py-1.5 rounded-md transition-all duration-200 bg-white text-sky-700 shadow-xs cursor-pointer text-xs">
-                                Tahun
-                            </button>
-                            <button type="button" id="btnModeBulan" class="px-3.5 py-1.5 rounded-lg transition-all duration-200 text-slate-500 hover:text-slate-900 cursor-pointer text-xs">
-                                Bulan
-                            </button>
-                        </div>
+                    <!-- Petunjuk Interaksi di Bawah Legenda (Hanya tampil saat mode tahun) -->
+                    <div id="hintKlikTahun" class="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-400 mt-0.5">
+                        <i class="fa-solid fa-arrow-pointer text-sky-500 text-[10px]"></i>
+                        <span>Klik batang tahun pada grafik untuk melihat rincian per bulan</span>
                     </div>
-                </div>
-
-                <!-- Canvas Grafik Batang Tahunan / Bulanan (Tinggi Lega, Proporsional & Sama Sekali Tidak Gepeng) -->
-                <div class="relative h-[340px] sm:h-[380px] lg:h-[420px] w-full pt-2">
-                    <canvas id="chartLaporanTahunan"></canvas>
                 </div>
 
             </div>
@@ -217,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     let currentMode = 'tahun';
-    let currentDynamicMax = calculateDynamicMax(dataTahunan.permintaan, dataTahunan.disetujui, dataTahunan.ditolak, dataTahunan.keberatan);
+    const currentDynamicMax = calculateDynamicMax(dataTahunan.permintaan, dataTahunan.disetujui, dataTahunan.ditolak, dataTahunan.keberatan);
 
     const chartInstance = new Chart(ctx, {
         type: 'bar',
@@ -264,14 +265,25 @@ document.addEventListener('DOMContentLoaded', function() {
             animation: {
                 duration: 400
             },
-            onClick: function(evt, elements) {
-                // Saat berada di mode Tahun, klik pada batang tahun manapun akan langsung membuka rincian Bulan untuk tahun tersebut!
-                if (currentMode === 'tahun' && elements.length > 0) {
-                    const clickedIndex = elements[0].index;
+            onHover: function(evt, elements) {
+                if (currentMode === 'tahun') {
+                    // Cek apakah kursor tepat berada di bar / kolom tahun
+                    const pts = chartInstance.getElementsAtEventForMode(evt, 'index', { intersect: false }, false);
+                    ctx.style.cursor = (pts.length > 0) ? 'pointer' : 'default';
+                } else {
+                    ctx.style.cursor = 'default';
+                }
+            },
+            onClick: function(evt) {
+                if (currentMode !== 'tahun') return;
+                
+                // Ambil elemen batang/kolom tahun yang diklik
+                const points = chartInstance.getElementsAtEventForMode(evt, 'index', { intersect: false }, false);
+                if (points.length > 0) {
+                    const clickedIndex = points[0].index;
                     const clickedYear = dataTahunan.labels[clickedIndex];
-                    if (clickedYear && dataBulananPerTahun[clickedYear]) {
-                        selectedYearForMonth = clickedYear;
-                        switchMode('bulan', clickedYear);
+                    if (clickedYear) {
+                        bukaGrafikBulan(clickedYear);
                     }
                 }
             },
@@ -286,8 +298,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     titleFont: { size: 12, weight: 'bold' },
                     bodyFont: { size: 12 },
                     callbacks: {
-                        afterTitle: function() {
-                            return currentMode === 'tahun' ? '💡 Klik batang untuk lihat rincian bulan' : '';
+                        title: function(tooltipItems) {
+                            if (!tooltipItems || tooltipItems.length === 0) return '';
+                            const item = tooltipItems[0];
+                            const label = item.label;
+                            if (currentMode === 'bulan') {
+                                const namaBulanLengkap = {
+                                    'Jan': 'Januari',
+                                    'Feb': 'Februari',
+                                    'Mar': 'Maret',
+                                    'Apr': 'April',
+                                    'Mei': 'Mei',
+                                    'Jun': 'Juni',
+                                    'Jul': 'Juli',
+                                    'Agu': 'Agustus',
+                                    'Sep': 'September',
+                                    'Okt': 'Oktober',
+                                    'Nov': 'November',
+                                    'Des': 'Desember'
+                                };
+                                const bulanLengkap = namaBulanLengkap[label] || label;
+                                return selectedYearForMonth ? `${bulanLengkap} ${selectedYearForMonth}` : bulanLengkap;
+                            }
+                            return label;
                         }
                     }
                 }
@@ -314,7 +347,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 x: {
                     ticks: {
                         color: '#334155',
-                        font: { size: 12, weight: 'bold' }
+                        font: { size: 12, weight: 'bold' },
+                        padding: 8
                     },
                     grid: {
                         display: true,
@@ -329,68 +363,81 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Event Handler Tombol Switch (Tahun / Bulan)
-    const btnTahun = document.getElementById('btnModeTahun');
-    const btnBulan = document.getElementById('btnModeBulan');
-    const yearBadge = document.getElementById('chartYearBadge');
-    const yearText = document.getElementById('chartYearText');
+    const containerBulan = document.getElementById('containerModeBulan');
+    const labelTahunAktif = document.getElementById('labelTahunAktif');
 
-    function switchMode(mode, specificYear = null) {
-        if (mode === currentMode && !specificYear) return;
-        currentMode = mode;
+    // Daftar 12 Bulan Standar
+    const defaultMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
-        if (specificYear) {
-            selectedYearForMonth = specificYear;
-        }
+    // Fungsi Ketika Batang Tahun Ditekan -> Berubah Jadi Grafik Bulan di Tahun Tersebut
+    window.bukaGrafikBulan = function(tahun) {
+        currentMode = 'bulan';
+        selectedYearForMonth = tahun;
+        const dataBulanTahun = (dataBulananPerTahun && dataBulananPerTahun[tahun]) ? dataBulananPerTahun[tahun] : {
+            months: defaultMonths,
+            permintaan: @json($chartBulanan['permintaan'] ?? array_fill(0, 12, 0)),
+            disetujui: @json($chartBulanan['disetujui'] ?? array_fill(0, 12, 0)),
+            ditolak: @json($chartBulanan['ditolak'] ?? array_fill(0, 12, 0)),
+            keberatan: @json($chartBulanan['keberatan'] ?? array_fill(0, 12, 0)),
+        };
 
-        const activeDataset = (mode === 'tahun') 
-            ? dataTahunan 
-            : (dataBulananPerTahun[selectedYearForMonth] || {
-                labels: @json($chartBulanan['months']),
-                permintaan: @json($chartBulanan['permintaan']),
-                disetujui: @json($chartBulanan['disetujui']),
-                ditolak: @json($chartBulanan['ditolak']),
-                keberatan: @json($chartBulanan['keberatan']),
-              });
+        const monthLabels = dataBulanTahun.months || dataBulanTahun.labels || defaultMonths;
 
-        // Update Button Active Styling & Year Badge Visibility
-        if (mode === 'tahun') {
-            btnTahun.className = 'px-3.5 py-1.5 rounded-md transition-all duration-200 bg-white text-sky-700 shadow-xs cursor-pointer text-xs';
-            btnBulan.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 text-slate-500 hover:text-slate-900 cursor-pointer text-xs';
-            if (yearBadge) {
-                yearBadge.classList.add('hidden');
-                yearBadge.classList.remove('inline-flex');
-            }
-        } else {
-            btnBulan.className = 'px-3.5 py-1.5 rounded-md transition-all duration-200 bg-white text-sky-700 shadow-xs cursor-pointer text-xs';
-            btnTahun.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 text-slate-500 hover:text-slate-900 cursor-pointer text-xs';
-            if (yearBadge) {
-                if (yearText) yearText.textContent = 'Tahun ' + selectedYearForMonth;
-                yearBadge.classList.remove('hidden');
-                yearBadge.classList.add('inline-flex');
-            }
-        }
+        // Update Data Grafik ke 12 Bulan
+        chartInstance.data.labels = monthLabels;
+        chartInstance.data.datasets[0].data = dataBulanTahun.permintaan || [];
+        chartInstance.data.datasets[1].data = dataBulanTahun.disetujui || [];
+        chartInstance.data.datasets[2].data = dataBulanTahun.ditolak || [];
+        chartInstance.data.datasets[3].data = dataBulanTahun.keberatan || [];
 
-        // Update Chart Labels & Data
-        chartInstance.data.labels = activeDataset.labels;
-        chartInstance.data.datasets[0].data = activeDataset.permintaan;
-        chartInstance.data.datasets[1].data = activeDataset.disetujui;
-        chartInstance.data.datasets[2].data = activeDataset.ditolak;
-        chartInstance.data.datasets[3].data = activeDataset.keberatan;
-
-        // Update Dynamic Max Sumbu Y
-        const newMax = calculateDynamicMax(activeDataset.permintaan, activeDataset.disetujui, activeDataset.ditolak, activeDataset.keberatan);
-        chartInstance.options.scales.y.max = newMax;
-
+        // Dynamic Sumbu Y
+        const maxVal = calculateDynamicMax(
+            dataBulanTahun.permintaan || [], 
+            dataBulanTahun.disetujui || [], 
+            dataBulanTahun.ditolak || [], 
+            dataBulanTahun.keberatan || []
+        );
+        chartInstance.options.scales.y.max = maxVal;
         chartInstance.update();
-    }
 
-    if (btnTahun) {
-        btnTahun.addEventListener('click', () => switchMode('tahun'));
-    }
-    if (btnBulan) {
-        btnBulan.addEventListener('click', () => switchMode('bulan'));
-    }
+        // Tampilkan Baris Keterangan Mode Bulan dengan Tombol Kembali
+        if (containerBulan) {
+            if (labelTahunAktif) labelTahunAktif.textContent = 'Tahun ' + tahun;
+            containerBulan.classList.remove('hidden');
+            containerBulan.classList.add('flex');
+        }
+
+        // Sembunyikan Petunjuk Klik Batang saat sudah di mode Bulan
+        const hintKlik = document.getElementById('hintKlikTahun');
+        if (hintKlik) hintKlik.classList.add('hidden');
+    };
+
+    // Fungsi Kembali ke Grafik Tahunan
+    window.kembaliKeTahunan = function() {
+        currentMode = 'tahun';
+
+        // Kembalikan Data Grafik ke Tahunan
+        chartInstance.data.labels = dataTahunan.labels;
+        chartInstance.data.datasets[0].data = dataTahunan.permintaan;
+        chartInstance.data.datasets[1].data = dataTahunan.disetujui;
+        chartInstance.data.datasets[2].data = dataTahunan.ditolak;
+        chartInstance.data.datasets[3].data = dataTahunan.keberatan;
+
+        // Dynamic Sumbu Y
+        const maxVal = calculateDynamicMax(dataTahunan.permintaan, dataTahunan.disetujui, dataTahunan.ditolak, dataTahunan.keberatan);
+        chartInstance.options.scales.y.max = maxVal;
+        chartInstance.update();
+
+        // Sembunyikan Baris Keterangan Mode Bulan
+        if (containerBulan) {
+            containerBulan.classList.add('hidden');
+            containerBulan.classList.remove('flex');
+        }
+
+        // Tampilkan kembali Petunjuk Klik Batang saat di mode Tahun
+        const hintKlik = document.getElementById('hintKlikTahun');
+        if (hintKlik) hintKlik.classList.remove('hidden');
+    };
 });
 </script>
 

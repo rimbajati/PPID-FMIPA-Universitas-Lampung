@@ -14,11 +14,12 @@
                     Portal resmi Pejabat Pengelola Informasi dan Dokumentasi Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Lampung. Menjamin keterbukaan informasi publik secara cepat, transparan, dan akuntabel.
                 </p>
 
-                <div class="pt-2 space-y-1 text-xs text-slate-600 font-normal">
-                    <p class="font-bold text-slate-900">PPID FMIPA Universitas Lampung</p>
-                    <p>ppid.fmipa@unila.ac.id</p>
-                    <p>Telepon: +62 721-704625</p>
-                    <p>Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Bandar Lampung</p>
+                <div class="pt-2 space-y-1.5 text-xs text-slate-600 font-normal">
+                    <p class="font-bold text-slate-900">PPID Pelaksana FMIPA Universitas Lampung</p>
+                    <p class="text-slate-500 font-medium">PIC: <b>Aristoeteles</b> (Kasubag TU)</p>
+                    <p><i class="fa-solid fa-envelope text-sky-500 mr-1.5"></i>ppid.fmipa@unila.ac.id</p>
+                    <p><a href="https://wa.me/6281320178069" target="_blank" class="hover:text-emerald-600 transition"><i class="fa-brands fa-whatsapp text-emerald-500 mr-1.5"></i>+62 813-2017-8069</a></p>
+                    <p><i class="fa-solid fa-location-dot text-rose-500 mr-1.5"></i>Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Gedong Meneng, Bandar Lampung</p>
                 </div>
 
                 <div class="pt-4 text-xs text-slate-500 font-medium">
@@ -69,7 +70,7 @@
                         <a href="{{ route('informasi.publik', ['kategori' => 'Berkala']) }}" class="hover:text-sky-600 transition-colors">Informasi Berkala</a>
                     </li>
                     <li>
-                        <a href="{{ route('informasi.publik', ['kategori' => 'Serta Merta']) }}" class="hover:text-sky-600 transition-colors">Informasi Serta Merta</a>
+                        <a href="{{ route('informasi.publik', ['kategori' => 'Serta-Merta']) }}" class="hover:text-sky-600 transition-colors">Informasi Serta-Merta</a>
                     </li>
                     <li>
                         <a href="{{ route('informasi.publik', ['kategori' => 'Setiap Saat']) }}" class="hover:text-sky-600 transition-colors">Informasi Setiap Saat</a>

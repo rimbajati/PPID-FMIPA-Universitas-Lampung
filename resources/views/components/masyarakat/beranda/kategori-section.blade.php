@@ -8,14 +8,14 @@
 ])
 
 <!-- Kategori Informasi Publik Section (Harmonis dengan Tema PPID FMIPA Unila) -->
-<section id="kategori-informasi" class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 sm:pt-20 mb-24 relative z-20">
+<section id="kategori-informasi" class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-10 sm:pt-14 mb-16 sm:mb-20 relative z-20">
     <!-- Header Section -->
-    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-3">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200/80 shadow-2xs">
+    <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10 space-y-2.5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200/80 shadow-2xs">
             <i class="fa-solid fa-layer-group text-sky-500"></i>
             <span>Klasifikasi UU KIP No. 14/2008</span>
         </div>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
             Kategori <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">Informasi Publik</span>
         </h2>
         <p class="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Grid 4 Kategori (Responsive: 1 col di mobile, 2 col di tablet, 4 col di desktop) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         
         <!-- 1. Informasi Berkala (Navy Blue khas Referensi) -->
         <div class="bg-gradient-to-br from-[#1e3a5f] to-[#0f233a] p-6 sm:p-7 rounded-3xl shadow-lg shadow-slate-900/15 hover:shadow-2xl hover:shadow-slate-900/25 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between group relative overflow-hidden text-white border border-sky-400/20">

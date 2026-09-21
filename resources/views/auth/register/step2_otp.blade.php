@@ -10,17 +10,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+        html { 
+            font-size: 15px; 
+        }
+        @media (min-width: 1600px) {
+            html { font-size: 16px; }
+        }
+        @media (max-width: 1280px) {
+            html { font-size: 14px; }
+        }
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="relative min-h-screen bg-[#1B365D] flex flex-col items-center justify-center p-4 sm:p-6 select-none overflow-x-hidden">
+<body class="relative min-h-screen bg-[#1B365D] flex flex-col items-center justify-center p-4 sm:p-6 select-none overflow-y-auto">
 
     <!-- Background Layer Gedung Dekanat FMIPA -->
     <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ asset('images/GedungDekanatFMIPA.jpg') }}');"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-[#1B365D]/90 via-[#1B365D]/50 to-transparent"></div>
 
     <!-- Container Utama -->
-    <div class="relative z-10 w-full max-w-lg mx-auto flex flex-col items-center py-6 space-y-6">
+    <div class="relative z-10 w-full max-w-md mx-auto flex flex-col items-center py-4 sm:py-6 space-y-5 my-auto">
 
         <!-- Top Navigation Link (Kembali ke Register Step 1) -->
         <a href="{{ route('register') }}" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-xs font-extrabold text-white transition-all border border-white/20">

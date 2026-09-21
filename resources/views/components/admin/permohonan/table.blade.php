@@ -4,55 +4,57 @@
 <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
     <!-- Action Header, Bulk Actions, Pill Filters & Wide Search Bar -->
     <div class="p-6 border-b border-slate-100">
-        <form id="filter-search-form" action="{{ route('admin.permohonan.index') }}" method="GET" class="flex flex-col xl:flex-row items-start xl:items-center gap-3 w-full">
-            <div class="flex items-center gap-2 shrink-0">
-                <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()"
-                        class="inline-flex items-center justify-center gap-2 px-5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs md:text-sm font-extrabold rounded-xl transition cursor-pointer h-[48px] whitespace-nowrap select-none">
-                    <i class="fa-solid fa-list-check"></i> <span id="text-select-mode">Pilih</span>
-                </button>
+        <form id="filter-search-form" action="{{ route('admin.permohonan.index') }}" method="GET" class="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 w-full">
+            @if(request('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
 
-                <button type="button" id="btn-bulk-delete" onclick="triggerBulkDelete()"
-                        class="hidden inline-flex items-center justify-center gap-2 px-5 bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-extrabold rounded-xl transition shadow-xs cursor-pointer h-[48px] whitespace-nowrap select-none">
-                    <i class="fa-solid fa-trash"></i> <span>Hapus (<span id="selected-count">0</span>)</span>
-                </button>
-            </div>
+            <!-- Sisi Kiri: Tombol Pilih & Pill Filter Status -->
+            <div class="flex flex-wrap items-center gap-2.5">
+                <div class="flex items-center gap-2 shrink-0">
+                    <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()"
+                            class="inline-flex items-center justify-center gap-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs md:text-sm font-extrabold rounded-xl transition cursor-pointer h-10 whitespace-nowrap select-none">
+                        <i class="fa-solid fa-list-check"></i> <span id="text-select-mode">Hapus</span>
+                    </button>
 
-            <!-- Interactive Pill Filters & Search -->
-            <div class="flex flex-wrap items-center gap-3 flex-1">
-                @if(request('status'))
-                    <input type="hidden" name="status" value="{{ request('status') }}">
-                @endif
-                <div class="flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/50 shrink-0 h-[48px]">
+                    <button type="button" id="btn-bulk-delete" onclick="triggerBulkDelete()"
+                            class="hidden inline-flex items-center justify-center gap-2 px-4 bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-extrabold rounded-xl transition shadow-xs cursor-pointer h-10 whitespace-nowrap select-none">
+                        <i class="fa-solid fa-trash"></i> <span>Hapus (<span id="selected-count">0</span>)</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/50 overflow-x-auto max-w-full">
                     <a href="{{ route('admin.permohonan.index') }}" 
-                       class="px-4 py-2 rounded-xl text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ !request('status') || request('status') == 'Semua' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
+                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ !request('status') || request('status') == 'Semua' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
                         Semua
                     </a>
                     <a href="{{ route('admin.permohonan.index', array_merge(request()->query(), ['status' => 'Diajukan'])) }}" 
-                       class="px-4 py-2 rounded-xl text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Diajukan' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
+                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Diajukan' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
                         Diajukan
                     </a>
                     <a href="{{ route('admin.permohonan.index', array_merge(request()->query(), ['status' => 'Diproses'])) }}" 
-                       class="px-4 py-2 rounded-xl text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Diproses' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
+                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Diproses' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
                         Diproses
                     </a>
                     <a href="{{ route('admin.permohonan.index', array_merge(request()->query(), ['status' => 'Selesai'])) }}" 
-                       class="px-4 py-2 rounded-xl text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Selesai' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
+                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Selesai' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
                         Selesai
                     </a>
                     <a href="{{ route('admin.permohonan.index', array_merge(request()->query(), ['status' => 'Ditolak'])) }}" 
-                       class="px-4 py-2 rounded-xl text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Ditolak' ? 'bg-white text-slate-900 shadow-xs font-black' : 'text-slate-500 font-bold hover:text-slate-900' }}">
+                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Ditolak' ? 'bg-white text-slate-900 shadow-xs font-black' : 'text-slate-500 font-bold hover:text-slate-900' }}">
                         Ditolak
                     </a>
                 </div>
+            </div>
 
-                <!-- Input Searchbar -->
-                <div class="flex-1 min-w-[200px] h-[48px]">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari no. tiket, nama pemohon, NIK pemohon..." 
-                           class="w-full h-full px-4 bg-slate-50 border border-slate-200 text-xs md:text-sm font-semibold text-slate-800 placeholder-slate-400 rounded-xl focus:bg-white focus:outline-none focus:border-sky-500 transition shadow-xs" autocomplete="off">
+            <!-- Sisi Kanan: Search Bar & Tombol Cari Fleksibel -->
+            <div class="flex items-center gap-2 flex-1 lg:max-w-[480px] w-full">
+                <div class="flex-1 min-w-0 h-10 relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari no. tiket, nama, NIK pemohon..." 
+                           class="w-full h-full px-3.5 bg-slate-50 border border-slate-200 text-xs md:text-sm font-semibold text-slate-800 placeholder-slate-400 rounded-xl focus:bg-white focus:outline-none focus:border-sky-500 transition shadow-xs" autocomplete="off">
                 </div>
 
-                <!-- Tombol Cari Terpisah -->
-                <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-5 py-3 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-xl transition cursor-pointer shadow-xs shrink-0 whitespace-nowrap h-[48px]">
+                <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-xl transition cursor-pointer shadow-xs shrink-0 whitespace-nowrap h-10">
                     <i class="fa-solid fa-magnifying-glass text-xs"></i> <span>Cari</span>
                 </button>
             </div>
@@ -96,8 +98,8 @@
                             <td class="px-6 py-2.5 text-slate-500 font-medium whitespace-nowrap">
                                 {{ $item->created_at ? $item->created_at->translatedFormat('d M Y') : '-' }}
                             </td>
-                            <td class="px-6 py-2.5 max-w-xs md:max-w-sm">
-                                <p class="text-slate-700 font-medium leading-relaxed line-clamp-2 text-xs md:text-sm">
+                            <td class="px-6 py-2.5 min-w-[14rem] max-w-md">
+                                <p class="text-slate-700 font-medium leading-relaxed whitespace-normal break-words text-xs md:text-sm">
                                     {{ $item->informasi_yang_diminta }}
                                 </p>
                             </td>

@@ -13,8 +13,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 
     <style>
-        html { font-size: 16px; scroll-behavior: smooth; }
-        body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; font-size: 0.975rem; }
+        html { 
+            font-size: 14px; 
+            scroll-behavior: smooth; 
+        }
+        @media (min-width: 1700px) {
+            html { font-size: 16px; }
+        }
+        @media (min-width: 1400px) and (max-width: 1699px) {
+            html { font-size: 14.5px; }
+        }
+        @media (max-width: 1200px) {
+            html { font-size: 13.5px; }
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; 
+            font-size: 0.9375rem; 
+        }
         /* Scrollbar kustom untuk sidebar agar lebih rapi */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -55,7 +70,7 @@
 <body class="bg-[#f1f5f9] text-slate-800 antialiased overflow-hidden flex flex-col h-screen relative">
 
     <!-- 1. Header Topbar Biru Muda Sistem (bg-sky-600) -->
-    <header class="bg-sky-600 h-[64px] flex items-center justify-between px-6 text-white shadow-md w-full flex-shrink-0">
+    <header class="bg-sky-600 h-14 md:h-16 flex items-center justify-between px-4 md:px-6 text-white shadow-md w-full flex-shrink-0">
         <!-- Sisi Kiri: Logo PPID FMIPA + Tombol Hamburger Berjarak Lega -->
         <div class="flex items-center gap-6 md:gap-8">
             <a href="/" class="flex items-center shrink-0 gap-3 group">
@@ -90,7 +105,7 @@
         <!-- Main Content (Warna latar Slate-100 #f1f5f9 Soft & Terang) -->
         <div class="flex-1 flex flex-col min-w-0 bg-[#f1f5f9] relative">
             <!-- Area Konten Utama -->
-            <main class="flex-1 overflow-y-auto p-6 md:p-8 w-full bg-[#f1f5f9]">
+            <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-7 w-full bg-[#f1f5f9]">
                 <!-- Toast Popup Notification (Hilang Otomatis 3.5 Detik) -->
                 @if(session('success'))
                     <div id="toast-success" class="fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 bg-emerald-600 text-white rounded-xl shadow-2xl transition-all duration-500 transform translate-y-0 opacity-100 border border-emerald-500">
@@ -154,7 +169,7 @@
                 } else {
                     toggleBtn.classList.remove('bg-rose-50', 'text-rose-600');
                     toggleBtn.classList.add('bg-slate-100', 'text-slate-700');
-                    textSelectMode.innerText = 'Pilih';
+                    textSelectMode.innerText = 'Hapus';
                     
                     if (checkAll) checkAll.checked = false;
                     document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = false);
@@ -239,7 +254,7 @@
             if (!sidebar) return;
 
             if (window.innerWidth >= 1024) {
-                sidebar.classList.toggle('lg:-ml-[300px]');
+                sidebar.classList.toggle('lg:-ml-[17rem]');
             } else {
                 sidebar.classList.toggle('-translate-x-full');
             }

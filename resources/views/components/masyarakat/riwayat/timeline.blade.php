@@ -39,7 +39,8 @@
                     <h4 class="text-sm md:text-base font-black text-slate-900 leading-none">Diproses</h4>
                     <span class="text-xs font-bold text-slate-400" x-text="activeItem.updated_at_formatted || '-'"></span>
                 </div>
-                <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">Informasi sedang disiapkan</p>
+                <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed"
+                   x-text="activeItem.type === 'keberatan' ? 'Keberatan sedang ditinjau dan dikoordinasikan dengan Atasan PPID' : 'Informasi sedang disiapkan'"></p>
 
                 <template x-if="activeItem.catatan_diproses">
                     <div class="p-4 bg-amber-50/70 rounded-2xl text-xs md:text-sm text-amber-950 space-y-1.5 border border-amber-200/80 shadow-xs font-medium">
@@ -64,7 +65,8 @@
                     <h4 class="text-sm md:text-base font-black text-emerald-900 leading-none">Selesai</h4>
                     <span class="text-xs font-bold text-slate-400" x-text="activeItem.updated_at_formatted || '-'"></span>
                 </div>
-                <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">Permohonan dipenuhi.</p>
+                <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed"
+                   x-text="activeItem.type === 'keberatan' ? 'Tanggapan atas keberatan telah diputuskan dan disetujui.' : 'Permohonan dipenuhi.'"></p>
 
                 <div class="p-4 bg-emerald-50/70 rounded-2xl text-xs md:text-sm text-emerald-950 space-y-1.5 border border-emerald-200/80 shadow-xs font-medium">
                     <div class="text-[11px] font-black text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
@@ -72,9 +74,13 @@
                     </div>
                     <p class="leading-relaxed text-slate-800 font-semibold whitespace-pre-line" 
                        x-text="activeItem.catatan_selesai ? activeItem.catatan_selesai : (
-                           activeItem.cara_memperoleh_informasi && activeItem.cara_memperoleh_informasi.toLowerCase().includes('email') 
-                           ? 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam) untuk mengakses informasi yang diminta.' 
-                           : 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan informasi.'
+                           activeItem.type === 'keberatan' 
+                           ? 'Pengajuan keberatan Anda telah diterima dan disetujui. Silakan periksa kotak masuk email Anda (termasuk folder Spam) untuk tanggapan resmi dari Atasan PPID.' 
+                           : (
+                               activeItem.cara_memperoleh_informasi && activeItem.cara_memperoleh_informasi.toLowerCase().includes('email') 
+                               ? 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam) untuk mengakses informasi yang diminta.' 
+                               : 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan informasi.'
+                           )
                        )"></p>
                 </div>
             </div>
@@ -92,13 +98,14 @@
                     <h4 class="text-sm md:text-base font-black text-rose-900 leading-none">Ditolak</h4>
                     <span class="text-xs font-bold text-slate-400" x-text="activeItem.updated_at_formatted || '-'"></span>
                 </div>
-                <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed">Permohonan tidak dipenuhi</p>
+                <p class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed"
+                   x-text="activeItem.type === 'keberatan' ? 'Pengajuan keberatan ditolak' : 'Permohonan tidak dipenuhi'"></p>
 
                 <div class="p-4 bg-rose-50/70 rounded-2xl text-xs md:text-sm text-rose-950 space-y-1.5 border border-rose-200/80 shadow-xs font-medium">
                     <div class="text-[11px] font-black text-rose-900 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> ALASAN PENOLAKAN:
                     </div>
-                    <p class="leading-relaxed text-slate-800 font-semibold whitespace-pre-line" x-text="activeItem.alasan_ditolak || activeItem.pesan_ditolak || activeItem.catatan_final || 'Tidak ada catatan alasan penolakan.'"></p>
+                    <p class="leading-relaxed text-slate-800 font-semibold whitespace-pre-line" x-text="activeItem.alasan_ditolak || activeItem.pesan_ditolak || activeItem.catatan_final || (activeItem.type === 'keberatan' ? 'Keberatan tidak dapat diterima berdasarkan pertimbangan Atasan PPID.' : 'Tidak ada catatan alasan penolakan.')"></p>
                 </div>
 
                 <div class="pt-1">

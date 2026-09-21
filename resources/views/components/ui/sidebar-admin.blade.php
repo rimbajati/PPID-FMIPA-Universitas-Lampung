@@ -1,38 +1,98 @@
 <!-- Sidebar Container Navigasi Admin -->
-<aside id="sidebar" class="w-[290px] bg-white border-r border-slate-200/80 text-slate-700 flex flex-col justify-between flex-shrink-0 h-full fixed inset-y-0 left-0 z-20 transform -translate-x-full lg:translate-x-0 lg:static transition-all duration-300 ease-in-out shadow-xs select-none">
+<aside id="sidebar" class="w-[17rem] bg-white border-r border-slate-200/80 text-slate-700 flex flex-col justify-between flex-shrink-0 h-full fixed inset-y-0 left-0 z-20 transform -translate-x-full lg:translate-x-0 lg:static transition-all duration-300 ease-in-out shadow-xs select-none">
 
     @php
         $sidebarPendingPermohonan = \App\Models\Permohonan::whereIn('status', ['Diajukan', 'Diproses', 'Proses', 'Perlu Tindakan', 'Perlu Hasil Akhir'])->count();
         $sidebarPendingKeberatan  = \App\Models\Keberatan::whereIn('status', ['Diajukan', 'Diproses', 'Proses', 'Perlu Tindakan'])->count();
-        $isInformasiActive        = request()->is('admin/informasi-publik*');
+        $isDIPActive              = request()->is('admin/informasi-publik*') && !request()->filled('kategori');
+        $isBerkalaActive          = request()->is('admin/informasi-publik*') && request('kategori') === 'Informasi Berkala';
+        $isSertaMertaActive       = request()->is('admin/informasi-publik*') && request('kategori') === 'Informasi Serta-Merta';
+        $isSetiapSaatActive       = request()->is('admin/informasi-publik*') && request('kategori') === 'Informasi Setiap Saat';
+        $isDikecualikanActive     = request()->is('admin/informasi-dikecualikan*');
+        $isFaqActive              = request()->is('admin/faq*') || request()->is('admin/beranda-konten*');
         $isPermohonanActive       = request()->is('admin/permohonan*');
         $isKeberatanActive        = request()->is('admin/keberatan*');
+        $isStatistikActive        = request()->is('admin/statistik*');
     @endphp
 
     <div class="flex-1 overflow-y-auto px-3.5 py-6 space-y-5">
 
-        <!-- 1. Grup Kelola Data -->
-        <div class="space-y-2">
+        <!-- 1. Grup Informasi Publik (Simpel, Bersih, 1 Baris) -->
+        <div class="space-y-1">
             <div class="px-2 text-[11px] font-black text-sky-600 uppercase tracking-wider">
-                Pengelolaan Data
+                Informasi Publik
             </div>
 
-            <a href="{{ url('/admin/informasi-publik') }}"
-               class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isInformasiActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
-                <i class="fa-regular fa-folder-open text-base w-5 text-center shrink-0 {{ $isInformasiActive ? 'text-white' : 'text-slate-400' }}"></i>
-                <span class="whitespace-nowrap">Informasi Publik</span>
+            @php
+                $isAnyDipActive = $isDIPActive || $isBerkalaActive || $isSertaMertaActive || $isSetiapSaatActive;
+            @endphp
+            <!-- Dropdown: Daftar Informasi Publik -->
+            <div x-data="{ dipOpen: {{ $isAnyDipActive ? 'true' : 'false' }} }" class="space-y-1">
+                <!-- Parent Menu -->
+                <div class="flex items-center justify-between rounded-xl transition-all duration-200 {{ $isAnyDipActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600 font-bold' }}">
+                    <a href="{{ url('/admin/informasi-publik') }}"
+                       class="flex-1 flex items-center gap-3 px-3.5 py-2.5 min-w-0 text-xs md:text-sm {{ $isAnyDipActive ? 'text-white' : 'text-slate-600 hover:text-sky-600' }}">
+                        <i class="fa-regular fa-folder-open text-base w-5 text-center shrink-0 {{ $isAnyDipActive ? 'text-white' : 'text-slate-400' }}"></i>
+                        <span class="whitespace-nowrap">Daftar Informasi Publik</span>
+                    </a>
+                    
+                    <button type="button" @click.stop="dipOpen = !dipOpen" 
+                            class="px-3 py-2.5 flex items-center justify-center cursor-pointer transition-transform duration-200 focus:outline-none shrink-0 {{ $isAnyDipActive ? 'text-white/90 hover:text-white' : 'text-slate-400 hover:text-sky-600' }}"
+                            title="Buka/Tutup">
+                        <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" :class="{ 'rotate-180': dipOpen }"></i>
+                    </button>
+                </div>
+
+                <!-- Submenu Ringkas 1 Baris -->
+                <div x-show="dipOpen" 
+                     x-transition:enter="transition ease-out duration-150"
+                     x-transition:enter-start="opacity-0 -translate-y-1"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-100"
+                     x-transition:leave-start="opacity-100 translate-y-0"
+                     x-transition:leave-end="opacity-0 -translate-y-1"
+                     class="pt-0.5 pb-1 space-y-0.5 pl-3" x-cloak>
+                    
+                    <!-- Berkala -->
+                    <a href="{{ url('/admin/informasi-publik?kategori=' . urlencode('Informasi Berkala')) }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs md:text-sm transition-all duration-150 {{ $isBerkalaActive ? 'bg-sky-50 text-sky-700 font-extrabold' : 'font-bold text-slate-600 hover:bg-slate-100/80 hover:text-slate-900' }}">
+                        <i class="fa-regular fa-clock text-xs w-4 text-center shrink-0 {{ $isBerkalaActive ? 'text-sky-600' : 'text-slate-400' }}"></i>
+                        <span class="whitespace-nowrap">Informasi Berkala</span>
+                    </a>
+
+                    <!-- Serta-Merta -->
+                    <a href="{{ url('/admin/informasi-publik?kategori=' . urlencode('Informasi Serta-Merta')) }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs md:text-sm transition-all duration-150 {{ $isSertaMertaActive ? 'bg-sky-50 text-sky-700 font-extrabold' : 'font-bold text-slate-600 hover:bg-slate-100/80 hover:text-slate-900' }}">
+                        <i class="fa-solid fa-triangle-exclamation text-xs w-4 text-center shrink-0 {{ $isSertaMertaActive ? 'text-sky-600' : 'text-slate-400' }}"></i>
+                        <span class="whitespace-nowrap">Informasi Serta-Merta</span>
+                    </a>
+
+                    <!-- Setiap Saat -->
+                    <a href="{{ url('/admin/informasi-publik?kategori=' . urlencode('Informasi Setiap Saat')) }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs md:text-sm transition-all duration-150 {{ $isSetiapSaatActive ? 'bg-sky-50 text-sky-700 font-extrabold' : 'font-bold text-slate-600 hover:bg-slate-100/80 hover:text-slate-900' }}">
+                        <i class="fa-solid fa-arrows-rotate text-xs w-4 text-center shrink-0 {{ $isSetiapSaatActive ? 'text-sky-600' : 'text-slate-400' }}"></i>
+                        <span class="whitespace-nowrap">Informasi Setiap Saat</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Informasi Dikecualikan -->
+            <a href="{{ url('/admin/informasi-dikecualikan') }}"
+               class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isDikecualikanActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
+                <i class="fa-solid fa-lock text-base w-5 text-center shrink-0 {{ $isDikecualikanActive ? 'text-white' : 'text-slate-400' }}"></i>
+                <span class="whitespace-nowrap">Informasi Dikecualikan</span>
             </a>
         </div>
 
-        <!-- 2. Grup Layanan PPID -->
-        <div class="space-y-2 pt-1">
+        <!-- 2. Grup Layanan Informasi (Simpel & Rapi) -->
+        <div class="space-y-1 pt-1">
             <div class="px-2 text-[11px] font-black text-sky-600 uppercase tracking-wider">
-                Layanan Informasi 
+                Layanan Informasi
             </div>
 
-            <!-- Submenu 1: Permohonan Informasi -->
+            <!-- Permohonan Informasi -->
             <a href="{{ url('/admin/permohonan') }}"
-               class="flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isPermohonanActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
+               class="flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isPermohonanActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
                 <div class="flex items-center gap-3 min-w-0">
                     <i class="fa-regular fa-file-lines text-base w-5 text-center shrink-0 {{ $isPermohonanActive ? 'text-white' : 'text-slate-400' }}"></i>
                     <span class="whitespace-nowrap">Permohonan Informasi</span>
@@ -44,9 +104,9 @@
                 @endif
             </a>
 
-            <!-- Submenu 2: Pengajuan Keberatan -->
+            <!-- Pengajuan Keberatan -->
             <a href="{{ url('/admin/keberatan') }}"
-               class="flex items-center justify-between gap-2 px-3.5 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isKeberatanActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
+               class="flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isKeberatanActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
                 <div class="flex items-center gap-3 min-w-0">
                     <i class="fa-solid fa-scale-balanced text-base w-5 text-center shrink-0 {{ $isKeberatanActive ? 'text-white' : 'text-slate-400' }}"></i>
                     <span class="whitespace-nowrap">Pengajuan Keberatan</span>
@@ -56,6 +116,26 @@
                         {{ $sidebarPendingKeberatan }}
                     </span>
                 @endif
+            </a>
+
+            <!-- FAQ -->
+            <a href="{{ url('/admin/faq') }}"
+               class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 leading-snug {{ $isFaqActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
+                <i class="fa-regular fa-circle-question text-base w-5 text-center shrink-0 {{ $isFaqActive ? 'text-white' : 'text-slate-400' }}"></i>
+                <span class="whitespace-nowrap">Tanya Jawab (FAQ)</span>
+            </a>
+        </div>
+
+        <!-- 3. Grup Laporan -->
+        <div class="space-y-1 pt-1">
+            <div class="px-2 text-[11px] font-black text-sky-600 uppercase tracking-wider">
+                Laporan & Analitik
+            </div>
+
+            <a href="{{ url('/admin/statistik') }}"
+               class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 {{ $isStatistikActive ? 'bg-sky-500 text-white font-extrabold shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-sky-600' }}">
+                <i class="fa-solid fa-chart-simple text-base w-5 text-center shrink-0 {{ $isStatistikActive ? 'text-white' : 'text-slate-400' }}"></i>
+                <span class="whitespace-nowrap">Statistik Layanan</span>
             </a>
         </div>
 
