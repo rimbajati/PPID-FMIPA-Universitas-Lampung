@@ -13,8 +13,9 @@ class InformasiPublikController extends Controller
      */
     public function index(Request $request)
     {
-        // Hanya sinkronisasi data Monev baru jika menggunakan database iterasi 2 (v2)
-        if (str_contains(config('database.connections.mysql.database'), '_v2')) {
+        // Sinkronisasi data Monev jika di database v2 atau environment v2
+        $dbName = config('database.connections.mysql.database', '');
+        if (str_contains($dbName, 'v2') || env('APP_VERSION') === 'v2') {
             $this->ensureMonevSynced();
         }
 
@@ -261,7 +262,8 @@ class InformasiPublikController extends Controller
      */
     public function kategori(Request $request, $slug)
     {
-        if (str_contains(config('database.connections.mysql.database'), '_v2')) {
+        $dbName = config('database.connections.mysql.database', '');
+        if (str_contains($dbName, 'v2') || env('APP_VERSION') === 'v2') {
             $this->ensureMonevSynced();
         }
 
