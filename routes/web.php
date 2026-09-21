@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\InformasiDikecualikanController as AdminInformasi
 use App\Http\Controllers\Admin\PermohonanController as AdminPermohonanController;
 use App\Http\Controllers\Admin\KeberatanController as AdminKeberatanController;
 use App\Http\Controllers\Admin\StatistikController as AdminStatistikController;
+use App\Http\Controllers\Admin\BerandaController as AdminBerandaController;
 use App\Http\Controllers\Masyarakat\RiwayatLayananController as MasyarakatRiwayatLayananController;
 use Illuminate\Http\Request;
 
