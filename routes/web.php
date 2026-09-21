@@ -10,57 +10,8 @@ use App\Http\Controllers\Admin\InformasiDikecualikanController as AdminInformasi
 use App\Http\Controllers\Admin\PermohonanController as AdminPermohonanController;
 use App\Http\Controllers\Admin\KeberatanController as AdminKeberatanController;
 use App\Http\Controllers\Admin\StatistikController as AdminStatistikController;
-use App\Http\Controllers\Admin\BerandaController as AdminBerandaController;
+use App\Http\Controllers\Masyarakat\RiwayatLayananController as MasyarakatRiwayatLayananController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-
-// Helper Rute Satu Kali untuk Menyiapkan Database Iterasi 2 dan Merapikan Iterasi 1
-Route::get('/setup-iterasi-db', function () {
-    $results = [];
-    
-    // 1. Buat database ppid_fmipa_unila_v2 jika belum ada
-    try {
-        DB::statement("CREATE DATABASE IF NOT EXISTS ppid_fmipa_unila_v2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-        $results[] = "Database 'ppid_fmipa_unila_v2' berhasil dibuat / dipastikan ada.";
-    } catch (\Exception $e) {
-        $results[] = "Error pembuatan DB v2: " . $e->getMessage();
-    }
-
-    // 2. Duplikasi tabel-tabel utama dari ppid_fmipa_unila ke ppid_fmipa_unila_v2 jika v2 masih kosong
-    try {
-        $tables = DB::select("SHOW TABLES FROM ppid_fmipa_unila");
-        foreach ($tables as $tObj) {
-            $tArr = (array) $tObj;
-            $tableName = reset($tArr);
-            DB::statement("CREATE TABLE IF NOT EXISTS ppid_fmipa_unila_v2.{$tableName} LIKE ppid_fmipa_unila.{$tableName}");
-            
-            // Cek jika kosong, salin data
-            $countV2 = DB::table("ppid_fmipa_unila_v2.{$tableName}")->count();
-            if ($countV2 === 0) {
-                DB::statement("INSERT INTO ppid_fmipa_unila_v2.{$tableName} SELECT * FROM ppid_fmipa_unila.{$tableName}");
-            }
-        }
-        $results[] = "Seluruh struktur & data berhasil disalin ke 'ppid_fmipa_unila_v2'.";
-    } catch (\Exception $e) {
-        $results[] = "Info migrasi salin tabel: " . $e->getMessage();
-    }
-
-    // 3. Bersihkan tabel informasi_dikecualikans dari database ppid_fmipa_unila (Iterasi 1)
-    try {
-        DB::statement("DROP TABLE IF EXISTS ppid_fmipa_unila.informasi_dikecualikans");
-        // Hapus juga record migrasinya dari tabel migrations di iterasi 1 agar sinkron
-        DB::table('ppid_fmipa_unila.migrations')->where('migration', 'like', '%informasi_dikecualikans%')->delete();
-        $results[] = "Tabel 'informasi_dikecualikans' berhasil dihapus dari database 'ppid_fmipa_unila' (Iterasi 1).";
-    } catch (\Exception $e) {
-        $results[] = "Info penghapusan tabel di iterasi 1: " . $e->getMessage();
-    }
-
-    return response()->json([
-        'status' => 'success',
-        'messages' => $results
-    ]);
-});
 
 Route::get('/', function () {
     $totalDokumen = \App\Models\InformasiPublik::count();
