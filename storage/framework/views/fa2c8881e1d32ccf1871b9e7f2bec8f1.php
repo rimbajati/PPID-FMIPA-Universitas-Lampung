@@ -275,7 +275,7 @@
             const tr = row.element;
             const noCell = tr.querySelector('.col-dip-no');
             if (noCell) {
-                noCell.innerText = startIndex + i + 1;
+                noCell.innerText = row.originalIndex;
             }
             tbody.appendChild(tr);
         });

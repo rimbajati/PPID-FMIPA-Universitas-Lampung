@@ -125,14 +125,14 @@
 <?php $__env->startSection('modals'); ?>
 <?php if (isset($component)) { $__componentOriginal005b20d902616bd5c696c1c04eff5adf = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal005b20d902616bd5c696c1c04eff5adf = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.informasi_publik.modal-add-edit','data' => ['listRincian' => $listRincian ?? [],'listRincianBerkala' => $listRincianBerkala ?? [],'listRincianSetiapSaat' => $listRincianSetiapSaat ?? [],'listRincianSertaMerta' => $listRincianSertaMerta ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.informasi_publik.modal-add-edit','data' => ['listRincian' => $listRincian ?? [],'listRincianBerkala' => $listRincianBerkala ?? [],'listRincianSetiapSaat' => $listRincianSetiapSaat ?? [],'listRincianSertaMerta' => $listRincianSertaMerta ?? [],'listJudul' => $listJudul ?? [],'listSatker' => $listSatker ?? [],'listPenanggungJawab' => $listPenanggungJawab ?? [],'listTahun' => $listTahun ?? [],'listRetensi' => $listRetensi ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('admin.informasi_publik.modal-add-edit'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['listRincian' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincian ?? []),'listRincianBerkala' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianBerkala ?? []),'listRincianSetiapSaat' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianSetiapSaat ?? []),'listRincianSertaMerta' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianSertaMerta ?? [])]); ?>
+<?php $component->withAttributes(['listRincian' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincian ?? []),'listRincianBerkala' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianBerkala ?? []),'listRincianSetiapSaat' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianSetiapSaat ?? []),'listRincianSertaMerta' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianSertaMerta ?? []),'listJudul' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listJudul ?? []),'listSatker' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listSatker ?? []),'listPenanggungJawab' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listPenanggungJawab ?? []),'listTahun' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listTahun ?? []),'listRetensi' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRetensi ?? [])]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal005b20d902616bd5c696c1c04eff5adf)): ?>
@@ -168,14 +168,14 @@
 <?php $__env->startPush('scripts'); ?>
 <?php if (isset($component)) { $__componentOriginal8faaee0fb911f36987939f0c6667044a = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal8faaee0fb911f36987939f0c6667044a = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.informasi_publik.script','data' => ['listRincianBerkala' => $listRincianBerkala ?? [],'listRincianSetiapSaat' => $listRincianSetiapSaat ?? [],'listRincianSertaMerta' => $listRincianSertaMerta ?? [],'listRincian' => $listRincian ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.informasi_publik.script','data' => ['listRincianBerkala' => $listRincianBerkala ?? [],'listRincianSetiapSaat' => $listRincianSetiapSaat ?? [],'listRincianSertaMerta' => $listRincianSertaMerta ?? [],'listRincian' => $listRincian ?? [],'listSubByRincian' => $listSubByRincian ?? []]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('admin.informasi_publik.script'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['listRincianBerkala' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianBerkala ?? []),'listRincianSetiapSaat' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianSetiapSaat ?? []),'listRincianSertaMerta' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianSertaMerta ?? []),'listRincian' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincian ?? [])]); ?>
+<?php $component->withAttributes(['listRincianBerkala' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianBerkala ?? []),'listRincianSetiapSaat' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianSetiapSaat ?? []),'listRincianSertaMerta' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincianSertaMerta ?? []),'listRincian' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listRincian ?? []),'listSubByRincian' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($listSubByRincian ?? [])]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal8faaee0fb911f36987939f0c6667044a)): ?>

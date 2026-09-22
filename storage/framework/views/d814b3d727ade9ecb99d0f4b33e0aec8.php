@@ -231,87 +231,67 @@
                     
                     <?php
                         $rincianGroups = $daftarItem->groupBy(function($item) {
-                            return $item->rincian_informasi ?: ($item->sub_informasi ?: $item->ringkasan_isi_informasi);
+                            return $item->rincian_informasi ?: $item->sub_informasi;
                         });
                     ?>
 
+                        <?php $rincianGroupNo = 0; ?>
                         <?php $__currentLoopData = $rincianGroups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $namaRincian => $subItems): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <?php
-                                $rowCount = $subItems->count();
-                                $first = $subItems->first();
-                                $pejabat = $first->pejabat_unit_yang_menguasai_informasi ?: 'Dekanat / Bagian Tata Usaha FMIPA';
-                                $penanggung = $first->penanggung_jawab_pembuatan_informasi ?: 'PPID Pelaksana FMIPA Unila';
-                                $waktu = $first->waktu_pembuatan_informasi ?: ($first->created_at ? $first->created_at->format('Y') : date('Y'));
-                                $waktuTempat = $waktu . ', FMIPA Unila';
-                                
-                                $bentukStr = strtolower(trim($first->bentuk_informasi_yang_tersedia ?? ''));
-                                $isCetak = str_contains($bentukStr, 'cetak') || str_contains($bentukStr, 'hardcopy');
-                                $isOnline = str_contains($bentukStr, 'online') || str_contains($bentukStr, 'softcopy') || !empty($first->file_informasi) || !empty($first->link_informasi) || empty($bentukStr);
-
-                                $retensi = $first->retensi_arsip ?: 'Selama Berlaku';
+                                $rincianGroupNo++;
+                                $subCount = $subItems->count();
                             ?>
 
-                            <?php $__currentLoopData = $subItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subIndex => $sub): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            
+                            
+                            
+                            <tr style="background-color: #ffffff;">
+                                <td rowspan="<?php echo e($subCount + 1); ?>" class="text-center"
+                                    style="vertical-align: middle; font-weight: bold; border-right: 1px solid #000000;">
+                                    <?php echo e($rincianGroupNo); ?>
+
+                                </td>
+                                <td colspan="7" style="vertical-align: middle; padding: 2mm 3mm; font-weight: bold;">
+                                    <?php echo e($namaRincian); ?>
+
+                                </td>
+                            </tr>
+
+                            
+                            <?php $__currentLoopData = $subItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <?php
-                                    $subText = trim($sub->sub_informasi ?: ($sub->ringkasan_isi_informasi ?: ''));
+                                    $subText    = trim($sub->sub_informasi ?: '');
+                                    $subBentuk  = strtolower(trim($sub->bentuk_informasi_yang_tersedia ?? ''));
+                                    $subCetak   = str_contains($subBentuk, 'cetak') || str_contains($subBentuk, 'hardcopy');
+                                    $subOnline  = str_contains($subBentuk, 'online') || str_contains($subBentuk, 'softcopy')
+                                                  || !empty($sub->file_informasi) || !empty($sub->link_informasi);
+                                    $subPejabat = $sub->pejabat_unit_yang_menguasai_informasi ?: '-';
+                                    $subPJ      = $sub->penanggung_jawab_pembuatan_informasi ?: '-';
+                                    $subWaktu   = $sub->waktu_pembuatan_informasi ?: '-';
+                                    $subRetensi = $sub->retensi_arsip ?: '-';
                                 ?>
                                 <tr>
-                                    <?php if($subIndex === 0): ?>
-                                        
-                                        <td rowspan="<?php echo e($rowCount); ?>" class="text-center" style="vertical-align: middle;">
-                                            <?php echo e($globalNo++); ?>
-
-                                        </td>
-                                    <?php endif; ?>
-
                                     
-                                    <td style="vertical-align: middle; padding: 2mm 3mm;">
+                                    <td style="vertical-align: middle; padding: 2mm 3mm 2mm 5mm;">
                                         <?php echo e($subText); ?>
 
                                     </td>
-
-                                    <?php if($subIndex === 0): ?>
-                                        
-                                        <td rowspan="<?php echo e($rowCount); ?>" class="text-center" style="vertical-align: middle;">
-                                            <?php echo e($pejabat); ?>
-
-                                        </td>
-
-                                        
-                                        <td rowspan="<?php echo e($rowCount); ?>" class="text-center" style="vertical-align: middle;">
-                                            <?php echo e($penanggung); ?>
-
-                                        </td>
-
-                                        
-                                        <td rowspan="<?php echo e($rowCount); ?>" class="text-center" style="vertical-align: middle;">
-                                            <?php echo e($waktuTempat); ?>
-
-                                        </td>
-
-                                        
-                                        <td rowspan="<?php echo e($rowCount); ?>" class="text-center" style="vertical-align: middle; font-size: 11pt;">
-                                            <?php if($isCetak): ?>
-                                                ✔
-                                            <?php endif; ?>
-                                        </td>
-
-                                        
-                                        <td rowspan="<?php echo e($rowCount); ?>" class="text-center" style="vertical-align: middle; font-size: 11pt;">
-                                            <?php if($isOnline): ?>
-                                                ✔
-                                            <?php endif; ?>
-                                        </td>
-
-                                        
-                                        <td rowspan="<?php echo e($rowCount); ?>" class="text-center" style="vertical-align: middle;">
-                                            <?php echo e($retensi); ?>
-
-                                        </td>
-                                    <?php endif; ?>
+                                    
+                                    <td class="text-center" style="vertical-align: middle;"><?php echo e($subPejabat); ?></td>
+                                    <td class="text-center" style="vertical-align: middle;"><?php echo e($subPJ); ?></td>
+                                    <td class="text-center" style="vertical-align: middle;"><?php echo e($subWaktu); ?></td>
+                                    <td class="text-center" style="vertical-align: middle; font-size: 11pt;">
+                                        <?php if($subCetak): ?> ✔ <?php endif; ?>
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle; font-size: 11pt;">
+                                        <?php if($subOnline): ?> ✔ <?php endif; ?>
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle;"><?php echo e($subRetensi); ?></td>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </tbody>
         </table>

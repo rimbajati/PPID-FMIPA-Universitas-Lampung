@@ -109,6 +109,11 @@
     :listRincianBerkala="$listRincianBerkala ?? []" 
     :listRincianSetiapSaat="$listRincianSetiapSaat ?? []" 
     :listRincianSertaMerta="$listRincianSertaMerta ?? []" 
+    :listJudul="$listJudul ?? []"
+    :listSatker="$listSatker ?? []"
+    :listPenanggungJawab="$listPenanggungJawab ?? []"
+    :listTahun="$listTahun ?? []"
+    :listRetensi="$listRetensi ?? []"
 />
 <x-modals.delete />
 @endsection
@@ -119,5 +124,6 @@
     :listRincianSetiapSaat="$listRincianSetiapSaat ?? []" 
     :listRincianSertaMerta="$listRincianSertaMerta ?? []" 
     :listRincian="$listRincian ?? []"
+    :listSubByRincian="$listSubByRincian ?? []"
 />
 @endpush

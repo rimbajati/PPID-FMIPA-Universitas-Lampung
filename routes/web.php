@@ -317,7 +317,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/informasi-publik', [AdminInformasiPublikController::class, 'store']);
     Route::put('/informasi-publik/{id}', [AdminInformasiPublikController::class, 'update']);
     Route::delete('/informasi-publik/bulk-delete', [AdminInformasiPublikController::class, 'destroyBulk'])->name('admin.informasi.bulk');
+    Route::delete('/informasi-publik/delete-rincian', [AdminInformasiPublikController::class, 'destroyRincian'])->name('admin.informasi.delete_rincian');
+    Route::post('/informasi-publik/rename-rincian', [AdminInformasiPublikController::class, 'renameRincian'])->name('admin.informasi.rincian.rename');
     Route::delete('/informasi-publik/{id}', [AdminInformasiPublikController::class, 'destroy']);
+
 
     // Rute Admin: Daftar Informasi Dikecualikan (DIK)
     Route::get('/informasi-dikecualikan', [AdminInformasiDikecualikanController::class, 'index'])->name('admin.informasi-dikecualikan.index');

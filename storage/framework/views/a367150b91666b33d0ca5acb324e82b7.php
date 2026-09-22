@@ -1,9 +1,7 @@
-@extends('components.layouts.admin')
+<?php $__env->startSection('title', 'Daftar Informasi Dikecualikan (DIK) - Admin PPID'); ?>
+<?php $__env->startSection('header_title', 'Daftar Informasi Dikecualikan (DIK)'); ?>
 
-@section('title', 'Daftar Informasi Dikecualikan (DIK) - Admin PPID')
-@section('header_title', 'Daftar Informasi Dikecualikan (DIK)')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="space-y-6">
 
     <!-- Section Header: Informasi Dikecualikan Overview & Tombol Tambah -->
@@ -45,10 +43,10 @@
                 <span>Show</span>
                 <select id="select-per-page-admin-dik" onchange="changePerPageAdminDik(this.value)" 
                         class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
-                    <option value="10" {{ (int)request('per_page', 10) === 10 ? 'selected' : '' }}>10</option>
-                    <option value="25" {{ (int)request('per_page', 10) === 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ (int)request('per_page', 10) === 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ (int)request('per_page', 10) === 100 ? 'selected' : '' }}>100</option>
+                    <option value="10" <?php echo e((int)request('per_page', 10) === 10 ? 'selected' : ''); ?>>10</option>
+                    <option value="25" <?php echo e((int)request('per_page', 10) === 25 ? 'selected' : ''); ?>>25</option>
+                    <option value="50" <?php echo e((int)request('per_page', 10) === 50 ? 'selected' : ''); ?>>50</option>
+                    <option value="100" <?php echo e((int)request('per_page', 10) === 100 ? 'selected' : ''); ?>>100</option>
                 </select>
                 <span>entries</span>
             </div>
@@ -63,12 +61,12 @@
                 <input type="text" 
                        name="search" 
                        id="input-search-admin-dik"
-                       value="{{ request('search') }}" 
+                       value="<?php echo e(request('search')); ?>" 
                        autocomplete="off"
                        oninput="debounceSearchAdminDik()"
                        class="w-48 sm:w-56 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-2xl text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
                 <button type="button" id="btn-clear-search-admin-dik" onclick="clearSearchAdminDik()" title="Hapus pencarian" 
-                        class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
+                        class="<?php echo e(request('search') ? '' : 'hidden'); ?> absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -77,9 +75,9 @@
 
     <!-- Table Container & Data Tabel -->
     <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-        <form id="form-bulk-delete" action="{{ route('admin.informasi-dikecualikan.bulk') }}" method="POST">
-            @csrf
-            @method('DELETE')
+        <form id="form-bulk-delete" action="<?php echo e(route('admin.informasi-dikecualikan.bulk')); ?>" method="POST">
+            <?php echo csrf_field(); ?>
+            <?php echo method_field('DELETE'); ?>
 
             <div class="overflow-x-auto">
                 <table class="w-full table-fixed text-left border-collapse border border-slate-200">
@@ -155,65 +153,71 @@
                         </tr>
                     </thead>
                     <tbody id="table-admin-dik-body" class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
-                        @forelse($informasi as $idx => $item)
+                        <?php $__empty_1 = true; $__currentLoopData = $informasi; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr class="table-admin-dik-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-200"
-                                data-id="{{ $item->id }}"
-                                data-no="{{ $idx + 1 }}"
-                                data-ringkasan="{{ strtolower($item->ringkasan_informasi ?? '') }}"
-                                data-dasar_hukum="{{ strtolower($item->dasar_hukum ?? '') }}"
-                                data-dibuka="{{ strtolower($item->dibuka ?? '') }}"
-                                data-ditutup="{{ strtolower($item->ditutup ?? '') }}"
-                                data-jangka_waktu="{{ strtolower($item->jangka_waktu ?? '') }}">
+                                data-id="<?php echo e($item->id); ?>"
+                                data-no="<?php echo e($idx + 1); ?>"
+                                data-ringkasan="<?php echo e(strtolower($item->ringkasan_informasi ?? '')); ?>"
+                                data-dasar_hukum="<?php echo e(strtolower($item->dasar_hukum ?? '')); ?>"
+                                data-dibuka="<?php echo e(strtolower($item->dibuka ?? '')); ?>"
+                                data-ditutup="<?php echo e(strtolower($item->ditutup ?? '')); ?>"
+                                data-jangka_waktu="<?php echo e(strtolower($item->jangka_waktu ?? '')); ?>">
                                 <td class="col-checkbox-cell hidden px-2 py-3 text-center">
-                                    <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
+                                    <input type="checkbox" name="ids[]" form="form-bulk-delete" value="<?php echo e($item->id); ?>" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                                 </td>
                                 <td class="col-admin-dik-no px-2 py-3 text-center font-bold text-slate-400">
-                                    {{ $idx + 1 }}
+                                    <?php echo e($idx + 1); ?>
+
                                 </td>
                                 <td class="px-3.5 py-3 font-extrabold text-slate-900 leading-normal break-words">
-                                    {{ $item->ringkasan_informasi }}
+                                    <?php echo e($item->ringkasan_informasi); ?>
+
                                 </td>
                                 <td class="px-3 py-3 text-slate-700 break-words leading-normal">
-                                    {{ $item->dasar_hukum }}
+                                    <?php echo e($item->dasar_hukum); ?>
+
                                 </td>
                                 <td class="px-3 py-3 text-slate-700 break-words leading-normal">
-                                    {{ $item->dibuka ?: '-' }}
+                                    <?php echo e($item->dibuka ?: '-'); ?>
+
                                 </td>
                                 <td class="px-3 py-3 text-slate-700 break-words leading-normal">
-                                    {{ $item->ditutup }}
+                                    <?php echo e($item->ditutup); ?>
+
                                 </td>
                                 <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words">
-                                    {{ $item->jangka_waktu }}
+                                    <?php echo e($item->jangka_waktu); ?>
+
                                 </td>
                                 <td class="px-2 py-2.5 text-center align-middle whitespace-nowrap">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <!-- Tombol Lihat (Detail Pop-up) -->
-                                        <button type="button" onclick="openDetailDikModal({{ json_encode($item) }})" title="Lihat Detail" 
+                                        <button type="button" onclick="openDetailDikModal(<?php echo e(json_encode($item)); ?>)" title="Lihat Detail" 
                                                 class="w-7 h-7 flex items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer">
                                             <i class="fa-regular fa-eye text-[11px]"></i>
                                         </button>
 
                                         <!-- Tombol Edit -->
-                                        <button type="button" onclick="openModalEditDik({{ json_encode($item) }})" title="Edit Data" 
+                                        <button type="button" onclick="openModalEditDik(<?php echo e(json_encode($item)); ?>)" title="Edit Data" 
                                                 class="w-7 h-7 flex items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
                                             <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                                         </button>
 
                                         <!-- Tombol Hapus -->
-                                        <button type="button" onclick="triggerDeleteDik('{{ url('/admin/informasi-dikecualikan/' . $item->id) }}', '{{ addslashes($item->ringkasan_informasi) }}')" title="Hapus Data" 
+                                        <button type="button" onclick="triggerDeleteDik('<?php echo e(url('/admin/informasi-dikecualikan/' . $item->id)); ?>', '<?php echo e(addslashes($item->ringkasan_informasi)); ?>')" title="Hapus Data" 
                                                 class="w-7 h-7 flex items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
                                             <i class="fa-solid fa-trash text-[11px]"></i>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
                                 <td colspan="8" class="p-12 text-center text-slate-400 font-semibold">
                                     Tidak ada data informasi dikecualikan.
                                 </td>
                             </tr>
-                        @endforelse
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -231,9 +235,9 @@
     </div>
 
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('modals')
+<?php $__env->startSection('modals'); ?>
 <!-- =================================================== -->
 <!-- MODAL TAMBAH & EDIT INFORMASI DIKECUALIKAN (DIK)    -->
 <!-- =================================================== -->
@@ -248,7 +252,7 @@
 
         <!-- Form Body -->
         <form id="formAddEditDik" method="POST" class="flex flex-col flex-1 min-h-0">
-            @csrf
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="_method" id="formMethodDik" value="POST">
 
             <div class="p-6 text-xs md:text-sm overflow-y-auto flex-1 space-y-4">
@@ -384,9 +388,9 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     window.isSelectMode = false;
 
@@ -465,7 +469,7 @@
     function openModalCreateDik() {
         document.getElementById('modalDikTitle').innerText = 'Tambah Informasi Dikecualikan';
         document.getElementById('modalDikSubtitle').innerText = 'Masukkan detail informasi yang dikecualikan';
-        document.getElementById('formAddEditDik').action = "{{ url('/admin/informasi-dikecualikan') }}";
+        document.getElementById('formAddEditDik').action = "<?php echo e(url('/admin/informasi-dikecualikan')); ?>";
         document.getElementById('formMethodDik').value = 'POST';
         document.getElementById('formAddEditDik').reset();
         document.getElementById('inputDibuka').value = '-';
@@ -475,7 +479,7 @@
     function openModalEditDik(data) {
         document.getElementById('modalDikTitle').innerText = 'Edit Informasi Dikecualikan';
         document.getElementById('modalDikSubtitle').innerText = 'Perbarui data informasi yang dikecualikan';
-        document.getElementById('formAddEditDik').action = "{{ url('/admin/informasi-dikecualikan') }}/" + data.id;
+        document.getElementById('formAddEditDik').action = "<?php echo e(url('/admin/informasi-dikecualikan')); ?>/" + data.id;
         document.getElementById('formMethodDik').value = 'PUT';
         
         document.getElementById('inputRingkasanInformasi').value = data.ringkasan_informasi || '';
@@ -764,4 +768,6 @@
         initClientSideAdminDikTable();
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('components.layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\laragon\www\ppid-fmipa-baru\resources\views/admin/informasi_dikecualikan/index.blade.php ENDPATH**/ ?>

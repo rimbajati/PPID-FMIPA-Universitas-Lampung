@@ -17,7 +17,7 @@ class AdminSeeder extends Seeder
         // Membuat akun Admin secara otomatis
         User::create([
             'nama_lengkap' => 'Admin PPID',
-            'email' => 'admin@fmipa.unila.ac.id',
+            'email' => 'ppid.fmipa@unila.ac.id',
             'password' => Hash::make('rahasia123'), // Kata sandi rahasia untuk admin
             'role' => 'admin',
         ]);

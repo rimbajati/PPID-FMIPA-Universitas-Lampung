@@ -30,7 +30,7 @@
                     @forelse($informasi as $idx => $item)
                         @php
                             $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
-                            $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->ringkasan_isi_informasi) . ($ext ? '.' . $ext : '.pdf'));
+                            $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->sub_informasi) . ($ext ? '.' . $ext : '.pdf'));
                             $fileTargetUrl = ($item->link_informasi && !$item->file_informasi) 
                                 ? $item->link_informasi 
                                 : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') : null);
@@ -41,8 +41,8 @@
                              data-no="{{ $idx + 1 }}"
                              data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
                              data-rincian="{{ strtolower($item->rincian_informasi ?? '') }}"
-                             data-sub_informasi="{{ strtolower($item->ringkasan_isi_informasi ?? '') }}"
-                             data-ringkasan="{{ strtolower($item->ringkasan_isi_informasi ?? '') }}"
+                             data-sub_informasi="{{ strtolower($item->sub_informasi ?? '') }}"
+                             data-ringkasan="{{ strtolower($item->sub_informasi ?? '') }}"
                              data-pejabat="{{ strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '') }}"
                              data-penanggung_jawab="{{ strtolower($item->penanggung_jawab_pembuatan_informasi ?? '') }}"
                              data-waktu="{{ strtolower($tglPembuatan) }}"
@@ -63,7 +63,7 @@
                                 <!-- Text Content -->
                                 <div class="space-y-1 flex-1 min-w-0">
                                     <h3 class="text-sm sm:text-base font-bold text-slate-900 group-hover/card:text-sky-600 transition-colors leading-snug break-words">
-                                        {{ $item->ringkasan_isi_informasi }}
+                                        {{ $item->sub_informasi }}
                                     </h3>
                                     <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 font-semibold">
                                         <span class="flex items-center gap-1.5">
@@ -75,13 +75,6 @@
                                             <span class="flex items-center gap-1.5 text-slate-500">
                                                 <i class="fa-solid fa-building-columns text-[11px]"></i>
                                                 <span>{{ $item->pejabat_unit_yang_menguasai_informasi }}</span>
-                                            </span>
-                                        @endif
-                                        @if($item->dilihat)
-                                            <span class="text-slate-300">•</span>
-                                            <span class="flex items-center gap-1.5">
-                                                <i class="fa-regular fa-eye text-[11px]"></i>
-                                                <span>{{ number_format($item->dilihat) }} dilihat</span>
                                             </span>
                                         @endif
                                     </div>
@@ -106,7 +99,7 @@
                                     <span>Edit</span>
                                 </button>
 
-                                <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->ringkasan_isi_informasi) }}')" title="Hapus Pengumuman" 
+                                <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->sub_informasi) }}')" title="Hapus Pengumuman" 
                                         class="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-rose-700 bg-rose-50 hover:bg-rose-600 hover:text-white text-xs font-bold rounded-xl transition shadow-2xs cursor-pointer">
                                     <i class="fa-solid fa-trash text-xs"></i>
                                     <span>Hapus</span>
@@ -126,12 +119,12 @@
                 <table class="w-full table-fixed text-left border-collapse border border-slate-200">
                     <thead>
                         @if($isKategoriMode)
-                            {{-- Header Khusus Kategori Berkala & Setiap Saat: Tanpa No, Rincian Informasi, Sub Informasi, dan Aksi --}}
+                            {{-- Header Khusus Kategori Berkala & Setiap Saat: Hanya Rincian Informasi & Sub Informasi --}}
                             <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide divide-x divide-white/20 select-none">
                                 <th id="col-checkbox-header" class="hidden px-2 py-3.5 w-12 text-center">
                                     <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                                 </th>
-                                <th onclick="sortAdminDipTable('rincian')" class="px-4 py-3.5 text-left w-[38%] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Rincian Informasi">
+                                <th onclick="sortAdminDipTable('rincian')" class="px-4 py-3.5 text-left w-1/2 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Rincian Informasi">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Rincian Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -139,17 +132,9 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('sub_informasi')" class="px-4 py-3.5 text-left w-[47%] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sub Informasi">
+                                <th onclick="sortAdminDipTable('sub_informasi')" class="px-4 py-3.5 text-left w-1/2 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sub Informasi">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Sub Informasi</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
-                                        </span>
-                                    </div>
-                                </th>
-                                <th onclick="sortAdminDipTable('dilihat')" class="px-3 py-3.5 text-center w-[15%] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sering Dilihat">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <span>Aksi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
                                             <i class="fa-solid fa-sort"></i>
                                         </span>
@@ -241,9 +226,9 @@
                         @forelse($informasi as $idx => $item)
                             @php
                                 $rincianText = trim($item->rincian_informasi ?: '-');
-                                $subInformasiText = trim($item->sub_informasi ?: ($item->ringkasan_isi_informasi ?: ''));
+                                $subInformasiText = trim($item->sub_informasi ?: '');
                                 $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
-                                $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->ringkasan_isi_informasi) . ($ext ? '.' . $ext : '.pdf'));
+                                $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->sub_informasi) . ($ext ? '.' . $ext : '.pdf'));
                                 $fileTargetUrl = ($item->link_informasi && !$item->file_informasi) 
                                     ? $item->link_informasi 
                                     : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') : null);
@@ -254,7 +239,7 @@
                                 data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
                                 data-rincian="{{ strtolower($rincianText) }}"
                                 data-sub_informasi="{{ strtolower($subInformasiText) }}"
-                                data-ringkasan="{{ strtolower($item->ringkasan_isi_informasi ?? '') }}"
+                                data-ringkasan="{{ strtolower($item->sub_informasi ?? '') }}"
                                 data-jenis="{{ strtolower($item->jenis_informasi ?? '') }}"
                                 data-pejabat="{{ strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '') }}"
                                 data-penanggung_jawab="{{ strtolower($item->penanggung_jawab_pembuatan_informasi ?? '') }}"
@@ -276,64 +261,93 @@
                                     <!-- 1. Rincian Informasi (Topik Induk) - Dynamic Rowspan Handled by Client Engine -->
                                     <td class="col-admin-rincian px-4 py-3 font-extrabold text-slate-900 leading-relaxed align-top bg-white border-r border-slate-200 break-words">
                                         <div class="sticky top-2">
-                                            {{ $rincianText }}
+                                            <div class="text-slate-900 font-extrabold text-xs sm:text-sm mb-2">
+                                                {{ $rincianText }}
+                                            </div>
+                                            <!-- Aksi Khusus Rincian Informasi (Wadah Topik) -->
+                                            <div class="flex items-center gap-1.5 flex-wrap">
+                                                <button type="button" onclick="addSubInfo({{ json_encode($item) }});" 
+                                                        title="Tambah Sub Informasi baru di bawah rincian ini"
+                                                        class="inline-flex items-center gap-1 px-2 py-1 bg-sky-50 hover:bg-sky-500 text-sky-600 hover:text-white rounded-lg text-[11px] font-bold transition shadow-2xs cursor-pointer border border-sky-200 hover:border-transparent">
+                                                    <i class="fa-solid fa-plus text-[10px]"></i>
+                                                    <span>Sub Informasi</span>
+                                                </button>
+                                                <button type="button" 
+                                                        onclick="triggerDeleteRincian('{{ addslashes($rincianText) }}', '{{ addslashes($item->jenis_informasi) }}')" 
+                                                        title="Hapus Rincian Informasi ini beserta seluruh isinya"
+                                                        class="inline-flex items-center gap-1 px-2 py-1 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-lg text-[11px] font-bold transition shadow-2xs cursor-pointer border border-rose-200 hover:border-transparent">
+                                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                                    <span>Hapus Rincian</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </td>
 
-                                    <!-- 2. Sub Informasi (Nama Dokumen) -->
+                                    <!-- 2. Sub Informasi (Nama Dokumen) + Aksi Langsung di Dalamnya -->
                                     <td class="px-4 py-3 font-medium text-slate-800 leading-relaxed align-top break-words">
                                         @php
-                                            $subText = trim($item->sub_informasi ?: ($item->ringkasan_isi_informasi ?: ''));
+                                            $subText = trim($item->sub_informasi ?: '');
                                             $isPending = empty($subText) || $subText === 'Dokumen sedang dilengkapi unit';
                                         @endphp
                                         <div class="space-y-1.5">
                                             @if(!$isPending)
-                                                <div class="font-extrabold text-slate-900" title="{{ $subText }}">
-                                                    {{ $subText }}
+                                                <div class="flex items-start justify-between gap-3">
+                                                    <div class="space-y-1">
+                                                        <div class="font-extrabold text-slate-900" title="{{ $subText }}">
+                                                            {{ $subText }}
+                                                        </div>
+
+                                                    </div>
+
+                                                    <!-- Tombol Aksi Dokumen Langsung Menempel di Sub Informasi -->
+                                                    <div class="flex items-center gap-1.5 shrink-0 self-center">
+                                                        @if($fileTargetUrl && $fileTargetUrl !== '#')
+                                                            <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" 
+                                                               class="w-7 h-7 flex items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer">
+                                                                <i class="fa-regular fa-eye text-[11px]"></i>
+                                                            </a>
+                                                        @endif
+                                                        <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Dokumen Ini" 
+                                                                class="w-7 h-7 flex items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
+                                                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                                        </button>
+                                                        <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($subText) }}')" title="Hapus Dokumen Ini" 
+                                                                class="w-7 h-7 flex items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
+                                                            <i class="fa-solid fa-trash text-[11px]"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
-
-                                                @if(!empty($item->ringkasan_isi_informasi) && $item->ringkasan_isi_informasi !== $subText && $item->ringkasan_isi_informasi !== 'Dokumen sedang dilengkapi unit')
-                                                    <div class="text-xs text-slate-500 font-normal leading-relaxed">
-                                                        {{ $item->ringkasan_isi_informasi }}
-                                                    </div>
-                                                @endif
-
-                                                @if($item->dilihat)
-                                                    <div class="text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
-                                                        <i class="fa-regular fa-eye text-[10px]"></i>
-                                                        <span>{{ number_format($item->dilihat) }} dilihat</span>
-                                                    </div>
-                                                @endif
                                             @else
-                                                <div class="text-xs text-slate-400 italic font-medium flex items-center gap-1.5">
-                                                    <i class="fa-regular fa-clock text-[11px]"></i>
-                                                    <span>Dokumen sedang dilengkapi unit</span>
+                                                <div class="flex items-center gap-2 py-0.5">
+                                                    <i class="fa-regular fa-clock text-[11px] text-amber-500"></i>
+                                                    <span class="text-xs text-amber-600 italic font-medium">Dokumen sedang dilengkapi unit</span>
                                                 </div>
                                             @endif
                                         </div>
                                     </td>
                                 @else
-                                     <!-- 1. Ringkasan Isi Informasi (Kombinasi Sub Informasi & Deskripsi / Rincian) -->
+                                     <!-- 1. Ringkasan Isi Informasi (Rincian Informasi & Sub Informasi) -->
                                      <td class="px-3.5 py-3 text-slate-900 leading-normal break-words text-xs sm:text-sm">
                                          @php
-                                             $subText = trim($item->sub_informasi ?: ($item->ringkasan_isi_informasi ?: ''));
-                                             $ringkasanText = trim($item->ringkasan_isi_informasi ?: '');
+                                             $rincianVal = trim($item->rincian_informasi ?: '');
+                                             $subVal = trim($item->sub_informasi ?: '');
                                          @endphp
                                          <div class="space-y-1">
-                                             @if($subText && $subText !== 'Dokumen sedang dilengkapi unit')
-                                                 <div class="font-black text-slate-900 leading-snug">{{ $subText }}</div>
-                                             @endif
-
-                                             @if($ringkasanText && $ringkasanText !== $subText && $ringkasanText !== 'Dokumen sedang dilengkapi unit')
-                                                 <div class="text-xs text-slate-500 font-normal leading-relaxed">{{ $ringkasanText }}</div>
-                                             @endif
-
-                                             @if($item->dilihat)
-                                                 <div class="text-[11px] text-slate-400 font-semibold flex items-center gap-1.5 pt-0.5">
-                                                     <i class="fa-regular fa-eye text-[10px]"></i>
-                                                     <span>{{ number_format($item->dilihat) }} dilihat</span>
+                                             @if($subVal && $subVal !== 'Dokumen sedang dilengkapi unit')
+                                                 <div class="font-black text-slate-900 leading-snug">{{ $subVal }}</div>
+                                                 @if($rincianVal && strcasecmp($rincianVal, $subVal) !== 0)
+                                                     <div class="text-[11px] text-slate-500 font-semibold flex items-center gap-1">
+                                                         <span class="px-1.5 py-0.5 bg-slate-100 rounded text-slate-600 border border-slate-200/80">{{ $rincianVal }}</span>
+                                                     </div>
+                                                 @endif
+                                             @else
+                                                 <div class="font-black text-slate-900 leading-snug">{{ $rincianVal ?: '-' }}</div>
+                                                 <div class="text-[11px] text-amber-600 font-semibold italic flex items-center gap-1">
+                                                     <i class="fa-regular fa-clock text-[10px]"></i>
+                                                     <span>Dokumen sedang dilengkapi unit</span>
                                                  </div>
                                              @endif
+
                                          </div>
                                      </td>
 
@@ -357,7 +371,7 @@
 
                                      <!-- 5. Waktu dan Tempat Pembuatan Informasi -->
                                      <td class="px-3 py-3 text-center font-medium text-slate-700 break-words text-xs sm:text-sm leading-normal">
-                                         {{ $item->waktu_pembuatan_informasi ?? date('Y', strtotime($item->created_at ?? now())) }}
+                                         {{ $item->waktu_pembuatan_informasi ?: '-' }}
                                      </td>
 
                                      <!-- 6. Jangka Waktu Penyimpanan atau Retensi Arsip -->
@@ -367,30 +381,30 @@
 
                                      <!-- 7. Bentuk Informasi yang Tersedia -->
                                      <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words text-xs sm:text-sm leading-normal">
-                                         {{ $item->bentuk_informasi_yang_tersedia ?: 'Cetak dan Online' }}
+                                         {{ $item->bentuk_informasi_yang_tersedia ?: '-' }}
+                                     </td>
+
+                                     <!-- Aksi (Tautan Berkas & Aksi Admin) Hanya untuk Full DIP -->
+                                     <td class="px-2 py-2.5 text-center align-middle">
+                                         <div class="flex items-center justify-center gap-1.5">
+                                             @if($fileTargetUrl && $fileTargetUrl !== '#')
+                                                 <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" 
+                                                    class="w-7 h-7 flex items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg">
+                                                     <i class="fa-regular fa-eye text-[11px]"></i>
+                                                 </a>
+                                             @endif
+                                             <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="w-7 h-7 flex items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
+                                                 <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                             </button>
+                                             <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->sub_informasi) }}')" title="Hapus Data" class="w-7 h-7 flex items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
+                                                 <i class="fa-solid fa-trash text-[11px]"></i>
+                                             </button>
+                                         </div>
                                      </td>
                                 @endif
-
-                                <!-- Aksi (Tautan Berkas & Aksi Admin) -->
-                                <td class="px-2 py-2.5 text-center align-middle">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        @if($fileTargetUrl && $fileTargetUrl !== '#')
-                                            <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" 
-                                               class="w-7 h-7 flex items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg">
-                                                <i class="fa-regular fa-eye text-[11px]"></i>
-                                            </a>
-                                        @endif
-                                        <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="w-7 h-7 flex items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
-                                        </button>
-                                        <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->ringkasan_isi_informasi) }}')" title="Hapus Data" class="w-7 h-7 flex items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                            <i class="fa-solid fa-trash text-[11px]"></i>
-                                        </button>
-                                    </div>
-                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="{{ $isKategoriMode ? '4' : '10' }}" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik.</td></tr>
+                            <tr><td colspan="{{ $isKategoriMode ? '2' : '10' }}" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

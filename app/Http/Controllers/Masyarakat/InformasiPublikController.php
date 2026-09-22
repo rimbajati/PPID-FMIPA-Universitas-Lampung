@@ -13,21 +13,12 @@ class InformasiPublikController extends Controller
      */
     public function index(Request $request)
     {
-        // Sinkronisasi data Monev jika di database v2 atau environment v2
-        $dbName = config('database.connections.mysql.database', '');
-        if (str_contains($dbName, 'v2') || env('APP_VERSION') === 'v2') {
-            $this->ensureMonevSynced();
-        }
-
         $query = InformasiPublik::query();
 
         // Pada katalog DIP publik masyarakat: hanya tampilkan dokumen yang sudah siap
         $query->where(function($q) {
             $q->where('sub_informasi', '!=', 'Dokumen sedang dilengkapi unit')
               ->orWhereNull('sub_informasi');
-        })->where(function($q) {
-            $q->where('ringkasan_isi_informasi', '!=', 'Dokumen sedang dilengkapi unit')
-              ->orWhereNull('ringkasan_isi_informasi');
         });
 
         // Filter pencarian di semua kolom isi tabel DIP (Optimized standard SQL LIKE)
@@ -35,7 +26,6 @@ class InformasiPublikController extends Controller
             $term = trim($request->search);
             $query->where(function($q) use ($term) {
                 $q->where('sub_informasi', 'like', "%{$term}%")
-                  ->orWhere('ringkasan_isi_informasi', 'like', "%{$term}%")
                   ->orWhere('rincian_informasi', 'like', "%{$term}%")
                   ->orWhere('pejabat_unit_yang_menguasai_informasi', 'like', "%{$term}%")
                   ->orWhere('penanggung_jawab_pembuatan_informasi', 'like', "%{$term}%")
@@ -136,7 +126,7 @@ class InformasiPublikController extends Controller
 
         $sortableColumns = [
             'no'              => 'id',
-            'ringkasan'       => 'ringkasan_isi_informasi',
+            'ringkasan'       => 'sub_informasi',
             'pejabat'         => 'pejabat_unit_yang_menguasai_informasi',
             'penanggung_jawab'=> 'penanggung_jawab_pembuatan_informasi',
             'waktu'           => 'waktu_pembuatan_informasi',
@@ -155,9 +145,9 @@ class InformasiPublikController extends Controller
             } elseif ($sort === 'terbaru') {
                 $query->orderBy('created_at', 'desc');
             } elseif ($sort === 'az') {
-                $query->orderBy('ringkasan_isi_informasi', 'asc');
+                $query->orderBy('sub_informasi', 'asc');
             } elseif ($sort === 'za') {
-                $query->orderBy('ringkasan_isi_informasi', 'desc');
+                $query->orderBy('sub_informasi', 'desc');
             } elseif ($sort === 'populer') {
                 $query->orderBy('dilihat', 'desc')->orderBy('created_at', 'desc');
             } else {
@@ -262,11 +252,6 @@ class InformasiPublikController extends Controller
      */
     public function kategori(Request $request, $slug)
     {
-        $dbName = config('database.connections.mysql.database', '');
-        if (str_contains($dbName, 'v2') || env('APP_VERSION') === 'v2') {
-            $this->ensureMonevSynced();
-        }
-
         $kategoriMap = [
             'berkala'     => 'Informasi Berkala',
             'setiap-saat' => 'Informasi Setiap Saat',
@@ -285,7 +270,6 @@ class InformasiPublikController extends Controller
             $term = strtolower(trim($request->search));
             $query->where(function($q) use ($term) {
                 $q->whereRaw('LOWER(COALESCE(sub_informasi, "")) LIKE ?', ["%{$term}%"])
-                  ->orWhereRaw('LOWER(COALESCE(ringkasan_isi_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(rincian_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"]);
             });
@@ -353,205 +337,5 @@ class InformasiPublikController extends Controller
                        ->get();
 
         return view('masyarakat.informasi_publik.dikecualikan', compact('items'));
-    }
-
-    /**
-     * Helper untuk sinkronisasi 11 data Monev FMIPA secara otomatis
-     */
-    public function ensureMonevSynced()
-    {
-        if (\Illuminate\Support\Facades\Schema::hasTable('informasi_publiks')) {
-            try {
-                \Illuminate\Support\Facades\DB::statement('ALTER TABLE informasi_publiks DROP INDEX informasi_publiks_ringkasan_isi_informasi_index');
-            } catch (\Exception $e) {}
-
-            try {
-                \Illuminate\Support\Facades\DB::statement('ALTER TABLE informasi_publiks MODIFY ringkasan_isi_informasi TEXT NULL');
-                \Illuminate\Support\Facades\DB::statement('ALTER TABLE informasi_publiks MODIFY sub_informasi TEXT NULL');
-            } catch (\Exception $e) {}
-
-            $syncKey = 'monev_fmipa_synced_v5';
-            if (!\Illuminate\Support\Facades\Cache::has($syncKey)) {
-                \App\Models\InformasiPublik::where('jenis_informasi', 'Informasi Berkala')->delete();
-
-                $monevBerkalaData = [
-                    // 1. Profil unit (kedudukan, tugas, struktur, pejabat) - 4 Items
-                    [
-                        'rincian' => 'Profil unit (kedudukan, tugas, struktur, pejabat)',
-                        'sub' => 'Profil & struktur organisasi unit',
-                        'ringkasan' => 'Profil dan struktur organisasi Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Lampung.',
-                        'pejabat' => 'Dekanat / Bagian Tata Usaha FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://fmipa.unila.ac.id/profil/',
-                        'bentuk' => 'Online',
-                    ],
-                    [
-                        'rincian' => 'Profil unit (kedudukan, tugas, struktur, pejabat)',
-                        'sub' => 'Sejarah',
-                        'ringkasan' => 'Sejarah berdirinya Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Lampung.',
-                        'pejabat' => 'Dekanat / Bagian Tata Usaha FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://fmipa.unila.ac.id/sejarah/',
-                        'bentuk' => 'Online',
-                    ],
-                    [
-                        'rincian' => 'Profil unit (kedudukan, tugas, struktur, pejabat)',
-                        'sub' => 'Profil Pimpinan',
-                        'ringkasan' => 'Profil jajaran pimpinan Dekan, Wakil Dekan, dan Ketua Jurusan FMIPA Unila.',
-                        'pejabat' => 'Dekanat / Bagian Tata Usaha FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://fmipa.unila.ac.id/pimpinan/',
-                        'bentuk' => 'Online',
-                    ],
-                    [
-                        'rincian' => 'Profil unit (kedudukan, tugas, struktur, pejabat)',
-                        'sub' => 'Struktur Organisasi',
-                        'ringkasan' => 'Bagan susunan tata pamong dan struktur organisasi pengelola FMIPA Unila.',
-                        'pejabat' => 'Dekanat / Bagian Tata Usaha FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://fmipa.unila.ac.id/struktur-organisasi/',
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 2. Program dan kegiatan tahun berjalan - 2 Items
-                    [
-                        'rincian' => 'Program dan kegiatan tahun berjalan',
-                        'sub' => 'Renstra',
-                        'ringkasan' => 'Rencana Strategis (Renstra) Fakultas MIPA Universitas Lampung.',
-                        'pejabat' => 'Dekanat / Bagian Perencanaan FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://fmipa.unila.ac.id/renstra/',
-                        'bentuk' => 'Online',
-                    ],
-                    [
-                        'rincian' => 'Program dan kegiatan tahun berjalan',
-                        'sub' => 'KEGIATAN',
-                        'ringkasan' => 'Agenda kegiatan dan program kerja tahunan civitas akademika FMIPA Unila.',
-                        'pejabat' => 'Dekanat / Bagian Tata Usaha FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://fmipa.unila.ac.id/kegiatan/',
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 3. Ringkasan kinerja - Sedang dilengkapi unit
-                    [
-                        'rincian' => 'Ringkasan kinerja',
-                        'sub' => 'Dokumen sedang dilengkapi unit',
-                        'ringkasan' => 'Dokumen sedang dilengkapi unit',
-                        'pejabat' => 'Dekanat / Bagian Tata Usaha FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => '#',
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 4. Ringkasan laporan keuangan / realisasi anggaran - 1 Item
-                    [
-                        'rincian' => 'Ringkasan laporan keuangan / realisasi anggaran',
-                        'sub' => 'Umum dan Keuangan',
-                        'ringkasan' => 'Laporan realisasi anggaran serta pengelolaan umum dan keuangan FMIPA Unila.',
-                        'pejabat' => 'Subbag Umum dan Keuangan FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://fmipa.unila.ac.id/keuangan/',
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 5. Ringkasan laporan akses informasi publik - 1 Item
-                    [
-                        'rincian' => 'Ringkasan laporan akses informasi publik',
-                        'sub' => 'Halaman PPID / Informasi Publik unit',
-                        'ringkasan' => 'Lihat statistik layanan unit dan rekapitulasi akses pada seksi Laporan & Statistik PPID.',
-                        'pejabat' => 'PPID Pelaksana FMIPA Unila',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => url('/statistik'),
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 6. Peraturan, keputusan, dan kebijakan unit - 1 Item
-                    [
-                        'rincian' => 'Peraturan, keputusan, dan kebijakan unit',
-                        'sub' => 'Peraturan Akademik',
-                        'ringkasan' => 'Buku pedoman peraturan akademik dan kebijakan pelaksanaan pembelajaran FMIPA Unila.',
-                        'pejabat' => 'Dekanat / Bagian Akademik FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://fmipa.unila.ac.id/peraturan-akademik/',
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 7. Prosedur memperoleh informasi publik
-                    [
-                        'rincian' => 'Prosedur memperoleh informasi publik',
-                        'sub' => 'Tata Cara dan Prosedur Permohonan Informasi Publik',
-                        'ringkasan' => 'Isi formulir permohonan online atau datang ke meja layanan dengan identitas dan rincian informasi. Petugas memberi nomor registrasi. PPID menjawab maksimal 10 hari kerja.',
-                        'pejabat' => 'PPID Pelaksana FMIPA Unila',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => url('/layanan'),
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 8. Tata cara pengaduan penyalahgunaan wewenang
-                    [
-                        'rincian' => 'Tata cara pengaduan penyalahgunaan wewenang',
-                        'sub' => 'Tata Cara Pengaduan Penyalahgunaan Wewenang Pejabat',
-                        'ringkasan' => 'Pengaduan pelanggaran/penyalahgunaan wewenang melalui kanal resmi Universitas Lampung dan LAPOR! (lapor.go.id). Identitas pelapor dilindungi sesuai ketentuan.',
-                        'pejabat' => 'PPID Pelaksana FMIPA Unila',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://ppid.unila.ac.id/tata-cara-pengaduan-penyalahgunaan-wewenang-pejabat/',
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 9. Pengadaan barang dan jasa
-                    [
-                        'rincian' => 'Pengadaan barang dan jasa',
-                        'sub' => 'Informasi Pengadaan Barang dan Jasa',
-                        'ringkasan' => 'Informasi pengadaan barang/jasa Universitas Lampung diumumkan melalui LPSE/SPSE dan RUP (SiRUP) — tautan pada halaman PPID Utama.',
-                        'pejabat' => 'Bagian Pengadaan Barang dan Jasa FMIPA Unila',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://lpse.unila.ac.id',
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 10. Ketenagakerjaan dan penerimaan - 1 Item
-                    [
-                        'rincian' => 'Ketenagakerjaan dan penerimaan',
-                        'sub' => 'Kepegawaian',
-                        'ringkasan' => 'Informasi ketenagakerjaan, formasi, dan penerimaan pegawai di lingkungan FMIPA Unila.',
-                        'pejabat' => 'Dekanat / Kepegawaian FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => 'https://fmipa.unila.ac.id/kepegawaian/',
-                        'bentuk' => 'Online',
-                    ],
-
-                    // 11. Prosedur peringatan dini dan evakuasi keadaan darurat - Sedang dilengkapi unit
-                    [
-                        'rincian' => 'Prosedur peringatan dini dan evakuasi keadaan darurat',
-                        'sub' => 'Dokumen sedang dilengkapi unit',
-                        'ringkasan' => 'Dokumen sedang dilengkapi unit',
-                        'pejabat' => 'Subbag Umum dan Keuangan FMIPA',
-                        'penanggung' => 'PPID Pelaksana FMIPA Unila',
-                        'link' => '#',
-                        'bentuk' => 'Online',
-                    ],
-                ];
-
-                foreach ($monevBerkalaData as $item) {
-                    \App\Models\InformasiPublik::create([
-                        'jenis_informasi' => 'Informasi Berkala',
-                        'rincian_informasi' => $item['rincian'],
-                        'sub_informasi' => $item['sub'],
-                        'ringkasan_isi_informasi' => $item['ringkasan'],
-                        'pejabat_unit_yang_menguasai_informasi' => $item['pejabat'],
-                        'penanggung_jawab_pembuatan_informasi' => $item['penanggung'],
-                        'waktu_pembuatan_informasi' => date('Y'),
-                        'retensi_arsip' => 'Selama Berlaku',
-                        'bentuk_informasi_yang_tersedia' => $item['bentuk'],
-                        'link_informasi' => $item['link'],
-                        'file_informasi' => null,
-                        'dilihat' => 0,
-                    ]);
-                }
-
-                \Illuminate\Support\Facades\Cache::forever($syncKey, true);
-            }
-        }
     }
 }

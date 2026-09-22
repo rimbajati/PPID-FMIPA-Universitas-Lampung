@@ -2,7 +2,8 @@
     'listRincianBerkala' => [],
     'listRincianSetiapSaat' => [],
     'listRincianSertaMerta' => [],
-    'listRincian' => []
+    'listRincian' => [],
+    'listSubByRincian' => []
 ])
 
 <script>
@@ -11,6 +12,26 @@
         'Informasi Setiap Saat': {!! json_encode($listRincianSetiapSaat) !!},
         'Informasi Serta-Merta': {!! json_encode($listRincianSertaMerta) !!},
         'all': {!! json_encode($listRincian) !!}
+    };
+
+    // Map: rincian_informasi => [sub_informasi, ...] untuk dropdown dinamis sub informasi
+    window.subByRincian = {!! json_encode($listSubByRincian) !!};
+
+    // Perbarui datalist sub informasi berdasarkan nilai rincian yang dipilih
+    window.updateSubInformasiDatalist = function(rincianVal) {
+        const datalist = document.getElementById('list-sub-informasi-history');
+        if (!datalist) return;
+        datalist.innerHTML = '';
+        const rincian = (rincianVal || '').trim();
+        if (!rincian) return;
+        const options = (window.subByRincian && window.subByRincian[rincian]) ? window.subByRincian[rincian] : [];
+        options.forEach(val => {
+            if (val && val.trim() !== '') {
+                const opt = document.createElement('option');
+                opt.value = val;
+                datalist.appendChild(opt);
+            }
+        });
     };
 
     window.isSelectMode = false;
@@ -90,6 +111,13 @@
         document.getElementById('modalConfirmDelete').classList.remove('hidden');
     }
 
+    function triggerDeleteRincian(rincianTitle, jenisKategori) {
+        document.getElementById('deleteConfirmText').innerHTML = 'Apakah Anda yakin ingin menghapus Rincian Informasi <b>"' + rincianTitle + '"</b> beserta seluruh isi dokumen di dalamnya?';
+        window.currentDeleteType = 'rincian';
+        window.currentDeleteRincianData = { rincian: rincianTitle, jenis: jenisKategori };
+        document.getElementById('modalConfirmDelete').classList.remove('hidden');
+    }
+
     function handleFileChange(input) {
         const fileDisplayName = document.getElementById('fileDisplayName');
         const currentFileLink = document.getElementById('currentFileLink');
@@ -123,27 +151,48 @@
         openAddModal();
     }
 
-    function addSubInfo(rincianName, jenisKategori) {
-        openAddModal();
-        if (jenisKategori && document.getElementById('inputJenisInformasi')) {
-            document.getElementById('inputJenisInformasi').value = jenisKategori;
-            handleJenisInformasiChange(jenisKategori);
-        }
-        if (rincianName && document.getElementById('inputRincianInformasi')) {
-            document.getElementById('inputRincianInformasi').value = rincianName;
-        }
-        const judulEl = document.getElementById('inputJudul');
-        if (judulEl) {
-            judulEl.focus();
+    function addSubInfo(itemJson) {
+        const subVal = (itemJson.sub_informasi || '').trim();
+        const isPending = !subVal || subVal === 'Dokumen sedang dilengkapi unit';
+
+        if (isPending) {
+            // Record masih placeholder → UPDATE record yang ada (isi sub informasinya)
+            editData(itemJson);
+            // Kosongkan field Sub Informasi agar admin bisa langsung mengisi
+            const subEl = document.getElementById('inputSubInformasi');
+            if (subEl) {
+                subEl.value = '';
+                subEl.focus();
+            }
+        } else {
+            // Record sudah terisi → Buka form TAMBAH BARU dengan jenis & rincian yang sama
+            openAddModal();
+            // Pre-fill jenis dan rincian informasi
+            const jenisEl = document.getElementById('inputJenisInformasi');
+            const rincianEl = document.getElementById('inputRincianInformasi');
+            if (jenisEl) {
+                jenisEl.value = itemJson.jenis_informasi || '';
+                handleJenisInformasiChange(jenisEl.value);
+            }
+            if (rincianEl) {
+                rincianEl.value = itemJson.rincian_informasi || '';
+            }
+            // Langsung tampilkan form lengkap agar admin bisa mengisi sub informasi
+            setTimeout(() => {
+                toggleSubDetailFields(true);
+                const subEl = document.getElementById('inputSubInformasi');
+                if (subEl) subEl.focus();
+            }, 50);
         }
     }
 
     function openAddModal() {
         document.getElementById('modalTitle').innerText = 'Tambah Informasi Publik';
-        document.getElementById('modalSubtitle').innerText = 'Tambahkan dokumen informasi publik baru kedalam sistem';
+        document.getElementById('modalSubtitle').innerText = 'Tambahka informasi publik baru kedalam sistem';
         document.getElementById('formAddEdit').action = "{{ url('/admin/informasi-publik') }}";
         document.getElementById('formMethod').value = 'POST';
         document.getElementById('formAddEdit').reset();
+        window.rincianSavedDuringStep = false;
         
         // Reset file display
         const fileDisplayName = document.getElementById('fileDisplayName');
@@ -163,57 +212,170 @@
         const helpText = document.getElementById('fileHelpText');
         if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX (Maks 5MB)';
 
-        // Reset default 
-        document.getElementById('inputTahun').value = '';
-        if (document.getElementById('inputRetensiArsip')) document.getElementById('inputRetensiArsip').value = '';
+        // Reset default inputs
+        if (document.getElementById('inputSubInformasi')) document.getElementById('inputSubInformasi').value = '';
         if (document.getElementById('inputRincianInformasi')) document.getElementById('inputRincianInformasi').value = '';
         if (document.getElementById('inputPejabatPenguasa')) document.getElementById('inputPejabatPenguasa').value = '';
+        if (document.getElementById('inputPenanggungJawab')) document.getElementById('inputPenanggungJawab').value = '';
+        if (document.getElementById('inputTahun')) document.getElementById('inputTahun').value = '';
+        if (document.getElementById('inputRetensiArsip')) document.getElementById('inputRetensiArsip').value = '';
+        if (document.getElementById('inputLink')) document.getElementById('inputLink').value = '';
+        if (document.getElementById('inputFile')) document.getElementById('inputFile').value = '';
+
+        // Reset progressive disclosure sections
+        toggleSubDetailFields(false);
+
         // Pre-fill kategori jika sedang filter kategori
         const urlParamsAdd = new URLSearchParams(window.location.search);
         const currentKat = urlParamsAdd.get('kategori') || '';
         if (document.getElementById('inputJenisInformasi')) {
             document.getElementById('inputJenisInformasi').value = currentKat;
             handleJenisInformasiChange(currentKat);
+        } else {
+            handleJenisInformasiChange('');
         }
+
         if (document.getElementById('inputBentukInformasi')) {
             document.getElementById('inputBentukInformasi').value = 'Cetak dan Online';
             handleBentukInformasiChange('Cetak dan Online');
-        }
-
-        if (document.getElementById('inputSubInformasi')) document.getElementById('inputSubInformasi').value = '';
-        if (document.getElementById('inputRingkasanIsi')) {
-            document.getElementById('inputRingkasanIsi').value = '';
-            document.getElementById('inputRingkasanIsi').dispatchEvent(new Event('input'));
         }
 
         toggleInputType('file');
         document.getElementById('modalAddEdit').classList.remove('hidden');
     }
 
-    function handleJenisInformasiChange(kategori) {
-        const modalBox = document.getElementById('modalAddEditBox');
+    window.toggleSubDetailFields = function(forceShow = null) {
         const sectionFields = document.getElementById('section-form-fields');
+        const modalBox = document.getElementById('modalAddEditBox');
+        const btnStepNext = document.getElementById('btnStepNext');
         const btnSubmit = document.getElementById('btnSubmitAddEdit');
+        const katVal = document.getElementById('inputJenisInformasi')?.value || '';
+
+        if (!sectionFields) return;
+
+        const shouldShow = forceShow !== null ? forceShow : sectionFields.classList.contains('hidden');
+        sectionFields.classList.toggle('hidden', !shouldShow);
+
+        if (modalBox) {
+            modalBox.classList.toggle('max-w-6xl', shouldShow);
+            modalBox.classList.toggle('max-w-lg', !shouldShow);
+        }
+
+        const hasCategory = Boolean(katVal && katVal.trim() !== '');
+
+        if (shouldShow) {
+            document.getElementById('inputSubInformasi')?.setAttribute('required', 'required');
+            document.getElementById('inputPejabatPenguasa')?.setAttribute('required', 'required');
+            document.getElementById('inputPenanggungJawab')?.setAttribute('required', 'required');
+            document.getElementById('inputTahun')?.setAttribute('required', 'required');
+            document.getElementById('inputRetensiArsip')?.setAttribute('required', 'required');
+
+            if (btnStepNext) btnStepNext.classList.add('hidden');
+            if (btnSubmit) btnSubmit.classList.remove('hidden');
+        } else {
+            document.getElementById('inputSubInformasi')?.removeAttribute('required');
+            document.getElementById('inputPejabatPenguasa')?.removeAttribute('required');
+            document.getElementById('inputPenanggungJawab')?.removeAttribute('required');
+            document.getElementById('inputTahun')?.removeAttribute('required');
+            document.getElementById('inputRetensiArsip')?.removeAttribute('required');
+
+            if (btnSubmit) btnSubmit.classList.add('hidden');
+            if (btnStepNext) btnStepNext.classList.toggle('hidden', !hasCategory);
+        }
+    };
+
+    window.handleStepNext = function() {
+        const rincianInput = document.getElementById('inputRincianInformasi');
+        const jenisInput = document.getElementById('inputJenisInformasi');
+        const btnStepNext = document.getElementById('btnStepNext');
+        const textBtnStep = document.getElementById('textBtnStep');
+        const iconBtnStep = document.getElementById('iconBtnStep');
+
+        if (!jenisInput || !jenisInput.value.trim()) {
+            jenisInput?.focus();
+            jenisInput?.reportValidity();
+            return;
+        }
+
+        if (!rincianInput || !rincianInput.value.trim()) {
+            rincianInput?.focus();
+            rincianInput?.reportValidity();
+            return;
+        }
+
+        const isAddMode = document.getElementById('formMethod').value === 'POST';
+
+        // Jika mode Tambah baru, simpan rincian informasi terlebih dahulu ke sistem
+        // sehingga jika admin menekan Batal pada tahap pengisian dokumen, rincian tetap tersimpan di tabel
+        if (isAddMode) {
+            if (btnStepNext) btnStepNext.disabled = true;
+            if (textBtnStep) textBtnStep.innerText = 'Menyimpan Rincian...';
+            if (iconBtnStep) iconBtnStep.className = 'fa-solid fa-spinner fa-spin';
+
+            const csrfToken = document.querySelector('input[name="_token"]')?.value;
+            const formData = new FormData();
+            formData.append('_token', csrfToken);
+            formData.append('jenis_informasi', jenisInput.value.trim());
+            formData.append('rincian_informasi', rincianInput.value.trim());
+            // sub_informasi sengaja dikosongkan agar otomatis dibuat sebagai placeholder "Dokumen sedang dilengkapi unit"
+
+            fetch("{{ url('/admin/informasi-publik') }}", {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(res => {
+                // Rincian berhasil tersimpan di database
+                window.rincianSavedDuringStep = true;
+                // Buka form lengkap untuk mengisi sub informasi
+                toggleSubDetailFields(true);
+                setTimeout(() => {
+                    const subInput = document.getElementById('inputSubInformasi');
+                    if (subInput) subInput.focus();
+                }, 150);
+            })
+            .catch(err => {
+                // Tetap buka form lengkap jika ada kendala jaringan
+                toggleSubDetailFields(true);
+                setTimeout(() => {
+                    const subInput = document.getElementById('inputSubInformasi');
+                    if (subInput) subInput.focus();
+                }, 150);
+            })
+            .finally(() => {
+                if (btnStepNext) btnStepNext.disabled = false;
+                if (textBtnStep) textBtnStep.innerText = 'Simpan Rincian & Lanjut';
+                if (iconBtnStep) iconBtnStep.className = 'fa-solid fa-arrow-right';
+            });
+        } else {
+            // Mode Edit: langsung buka form lengkap
+            toggleSubDetailFields(true);
+            setTimeout(() => {
+                const subInput = document.getElementById('inputSubInformasi');
+                if (subInput) subInput.focus();
+            }, 150);
+        }
+    };
+
+    function handleJenisInformasiChange(kategori) {
+        const sectionRincian = document.getElementById('section-rincian-field');
         const datalist = document.getElementById('list-rincian-dynamic');
 
         const hasCategory = Boolean(kategori && kategori.trim() !== '');
 
-        if (modalBox) {
-            if (hasCategory) {
-                modalBox.classList.remove('max-w-lg');
-                modalBox.classList.add('max-w-6xl');
-            } else {
-                modalBox.classList.remove('max-w-6xl');
-                modalBox.classList.add('max-w-lg');
-            }
+        // Munculkan rincian informasi segera setelah kategori dipilih
+        if (sectionRincian) {
+            sectionRincian.classList.toggle('hidden', !hasCategory);
         }
 
-        if (sectionFields) {
-            sectionFields.classList.toggle('hidden', !hasCategory);
-        }
-        if (btnSubmit) {
-            btnSubmit.classList.toggle('hidden', !hasCategory);
-        }
+        // Update tombol footer sesuai status
+        toggleSubDetailFields(false);
+
+        // Reset datalist sub informasi saat kategori berubah
+        updateSubInformasiDatalist('');
 
         if (!datalist) return;
 
@@ -235,10 +397,26 @@
                 datalist.appendChild(opt);
             }
         });
+
+        // Pasang listener oninput pada inputRincianInformasi untuk update datalist sub informasi
+        const rincianInput = document.getElementById('inputRincianInformasi');
+        if (rincianInput && !rincianInput._subDatalistListenerAdded) {
+            rincianInput.addEventListener('input', function() {
+                updateSubInformasiDatalist(this.value);
+            });
+            rincianInput.addEventListener('change', function() {
+                updateSubInformasiDatalist(this.value);
+            });
+            rincianInput._subDatalistListenerAdded = true;
+        }
     }
 
     function closeAddEditModal() {
         document.getElementById('modalAddEdit').classList.add('hidden');
+        if (window.rincianSavedDuringStep) {
+            window.rincianSavedDuringStep = false;
+            window.location.reload();
+        }
     }
 
     function handleBentukInformasiChange(val) {
@@ -288,26 +466,17 @@
 
     function editData(item) {
 
-        document.getElementById('modalTitle').innerText = 'Edit Informasi Publik (DIP)';
+        document.getElementById('modalTitle').innerText = 'Edit Informasi Publik';
         document.getElementById('modalSubtitle').innerText = 'Perbarui data informasi publik dibawah ini';
         document.getElementById('formAddEdit').action = "{{ url('/admin/informasi-publik') }}/" + item.id;
         document.getElementById('formMethod').value = 'PUT';
 
-        let subVal = item.sub_informasi || item.ringkasan_isi_informasi || item.judul_informasi || '';
+        let subVal = item.sub_informasi || item.judul_informasi || '';
         if (subVal.trim() === 'Dokumen sedang dilengkapi unit') {
             subVal = '';
         }
         if (document.getElementById('inputSubInformasi')) {
             document.getElementById('inputSubInformasi').value = subVal;
-        }
-
-        let ringkasanVal = item.ringkasan_isi_informasi || '';
-        if (ringkasanVal.trim() === 'Dokumen sedang dilengkapi unit') {
-            ringkasanVal = '';
-        }
-        if (document.getElementById('inputRingkasanIsi')) {
-            document.getElementById('inputRingkasanIsi').value = ringkasanVal;
-            document.getElementById('inputRingkasanIsi').dispatchEvent(new Event('input'));
         }
 
         document.getElementById('inputJenisInformasi').value = item.jenis_informasi || '';
@@ -318,6 +487,8 @@
         }
         if (document.getElementById('inputRincianInformasi')) {
             document.getElementById('inputRincianInformasi').value = item.rincian_informasi || '';
+            // Update datalist sub informasi sesuai rincian yang sudah terpilih
+            updateSubInformasiDatalist(item.rincian_informasi || '');
         }
         if (document.getElementById('inputPejabatPenguasa')) {
             document.getElementById('inputPejabatPenguasa').value = item.pejabat_unit_yang_menguasai_informasi || item.pejabat_unit_yang_menguasai || item.pejabat_penguasa || '';
@@ -373,10 +544,8 @@
             }
         }
 
+        toggleSubDetailFields(true);
         document.getElementById('modalAddEdit').classList.remove('hidden');
-
-        // Dispatch input event for char counter
-        document.getElementById('inputJudul').dispatchEvent(new Event('input'));
     }
 
     function handleFormSubmit(event) {
@@ -664,7 +833,7 @@
             const isKatMode = new URLSearchParams(window.location.search).has('kategori') || {{ request()->filled('kategori') ? 'true' : 'false' }};
 
             if (totalItems === 0) {
-                const colspan = isKatMode ? '4' : '9';
+                const colspan = isKatMode ? '2' : '9';
                 tbody.innerHTML = `<tr><td colspan="${colspan}" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik yang sesuai.</td></tr>`;
                 if (infoEl) infoEl.innerText = 'Menampilkan 0 sampai 0 dari 0 entri';
                 if (paginEl) paginEl.innerHTML = '';
@@ -693,7 +862,7 @@
                         const tr = pageRows[i + k].element;
                         const noCell = tr.querySelector('.col-admin-dip-no');
                         if (noCell) {
-                            noCell.innerText = startIndex + (i + k) + 1;
+                            noCell.innerText = pageRows[i + k].originalIndex;
                         }
 
                         // Sinkronkan visibility checkbox mode pilih
@@ -715,21 +884,19 @@
                     i += span;
                 }
             } else {
-                // Mode Matriks Lengkap (Full DIP)
-                pageRows.forEach((row, i) => {
+                // Mode Matriks Lengkap (Full DIP) — tampilan flat biasa
+                pageRows.forEach(row => {
                     const tr = row.element;
                     const noCell = tr.querySelector('.col-admin-dip-no');
-                    if (noCell) {
-                        noCell.innerText = startIndex + i + 1;
-                    }
-
-                    // Sinkronkan visibility checkbox mode pilih
+                    if (noCell) noCell.innerText = row.originalIndex;
                     const cbCell = tr.querySelector('.col-checkbox-cell');
                     if (cbCell) cbCell.classList.toggle('hidden', !window.isSelectMode);
-
                     tbody.appendChild(tr);
                 });
             }
+
+
+
         }
 
         // Teks info entri

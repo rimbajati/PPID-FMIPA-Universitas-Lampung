@@ -36,9 +36,9 @@ class InformasiDikecualikanController extends Controller
         $totalDikecualikan = InformasiDikecualikan::count();
         $lastUpdate = InformasiDikecualikan::max('updated_at');
 
-        $items = $query->get();
+        $informasi = $query->get();
 
-        return view('admin.informasi_dikecualikan.index', compact('items', 'totalDikecualikan', 'lastUpdate'));
+        return view('admin.informasi_dikecualikan.index', compact('informasi', 'totalDikecualikan', 'lastUpdate'));
     }
 
     public function store(Request $request)

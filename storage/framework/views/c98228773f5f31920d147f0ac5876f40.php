@@ -139,7 +139,7 @@
                         data-id="<?php echo e($item->id); ?>"
                         data-no="<?php echo e($idx + 1); ?>"
                         data-dilihat="<?php echo e((int)($item->dilihat ?? 0)); ?>"
-                        data-ringkasan="<?php echo e(strtolower($item->ringkasan_isi_informasi ?? '')); ?>"
+                        data-ringkasan="<?php echo e(strtolower($item->sub_informasi ?? '')); ?>"
                         data-jenis="<?php echo e(strtolower($item->jenis_informasi ?? '')); ?>"
                         data-pejabat="<?php echo e(strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '')); ?>"
                         data-penanggung_jawab="<?php echo e(strtolower($item->penanggung_jawab_pembuatan_informasi ?? '')); ?>"
@@ -152,19 +152,26 @@
 
                         </td>
 
-                        <!-- 1. Ringkasan Isi Informasi -->
+                        <!-- 1. Ringkasan Isi Informasi (Sub Informasi & Rincian Informasi) -->
                         <td class="px-3.5 py-3 text-slate-900 leading-normal break-words text-xs sm:text-sm">
                             <?php
-                                $subText = trim($item->sub_informasi ?: ($item->ringkasan_isi_informasi ?: ''));
-                                $ringkasanText = trim($item->ringkasan_isi_informasi ?: '');
+                                $rincianVal = trim($item->rincian_informasi ?: '');
+                                $subVal = trim($item->sub_informasi ?: '');
                             ?>
                             <div class="space-y-1">
-                                <?php if($subText && $subText !== 'Dokumen sedang dilengkapi unit'): ?>
-                                    <div class="font-black text-slate-900 leading-snug"><?php echo e($subText); ?></div>
-                                <?php endif; ?>
-
-                                <?php if($ringkasanText && $ringkasanText !== $subText && $ringkasanText !== 'Dokumen sedang dilengkapi unit'): ?>
-                                    <div class="text-xs text-slate-500 font-normal leading-relaxed"><?php echo e($ringkasanText); ?></div>
+                                <?php if($subVal && $subVal !== 'Dokumen sedang dilengkapi unit'): ?>
+                                    <div class="font-black text-slate-900 leading-snug"><?php echo e($subVal); ?></div>
+                                    <?php if($rincianVal && strcasecmp($rincianVal, $subVal) !== 0): ?>
+                                        <div class="text-[11px] text-slate-500 font-semibold flex items-center gap-1">
+                                            <span class="px-1.5 py-0.5 bg-slate-100 rounded text-slate-600 border border-slate-200/80"><?php echo e($rincianVal); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <div class="font-black text-slate-900 leading-snug"><?php echo e($rincianVal ?: '-'); ?></div>
+                                    <div class="text-[11px] text-amber-600 font-semibold italic flex items-center gap-1">
+                                        <i class="fa-regular fa-clock text-[10px]"></i>
+                                        <span>Dokumen sedang dilengkapi unit</span>
+                                    </div>
                                 <?php endif; ?>
 
                                 <?php if($item->dilihat): ?>
@@ -199,7 +206,7 @@
 
                         <!-- 5. Waktu dan Tempat Pembuatan Informasi -->
                         <td class="px-3 py-3 text-center font-medium text-slate-700 break-words text-xs sm:text-sm leading-normal">
-                            <?php echo e($item->waktu_pembuatan_informasi ?? date('Y', strtotime($item->created_at ?? now()))); ?>
+                            <?php echo e($item->waktu_pembuatan_informasi ?: '-'); ?>
 
                         </td>
 
@@ -211,7 +218,7 @@
 
                         <!-- 7. Bentuk/Format Informasi yang Tersedia -->
                         <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words text-xs sm:text-sm leading-normal">
-                            <?php echo e($item->bentuk_informasi_yang_tersedia ?: 'Cetak dan Online'); ?>
+                            <?php echo e($item->bentuk_informasi_yang_tersedia ?: '-'); ?>
 
                         </td>
 
@@ -220,7 +227,7 @@
                             <div class="flex items-center justify-center">
                                 <?php
                                     $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
-                                    $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->ringkasan_isi_informasi) . ($ext ? '.' . $ext : '.pdf'));
+                                    $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->sub_informasi) . ($ext ? '.' . $ext : '.pdf'));
                                     $fileTargetUrl = ($item->link_informasi && !$item->file_informasi) 
                                         ? $item->link_informasi 
                                         : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName)) : null);

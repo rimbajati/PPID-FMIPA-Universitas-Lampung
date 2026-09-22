@@ -31,7 +31,7 @@
                             <span x-text="len">0</span>/150
                         </span>
                     </div>
-                    <input type="text" id="inputJudulSertaMerta" name="ringkasan_isi_informasi" x-ref="inputSertaMerta" maxlength="150" required 
+                    <input type="text" id="inputJudulSertaMerta" name="sub_informasi" x-ref="inputSertaMerta" maxlength="150" required 
                            placeholder="Contoh: Surat Edaran Kesiapsiagaan Bencana / Pengumuman Lelang Mendesak..." 
                            @input="len = $el.value.length"
                            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-semibold placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm">

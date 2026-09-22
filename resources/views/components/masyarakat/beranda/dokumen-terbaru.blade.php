@@ -45,7 +45,7 @@
                         </div>
 
                         <h3 class="text-base sm:text-lg font-black text-slate-900 group-hover:text-sky-600 transition-colors line-clamp-2">
-                            {{ $doc->ringkasan_isi_informasi }}
+                            {{ $doc->sub_informasi }}
                         </h3>
                     </div>
 

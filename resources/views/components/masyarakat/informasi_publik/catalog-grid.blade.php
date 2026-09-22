@@ -70,7 +70,7 @@
                     <div class="space-y-2.5">
                         <!-- Title -->
                         <h3 class="text-base font-extrabold text-slate-900 group-hover:text-sky-600 transition-colors leading-snug block break-words [word-break:break-word]">
-                            {{ $info->ringkasan_isi_informasi ?? $info->judul_informasi }}
+                            {{ $info->sub_informasi ?? $info->judul_informasi }}
                             @if($isDikecualikan)
                                 <span class="inline-block ml-1 text-slate-400 text-xs"><i class="fa-solid fa-lock"></i></span>
                             @endif

@@ -35,14 +35,13 @@ class ExportController extends Controller
         }
 
         // Dokumen yang masih dilengkapi unit tidak dimasukkan ke dalam dokumen DIP resmi yang diekspor
-        $query->where('ringkasan_isi_informasi', '!=', 'Dokumen sedang dilengkapi unit');
+        $query->where('sub_informasi', '!=', 'Dokumen sedang dilengkapi unit');
 
         // Filter search jika ada
         if ($request->filled('search')) {
             $term = strtolower(trim($request->search));
             $query->where(function($q) use ($term) {
                 $q->whereRaw('LOWER(COALESCE(sub_informasi, "")) LIKE ?', ["%{$term}%"])
-                  ->orWhereRaw('LOWER(COALESCE(ringkasan_isi_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(rincian_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(penanggung_jawab_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])
@@ -100,41 +99,66 @@ class ExportController extends Controller
             fputcsv($file, ['Tanggal Ekspor: ' . date('d F Y H:i:s')]);
             fputcsv($file, []);
 
-            // Header kolom standar Perki KIP
+            // Header kolom standar DIP (sesuai format Unpad)
             fputcsv($file, [
                 'No',
                 'Ringkasan Isi Informasi',
                 'Jenis Informasi',
-                'Pejabat / Penanggung Jawab Unit',
-                'Waktu Pembuatan Informasi',
-                'Bentuk Informasi Yang Tersedia',
-                'Jangka Waktu Retensi',
+                'Pejabat/Unit/Satker yang Menguasai Informasi',
+                'Penanggung Jawab Pembuatan atau Penerbitan Informasi',
+                'Waktu dan Tempat Pembuatan Informasi',
+                'Bentuk Informasi yang Tersedia',
+                'Jangka Waktu Penyimpanan atau Retensi Arsip',
                 'Tautan / Akses Berkas'
             ]);
 
-            $no = 1;
-            foreach ($items as $item) {
-                $bentuk = $item->bentuk_informasi_yang_tersedia ?: 'Cetak/Online';
-                $link   = $item->file_informasi ? url('/informasi/lihat/' . $item->id) : ($item->link_informasi ?: '-');
-                $subText = trim($item->sub_informasi ?: ($item->ringkasan_isi_informasi ?: ''));
-                $ringkasanText = trim($item->ringkasan_isi_informasi ?: '');
-                $pejabat = $item->pejabat_unit_yang_menguasai_informasi ?: ($item->penanggung_jawab_pembuatan_informasi ?: '-');
-                $retensi = $item->retensi_arsip ?: '-';
-                $isiCell = $subText;
-                if ($ringkasanText && $ringkasanText !== $subText && $ringkasanText !== 'Dokumen sedang dilengkapi unit') {
-                    $isiCell .= "\n" . $ringkasanText;
-                }
+            // Kelompokkan berdasarkan rincian_informasi — struktur hierarki DIP Unpad
+            $rincianGroups = $items->groupBy(function($item) {
+                return $item->rincian_informasi ?: ($item->sub_informasi ?: '-');
+            });
 
+            $groupNo = 0;
+            $no = 1;
+            foreach ($rincianGroups as $namaRincian => $subItems) {
+                $groupNo++;
+                $first = $subItems->first();
+
+                // Baris rincian — persis seperti DIP Unpad:
+                // Nama rincian di kolom Ringkasan, data bersama dari item pertama
                 fputcsv($file, [
-                    $no++,
-                    $isiCell,
-                    $item->jenis_informasi,
-                    $pejabat,
-                    $item->waktu_pembuatan_informasi ?: '-',
-                    $bentuk,
-                    $retensi,
-                    $link
+                    $groupNo,
+                    $namaRincian,
+                    $first->jenis_informasi ?: '-',
+                    $first->pejabat_unit_yang_menguasai_informasi ?: '-',
+                    $first->penanggung_jawab_pembuatan_informasi ?: '-',
+                    $first->waktu_pembuatan_informasi ?: '-',
+                    $first->bentuk_informasi_yang_tersedia ?: '-',
+                    $first->retensi_arsip ?: '-',
+                    '-'
                 ]);
+
+                // Baris sub informasi di bawahnya (indented 4 spasi)
+                foreach ($subItems as $item) {
+                    $subText  = trim($item->sub_informasi ?: '');
+                    $bentuk   = $item->bentuk_informasi_yang_tersedia ?: '-';
+                    $link     = $item->file_informasi ? url('/informasi/lihat/' . $item->id) : ($item->link_informasi ?: '-');
+                    $pejabat  = $item->pejabat_unit_yang_menguasai_informasi ?: '-';
+                    $pj       = $item->penanggung_jawab_pembuatan_informasi ?: '-';
+                    $waktu    = $item->waktu_pembuatan_informasi ?: '-';
+                    $retensi  = $item->retensi_arsip ?: '-';
+
+                    fputcsv($file, [
+                        $no++,
+                        '    ' . $subText,
+                        $item->jenis_informasi ?: '-',
+                        $pejabat,
+                        $pj,
+                        $waktu,
+                        $bentuk,
+                        $retensi,
+                        $link
+                    ]);
+                }
             }
 
             fclose($file);
@@ -172,14 +196,13 @@ class ExportController extends Controller
         }
 
         // Dokumen yang masih dilengkapi unit tidak dimasukkan ke dalam dokumen DIP resmi yang dicetak/diekspor
-        $query->where('ringkasan_isi_informasi', '!=', 'Dokumen sedang dilengkapi unit');
+        $query->where('sub_informasi', '!=', 'Dokumen sedang dilengkapi unit');
 
         // Filter search jika ada
         if ($request->filled('search')) {
             $term = strtolower(trim($request->search));
             $query->where(function($q) use ($term) {
                 $q->whereRaw('LOWER(COALESCE(sub_informasi, "")) LIKE ?', ["%{$term}%"])
-                  ->orWhereRaw('LOWER(COALESCE(ringkasan_isi_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(rincian_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(penanggung_jawab_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])

@@ -231,81 +231,64 @@
                     {{-- MODE DEFAULT DIP RESMI: Menggunakan standard HTML rowspan yang presisi dan rapi --}}
                     @php
                         $rincianGroups = $daftarItem->groupBy(function($item) {
-                            return $item->rincian_informasi ?: ($item->sub_informasi ?: $item->ringkasan_isi_informasi);
+                            return $item->rincian_informasi ?: $item->sub_informasi;
                         });
                     @endphp
 
+                        @php $rincianGroupNo = 0; @endphp
                         @foreach($rincianGroups as $namaRincian => $subItems)
                             @php
-                                $rowCount = $subItems->count();
-                                $first = $subItems->first();
-                                $pejabat = $first->pejabat_unit_yang_menguasai_informasi ?: 'Dekanat / Bagian Tata Usaha FMIPA';
-                                $penanggung = $first->penanggung_jawab_pembuatan_informasi ?: 'PPID Pelaksana FMIPA Unila';
-                                $waktu = $first->waktu_pembuatan_informasi ?: ($first->created_at ? $first->created_at->format('Y') : date('Y'));
-                                $waktuTempat = $waktu . ', FMIPA Unila';
-                                
-                                $bentukStr = strtolower(trim($first->bentuk_informasi_yang_tersedia ?? ''));
-                                $isCetak = str_contains($bentukStr, 'cetak') || str_contains($bentukStr, 'hardcopy');
-                                $isOnline = str_contains($bentukStr, 'online') || str_contains($bentukStr, 'softcopy') || !empty($first->file_informasi) || !empty($first->link_informasi) || empty($bentukStr);
-
-                                $retensi = $first->retensi_arsip ?: 'Selama Berlaku';
+                                $rincianGroupNo++;
+                                $subCount = $subItems->count();
                             @endphp
 
-                            @foreach($subItems as $subIndex => $sub)
+                            {{-- Baris Rincian Informasi --}}
+                            {{-- No: rowspan = 1 (baris rincian ini) + subCount (baris sub di bawahnya) --}}
+                            {{-- Nama rincian: colspan 7 (span semua kolom selain No), tanpa data --}}
+                            <tr style="background-color: #ffffff;">
+                                <td rowspan="{{ $subCount + 1 }}" class="text-center"
+                                    style="vertical-align: middle; font-weight: bold; border-right: 1px solid #000000;">
+                                    {{ $rincianGroupNo }}
+                                </td>
+                                <td colspan="7" style="vertical-align: middle; padding: 2mm 3mm; font-weight: bold;">
+                                    {{ $namaRincian }}
+                                </td>
+                            </tr>
+
+                            {{-- Baris Sub Informasi (No tidak ada, sudah di-rowspan dari baris rincian) --}}
+                            @foreach($subItems as $sub)
                                 @php
-                                    $subText = trim($sub->sub_informasi ?: ($sub->ringkasan_isi_informasi ?: ''));
+                                    $subText    = trim($sub->sub_informasi ?: '');
+                                    $subBentuk  = strtolower(trim($sub->bentuk_informasi_yang_tersedia ?? ''));
+                                    $subCetak   = str_contains($subBentuk, 'cetak') || str_contains($subBentuk, 'hardcopy');
+                                    $subOnline  = str_contains($subBentuk, 'online') || str_contains($subBentuk, 'softcopy')
+                                                  || !empty($sub->file_informasi) || !empty($sub->link_informasi);
+                                    $subPejabat = $sub->pejabat_unit_yang_menguasai_informasi ?: '-';
+                                    $subPJ      = $sub->penanggung_jawab_pembuatan_informasi ?: '-';
+                                    $subWaktu   = $sub->waktu_pembuatan_informasi ?: '-';
+                                    $subRetensi = $sub->retensi_arsip ?: '-';
                                 @endphp
                                 <tr>
-                                    @if($subIndex === 0)
-                                        {{-- Kolom No dengan rowspan --}}
-                                        <td rowspan="{{ $rowCount }}" class="text-center" style="vertical-align: middle;">
-                                            {{ $globalNo++ }}
-                                        </td>
-                                    @endif
-
-                                    {{-- Kolom Ringkasan Isi Informasi --}}
-                                    <td style="vertical-align: middle; padding: 2mm 3mm;">
+                                    {{-- Col 2: Sub name (sedikit indent) --}}
+                                    <td style="vertical-align: middle; padding: 2mm 3mm 2mm 5mm;">
                                         {{ $subText }}
                                     </td>
-
-                                    @if($subIndex === 0)
-                                        {{-- Kolom Pejabat / Satker dengan rowspan --}}
-                                        <td rowspan="{{ $rowCount }}" class="text-center" style="vertical-align: middle;">
-                                            {{ $pejabat }}
-                                        </td>
-
-                                        {{-- Kolom Penanggungjawab dengan rowspan --}}
-                                        <td rowspan="{{ $rowCount }}" class="text-center" style="vertical-align: middle;">
-                                            {{ $penanggung }}
-                                        </td>
-
-                                        {{-- Kolom Waktu dan Tempat dengan rowspan --}}
-                                        <td rowspan="{{ $rowCount }}" class="text-center" style="vertical-align: middle;">
-                                            {{ $waktuTempat }}
-                                        </td>
-
-                                        {{-- Kolom Bentuk Cetak dengan rowspan --}}
-                                        <td rowspan="{{ $rowCount }}" class="text-center" style="vertical-align: middle; font-size: 11pt;">
-                                            @if($isCetak)
-                                                ✔
-                                            @endif
-                                        </td>
-
-                                        {{-- Kolom Bentuk Online dengan rowspan --}}
-                                        <td rowspan="{{ $rowCount }}" class="text-center" style="vertical-align: middle; font-size: 11pt;">
-                                            @if($isOnline)
-                                                ✔
-                                            @endif
-                                        </td>
-
-                                        {{-- Kolom Retensi dengan rowspan --}}
-                                        <td rowspan="{{ $rowCount }}" class="text-center" style="vertical-align: middle;">
-                                            {{ $retensi }}
-                                        </td>
-                                    @endif
+                                    {{-- Col 3-8: Data milik sub ini --}}
+                                    <td class="text-center" style="vertical-align: middle;">{{ $subPejabat }}</td>
+                                    <td class="text-center" style="vertical-align: middle;">{{ $subPJ }}</td>
+                                    <td class="text-center" style="vertical-align: middle;">{{ $subWaktu }}</td>
+                                    <td class="text-center" style="vertical-align: middle; font-size: 11pt;">
+                                        @if($subCetak) ✔ @endif
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle; font-size: 11pt;">
+                                        @if($subOnline) ✔ @endif
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle;">{{ $subRetensi }}</td>
                                 </tr>
                             @endforeach
                         @endforeach
+
+
                 @endforeach
             </tbody>
         </table>

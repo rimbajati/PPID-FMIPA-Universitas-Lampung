@@ -240,6 +240,25 @@
             if (window.currentDeleteType === 'bulk') {
                 const bulkForm = document.getElementById('form-bulk-delete');
                 if (bulkForm) bulkForm.submit();
+            } else if (window.currentDeleteType === 'rincian' && window.currentDeleteRincianData) {
+                let rincianForm = document.getElementById('deleteRincianForm');
+                if (!rincianForm) {
+                    rincianForm = document.createElement('form');
+                    rincianForm.id = 'deleteRincianForm';
+                    rincianForm.method = 'POST';
+                    rincianForm.action = "{{ route('admin.informasi.delete_rincian') }}";
+                    rincianForm.className = 'hidden';
+                    rincianForm.innerHTML = `
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" name="rincian" id="delRincianName">
+                        <input type="hidden" name="jenis" id="delRincianJenis">
+                    `;
+                    document.body.appendChild(rincianForm);
+                }
+                document.getElementById('delRincianName').value = window.currentDeleteRincianData.rincian || '';
+                document.getElementById('delRincianJenis').value = window.currentDeleteRincianData.jenis || '';
+                rincianForm.submit();
             } else if (window.currentDeleteType === 'single' && window.currentDeleteUrl) {
                 const singleForm = document.getElementById('globalDeleteForm');
                 if (singleForm) {

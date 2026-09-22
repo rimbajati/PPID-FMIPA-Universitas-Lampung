@@ -77,7 +77,7 @@
                         <?php $__empty_1 = true; $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <?php
                                 $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
-                                $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->ringkasan_isi_informasi) . ($ext ? '.' . $ext : '.pdf'));
+                                $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->sub_informasi) . ($ext ? '.' . $ext : '.pdf'));
                                 $fileTargetUrl = ($item->link_informasi && !$item->file_informasi) 
                                     ? $item->link_informasi 
                                     : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName)) : null);
@@ -86,14 +86,14 @@
                             <div class="card-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl border border-slate-200/80 bg-white hover:bg-sky-50/40 hover:border-sky-200 transition-all duration-200 shadow-2xs hover:shadow-xs"
                                  data-dilihat="<?php echo e((int)($item->dilihat ?? 0)); ?>"
                                  data-rincian="<?php echo e(strtolower($item->rincian_informasi ?? '')); ?>"
-                                 data-sub_informasi="<?php echo e(strtolower($item->ringkasan_isi_informasi ?? '')); ?>">
+                                 data-sub_informasi="<?php echo e(strtolower($item->sub_informasi ?? '')); ?>">
                                 <div class="flex items-start gap-3.5">
                                     <div class="w-10 h-10 rounded-xl bg-sky-100/70 text-sky-600 flex items-center justify-center shrink-0 group-hover/card:bg-sky-500 group-hover/card:text-white transition-colors duration-200 mt-0.5">
                                         <i class="fa-solid fa-bullhorn text-sm"></i>
                                     </div>
                                     <div class="space-y-1">
                                         <h3 class="text-sm sm:text-base font-bold text-slate-900 group-hover/card:text-sky-600 transition-colors leading-snug">
-                                            <?php echo e($item->ringkasan_isi_informasi); ?>
+                                            <?php echo e($item->sub_informasi); ?>
 
                                         </h3>
                                         <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 font-semibold">
@@ -185,7 +185,7 @@
                                 <?php $__empty_1 = true; $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <?php
                                         $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
-                                        $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->ringkasan_isi_informasi) . ($ext ? '.' . $ext : '.pdf'));
+                                        $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->sub_informasi) . ($ext ? '.' . $ext : '.pdf'));
                                         $fileTargetUrl = ($item->link_informasi && !$item->file_informasi) 
                                             ? $item->link_informasi 
                                             : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName)) : null);
@@ -194,7 +194,7 @@
                                     <tr class="table-kat-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-300"
                                         data-dilihat="<?php echo e((int)($item->dilihat ?? 0)); ?>"
                                         data-rincian="<?php echo e(strtolower($rincianText)); ?>"
-                                        data-sub_informasi="<?php echo e(strtolower($item->ringkasan_isi_informasi ?? '')); ?>">
+                                        data-sub_informasi="<?php echo e(strtolower($item->sub_informasi ?? '')); ?>">
                                         <!-- 1. Rincian Informasi -->
                                         <td class="col-kat-rincian px-5 py-3.5 font-extrabold text-slate-900 align-top leading-relaxed bg-white border-r border-slate-300 [word-break:break-word]">
                                             <?php echo e($rincianText); ?>
@@ -204,7 +204,7 @@
                                         <!-- 2. Sub Informasi (Nama Dokumen) -->
                                         <td class="px-5 py-3.5 text-slate-800 align-top leading-relaxed [word-break:break-word]">
                                              <?php
-                                                 $subText = trim($item->sub_informasi ?: ($item->ringkasan_isi_informasi ?: ''));
+                                                 $subText = trim($item->sub_informasi ?: '');
                                                  $isPending = empty($subText) || $subText === 'Dokumen sedang dilengkapi unit';
                                              ?>
                                              <div class="space-y-1.5">
@@ -214,12 +214,6 @@
 
                                                      </div>
 
-                                                     <?php if(!empty($item->ringkasan_isi_informasi) && $item->ringkasan_isi_informasi !== $subText && $item->ringkasan_isi_informasi !== 'Dokumen sedang dilengkapi unit'): ?>
-                                                         <div class="text-xs text-slate-500 font-normal leading-relaxed">
-                                                             <?php echo e($item->ringkasan_isi_informasi); ?>
-
-                                                         </div>
-                                                     <?php endif; ?>
 
                                                      <?php if($item->dilihat): ?>
                                                          <div class="text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
@@ -227,6 +221,11 @@
                                                              <span><?php echo e(number_format($item->dilihat)); ?> dilihat</span>
                                                          </div>
                                                      <?php endif; ?>
+                                                 <?php else: ?>
+                                                     <div class="text-xs text-slate-400 italic font-medium flex items-center gap-1.5">
+                                                         <i class="fa-regular fa-clock text-[11px]"></i>
+                                                         <span>Dokumen sedang dilengkapi unit</span>
+                                                     </div>
                                                  <?php endif; ?>
                                              </div>
                                         </td>
