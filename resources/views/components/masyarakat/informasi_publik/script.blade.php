@@ -81,7 +81,6 @@
                 ringkasan: tr.getAttribute('data-ringkasan') || '',
                 jenis: tr.getAttribute('data-jenis') || '',
                 pejabat: tr.getAttribute('data-pejabat') || '',
-                penanggung_jawab: tr.getAttribute('data-penanggung_jawab') || '',
                 waktu: tr.getAttribute('data-waktu') || '',
                 retensi: tr.getAttribute('data-retensi') || '',
                 bentuk: tr.getAttribute('data-bentuk') || '',

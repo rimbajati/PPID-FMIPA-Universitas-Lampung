@@ -6,7 +6,6 @@
     'listRincianSertaMerta' => [],
     'listJudul' => [],
     'listSatker' => [],
-    'listPenanggungJawab' => [],
     'listTahun' => [],
     'listRetensi' => [],
 ])
@@ -96,21 +95,6 @@
                             </datalist>
                         </div>
 
-                        <!-- Penanggung Jawab -->
-                        <div class="space-y-1">
-                            <label class="block text-xs md:text-sm font-bold text-slate-800">
-                                Penanggung Jawab Pembuatan atau Penerbitan Informasi <span class="text-rose-500">*</span>
-                            </label>
-                            <input type="text" id="inputPenanggungJawab" name="penanggung_jawab_pembuatan_informasi" required autocomplete="off"
-                                   placeholder="Contoh: PPID Pelaksana FMIPA Unila"
-                                   list="list-penanggung-jawab-history"
-                                   class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-semibold focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm">
-                            <datalist id="list-penanggung-jawab-history">
-                                @foreach($listPenanggungJawab as $val)
-                                    <option value="{{ $val }}"></option>
-                                @endforeach
-                            </datalist>
-                        </div>
 
                         <!-- Waktu dan Tempat Pembuatan Informasi -->
                         <div class="space-y-1">

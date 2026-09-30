@@ -29,10 +29,10 @@
 
     <!-- HEADER SECTION (Di Atas Kotak & Rata Tengah Sesuai Permintaan) -->
     <div class="text-center max-w-3xl mx-auto mb-6 sm:mb-8 space-y-2">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200 shadow-2xs">
+        <!-- <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200 shadow-2xs">
             <i class="fa-solid fa-chart-simple text-sky-500"></i>
             <span>Laporan Keterbukaan Informasi</span>
-        </div>
+        </div> -->
 
         <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
             Statistik <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">Permohonan Informasi</span>

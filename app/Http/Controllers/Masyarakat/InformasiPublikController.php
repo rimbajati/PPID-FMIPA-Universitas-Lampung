@@ -28,7 +28,6 @@ class InformasiPublikController extends Controller
                 $q->where('sub_informasi', 'like', "%{$term}%")
                   ->orWhere('rincian_informasi', 'like', "%{$term}%")
                   ->orWhere('pejabat_unit_yang_menguasai_informasi', 'like', "%{$term}%")
-                  ->orWhere('penanggung_jawab_pembuatan_informasi', 'like', "%{$term}%")
                   ->orWhere('waktu_pembuatan_informasi', 'like', "%{$term}%")
                   ->orWhere('retensi_arsip', 'like', "%{$term}%")
                   ->orWhere('bentuk_informasi_yang_tersedia', 'like', "%{$term}%");
@@ -128,7 +127,6 @@ class InformasiPublikController extends Controller
             'no'              => 'id',
             'ringkasan'       => 'sub_informasi',
             'pejabat'         => 'pejabat_unit_yang_menguasai_informasi',
-            'penanggung_jawab'=> 'penanggung_jawab_pembuatan_informasi',
             'waktu'           => 'waktu_pembuatan_informasi',
             'retensi'         => 'retensi_arsip',
             'bentuk'          => 'bentuk_informasi_yang_tersedia',

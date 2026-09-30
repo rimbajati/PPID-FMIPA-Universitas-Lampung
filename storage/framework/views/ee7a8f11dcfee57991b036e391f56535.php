@@ -7,7 +7,6 @@
     'listRincianSertaMerta' => [],
     'listJudul' => [],
     'listSatker' => [],
-    'listPenanggungJawab' => [],
     'listTahun' => [],
     'listRetensi' => [],
 ]) as $__key => $__value) {
@@ -20,7 +19,6 @@
     'listRincianSertaMerta' => [],
     'listJudul' => [],
     'listSatker' => [],
-    'listPenanggungJawab' => [],
     'listTahun' => [],
     'listRetensi' => [],
 ]); ?>
@@ -31,7 +29,6 @@
     'listRincianSertaMerta' => [],
     'listJudul' => [],
     'listSatker' => [],
-    'listPenanggungJawab' => [],
     'listTahun' => [],
     'listRetensi' => [],
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
@@ -128,21 +125,6 @@
                             </datalist>
                         </div>
 
-                        <!-- Penanggung Jawab -->
-                        <div class="space-y-1">
-                            <label class="block text-xs md:text-sm font-bold text-slate-800">
-                                Penanggung Jawab Pembuatan atau Penerbitan Informasi <span class="text-rose-500">*</span>
-                            </label>
-                            <input type="text" id="inputPenanggungJawab" name="penanggung_jawab_pembuatan_informasi" required autocomplete="off"
-                                   placeholder="Contoh: PPID Pelaksana FMIPA Unila"
-                                   list="list-penanggung-jawab-history"
-                                   class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-semibold focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm">
-                            <datalist id="list-penanggung-jawab-history">
-                                <?php $__currentLoopData = $listPenanggungJawab; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($val); ?>"></option>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </datalist>
-                        </div>
 
                         <!-- Waktu dan Tempat Pembuatan Informasi -->
                         <div class="space-y-1">

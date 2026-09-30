@@ -16,7 +16,6 @@ class InformasiPublik extends Model
         'sub_informasi',
         'jenis_informasi',
         'pejabat_unit_yang_menguasai_informasi',
-        'penanggung_jawab_pembuatan_informasi',
         'waktu_pembuatan_informasi',
         'bentuk_informasi_yang_tersedia',
         'retensi_arsip',

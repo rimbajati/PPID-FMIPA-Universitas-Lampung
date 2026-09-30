@@ -47,23 +47,11 @@
                             </span>
                         </div>
                     </th>
-                    <th onclick="sortDipTable('pejabat')" class="px-2 py-3 w-[14%] break-normal cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit/Satker">
+                    <th onclick="sortDipTable('pejabat')" class="px-2 py-3 w-[18%] break-normal cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit/Satker">
                         <div class="flex items-center justify-center gap-1.5">
                             <span>Pejabat/Unit/Satker yang Menguasai Informasi</span>
                             <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'pejabat' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
                                 @if($curSortBy === 'pejabat')
-                                    <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
-                                @else
-                                    <i class="fa-solid fa-sort"></i>
-                                @endif
-                            </span>
-                        </div>
-                    </th>
-                    <th onclick="sortDipTable('penanggung_jawab')" class="px-1.5 py-3 w-[14%] [overflow-wrap:anywhere] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <span>Penanggung Jawab Pembuatan atau Penerbitan Informasi</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'penanggung_jawab' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
-                                @if($curSortBy === 'penanggung_jawab')
                                     <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
                                 @else
                                     <i class="fa-solid fa-sort"></i>
@@ -130,7 +118,6 @@
                         data-ringkasan="{{ strtolower($item->sub_informasi ?? '') }}"
                         data-jenis="{{ strtolower($item->jenis_informasi ?? '') }}"
                         data-pejabat="{{ strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '') }}"
-                        data-penanggung_jawab="{{ strtolower($item->penanggung_jawab_pembuatan_informasi ?? '') }}"
                         data-waktu="{{ strtolower($item->waktu_pembuatan_informasi ?? '') }}"
                         data-retensi="{{ strtolower($item->retensi_arsip ?? '') }}"
                         data-bentuk="{{ strtolower($item->bentuk_informasi_yang_tersedia ?? '') }}">
@@ -183,12 +170,7 @@
                             {{ $item->pejabat_unit_yang_menguasai_informasi ?: '-' }}
                         </td>
 
-                        <!-- 4. Penanggung Jawab Pembuatan Informasi -->
-                        <td class="px-3 py-3 font-medium text-slate-700 text-center break-words text-xs sm:text-sm leading-normal">
-                            {{ $item->penanggung_jawab_pembuatan_informasi ?: '-' }}
-                        </td>
-
-                        <!-- 5. Waktu dan Tempat Pembuatan Informasi -->
+                        <!-- 4. Waktu dan Tempat Pembuatan Informasi -->
                         <td class="px-3 py-3 text-center font-medium text-slate-700 break-words text-xs sm:text-sm leading-normal">
                             {{ $item->waktu_pembuatan_informasi ?: '-' }}
                         </td>
@@ -227,7 +209,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="9" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik yang sesuai.</td></tr>
+                    <tr><td colspan="8" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik yang sesuai.</td></tr>
                 @endforelse
             </tbody>
         </table>

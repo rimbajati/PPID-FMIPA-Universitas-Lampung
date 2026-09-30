@@ -90,8 +90,9 @@ Route::get('/', function () {
 
     $dokumenTerbaru = \App\Models\InformasiPublik::latest()->take(4)->get();
     
-    // Konten dinamis Tanya Jawab (FAQ) dari file JSON
+    // Konten dinamis Tanya Jawab (FAQ) & Profil PPID dari file JSON
     $faqs = AdminBerandaController::getFaqs();
+    $profil = AdminBerandaController::getProfil();
 
     return view('masyarakat.beranda.index', compact(
         'totalDokumen',
@@ -106,7 +107,8 @@ Route::get('/', function () {
         'chartBulananPerTahun',
         'rataRataWaktuTeks',
         'dokumenTerbaru',
-        'faqs'
+        'faqs',
+        'profil'
     ));
 })->name('beranda');
 Route::get('/home', function () { return redirect()->route('beranda'); });
@@ -116,6 +118,27 @@ Route::get('/informasi-publik', [MasyarakatInformasiPublikController::class, 'in
 Route::get('/informasi-publik/kategori/{slug}', [MasyarakatInformasiPublikController::class, 'kategori'])->name('informasi.kategori');
 Route::get('/informasi-dikecualikan', [MasyarakatInformasiPublikController::class, 'dikecualikan'])->name('informasi.dikecualikan');
 Route::get('/informasi-publik/{id}', [MasyarakatInformasiPublikController::class, 'show'])->name('informasi.detail');
+
+// Rute Profil PPID Pelaksana FMIPA Unila (Mengarahkan langsung ke section profil di beranda)
+Route::get('/profil-ppid', function () {
+    return redirect('/#profil-ppid');
+})->name('profil.ppid');
+
+// Rute Tata Cara Permohonan dan Keberatan Layanan Informasi
+Route::get('/tata-cara-permohonan-dan-keberatan', function () {
+    return view('masyarakat.tata_cara.index');
+})->name('tata-cara');
+Route::get('/tata-cara', function () {
+    return redirect()->route('tata-cara');
+});
+Route::get('/alur-layanan', function () {
+    return redirect()->route('tata-cara');
+});
+
+// Rute Regulasi Keterbukaan Informasi Publik
+Route::get('/regulasi', function () {
+    return view('masyarakat.regulasi.index');
+})->name('regulasi');
 
 // Rute Halaman Hub Layanan PPID Online (Dialihkan langsung ke Permohonan)
 Route::get('/layanan', function () { return redirect()->route('layanan.permohonan'); })->name('layanan');
@@ -343,12 +366,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/keberatan/bulk-delete', [AdminKeberatanController::class, 'destroyBulk'])->name('admin.keberatan.bulk');
     Route::delete('/keberatan/{id}', [AdminKeberatanController::class, 'destroy'])->name('admin.keberatan.destroy');
 
-    // Rute Admin: Tanya Jawab (FAQ)
+    // Rute Admin: Kelola Beranda (Profil PPID & FAQ)
     Route::get('/faq', [AdminBerandaController::class, 'index'])->name('admin.faq.index');
     Route::post('/faq', [AdminBerandaController::class, 'storeFaq'])->name('admin.faq.store');
     Route::delete('/faq/{id}', [AdminBerandaController::class, 'destroyFaq'])->name('admin.faq.destroy');
+    Route::post('/profil-ppid', [AdminBerandaController::class, 'updateProfil'])->name('admin.profil.update');
     // Alias redirect rute lama
     Route::get('/beranda-konten', function () { return redirect()->route('admin.faq.index'); });
+    Route::get('/profil-ppid-admin', function () { return redirect()->route('admin.faq.index'); });
 
     // Rute Admin: Statistik Layanan
     Route::get('/statistik', [AdminStatistikController::class, 'index'])->name('admin.statistik.index');

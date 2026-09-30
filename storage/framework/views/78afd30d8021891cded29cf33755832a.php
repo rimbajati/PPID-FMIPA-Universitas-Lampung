@@ -518,9 +518,6 @@
         if (document.getElementById('inputPejabatPenguasa')) {
             document.getElementById('inputPejabatPenguasa').value = item.pejabat_unit_yang_menguasai_informasi || item.pejabat_unit_yang_menguasai || item.pejabat_penguasa || '';
         }
-        if (document.getElementById('inputPenanggungJawab')) {
-            document.getElementById('inputPenanggungJawab').value = item.penanggung_jawab_pembuatan_informasi || '';
-        }
         if (document.getElementById('inputBentukInformasi')) {
             let bentukVal = item.bentuk_informasi_yang_tersedia || item.bentuk_informasi || 'Cetak dan Online';
             if (bentukVal === 'Cetak/Online') bentukVal = 'Cetak dan Online';
@@ -638,7 +635,6 @@
                     sub_informasi: card.getAttribute('data-sub_informasi') || '',
                     ringkasan: card.getAttribute('data-ringkasan') || '',
                     pejabat: card.getAttribute('data-pejabat') || '',
-                    penanggung_jawab: card.getAttribute('data-penanggung_jawab') || '',
                     waktu: card.getAttribute('data-waktu') || '',
                     retensi: card.getAttribute('data-retensi') || '',
                     bentuk: card.getAttribute('data-bentuk') || '',
@@ -660,7 +656,6 @@
                     ringkasan: tr.getAttribute('data-ringkasan') || '',
                     jenis: tr.getAttribute('data-jenis') || '',
                     pejabat: tr.getAttribute('data-pejabat') || '',
-                    penanggung_jawab: tr.getAttribute('data-penanggung_jawab') || '',
                     waktu: tr.getAttribute('data-waktu') || '',
                     retensi: tr.getAttribute('data-retensi') || '',
                     bentuk: tr.getAttribute('data-bentuk') || '',

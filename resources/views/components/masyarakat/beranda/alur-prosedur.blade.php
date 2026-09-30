@@ -1,16 +1,16 @@
-<!-- Prosedur & Alur Layanan Sistem PPID Terpadu (Permohonan, Cek Riwayat, hingga Keberatan) -->
+<!-- Tata Cara Permohonan & Keberatan Layanan Informasi Sistem PPID Terpadu -->
 <section id="alur-layanan" class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-16 sm:pt-24 mb-16 sm:mb-20 relative z-20 scroll-mt-24 sm:scroll-mt-28">
     <!-- Header Section -->
     <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-2.5">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200/80 shadow-2xs">
             <i class="fa-solid fa-arrows-split-up-and-left text-sky-500"></i>
-            <span>Mekanisme Layanan Terpadu</span>
+            <span>Mekanisme Layanan Informasi</span>
         </div>
         <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-            Alur Layanan <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">PPID FMIPA</span>
+            Tata Cara Permohonan & Keberatan <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">Layanan Informasi</span>
         </h2>
         <p class="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
-            Panduan lengkap siklus layanan sistem mulai dari registrasi tiket, pelacakan riwayat real-time, penerimaan dokumen, hingga hak pengajuan keberatan.
+            Panduan lengkap siklus layanan informasi publik PPID FMIPA Unila: pengajuan permohonan, registrasi tiket, jangka waktu respon (SLA), hingga penyampaian keberatan.
         </p>
     </div>
 
@@ -143,12 +143,16 @@
 
     <!-- Tombol Navigasi Cepat Terpadu di Bawah Alur -->
     <div class="flex flex-wrap items-center justify-center gap-4 mt-12 sm:mt-14">
-        <a href="{{ url('/permohonan') }}" class="px-7 py-3.5 bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-700 hover:to-blue-800 text-white text-xs sm:text-sm font-black rounded-2xl transition-all shadow-md shadow-sky-900/20 hover:shadow-xl hover:shadow-sky-900/30 hover:-translate-y-0.5 inline-flex items-center gap-2.5 cursor-pointer">
-            <i class="fa-solid fa-plus-circle text-xs"></i>
+        <a href="{{ url('/tata-cara-permohonan-dan-keberatan') }}" class="px-7 py-3.5 bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-700 hover:to-blue-800 text-white text-xs sm:text-sm font-black rounded-2xl transition-all shadow-md shadow-sky-900/20 hover:shadow-xl hover:shadow-sky-900/30 hover:-translate-y-0.5 inline-flex items-center gap-2.5 cursor-pointer">
+            <i class="fa-solid fa-book-open-reader text-xs"></i>
+            <span>Pelajari Tata Cara & SOP Lengkap</span>
+        </a>
+        <a href="{{ url('/permohonan') }}" class="px-7 py-3.5 bg-white hover:bg-slate-50 text-slate-800 text-xs sm:text-sm font-black rounded-2xl transition-all border border-slate-200/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 inline-flex items-center gap-2.5 cursor-pointer">
+            <i class="fa-solid fa-plus-circle text-xs text-sky-600"></i>
             <span>Ajukan Permohonan Baru</span>
         </a>
         <a href="{{ url('/riwayat-layanan') }}" class="px-7 py-3.5 bg-white hover:bg-slate-50 text-slate-800 text-xs sm:text-sm font-black rounded-2xl transition-all border border-slate-200/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 inline-flex items-center gap-2.5 cursor-pointer">
-            <i class="fa-solid fa-clock-rotate-left text-xs text-sky-600"></i>
+            <i class="fa-solid fa-clock-rotate-left text-xs text-slate-600"></i>
             <span>Cek Riwayat & Tracking Tiket</span>
         </a>
     </div>

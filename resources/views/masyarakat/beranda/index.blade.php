@@ -8,8 +8,8 @@
     <!-- 1. Hero Section Banner: Dekanat FMIPA & Konten Modern -->
     <x-masyarakat.beranda.hero />
 
-    <!-- 3. Alur & Prosedur Permohonan Layanan -->
-    <x-masyarakat.beranda.alur-prosedur />
+    <!-- 2. Profil PPID Pelaksana (Sesuai Web MONEV Unila) -->
+    <x-masyarakat.beranda.profil-ppid :profil="$profil" />
 
     <!-- 4. Statistik Transparansi PPID FMIPA Unila -->
     <x-masyarakat.beranda.statistik-section 

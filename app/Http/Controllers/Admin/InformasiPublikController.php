@@ -72,12 +72,6 @@ class InformasiPublikController extends Controller
                         ->orderBy('retensi_arsip', 'asc')
                         ->pluck('retensi_arsip');
 
-        $listPenanggungJawab = InformasiPublik::whereNotNull('penanggung_jawab_pembuatan_informasi')
-                        ->where('penanggung_jawab_pembuatan_informasi', '!='  , '')
-                        ->distinct()
-                        ->orderBy('penanggung_jawab_pembuatan_informasi', 'asc')
-                        ->pluck('penanggung_jawab_pembuatan_informasi');
-
         // Map: rincian_informasi => [sub_informasi, ...] untuk dropdown dinamis di modal
         $listSubByRincian = InformasiPublik::whereNotNull('sub_informasi')
                         ->where('sub_informasi', '!=', '')
@@ -210,19 +204,13 @@ class InformasiPublikController extends Controller
         $informasi = $query->get();
 
         return view('admin.informasi_publik.index', compact(
-            'informasi', 'listJenis', 'listRincian', 'listRincianBerkala', 'listRincianSetiapSaat', 'listRincianSertaMerta', 'listJudul', 'listTahun', 'listSatker', 'listBentuk', 'listRetensi', 'listPenanggungJawab', 'listSubByRincian', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
+            'informasi', 'listJenis', 'listRincian', 'listRincianBerkala', 'listRincianSetiapSaat', 'listRincianSertaMerta', 'listJudul', 'listTahun', 'listSatker', 'listBentuk', 'listRetensi', 'listSubByRincian', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
             'lastUpdateTotal', 'lastUpdateBerkala', 'lastUpdateSertaMerta', 'lastUpdateSetiapSaat', 'lastUpdateDikecualikan'
         ));
     }
 
     public function __construct()
     {
-        // Pastikan kolom penanggung_jawab_pembuatan_informasi sudah ada di database jika migration belum jalan
-        if (\Illuminate\Support\Facades\Schema::hasTable('informasi_publiks') && !\Illuminate\Support\Facades\Schema::hasColumn('informasi_publiks', 'penanggung_jawab_pembuatan_informasi')) {
-            \Illuminate\Support\Facades\Schema::table('informasi_publiks', function ($table) {
-                $table->string('penanggung_jawab_pembuatan_informasi')->nullable()->after('pejabat_unit_yang_menguasai_informasi');
-            });
-        }
 
         // Pastikan kolom sub_informasi sudah ada di database
         if (\Illuminate\Support\Facades\Schema::hasTable('informasi_publiks')) {
@@ -231,8 +219,6 @@ class InformasiPublikController extends Controller
                     $table->string('sub_informasi')->nullable()->after('rincian_informasi');
                 });
             }
-
-
         }
     }
 
@@ -242,7 +228,6 @@ class InformasiPublikController extends Controller
             'rincian_informasi'                      => 'required|string|max:255',
             'sub_informasi'                          => 'nullable|string|max:255',
             'pejabat_unit_yang_menguasai_informasi'  => 'nullable|string|max:255',
-            'penanggung_jawab_pembuatan_informasi'   => 'nullable|string|max:255',
             'waktu_pembuatan_informasi'              => 'nullable|string|max:255',
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',
@@ -278,10 +263,6 @@ class InformasiPublikController extends Controller
         // Nilai kolom detail: simpan null jika dikosongkan oleh admin
         $validated['pejabat_unit_yang_menguasai_informasi'] = !empty(trim($validated['pejabat_unit_yang_menguasai_informasi'] ?? '')) 
             ? trim($validated['pejabat_unit_yang_menguasai_informasi']) 
-            : null;
-            
-        $validated['penanggung_jawab_pembuatan_informasi'] = !empty(trim($validated['penanggung_jawab_pembuatan_informasi'] ?? '')) 
-            ? trim($validated['penanggung_jawab_pembuatan_informasi']) 
             : null;
 
         $validated['waktu_pembuatan_informasi'] = !empty(trim($validated['waktu_pembuatan_informasi'] ?? '')) 
@@ -362,7 +343,6 @@ class InformasiPublikController extends Controller
             'rincian_informasi'                      => 'required|string|max:255',
             'sub_informasi'                          => 'nullable|string|max:255',
             'pejabat_unit_yang_menguasai_informasi'  => 'nullable|string|max:255',
-            'penanggung_jawab_pembuatan_informasi'   => 'nullable|string|max:255',
             'waktu_pembuatan_informasi'              => 'nullable|string|max:255',
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',
@@ -386,10 +366,6 @@ class InformasiPublikController extends Controller
 
         $validated['pejabat_unit_yang_menguasai_informasi'] = !empty(trim($validated['pejabat_unit_yang_menguasai_informasi'] ?? '')) 
             ? trim($validated['pejabat_unit_yang_menguasai_informasi']) 
-            : null;
-            
-        $validated['penanggung_jawab_pembuatan_informasi'] = !empty(trim($validated['penanggung_jawab_pembuatan_informasi'] ?? '')) 
-            ? trim($validated['penanggung_jawab_pembuatan_informasi']) 
             : null;
 
         $validated['waktu_pembuatan_informasi'] = !empty(trim($validated['waktu_pembuatan_informasi'] ?? '')) 
@@ -464,7 +440,6 @@ class InformasiPublikController extends Controller
             $info->update([
                 'sub_informasi' => 'Dokumen sedang dilengkapi unit',
                 'pejabat_unit_yang_menguasai_informasi' => null,
-                'penanggung_jawab_pembuatan_informasi' => null,
                 'waktu_pembuatan_informasi' => null,
                 'bentuk_informasi_yang_tersedia' => null,
                 'retensi_arsip' => null,

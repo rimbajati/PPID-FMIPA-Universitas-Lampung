@@ -32,21 +32,99 @@ class BerandaController extends Controller
     }
 
     /**
+     * Helper mengambil data Profil PPID Pelaksana
+     */
+    public static function getProfil(): array
+    {
+        $defaultProfil = [
+            'nama'            => 'Aristoeteles',
+            'jabatan'         => 'Kasubag TU / PIC PPID Pelaksana',
+            'foto'            => null,
+            'dasar_penetapan' => 'Dasar penetapan mengikuti SK Rektor Universitas Lampung tentang PPID (lihat Regulasi).',
+            'tugas_fungsi'    => 'Mengelola, menyediakan, dan melayani informasi publik di lingkungan Fakultas Matematika dan Ilmu Pengetahuan Alam; menyusun Daftar Informasi Publik unit; melayani permohonan dan keberatan; serta melaporkan layanan kepada PPID Utama Universitas Lampung.'
+        ];
+
+        if (Storage::disk('local')->exists(self::$filePath)) {
+            $data = json_decode(Storage::disk('local')->get(self::$filePath), true);
+            if (is_array($data) && isset($data['profil']) && is_array($data['profil'])) {
+                return array_merge($defaultProfil, $data['profil']);
+            }
+        }
+
+        return $defaultProfil;
+    }
+
+    /**
+     * Simpan pembaruan data Profil PPID
+     */
+    public function updateProfil(Request $request)
+    {
+        $request->validate([
+            'nama'            => 'required|string|max:150',
+            'jabatan'         => 'required|string|max:200',
+            'foto'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
+            'dasar_penetapan' => 'nullable|string|max:500',
+            'tugas_fungsi'    => 'required|string',
+        ]);
+
+        $profil = self::getProfil();
+        $profil['nama'] = trim($request->input('nama'));
+        $profil['jabatan'] = trim($request->input('jabatan'));
+        $profil['tugas_fungsi'] = trim($request->input('tugas_fungsi'));
+        if ($request->filled('dasar_penetapan')) {
+            $profil['dasar_penetapan'] = trim($request->input('dasar_penetapan'));
+        }
+
+        // Upload Foto baru jika ada
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika tersimpan di disk public
+            if (!empty($profil['foto']) && Storage::disk('public')->exists($profil['foto'])) {
+                Storage::disk('public')->delete($profil['foto']);
+            }
+            $path = $request->file('foto')->store('profil-ppid', 'public');
+            $profil['foto'] = $path;
+        }
+
+        // Hapus foto jika checkbox/permintaan hapus foto dicentang
+        if ($request->boolean('hapus_foto')) {
+            if (!empty($profil['foto']) && Storage::disk('public')->exists($profil['foto'])) {
+                Storage::disk('public')->delete($profil['foto']);
+            }
+            $profil['foto'] = null;
+        }
+
+        // Simpan ke beranda_konten.json
+        $currentData = [];
+        if (Storage::disk('local')->exists(self::$filePath)) {
+            $currentData = json_decode(Storage::disk('local')->get(self::$filePath), true) ?: [];
+        }
+        $currentData['profil'] = $profil;
+        Storage::disk('local')->put(self::$filePath, json_encode($currentData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+        return redirect()->back()->with('success', 'Profil PPID Pelaksana berhasil diperbarui.');
+    }
+
+    /**
      * Helper menyimpan FAQ
      */
     private function saveFaqs(array $faqs): void
     {
-        $data = ['faq' => $faqs];
-        Storage::disk('local')->put(self::$filePath, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        $currentData = [];
+        if (Storage::disk('local')->exists(self::$filePath)) {
+            $currentData = json_decode(Storage::disk('local')->get(self::$filePath), true) ?: [];
+        }
+        $currentData['faq'] = $faqs;
+        Storage::disk('local')->put(self::$filePath, json_encode($currentData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 
     /**
-     * Tampilan Simpel Manajemen Tanya Jawab (FAQ) di Admin
+     * Tampilan Simpel Manajemen Profil PPID & Tanya Jawab (FAQ) di Admin
      */
     public function index()
     {
         return view('admin.beranda.index', [
-            'faqs' => self::getFaqs()
+            'faqs'   => self::getFaqs(),
+            'profil' => self::getProfil()
         ]);
     }
 

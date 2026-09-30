@@ -197,13 +197,12 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th rowspan="2" style="width: 3.5%;">No</th>
-                    <th rowspan="2" style="width: 28.5%;">Ringkasan Isi Informasi</th>
-                    <th rowspan="2" style="width: 16%;">Pejabat/Unit/Satker yang Menguasai Informasi</th>
-                    <th rowspan="2" style="width: 16%;">Penanggungjawab Pembuatan atau Penerbitan Informasi</th>
-                    <th rowspan="2" style="width: 13%;">Waktu dan Tempat Pembuatan Informasi</th>
+                    <th rowspan="2" style="width: 4%;">No</th>
+                    <th rowspan="2" style="width: 35%;">Ringkasan Isi Informasi</th>
+                    <th rowspan="2" style="width: 20%;">Pejabat/Unit/Satker yang Menguasai Informasi</th>
+                    <th rowspan="2" style="width: 16%;">Waktu dan Tempat Pembuatan Informasi</th>
                     <th colspan="2" style="width: 12%;">Bentuk Informasi yang Tersedia</th>
-                    <th rowspan="2" style="width: 11%;">Jangka Waktu Penyimpanan atau Retensi Arsip</th>
+                    <th rowspan="2" style="width: 13%;">Jangka Waktu Penyimpanan atau Retensi Arsip</th>
                 </tr>
                 <tr>
                     <th style="width: 6%; white-space: nowrap; padding: 2mm 1mm;">Cetak</th>
@@ -223,7 +222,7 @@
 
                     <!-- Baris Header Kategori (Spanning Kolom 1 s/d 8) -->
                     <tr>
-                        <td colspan="8" class="category-header-cell">
+                        <td colspan="7" class="category-header-cell">
                             <strong>{{ $judulKelompok }}</strong>
                         </td>
                     </tr>
@@ -250,7 +249,7 @@
                                     style="vertical-align: middle; font-weight: bold; border-right: 1px solid #000000;">
                                     {{ $rincianGroupNo }}
                                 </td>
-                                <td colspan="7" style="vertical-align: middle; padding: 2mm 3mm; font-weight: bold;">
+                                <td colspan="6" style="vertical-align: middle; padding: 2mm 3mm; font-weight: bold;">
                                     {{ $namaRincian }}
                                 </td>
                             </tr>
@@ -264,7 +263,6 @@
                                     $subOnline  = str_contains($subBentuk, 'online') || str_contains($subBentuk, 'softcopy')
                                                   || !empty($sub->file_informasi) || !empty($sub->link_informasi);
                                     $subPejabat = $sub->pejabat_unit_yang_menguasai_informasi ?: '-';
-                                    $subPJ      = $sub->penanggung_jawab_pembuatan_informasi ?: '-';
                                     $subWaktu   = $sub->waktu_pembuatan_informasi ?: '-';
                                     $subRetensi = $sub->retensi_arsip ?: '-';
                                 @endphp
@@ -273,9 +271,8 @@
                                     <td style="vertical-align: middle; padding: 2mm 3mm 2mm 5mm;">
                                         {{ $subText }}
                                     </td>
-                                    {{-- Col 3-8: Data milik sub ini --}}
+                                    {{-- Col 3-7: Data milik sub ini --}}
                                     <td class="text-center" style="vertical-align: middle;">{{ $subPejabat }}</td>
-                                    <td class="text-center" style="vertical-align: middle;">{{ $subPJ }}</td>
                                     <td class="text-center" style="vertical-align: middle;">{{ $subWaktu }}</td>
                                     <td class="text-center" style="vertical-align: middle; font-size: 11pt;">
                                         @if($subCetak) ✔ @endif

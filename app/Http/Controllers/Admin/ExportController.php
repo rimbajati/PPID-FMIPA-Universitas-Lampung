@@ -44,7 +44,6 @@ class ExportController extends Controller
                 $q->whereRaw('LOWER(COALESCE(sub_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(rincian_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"])
-                  ->orWhereRaw('LOWER(COALESCE(penanggung_jawab_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(waktu_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(retensi_arsip, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(bentuk_informasi_yang_tersedia, "")) LIKE ?', ["%{$term}%"]);
@@ -99,13 +98,12 @@ class ExportController extends Controller
             fputcsv($file, ['Tanggal Ekspor: ' . date('d F Y H:i:s')]);
             fputcsv($file, []);
 
-            // Header kolom standar DIP (sesuai format Unpad)
+            // Header kolom standar DIP
             fputcsv($file, [
                 'No',
                 'Ringkasan Isi Informasi',
                 'Jenis Informasi',
                 'Pejabat/Unit/Satker yang Menguasai Informasi',
-                'Penanggung Jawab Pembuatan atau Penerbitan Informasi',
                 'Waktu dan Tempat Pembuatan Informasi',
                 'Bentuk Informasi yang Tersedia',
                 'Jangka Waktu Penyimpanan atau Retensi Arsip',
@@ -123,14 +121,13 @@ class ExportController extends Controller
                 $groupNo++;
                 $first = $subItems->first();
 
-                // Baris rincian — persis seperti DIP Unpad:
+                // Baris rincian:
                 // Nama rincian di kolom Ringkasan, data bersama dari item pertama
                 fputcsv($file, [
                     $groupNo,
                     $namaRincian,
                     $first->jenis_informasi ?: '-',
                     $first->pejabat_unit_yang_menguasai_informasi ?: '-',
-                    $first->penanggung_jawab_pembuatan_informasi ?: '-',
                     $first->waktu_pembuatan_informasi ?: '-',
                     $first->bentuk_informasi_yang_tersedia ?: '-',
                     $first->retensi_arsip ?: '-',
@@ -143,7 +140,6 @@ class ExportController extends Controller
                     $bentuk   = $item->bentuk_informasi_yang_tersedia ?: '-';
                     $link     = $item->file_informasi ? url('/informasi/lihat/' . $item->id) : ($item->link_informasi ?: '-');
                     $pejabat  = $item->pejabat_unit_yang_menguasai_informasi ?: '-';
-                    $pj       = $item->penanggung_jawab_pembuatan_informasi ?: '-';
                     $waktu    = $item->waktu_pembuatan_informasi ?: '-';
                     $retensi  = $item->retensi_arsip ?: '-';
 
@@ -152,7 +148,6 @@ class ExportController extends Controller
                         '    ' . $subText,
                         $item->jenis_informasi ?: '-',
                         $pejabat,
-                        $pj,
                         $waktu,
                         $bentuk,
                         $retensi,
@@ -205,7 +200,6 @@ class ExportController extends Controller
                 $q->whereRaw('LOWER(COALESCE(sub_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(rincian_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"])
-                  ->orWhereRaw('LOWER(COALESCE(penanggung_jawab_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(waktu_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(retensi_arsip, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(bentuk_informasi_yang_tersedia, "")) LIKE ?', ["%{$term}%"]);

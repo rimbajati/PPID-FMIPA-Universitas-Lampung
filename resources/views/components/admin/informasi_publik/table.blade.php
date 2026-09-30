@@ -44,7 +44,6 @@
                              data-sub_informasi="{{ strtolower($item->sub_informasi ?? '') }}"
                              data-ringkasan="{{ strtolower($item->sub_informasi ?? '') }}"
                              data-pejabat="{{ strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '') }}"
-                             data-penanggung_jawab="{{ strtolower($item->penanggung_jawab_pembuatan_informasi ?? '') }}"
                              data-waktu="{{ strtolower($tglPembuatan) }}"
                              data-retensi="{{ strtolower($item->retensi_arsip ?? '') }}"
                              data-bentuk="{{ strtolower($item->bentuk_informasi_yang_tersedia ?? '') }}">
@@ -171,17 +170,9 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('pejabat')" class="px-2 py-3 w-[14%] break-normal cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit/Satker">
+                                <th onclick="sortAdminDipTable('pejabat')" class="px-2 py-3 w-[18%] break-normal cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit/Satker">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Pejabat/Unit/Satker yang Menguasai Informasi</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
-                                        </span>
-                                    </div>
-                                </th>
-                                <th onclick="sortAdminDipTable('penanggung_jawab')" class="px-1.5 py-3 w-[14%] [overflow-wrap:anywhere] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <span>Penanggung Jawab Pembuatan atau Penerbitan Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
                                             <i class="fa-solid fa-sort"></i>
                                         </span>
@@ -242,7 +233,6 @@
                                 data-ringkasan="{{ strtolower($item->sub_informasi ?? '') }}"
                                 data-jenis="{{ strtolower($item->jenis_informasi ?? '') }}"
                                 data-pejabat="{{ strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '') }}"
-                                data-penanggung_jawab="{{ strtolower($item->penanggung_jawab_pembuatan_informasi ?? '') }}"
                                 data-waktu="{{ strtolower($item->waktu_pembuatan_informasi ?? '') }}"
                                 data-retensi="{{ strtolower($item->retensi_arsip ?? '') }}"
                                 data-bentuk="{{ strtolower($item->bentuk_informasi_yang_tersedia ?? '') }}">
@@ -364,10 +354,6 @@
                                          {{ $item->pejabat_unit_yang_menguasai_informasi ?: '-' }}
                                      </td>
 
-                                     <!-- 4. Penanggung Jawab Pembuatan Informasi -->
-                                     <td class="px-3 py-3 font-medium text-slate-700 text-center break-words text-xs sm:text-sm leading-normal">
-                                         {{ $item->penanggung_jawab_pembuatan_informasi ?: '-' }}
-                                     </td>
 
                                      <!-- 5. Waktu dan Tempat Pembuatan Informasi -->
                                      <td class="px-3 py-3 text-center font-medium text-slate-700 break-words text-xs sm:text-sm leading-normal">

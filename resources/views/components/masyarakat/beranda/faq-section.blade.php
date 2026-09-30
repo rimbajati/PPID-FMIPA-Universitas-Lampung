@@ -3,10 +3,10 @@
 <!-- Tanya Jawab Seputar PPID Section (FAQ Accordion) -->
 <section class="max-w-4xl mx-auto px-6 md:px-12 mb-20" x-data="{ activeAccordion: null }">
     <div class="text-center max-w-2xl mx-auto mb-12 space-y-3">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 text-sky-700 text-xs font-extrabold border border-sky-100">
+        <!-- <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 text-sky-700 text-xs font-extrabold border border-sky-100">
             <i class="fa-solid fa-circle-question"></i>
             <span>FAQ PPID</span>
-        </div>
+        </div> -->
         <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Pertanyaan yang Sering Diajukan</h2>
         <p class="text-sm sm:text-base text-slate-600 font-medium">Informasi penting terkait tata kelola dan pengajuan permohonan informasi publik.</p>
     </div>

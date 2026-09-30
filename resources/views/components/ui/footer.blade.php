@@ -34,6 +34,12 @@
                 </h4>
                 <ul class="space-y-3 text-xs">
                     <li>
+                        <a href="{{ route('tata-cara') }}" class="block hover:text-sky-600 transition-colors">
+                            <span class="font-semibold text-slate-800 block">Tata Cara Layanan</span>
+                            <span class="text-[10px] text-slate-400 block font-normal">Permohonan & Keberatan</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('layanan.permohonan') }}" class="block hover:text-sky-600 transition-colors">
                             <span class="font-semibold text-slate-800 block">Permohonan Informasi</span>
                             <span class="text-[10px] text-slate-400 block font-normal">Formulir Pengajuan Online</span>
@@ -51,32 +57,29 @@
                             <span class="text-[10px] text-slate-400 block font-normal">Status Tiket Real-Time</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('layanan') }}" class="block hover:text-sky-600 transition-colors">
-                            <span class="font-semibold text-slate-800 block">Hub Layanan</span>
-                            <span class="text-[10px] text-slate-400 block font-normal">Katalog Layanan PPID</span>
-                        </a>
-                    </li>
                 </ul>
             </div>
 
             <!-- KOLOM 3: INFORMASI PUBLIK (2 Columns) -->
             <div class="lg:col-span-2 space-y-3">
                 <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest">
-                    Informasi Publik
+                    Informasi & Regulasi
                 </h4>
                 <ul class="space-y-2.5 text-xs font-medium text-slate-600">
+                    <li>
+                        <a href="{{ url('/#profil-ppid') }}" class="hover:text-sky-600 transition-colors">Profil PPID Pelaksana</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('regulasi') }}" class="hover:text-sky-600 transition-colors">Regulasi KIP</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('informasi.publik') }}" class="hover:text-sky-600 transition-colors">Daftar Informasi Publik (DIP)</a>
+                    </li>
                     <li>
                         <a href="{{ route('informasi.publik', ['kategori' => 'Berkala']) }}" class="hover:text-sky-600 transition-colors">Informasi Berkala</a>
                     </li>
                     <li>
-                        <a href="{{ route('informasi.publik', ['kategori' => 'Serta-Merta']) }}" class="hover:text-sky-600 transition-colors">Informasi Serta-Merta</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('informasi.publik', ['kategori' => 'Setiap Saat']) }}" class="hover:text-sky-600 transition-colors">Informasi Setiap Saat</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('informasi.publik') }}" class="hover:text-sky-600 transition-colors">Daftar Informasi Publik</a>
+                        <a href="{{ route('informasi.dikecualikan') }}" class="hover:text-sky-600 transition-colors">Informasi Dikecualikan</a>
                     </li>
                 </ul>
             </div>
