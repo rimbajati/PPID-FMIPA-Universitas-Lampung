@@ -1,4 +1,16 @@
-@props(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => []])
+<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
+<?php foreach($attributes->onlyProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => []]) as $__key => $__value) {
+    $$__key = $$__key ?? $__value;
+} ?>
+<?php $attributes = $attributes->exceptProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => []]); ?>
+<?php foreach (array_filter((['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => []]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+    $$__key = $$__key ?? $__value;
+} ?>
+<?php $__defined_vars = get_defined_vars(); ?>
+<?php foreach ($attributes as $__key => $__value) {
+    if (array_key_exists($__key, $__defined_vars)) unset($$__key);
+} ?>
+<?php unset($__defined_vars); ?>
 
 <!-- Table Container Informasi Publik (Masyarakat / Publik) -->
 <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
@@ -6,211 +18,217 @@
     <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
         <table class="w-full min-w-[960px] table-auto text-left border-collapse border border-slate-300">
             <thead>
-                @php
+                <?php
                     $curSortBy = request('sort_by');
                     $curSortDir = request('sort_direction', 'asc');
-                @endphp
+                ?>
                 <tr class="bg-sky-500 text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-sky-600 text-center leading-snug select-none">
                     <th onclick="sortDipTable('no')" class="px-2 py-3 text-center w-12 min-w-[48px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
                         <div class="flex items-center justify-center gap-1.5">
                             <span>No</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'no' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
-                                @if($curSortBy === 'no')
-                                    <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
-                                @else
+                            <span class="inline-flex items-center justify-center text-xs md:text-sm <?php echo e($curSortBy === 'no' ? 'text-white' : 'text-white/70 group-hover:text-white'); ?> transition">
+                                <?php if($curSortBy === 'no'): ?>
+                                    <i class="fa-solid <?php echo e($curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'); ?>"></i>
+                                <?php else: ?>
                                     <i class="fa-solid fa-sort"></i>
-                                @endif
+                                <?php endif; ?>
                             </span>
                         </div>
                     </th>
                     <th onclick="sortDipTable('ringkasan')" class="px-3 py-3 text-center min-w-[220px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
                         <div class="flex items-center justify-center gap-1.5">
                             <span>Ringkasan Isi Informasi</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'ringkasan' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
-                                @if($curSortBy === 'ringkasan')
-                                    <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
-                                @else
+                            <span class="inline-flex items-center justify-center text-xs md:text-sm <?php echo e($curSortBy === 'ringkasan' ? 'text-white' : 'text-white/70 group-hover:text-white'); ?> transition">
+                                <?php if($curSortBy === 'ringkasan'): ?>
+                                    <i class="fa-solid <?php echo e($curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'); ?>"></i>
+                                <?php else: ?>
                                     <i class="fa-solid fa-sort"></i>
-                                @endif
+                                <?php endif; ?>
                             </span>
                         </div>
                     </th>
                     <th onclick="sortDipTable('jenis')" class="px-2 py-3 text-center min-w-[130px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jenis Informasi">
                         <div class="flex items-center justify-center gap-1.5">
                             <span>Jenis Informasi</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'jenis' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
-                                @if($curSortBy === 'jenis')
-                                    <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
-                                @else
+                            <span class="inline-flex items-center justify-center text-xs md:text-sm <?php echo e($curSortBy === 'jenis' ? 'text-white' : 'text-white/70 group-hover:text-white'); ?> transition">
+                                <?php if($curSortBy === 'jenis'): ?>
+                                    <i class="fa-solid <?php echo e($curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'); ?>"></i>
+                                <?php else: ?>
                                     <i class="fa-solid fa-sort"></i>
-                                @endif
+                                <?php endif; ?>
                             </span>
                         </div>
                     </th>
                     <th onclick="sortDipTable('pejabat')" class="px-3 py-3 text-center min-w-[180px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit/Satker">
                         <div class="flex items-center justify-center gap-1.5">
                             <span>Pejabat/Unit/Satker yang Menguasai Informasi</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'pejabat' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
-                                @if($curSortBy === 'pejabat')
-                                    <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
-                                @else
+                            <span class="inline-flex items-center justify-center text-xs md:text-sm <?php echo e($curSortBy === 'pejabat' ? 'text-white' : 'text-white/70 group-hover:text-white'); ?> transition">
+                                <?php if($curSortBy === 'pejabat'): ?>
+                                    <i class="fa-solid <?php echo e($curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'); ?>"></i>
+                                <?php else: ?>
                                     <i class="fa-solid fa-sort"></i>
-                                @endif
+                                <?php endif; ?>
                             </span>
                         </div>
                     </th>
                     <th onclick="sortDipTable('waktu')" class="px-2 py-3 text-center min-w-[150px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat">
                         <div class="flex items-center justify-center gap-1.5">
                             <span>Waktu dan Tempat Pembuatan Informasi</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'waktu' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
-                                @if($curSortBy === 'waktu')
-                                    <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
-                                @else
+                            <span class="inline-flex items-center justify-center text-xs md:text-sm <?php echo e($curSortBy === 'waktu' ? 'text-white' : 'text-white/70 group-hover:text-white'); ?> transition">
+                                <?php if($curSortBy === 'waktu'): ?>
+                                    <i class="fa-solid <?php echo e($curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'); ?>"></i>
+                                <?php else: ?>
                                     <i class="fa-solid fa-sort"></i>
-                                @endif
+                                <?php endif; ?>
                             </span>
                         </div>
                     </th>
                     <th onclick="sortDipTable('retensi')" class="px-3 py-3 text-center min-w-[170px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Retensi Arsip">
                         <div class="flex items-center justify-center gap-1.5">
                             <span>Jangka Waktu Penyimpanan atau Retensi Arsip</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'retensi' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
-                                @if($curSortBy === 'retensi')
-                                    <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
-                                @else
+                            <span class="inline-flex items-center justify-center text-xs md:text-sm <?php echo e($curSortBy === 'retensi' ? 'text-white' : 'text-white/70 group-hover:text-white'); ?> transition">
+                                <?php if($curSortBy === 'retensi'): ?>
+                                    <i class="fa-solid <?php echo e($curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'); ?>"></i>
+                                <?php else: ?>
                                     <i class="fa-solid fa-sort"></i>
-                                @endif
+                                <?php endif; ?>
                             </span>
                         </div>
                     </th>
                     <th onclick="sortDipTable('bentuk')" class="px-2 py-3 text-center min-w-[130px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Bentuk Informasi">
                         <div class="flex items-center justify-center gap-1.5">
                             <span>Bentuk Informasi yang Tersedia</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'bentuk' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
-                                @if($curSortBy === 'bentuk')
-                                    <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
-                                @else
+                            <span class="inline-flex items-center justify-center text-xs md:text-sm <?php echo e($curSortBy === 'bentuk' ? 'text-white' : 'text-white/70 group-hover:text-white'); ?> transition">
+                                <?php if($curSortBy === 'bentuk'): ?>
+                                    <i class="fa-solid <?php echo e($curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'); ?>"></i>
+                                <?php else: ?>
                                     <i class="fa-solid fa-sort"></i>
-                                @endif
+                                <?php endif; ?>
                             </span>
                         </div>
                     </th>
                     <th onclick="sortDipTable('dilihat')" class="px-2 py-3 text-center w-20 min-w-[80px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan berdasarkan Sering Dilihat">
                         <div class="flex items-center justify-center gap-1.5">
                             <span>Akses</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm {{ $curSortBy === 'dilihat' ? 'text-white' : 'text-white/70 group-hover:text-white' }} transition">
-                                @if($curSortBy === 'dilihat')
-                                    <i class="fa-solid {{ $curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up' }}"></i>
-                                @else
+                            <span class="inline-flex items-center justify-center text-xs md:text-sm <?php echo e($curSortBy === 'dilihat' ? 'text-white' : 'text-white/70 group-hover:text-white'); ?> transition">
+                                <?php if($curSortBy === 'dilihat'): ?>
+                                    <i class="fa-solid <?php echo e($curSortDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'); ?>"></i>
+                                <?php else: ?>
                                     <i class="fa-solid fa-sort"></i>
-                                @endif
+                                <?php endif; ?>
                             </span>
                         </div>
                     </th>
                 </tr>
             </thead>
             <tbody id="table-dip-body" class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
-                @forelse($informasi as $idx => $item)
+                <?php $__empty_1 = true; $__currentLoopData = $informasi; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr class="table-dip-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-200"
-                        data-id="{{ $item->id }}"
-                        data-no="{{ $idx + 1 }}"
-                        data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
-                        data-ringkasan="{{ strtolower($item->sub_informasi ?? '') }}"
-                        data-jenis="{{ strtolower($item->jenis_informasi ?? '') }}"
-                        data-pejabat="{{ strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '') }}"
-                        data-waktu="{{ strtolower($item->waktu_pembuatan_informasi ?? '') }}"
-                        data-retensi="{{ strtolower($item->retensi_arsip ?? '') }}"
-                        data-bentuk="{{ strtolower($item->bentuk_informasi_yang_tersedia ?? '') }}">
+                        data-id="<?php echo e($item->id); ?>"
+                        data-no="<?php echo e($idx + 1); ?>"
+                        data-dilihat="<?php echo e((int)($item->dilihat ?? 0)); ?>"
+                        data-ringkasan="<?php echo e(strtolower($item->sub_informasi ?? '')); ?>"
+                        data-jenis="<?php echo e(strtolower($item->jenis_informasi ?? '')); ?>"
+                        data-pejabat="<?php echo e(strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '')); ?>"
+                        data-waktu="<?php echo e(strtolower($item->waktu_pembuatan_informasi ?? '')); ?>"
+                        data-retensi="<?php echo e(strtolower($item->retensi_arsip ?? '')); ?>"
+                        data-bentuk="<?php echo e(strtolower($item->bentuk_informasi_yang_tersedia ?? '')); ?>">
                         <!-- 0. Kolom No -->
                         <td class="col-dip-no px-2 py-3 text-center font-bold text-slate-400">
-                            {{ $idx + 1 }}
+                            <?php echo e($idx + 1); ?>
+
                         </td>
 
                         <!-- 1. Ringkasan Isi Informasi (Sub Informasi & Rincian Informasi) -->
                         <td class="px-3.5 py-3 text-slate-900 leading-normal break-words text-xs sm:text-sm">
-                            @php
+                            <?php
                                 $rincianVal = trim($item->rincian_informasi ?: '');
                                 $subVal = trim($item->sub_informasi ?: '');
-                            @endphp
+                            ?>
                             <div class="space-y-1">
-                                @if($subVal && $subVal !== 'Dokumen sedang dilengkapi unit')
-                                    <div class="font-black text-slate-900 leading-snug">{{ $subVal }}</div>
-                                    @if($rincianVal && strcasecmp($rincianVal, $subVal) !== 0)
+                                <?php if($subVal && $subVal !== 'Dokumen sedang dilengkapi unit'): ?>
+                                    <div class="font-black text-slate-900 leading-snug"><?php echo e($subVal); ?></div>
+                                    <?php if($rincianVal && strcasecmp($rincianVal, $subVal) !== 0): ?>
                                         <div class="text-[11px] text-slate-500 font-semibold flex items-center gap-1">
-                                            <span class="px-1.5 py-0.5 bg-slate-100 rounded text-slate-600 border border-slate-200/80">{{ $rincianVal }}</span>
+                                            <span class="px-1.5 py-0.5 bg-slate-100 rounded text-slate-600 border border-slate-200/80"><?php echo e($rincianVal); ?></span>
                                         </div>
-                                    @endif
-                                @else
-                                    <div class="font-black text-slate-900 leading-snug">{{ $rincianVal ?: '-' }}</div>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <div class="font-black text-slate-900 leading-snug"><?php echo e($rincianVal ?: '-'); ?></div>
                                     <div class="text-[11px] text-amber-600 font-semibold italic flex items-center gap-1">
                                         <i class="fa-regular fa-clock text-[10px]"></i>
                                         <span>Dokumen sedang dilengkapi unit</span>
                                     </div>
-                                @endif
+                                <?php endif; ?>
 
-                                @if($item->dilihat)
+                                <?php if($item->dilihat): ?>
                                     <div class="text-[11px] text-slate-400 font-semibold flex items-center gap-1.5 pt-0.5">
                                         <i class="fa-regular fa-eye text-[10px]"></i>
-                                        <span>{{ number_format($item->dilihat) }} dilihat</span>
+                                        <span><?php echo e(number_format($item->dilihat)); ?> dilihat</span>
                                     </div>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </td>
 
                         <!-- 2. Jenis Informasi (Berkala / Serta Merta / Setiap Saat) -->
                         <td class="px-2.5 py-3 font-medium text-slate-700 text-center break-words text-xs sm:text-sm leading-normal">
-                            @php
+                            <?php
                                 $cleanJenis = preg_replace('/^informasi\s+/i', '', trim($item->jenis_informasi ?? ''));
-                            @endphp
-                            {{ $cleanJenis ?: ($item->jenis_informasi ?: '-') }}
+                            ?>
+                            <?php echo e($cleanJenis ?: ($item->jenis_informasi ?: '-')); ?>
+
                         </td>
 
                         <!-- 3. Pejabat/Unit/Satker Yang Menguasai Informasi -->
                         <td class="px-3 py-3 font-medium text-slate-700 text-center break-words text-xs sm:text-sm leading-normal">
-                            {{ $item->pejabat_unit_yang_menguasai_informasi ?: '-' }}
+                            <?php echo e($item->pejabat_unit_yang_menguasai_informasi ?: '-'); ?>
+
                         </td>
 
                         <!-- 4. Waktu dan Tempat Pembuatan Informasi -->
                         <td class="px-3 py-3 text-center font-medium text-slate-700 break-words text-xs sm:text-sm leading-normal">
-                            {{ $item->waktu_pembuatan_informasi ?: '-' }}
+                            <?php echo e($item->waktu_pembuatan_informasi ?: '-'); ?>
+
                         </td>
 
                         <!-- 6. Jangka Waktu Penyimpanan atau Retensi Arsip -->
                         <td class="px-3 py-3 text-center font-medium text-slate-700 break-words text-xs sm:text-sm leading-normal">
-                            {{ $item->retensi_arsip ?: '-' }}
+                            <?php echo e($item->retensi_arsip ?: '-'); ?>
+
                         </td>
 
                         <!-- 7. Bentuk/Format Informasi yang Tersedia -->
                         <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words text-xs sm:text-sm leading-normal">
-                            {{ $item->bentuk_informasi_yang_tersedia ?: '-' }}
+                            <?php echo e($item->bentuk_informasi_yang_tersedia ?: '-'); ?>
+
                         </td>
 
                         <!-- 9. Akses (Hanya untuk Melihat Dokumen/Tautan) -->
                         <td class="px-2 py-3 text-center align-middle">
                             <div class="flex items-center justify-center">
-                                @php
+                                <?php
                                     $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
                                     $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->sub_informasi) . ($ext ? '.' . $ext : '.pdf'));
                                     $fileTargetUrl = ($item->link_informasi && !$item->file_informasi) 
                                         ? $item->link_informasi 
                                         : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName)) : null);
-                                @endphp
-                                @if($item->bentuk_informasi_yang_tersedia === 'Cetak' && !$item->file_informasi && !$item->link_informasi)
+                                ?>
+                                <?php if($item->bentuk_informasi_yang_tersedia === 'Cetak' && !$item->file_informasi && !$item->link_informasi): ?>
                                     <span class="text-slate-400 font-bold text-xs">-</span>
-                                @elseif($fileTargetUrl && $fileTargetUrl !== '#')
-                                    <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" 
+                                <?php elseif($fileTargetUrl && $fileTargetUrl !== '#'): ?>
+                                    <a href="<?php echo e($fileTargetUrl); ?>" target="_blank" title="Lihat Tautan / Berkas" 
                                        class="inline-flex items-center justify-center px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold rounded-lg transition shadow-2xs">
                                         Lihat
                                     </a>
-                                @else
+                                <?php else: ?>
                                     <span class="text-slate-400 font-bold text-xs">-</span>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr><td colspan="8" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik yang sesuai.</td></tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -225,3 +243,4 @@
         </div>
     </div>
 </div>
+<?php /**PATH D:\laragon\www\ppid-fmipa-baru\resources\views/components/masyarakat/informasi_publik/table.blade.php ENDPATH**/ ?>

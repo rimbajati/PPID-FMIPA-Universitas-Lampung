@@ -1,5 +1,5 @@
 <!-- Sidebar Container Navigasi Admin -->
-<aside id="sidebar" class="w-[17rem] bg-white border-r border-slate-200/80 text-slate-700 flex flex-col justify-between flex-shrink-0 h-full fixed inset-y-0 left-0 z-20 transform -translate-x-full lg:translate-x-0 lg:static transition-all duration-300 ease-in-out shadow-xs select-none">
+<aside id="sidebar" class="w-[17rem] bg-white border-r border-slate-200/80 text-slate-700 flex flex-col justify-between flex-shrink-0 h-full fixed inset-y-0 left-0 z-30 transform -translate-x-full lg:translate-x-0 lg:static transition-all duration-300 ease-in-out shadow-xs select-none">
 
     @php
         $sidebarPendingPermohonan = \App\Models\Permohonan::whereIn('status', ['Diajukan', 'Diproses', 'Proses', 'Perlu Tindakan', 'Perlu Hasil Akhir'])->count();

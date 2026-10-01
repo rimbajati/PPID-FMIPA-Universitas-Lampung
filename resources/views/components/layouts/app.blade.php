@@ -60,6 +60,26 @@
             font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; 
             font-size: 1rem; 
         }
+        /* Mencegah pemotongan suku kata di tengah kata (seperti: penyimpa - nan) */
+        th, td, p, span, h1, h2, h3, h4, h5, h6, a, div {
+            word-break: normal !important;
+            overflow-wrap: break-word;
+            hyphens: none !important;
+            -webkit-hyphens: none !important;
+        }
+
+        /* Aturan Sudut Siku 90 Derajat (Sharp / Minimal Radius) untuk Semua Tabel & Statistik */
+        table, table th, table td, table tr,
+        .overflow-x-auto,
+        [class*="table-container"],
+        #statistik-layanan,
+        #statistik-layanan * {
+            border-radius: 0px !important;
+        }
+        /* Kontainer pembungkus tabel dibuat siku tajam */
+        div:has(> .overflow-x-auto), div:has(> table) {
+            border-radius: 0px !important;
+        }
     </style>
 </head>
 

@@ -113,9 +113,9 @@
                 </div>
             </div>
         @else
-            <!-- Tabel Daftar Informasi Publik Clean Modern (Fit Screen, Never Horizontal Scroll) -->
-            <div>
-                <table class="w-full table-fixed text-left border-collapse border border-slate-200">
+            <!-- Tabel Daftar Informasi Publik — horizontal scroll on mobile -->
+            <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
+                <table class="w-full min-w-[900px] table-auto text-left border-collapse border border-slate-200">
                     <thead>
                         @if($isKategoriMode)
                             {{-- Header Khusus Kategori Berkala & Setiap Saat: Hanya Rincian Informasi & Sub Informasi --}}
@@ -146,7 +146,7 @@
                                 <th id="col-checkbox-header" class="hidden px-1 py-3 w-10 text-center">
                                     <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                                 </th>
-                                <th onclick="sortAdminDipTable('no')" class="px-1 py-3 text-center w-12 shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
+                                <th onclick="sortAdminDipTable('no')" class="px-2 py-3 text-center w-12 min-w-[48px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>No</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -154,7 +154,7 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('ringkasan')" class="px-2 py-3 text-center w-[20%] [overflow-wrap:anywhere] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
+                                <th onclick="sortAdminDipTable('ringkasan')" class="px-3 py-3 text-center min-w-[220px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Ringkasan Isi Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -162,7 +162,7 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('jenis')" class="px-1.5 py-3 w-[11%] [overflow-wrap:anywhere] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jenis Informasi">
+                                <th onclick="sortAdminDipTable('jenis')" class="px-2 py-3 text-center min-w-[130px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jenis Informasi">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Jenis Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -170,7 +170,7 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('pejabat')" class="px-2 py-3 w-[18%] break-normal cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit/Satker">
+                                <th onclick="sortAdminDipTable('pejabat')" class="px-3 py-3 text-center min-w-[180px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit/Satker">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Pejabat/Unit/Satker yang Menguasai Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -178,7 +178,7 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('waktu')" class="px-1.5 py-3 w-[12%] [overflow-wrap:anywhere] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat">
+                                <th onclick="sortAdminDipTable('waktu')" class="px-2 py-3 text-center min-w-[150px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Waktu dan Tempat Pembuatan Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -186,7 +186,7 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('retensi')" class="px-1.5 py-3 w-[11%] [overflow-wrap:anywhere] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Retensi Arsip">
+                                <th onclick="sortAdminDipTable('retensi')" class="px-3 py-3 text-center min-w-[170px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Retensi Arsip">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Jangka Waktu Penyimpanan atau Retensi Arsip</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -194,7 +194,7 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('bentuk')" class="px-1.5 py-3 w-[10.5%] [overflow-wrap:anywhere] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Bentuk Informasi">
+                                <th onclick="sortAdminDipTable('bentuk')" class="px-2 py-3 text-center min-w-[130px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Bentuk Informasi">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Bentuk Informasi yang Tersedia</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -202,7 +202,7 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('dilihat')" class="px-1 py-3 w-[8%] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sering Dilihat">
+                                <th onclick="sortAdminDipTable('dilihat')" class="px-2 py-3 text-center w-24 min-w-[90px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sering Dilihat">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Aksi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">

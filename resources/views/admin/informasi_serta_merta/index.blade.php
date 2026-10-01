@@ -94,8 +94,8 @@
             @csrf
             @method('DELETE')
 
-            <div>
-                <table class="w-full table-fixed text-left border-collapse border border-slate-200">
+            <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
+                <table class="w-full min-w-[750px] table-auto text-left border-collapse border border-slate-200">
                     <thead>
                         <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide divide-x divide-white/20 select-none">
                             <th id="col-checkbox-header" class="hidden px-2 py-3.5 w-12 text-center">

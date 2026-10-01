@@ -1,4 +1,5 @@
-@props([
+<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
+<?php foreach($attributes->onlyProps([
     'totalDokumen' => 0,
     'totalPermohonan' => 0,
     'totalPermohonanSelesai' => 0,
@@ -22,7 +23,66 @@
         'keberatan' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ],
     'chartBulananPerTahun' => []
-])
+]) as $__key => $__value) {
+    $$__key = $$__key ?? $__value;
+} ?>
+<?php $attributes = $attributes->exceptProps([
+    'totalDokumen' => 0,
+    'totalPermohonan' => 0,
+    'totalPermohonanSelesai' => 0,
+    'totalPermohonanDitolak' => 0,
+    'totalKeberatan' => 0,
+    'totalDilihat' => 0,
+    'rataRataWaktuTeks' => '1 Hari',
+    'chartTahunan' => [
+        'years' => [2022, 2023, 2024, 2025, 2026],
+        'permintaan' => [0, 0, 0, 0, 0],
+        'disetujui' => [0, 0, 0, 0, 0],
+        'ditolak' => [0, 0, 0, 0, 0],
+        'keberatan' => [0, 0, 0, 0, 0],
+    ],
+    'chartBulanan' => [
+        'months' => ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+        'year' => 2026,
+        'permintaan' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        'disetujui' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        'ditolak' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        'keberatan' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ],
+    'chartBulananPerTahun' => []
+]); ?>
+<?php foreach (array_filter(([
+    'totalDokumen' => 0,
+    'totalPermohonan' => 0,
+    'totalPermohonanSelesai' => 0,
+    'totalPermohonanDitolak' => 0,
+    'totalKeberatan' => 0,
+    'totalDilihat' => 0,
+    'rataRataWaktuTeks' => '1 Hari',
+    'chartTahunan' => [
+        'years' => [2022, 2023, 2024, 2025, 2026],
+        'permintaan' => [0, 0, 0, 0, 0],
+        'disetujui' => [0, 0, 0, 0, 0],
+        'ditolak' => [0, 0, 0, 0, 0],
+        'keberatan' => [0, 0, 0, 0, 0],
+    ],
+    'chartBulanan' => [
+        'months' => ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+        'year' => 2026,
+        'permintaan' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        'disetujui' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        'ditolak' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        'keberatan' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ],
+    'chartBulananPerTahun' => []
+]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+    $$__key = $$__key ?? $__value;
+} ?>
+<?php $__defined_vars = get_defined_vars(); ?>
+<?php foreach ($attributes as $__key => $__value) {
+    if (array_key_exists($__key, $__defined_vars)) unset($$__key);
+} ?>
+<?php unset($__defined_vars); ?>
 
 <!-- Seksi Laporan & Statistik Keterbukaan Informasi (Desain Kustom Tema PPID FMIPA Unila) -->
 <section id="statistik-layanan" class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 mb-20 relative z-20 scroll-mt-24 sm:scroll-mt-28">
@@ -59,7 +119,8 @@
                     <div>
                         <span class="text-[11px] font-bold text-slate-500 block truncate">Total Layanan</span>
                         <span class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5 block">
-                            {{ $totalPermohonan + $totalKeberatan }}
+                            <?php echo e($totalPermohonan + $totalKeberatan); ?>
+
                         </span>
                     </div>
                     <span class="text-[10px] sm:text-[11px] text-slate-700 font-semibold mt-1 flex items-center gap-1.5 truncate">
@@ -72,7 +133,8 @@
                     <div>
                         <span class="text-[11px] font-bold text-slate-500 block truncate">Total Permohonan</span>
                         <span class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5 block">
-                            {{ $totalPermohonan }}
+                            <?php echo e($totalPermohonan); ?>
+
                         </span>
                     </div>
                     <span class="text-[10px] sm:text-[11px] text-slate-700 font-semibold mt-1 flex items-center gap-1.5 truncate">
@@ -85,7 +147,8 @@
                     <div>
                         <span class="text-[11px] font-bold text-slate-500 block truncate">Permohonan Selesai</span>
                         <span class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5 block">
-                            {{ $totalPermohonanSelesai }}
+                            <?php echo e($totalPermohonanSelesai); ?>
+
                         </span>
                     </div>
                     <span class="text-[10px] sm:text-[11px] text-slate-700 font-semibold mt-1 flex items-center gap-1.5 truncate">
@@ -98,7 +161,8 @@
                     <div>
                         <span class="text-[11px] font-bold text-slate-500 block truncate">Permohonan Ditolak</span>
                         <span class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5 block">
-                            {{ $totalPermohonanDitolak }}
+                            <?php echo e($totalPermohonanDitolak); ?>
+
                         </span>
                     </div>
                     <span class="text-[10px] sm:text-[11px] text-slate-700 font-semibold mt-1 flex items-center gap-1.5 truncate">
@@ -111,7 +175,8 @@
                     <div>
                         <span class="text-[11px] font-bold text-slate-500 block truncate">Total Keberatan</span>
                         <span class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5 block">
-                            {{ $totalKeberatan }}
+                            <?php echo e($totalKeberatan); ?>
+
                         </span>
                     </div>
                     <span class="text-[10px] sm:text-[11px] text-slate-700 font-semibold mt-1 flex items-center gap-1.5 truncate">
@@ -124,7 +189,8 @@
                     <div>
                         <span class="text-[11px] font-bold text-slate-500 block truncate">Waktu Respon</span>
                         <span class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5 block">
-                            {{ $rataRataWaktuTeks ?? '1 Hari' }}
+                            <?php echo e($rataRataWaktuTeks ?? '1 Hari'); ?>
+
                         </span>
                     </div>
                     <span class="text-[10px] sm:text-[11px] text-slate-700 font-semibold mt-1 flex items-center gap-1.5 truncate">
@@ -199,17 +265,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dataset Tahunan
     const dataTahunan = {
         title: 'Tren Tahunan Layanan',
-        badge: '{{ $chartTahunan['years'][0] ?? 2022 }} - {{ end($chartTahunan['years']) ?: 2026 }}',
-        labels: @json($chartTahunan['years']),
-        permintaan: @json($chartTahunan['permintaan']),
-        disetujui: @json($chartTahunan['disetujui']),
-        ditolak: @json($chartTahunan['ditolak']),
-        keberatan: @json($chartTahunan['keberatan']),
+        badge: '<?php echo e($chartTahunan['years'][0] ?? 2022); ?> - <?php echo e(end($chartTahunan['years']) ?: 2026); ?>',
+        labels: <?php echo json_encode($chartTahunan['years'], 15, 512) ?>,
+        permintaan: <?php echo json_encode($chartTahunan['permintaan'], 15, 512) ?>,
+        disetujui: <?php echo json_encode($chartTahunan['disetujui'], 15, 512) ?>,
+        ditolak: <?php echo json_encode($chartTahunan['ditolak'], 15, 512) ?>,
+        keberatan: <?php echo json_encode($chartTahunan['keberatan'], 15, 512) ?>,
     };
 
     // Dataset Bulanan untuk Setiap Tahun (Drill-Down Interaktif)
-    const dataBulananPerTahun = @json($chartBulananPerTahun);
-    let selectedYearForMonth = {{ $chartBulanan['year'] ?? date('Y') }};
+    const dataBulananPerTahun = <?php echo json_encode($chartBulananPerTahun, 15, 512) ?>;
+    let selectedYearForMonth = <?php echo e($chartBulanan['year'] ?? date('Y')); ?>;
 
     function calculateDynamicMax(permintaan, disetujui, ditolak, keberatan) {
         const allValues = [...permintaan, ...disetujui, ...ditolak, ...keberatan];
@@ -375,10 +441,10 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedYearForMonth = tahun;
         const dataBulanTahun = (dataBulananPerTahun && dataBulananPerTahun[tahun]) ? dataBulananPerTahun[tahun] : {
             months: defaultMonths,
-            permintaan: @json($chartBulanan['permintaan'] ?? array_fill(0, 12, 0)),
-            disetujui: @json($chartBulanan['disetujui'] ?? array_fill(0, 12, 0)),
-            ditolak: @json($chartBulanan['ditolak'] ?? array_fill(0, 12, 0)),
-            keberatan: @json($chartBulanan['keberatan'] ?? array_fill(0, 12, 0)),
+            permintaan: <?php echo json_encode($chartBulanan['permintaan'] ?? array_fill(0, 12, 0)) ?>,
+            disetujui: <?php echo json_encode($chartBulanan['disetujui'] ?? array_fill(0, 12, 0)) ?>,
+            ditolak: <?php echo json_encode($chartBulanan['ditolak'] ?? array_fill(0, 12, 0)) ?>,
+            keberatan: <?php echo json_encode($chartBulanan['keberatan'] ?? array_fill(0, 12, 0)) ?>,
         };
 
         const monthLabels = dataBulanTahun.months || dataBulanTahun.labels || defaultMonths;
@@ -443,3 +509,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+<?php /**PATH D:\laragon\www\ppid-fmipa-baru\resources\views/components/masyarakat/beranda/statistik-section.blade.php ENDPATH**/ ?>

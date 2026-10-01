@@ -38,6 +38,23 @@
 
         /* Alpine.js Cloak Directive */
         [x-cloak] { display: none !important; }
+
+        /* Mencegah pemotongan suku kata di tengah kata */
+        th, td, p, span, h1, h2, h3, h4, h5, h6, a, div {
+            word-break: normal !important;
+            overflow-wrap: break-word;
+            hyphens: none !important;
+            -webkit-hyphens: none !important;
+        }
+
+        /* Aturan Sudut Siku 90 Derajat (Sharp / Minimal Radius) untuk Semua Tabel Admin */
+        table, table th, table td, table tr,
+        .overflow-x-auto {
+            border-radius: 0px !important;
+        }
+        div:has(> .overflow-x-auto), div:has(> table) {
+            border-radius: 0px !important;
+        }
     </style>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -99,6 +116,11 @@
 
     <!-- 2. Container Bawah Header (Sidebar Navigasi Menu + Main Content) -->
     <div class="flex flex-1 min-h-0 w-full relative">
+
+        <!-- Mobile Sidebar Backdrop Overlay -->
+        <div id="sidebar-backdrop" 
+             onclick="closeSidebar()" 
+             class="hidden fixed inset-0 bg-black/40 z-10 lg:hidden backdrop-blur-sm transition-opacity"></div>
 
         <!-- Sidebar Container Navigasi Admin -->
         <?php if (isset($component)) { $__componentOriginal866058266f1aa33777f53f753d6dbe46 = $component; } ?>
@@ -309,13 +331,34 @@
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
             if (!sidebar) return;
 
             if (window.innerWidth >= 1024) {
+                // Desktop: slide sidebar in/out by margin
                 sidebar.classList.toggle('lg:-ml-[17rem]');
             } else {
-                sidebar.classList.toggle('-translate-x-full');
+                // Mobile: slide sidebar in from left
+                const isHidden = sidebar.classList.contains('-translate-x-full');
+                if (isHidden) {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
+                    if (backdrop) backdrop.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    closeSidebar();
+                }
             }
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            if (!sidebar) return;
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            if (backdrop) backdrop.classList.add('hidden');
+            document.body.style.overflow = '';
         }
 
         // Auto Hide Toast Notification Popup

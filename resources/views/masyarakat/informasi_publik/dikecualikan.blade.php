@@ -60,8 +60,8 @@
 
             <!-- Tabel Informasi Publik yang Dikecualikan (Desain Seragam dengan Tabel DIP) -->
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden mb-6">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse border border-slate-300">
+                <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
+                    <table class="w-full min-w-[900px] text-left border-collapse border border-slate-300">
                         <thead>
                             <!-- Baris Header 1 -->
                             <tr class="bg-sky-500 text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-sky-600 select-none">

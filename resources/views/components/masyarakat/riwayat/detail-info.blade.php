@@ -30,14 +30,14 @@
     <!-- Informasi yang Diminta / Alasan Keberatan -->
     <div class="p-4 bg-white rounded-2xl border border-slate-200/90 space-y-1 shadow-sm">
         <span class="block font-extrabold text-slate-500 text-xs" x-text="activeItem.type === 'keberatan' ? 'Alasan Keberatan' : 'Informasi Yang Diminta'"></span>
-        <p class="font-black text-slate-900 text-sm md:text-base leading-relaxed break-words [word-break:break-word] break-all" x-text="activeItem.type === 'keberatan' ? (activeItem.alasan_keberatan || activeItem.judul) : (activeItem.informasi_yang_diminta || activeItem.judul)"></p>
+        <p class="font-black text-slate-900 text-sm md:text-base leading-relaxed break-words [word-break:normal] [overflow-wrap:break-word]" x-text="activeItem.type === 'keberatan' ? (activeItem.alasan_keberatan || activeItem.judul) : (activeItem.informasi_yang_diminta || activeItem.judul)"></p>
     </div>
 
     <!-- Kronologi / Tujuan Penggunaan -->
     <template x-if="activeItem.deskripsi || activeItem.tujuan_penggunaan_informasi || activeItem.kronologi_keberatan">
         <div class="p-4 bg-white rounded-2xl border border-slate-200/90 space-y-1 shadow-sm">
             <span class="block font-extrabold text-slate-500 text-xs" x-text="activeItem.type === 'keberatan' ? 'Kronologi Keberatan' : 'Tujuan Penggunaan Informasi'"></span>
-            <p class="font-semibold text-slate-800 text-xs md:text-sm leading-relaxed break-words [word-break:break-word] break-all" x-text="activeItem.type === 'keberatan' ? (activeItem.kronologi_keberatan || activeItem.deskripsi) : (activeItem.tujuan_penggunaan_informasi || activeItem.deskripsi)"></p>
+            <p class="font-semibold text-slate-800 text-xs md:text-sm leading-relaxed break-words [word-break:normal] [overflow-wrap:break-word]" x-text="activeItem.type === 'keberatan' ? (activeItem.kronologi_keberatan || activeItem.deskripsi) : (activeItem.tujuan_penggunaan_informasi || activeItem.deskripsi)"></p>
         </div>
     </template>
 

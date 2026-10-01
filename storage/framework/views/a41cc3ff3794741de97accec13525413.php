@@ -1,7 +1,7 @@
 <section class="relative w-full min-h-[520px] sm:min-h-[580px] lg:min-h-[640px] flex items-center overflow-hidden border-b border-sky-950/40">
     <!-- 1. Background Gedung Dekanat FMIPA Unila dengan Gradasi Gelap Elegan Sesuai Tema Biru PPID -->
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('images/GedungDekanatFMIPA.jpg') }}" 
+        <img src="<?php echo e(asset('images/GedungDekanatFMIPA.jpg')); ?>" 
              alt="Gedung Dekanat FMIPA Universitas Lampung" 
              class="w-full h-full object-cover object-[center_35%]">
         
@@ -35,11 +35,11 @@
 
             <!-- Tombol Aksi Utama Persis Desain Awal -->
             <div class="flex flex-wrap items-center gap-3.5 pt-2">
-                <a href="{{ url('/informasi-publik') }}" class="px-7 sm:px-8 py-3.5 sm:py-4 bg-sky-500 hover:bg-sky-400 text-white text-sm sm:text-base font-extrabold rounded-full transition-all shadow-lg shadow-sky-500/30 hover:shadow-xl hover:shadow-sky-400/40 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2 cursor-pointer">
+                <a href="<?php echo e(url('/informasi-publik')); ?>" class="px-7 sm:px-8 py-3.5 sm:py-4 bg-sky-500 hover:bg-sky-400 text-white text-sm sm:text-base font-extrabold rounded-full transition-all shadow-lg shadow-sky-500/30 hover:shadow-xl hover:shadow-sky-400/40 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2 cursor-pointer">
                     <span>Mulai Cari Informasi</span>
                 </a>
                 
-                <a href="{{ url('/permohonan') }}" class="px-7 sm:px-8 py-3.5 sm:py-4 bg-white/10 hover:bg-white/20 text-white hover:text-sky-200 text-sm sm:text-base font-extrabold rounded-full border-2 border-white/30 hover:border-sky-400 transition-all shadow-2xs hover:shadow-md hover:-translate-y-0.5 inline-flex items-center justify-center gap-2.5 cursor-pointer backdrop-blur-sm">
+                <a href="<?php echo e(url('/permohonan')); ?>" class="px-7 sm:px-8 py-3.5 sm:py-4 bg-white/10 hover:bg-white/20 text-white hover:text-sky-200 text-sm sm:text-base font-extrabold rounded-full border-2 border-white/30 hover:border-sky-400 transition-all shadow-2xs hover:shadow-md hover:-translate-y-0.5 inline-flex items-center justify-center gap-2.5 cursor-pointer backdrop-blur-sm">
                     <span>Ajukan Permohonan</span>
                     <i class="fa-solid fa-arrow-right text-xs"></i>
                 </a>
@@ -48,3 +48,4 @@
         </div>
     </div>
 </section>
+<?php /**PATH D:\laragon\www\ppid-fmipa-baru\resources\views/components/masyarakat/beranda/hero.blade.php ENDPATH**/ ?>
