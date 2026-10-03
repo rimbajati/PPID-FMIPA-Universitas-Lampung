@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL; // <-- Tambahkan baris ini di atas
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,5 +22,10 @@ class AppServiceProvider extends ServiceProvider
     {
         \Carbon\Carbon::setLocale('id');
         config(['app.locale' => 'id']);
+
+        // Tambahkan pengaman HTTPS khusus untuk environment production (di VPS)
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }

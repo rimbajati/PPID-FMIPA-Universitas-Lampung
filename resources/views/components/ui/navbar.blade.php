@@ -11,7 +11,7 @@
                 <!-- Left: Logo -->
                 <a href="/" class="flex items-center shrink-0 gap-3 group">
                     <img id="navbar-logo" src="{{ asset('images/logoPPID.png') }}?v=2.0" alt="Logo Unila" class="h-8 md:h-10 w-auto object-contain">
-                    <div class="text-left leading-tight hidden sm:block">
+                    <div class="text-left leading-tight">
                         <span id="navbar-logo-text1" class="block text-white font-extrabold text-sm md:text-base tracking-wide uppercase">PPID Pelaksana</span>
                         <span id="navbar-logo-text2" class="block text-sky-100 font-semibold text-[10px] md:text-[11px] tracking-wide uppercase">FMIPA Universitas Lampung</span>
                     </div>
@@ -232,73 +232,65 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden hidden bg-sky-600 border-t border-white/10 px-6 py-5 shadow-lg absolute w-full left-0">
-            <div class="flex flex-col space-y-2">
+        <div id="mobile-menu" class="md:hidden hidden bg-sky-500 border-t border-white/20 px-4 py-3 shadow-lg absolute w-full left-0">
+            <div class="flex flex-col">
                 @if(!request()->is('login*') && !request()->is('register*') && !request()->is('password*') && !request()->is('forgot-password') && !request()->is('reset-password*'))
-                    <a href="/" class="text-white font-semibold py-3 border-b border-white/10">Beranda</a>
+                    <a href="/" class="group relative text-white font-bold text-base tracking-wide py-3 border-b border-white/20 {{ request()->is('/') ? 'font-extrabold' : '' }}">Beranda</a>
 
-                    <a href="{{ url('/#profil-ppid') }}" class="text-white font-semibold py-3 border-b border-white/10 flex items-center justify-between">
+                    <a href="{{ url('/#profil-ppid') }}" class="text-white/90 hover:text-white font-bold text-base tracking-wide py-3 border-b border-white/20">
                         <span>Profil PPID</span>
-                        <i class="fa-solid fa-chevron-right text-xs opacity-60"></i>
                     </a>
 
                     <!-- Accordion Submenu Klasifikasi Informasi (Mobile) -->
-                    <div class="border-b border-white/10 py-2">
-                        <span class="text-xs font-bold text-sky-200 uppercase tracking-wider block mb-2">Informasi Publik:</span>
-                        <div class="pl-3 space-y-2">
-                            <a href="{{ url('/informasi-publik') }}" class="flex items-center gap-2.5 text-white text-sm py-1 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-table-list text-xs text-sky-300 w-4"></i>
+                    <details class="group border-b border-white/20 py-0">
+                        <summary class="list-none cursor-pointer text-white/90 hover:text-white font-bold text-base tracking-wide py-3 flex items-center justify-between [&::-webkit-details-marker]:hidden">
+                            <span>Informasi Publik</span><i class="fa-solid fa-chevron-down text-xs opacity-80 transition-transform group-open:rotate-180"></i>
+                        </summary>
+                        <div class="pb-3 pl-3 space-y-1">
+                            <a href="{{ url('/informasi-publik') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Daftar Informasi Publik</span>
                             </a>
-                            <a href="{{ url('/informasi-publik/kategori/berkala') }}" class="flex items-center gap-2.5 text-white text-sm py-1 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-clock-rotate-left text-xs text-emerald-300 w-4"></i>
+                            <a href="{{ url('/informasi-publik/kategori/berkala') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Informasi Tersedia Secara Berkala</span>
                             </a>
-                            <a href="{{ url('/informasi-publik/kategori/serta-merta') }}" class="flex items-center gap-2.5 text-white text-sm py-1 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-triangle-exclamation text-xs text-amber-300 w-4"></i>
+                            <a href="{{ url('/informasi-publik/kategori/serta-merta') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Informasi Diumumkan Serta-Merta</span>
                             </a>
-                            <a href="{{ url('/informasi-publik/kategori/setiap-saat') }}" class="flex items-center gap-2.5 text-white text-sm py-1 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-folder-open text-xs text-sky-300 w-4"></i>
+                            <a href="{{ url('/informasi-publik/kategori/setiap-saat') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Informasi Tersedia Setiap Saat</span>
                             </a>
-                            <a href="{{ url('/informasi-dikecualikan') }}" class="flex items-center gap-2.5 text-white text-sm py-1 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-lock text-xs text-sky-300 w-4"></i>
+                            <a href="{{ url('/informasi-dikecualikan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Daftar Informasi Publik yang Dikecualikan</span>
                             </a>
                         </div>
-                    </div>
+                    </details>
 
                     <!-- Accordion Submenu Standar Layanan (Mobile) -->
-                    <div class="border-b border-white/10 py-2">
-                        <span class="text-xs font-bold text-sky-200 uppercase tracking-wider block mb-2">Layanan:</span>
-                        <div class="pl-3 space-y-2">
-                            <a href="{{ url('/tata-cara-permohonan-dan-keberatan') }}" class="flex items-center gap-2.5 text-white text-sm py-1.5 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-route text-xs text-sky-300 w-4"></i>
+                    <details class="group border-b border-white/20 py-0">
+                        <summary class="list-none cursor-pointer text-white/90 hover:text-white font-bold text-base tracking-wide py-3 flex items-center justify-between [&::-webkit-details-marker]:hidden">
+                            <span>Layanan</span><i class="fa-solid fa-chevron-down text-xs opacity-80 transition-transform group-open:rotate-180"></i>
+                        </summary>
+                        <div class="pb-3 pl-3 space-y-1">
+                            <a href="{{ url('/tata-cara-permohonan-dan-keberatan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Tata Cara Permohonan & Keberatan</span>
                             </a>
-                            <a href="{{ url('/permohonan') }}" class="flex items-center gap-2.5 text-white text-sm py-1.5 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-file-signature text-xs text-blue-300 w-4"></i>
+                            <a href="{{ url('/permohonan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Permohonan Informasi</span>
                             </a>
-                            <a href="{{ url('/pengajuan-keberatan') }}" class="flex items-center gap-2.5 text-white text-sm py-1.5 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-scale-balanced text-xs text-amber-300 w-4"></i>
+                            <a href="{{ url('/pengajuan-keberatan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Pengajuan Keberatan</span>
                             </a>
-                            <a href="{{ url('/riwayat-layanan') }}" class="flex items-center gap-2.5 text-white text-sm py-1.5 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-clock-rotate-left text-xs text-emerald-300 w-4"></i>
+                            <a href="{{ url('/riwayat-layanan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Lacak & Riwayat Layanan</span>
                             </a>
-                            <a href="{{ url('/#statistik-layanan') }}" class="flex items-center gap-2.5 text-white text-sm py-1.5 font-medium hover:text-sky-100">
-                                <i class="fa-solid fa-chart-simple text-xs text-sky-300 w-4"></i>
+                            <a href="{{ url('/#statistik-layanan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Statistik Layanan</span>
                             </a>
                         </div>
-                    </div>
+                    </details>
 
-                    <a href="{{ url('/regulasi') }}" class="text-white font-semibold py-3 border-b border-white/10 flex items-center justify-between">
+                    <a href="{{ url('/regulasi') }}" class="text-white/90 hover:text-white font-bold text-base tracking-wide py-3 border-b border-white/20 {{ request()->is('regulasi*') ? 'text-white' : '' }}">
                         <span>Regulasi</span>
-                        <i class="fa-solid fa-chevron-right text-xs opacity-60"></i>
                     </a>
 
                     @auth
