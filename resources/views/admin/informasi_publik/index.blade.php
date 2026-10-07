@@ -104,6 +104,7 @@
     :listRincianSertaMerta="$listRincianSertaMerta ?? []" 
     :listJudul="$listJudul ?? []"
     :listSatker="$listSatker ?? []"
+    :listPenanggungJawab="$listPenanggungJawab ?? []"
     :listTahun="$listTahun ?? []"
     :listRetensi="$listRetensi ?? []"
 />

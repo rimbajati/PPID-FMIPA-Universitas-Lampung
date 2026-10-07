@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\InformasiDikecualikanController as AdminInformasi
 use App\Http\Controllers\Admin\PermohonanController as AdminPermohonanController;
 use App\Http\Controllers\Admin\KeberatanController as AdminKeberatanController;
 use App\Http\Controllers\Admin\StatistikController as AdminStatistikController;
+use App\Http\Controllers\Admin\KontenController as AdminKontenController;
 use App\Http\Controllers\Admin\BerandaController as AdminBerandaController;
 use App\Http\Controllers\Masyarakat\RiwayatLayananController as MasyarakatRiwayatLayananController;
 use Illuminate\Http\Request;
@@ -91,8 +92,8 @@ Route::get('/', function () {
     $dokumenTerbaru = \App\Models\InformasiPublik::latest()->take(4)->get();
     
     // Konten dinamis Tanya Jawab (FAQ) & Profil PPID dari file JSON
-    $faqs = AdminBerandaController::getFaqs();
-    $profil = AdminBerandaController::getProfil();
+    $faqs = AdminKontenController::getFaqs();
+    $profil = AdminKontenController::getProfil();
 
     return view('masyarakat.beranda.index', compact(
         'totalDokumen',
@@ -339,10 +340,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/keberatan/{id}', [AdminKeberatanController::class, 'destroy'])->name('admin.keberatan.destroy');
 
     // Rute Admin: Kelola Beranda (Profil PPID & FAQ)
-    Route::get('/faq', [AdminBerandaController::class, 'index'])->name('admin.faq.index');
-    Route::post('/faq', [AdminBerandaController::class, 'storeFaq'])->name('admin.faq.store');
-    Route::delete('/faq/{id}', [AdminBerandaController::class, 'destroyFaq'])->name('admin.faq.destroy');
-    Route::post('/profil-ppid', [AdminBerandaController::class, 'updateProfil'])->name('admin.profil.update');
+    Route::get('/faq', [AdminKontenController::class, 'index'])->name('admin.faq.index');
+    Route::post('/faq', [AdminKontenController::class, 'storeFaq'])->name('admin.faq.store');
+    Route::delete('/faq/{id}', [AdminKontenController::class, 'destroyFaq'])->name('admin.faq.destroy');
+    Route::post('/profil-ppid', [AdminKontenController::class, 'updateProfil'])->name('admin.profil.update');
     // Alias redirect rute lama
     Route::get('/beranda-konten', function () { return redirect()->route('admin.faq.index'); });
     Route::get('/profil-ppid-admin', function () { return redirect()->route('admin.faq.index'); });

@@ -145,12 +145,12 @@
                         <label class="mb-1.5 block text-xs sm:text-sm font-semibold text-slate-800">
                             Dokumen Pendukung <span class="text-slate-400 text-xs font-normal">(Opsional)</span>
                         </label>
-                        <input type="file" id="pendukung_file_input" name="pendukung_file" accept=".jpg,.jpeg,.png,.pdf,.docx,.doc"
+                        <input type="file" id="pendukung_file_input" name="pendukung_file" accept=".pdf,.jpg,.jpeg,.png"
                                @change="handlePendukungFileChange($event)" class="sr-only">
                         <div @click="document.getElementById('pendukung_file_input').click()"
                              class="flex items-center gap-2 w-full rounded-xl border border-slate-200 bg-white p-2 pr-2 cursor-pointer transition hover:border-slate-300">
                             <span class="shrink-0 inline-flex items-center justify-center rounded-full bg-amber-600 px-4 py-2 text-xs font-extrabold text-white">Pilih File</span>
-                            <span class="flex-1 min-w-0 truncate text-sm" :class="pendukungFileName ? 'text-slate-800' : 'text-slate-400'" x-text="pendukungFileName || 'Belum ada berkas dipilih'"></span>
+                            <span class="flex-1 min-w-0 truncate text-sm" :class="pendukungFileName ? 'text-slate-800' : 'text-slate-400'" x-text="pendukungFileName || 'Belum ada file dipilih'"></span>
                             <template x-if="pendukungFileName">
                                 <button type="button" @click.stop="clearPendukungFile()" class="shrink-0 ml-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="fa-regular fa-trash-can text-sm"></i></button>
                             </template>
@@ -170,7 +170,7 @@
                                 <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="pendukungErrorMsg"></span>
                             </p>
                         </template>
-                        <p x-show="!pendukungErrorMsg" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Format: PDF, DOCX, JPG, PNG (Maksimal 5 MB)</p>
+                        <p class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Format: PDF, JPG, JPEG, PNG (Maksimal 3 MB)</p>
                     </div>
                 </div>
             </section>

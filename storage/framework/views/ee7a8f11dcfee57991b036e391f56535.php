@@ -7,6 +7,7 @@
     'listRincianSertaMerta' => [],
     'listJudul' => [],
     'listSatker' => [],
+    'listPenanggungJawab' => [],
     'listTahun' => [],
     'listRetensi' => [],
 ]) as $__key => $__value) {
@@ -19,6 +20,7 @@
     'listRincianSertaMerta' => [],
     'listJudul' => [],
     'listSatker' => [],
+    'listPenanggungJawab' => [],
     'listTahun' => [],
     'listRetensi' => [],
 ]); ?>
@@ -29,6 +31,7 @@
     'listRincianSertaMerta' => [],
     'listJudul' => [],
     'listSatker' => [],
+    'listPenanggungJawab' => [],
     'listTahun' => [],
     'listRetensi' => [],
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
@@ -69,8 +72,8 @@
                                 class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 transition text-sm">
                             <option value="">-- Pilih Jenis Informasi --</option>
                             <option value="Informasi Berkala">Informasi Berkala</option>
-                            <option value="Informasi Serta-Merta">Informasi Serta-Merta</option>
                             <option value="Informasi Setiap Saat">Informasi Setiap Saat</option>
+                            <option value="Informasi Serta-Merta">Informasi Serta-Merta</option>
                         </select>
                     </div>
 
@@ -88,7 +91,7 @@
                     <!-- Sub Informasi -->
                     <div class="space-y-2 md:col-span-2">
                         <label class="block text-sm font-semibold text-slate-700">
-                            Sub Informasi <span class="text-rose-500">*</span>
+                            <span id="labelSubInformasi">Sub Informasi</span> <span class="text-rose-500">*</span>
                         </label>
                         <input type="text" id="inputSubInformasi" name="sub_informasi" maxlength="150" required
                                placeholder="Judul atau deskripsi singkat..." list="list-sub-informasi-history" autocomplete="off"
@@ -120,9 +123,14 @@
                         <label class="block text-sm font-semibold text-slate-700">
                             Penanggung Jawab <span class="text-rose-500">*</span>
                         </label>
-                        <input type="text" id="inputPenanggungJawab" name="penanggung_jawab_pembuatan_informasi" required maxlength="255" autocomplete="off"
+                        <input type="text" id="inputPenanggungJawab" name="penanggung_jawab_pembuatan_informasi" required maxlength="255" autocomplete="off" list="list-penanggung-jawab-history"
                                placeholder="Contoh: Dekan..."
                                class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 transition text-sm">
+                        <datalist id="list-penanggung-jawab-history">
+                            <?php $__currentLoopData = $listPenanggungJawab; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($val); ?>"></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </datalist>
                     </div>
 
                     <!-- Waktu dan Tempat Pembuatan -->
@@ -174,9 +182,21 @@
                             fileName: '',
                             fileSize: '',
                             fileUrl: '',
+                            fileError: '',
                             handle(e){
                                 const f = e.target.files[0];
+                                this.fileError='';
                                 if(!f) return;
+                                if(f.size > 5*1024*1024){
+                                    this.fileError='Ukuran file maksimal 5 MB';
+                                    e.target.value='';
+                                    this.fileName=''; this.fileSize='';
+                                    if(this.fileUrl) URL.revokeObjectURL(this.fileUrl);
+                                    this.fileUrl='';
+                                    const disp=document.getElementById('fileDisplayName');
+                                    if(disp) disp.textContent='';
+                                    return;
+                                }
                                 this.fileName = f.name;
                                 this.fileSize = (f.size/1024).toFixed(1)+' KB';
                                 if(f.size>1024*1024) this.fileSize = (f.size/(1024*1024)).toFixed(1)+' MB';
@@ -187,7 +207,7 @@
                             clear(){
                                 document.getElementById('inputFile').value='';
                                 if(this.fileUrl) URL.revokeObjectURL(this.fileUrl);
-                                this.fileName=''; this.fileSize=''; this.fileUrl='';
+                                this.fileName=''; this.fileSize=''; this.fileUrl=''; this.fileError='';
                             }
                         }" x-init="$watch('tipe', val => toggleInputType(val))">
                             <label class="block text-sm font-semibold text-slate-700">Bentuk <span class="text-rose-500">*</span></label>
@@ -201,10 +221,10 @@
                                 </label>
                             </div>
                             <div x-show="tipe==='file'">
-                                <input type="file" id="inputFile" name="file_informasi" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp" class="sr-only" @change="handle($event)">
+                                <input type="file" id="inputFile" name="file_informasi" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" class="sr-only" @change="handle($event)">
                                 <div @click="document.getElementById('inputFile').click()" class="flex items-center gap-2 w-full rounded-lg border border-slate-200 bg-white p-2 pr-2 cursor-pointer transition hover:border-slate-300">
                                     <span class="shrink-0 inline-flex items-center justify-center rounded-lg bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700">Pilih File</span>
-                                    <span class="flex-1 min-w-0 truncate text-sm" :class="fileName ? 'text-slate-800' : 'text-slate-400'" x-text="fileName || 'Belum ada berkas'"></span>
+                                    <span class="flex-1 min-w-0 truncate text-sm" :class="fileName ? 'text-slate-800' : 'text-slate-400'" x-text="fileName || 'Belum ada file'"></span>
                                     <template x-if="fileName">
                                         <button type="button" @click.stop="clear()" class="shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="fa-regular fa-trash-can text-sm"></i></button>
                                     </template>
@@ -219,9 +239,12 @@
                                         <a :href="fileUrl" target="_blank" class="shrink-0 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 transition">Lihat</a>
                                     </div>
                                 </template>
+                                <template x-if="fileError">
+                                    <p class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600"><i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="fileError"></span></p>
+                                </template>
                                 <span id="fileDisplayName" class="hidden"></span>
                                 <a id="currentFileLink" href="#" class="hidden"><span id="currentFileName"></span></a>
-                                <p id="fileHelpText" class="text-xs text-slate-400 mt-1">Format: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)</p>
+                                <p class="text-xs text-slate-400 mt-1">Format: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)</p>
                             </div>
                             <div x-show="tipe==='link'">
                                 <input type="url" id="inputLink" name="link_informasi" placeholder="Contoh: https://drive.google.com/..." class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-sky-500 transition text-sm">

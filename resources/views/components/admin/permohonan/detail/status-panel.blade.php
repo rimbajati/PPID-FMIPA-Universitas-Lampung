@@ -105,21 +105,24 @@
                             fileName: '',
                             fileSize: '',
                             fileUrl: '{{ $permohonan->file_jawaban ? asset('storage/' . $permohonan->file_jawaban) : '' }}',
+                            fileError: '',
                             init() { if (this.fileUrl) { let name = '{{ $permohonan->file_jawaban ? basename($permohonan->file_jawaban) : '' }}'; this.fileName = name; } },
                             handle(e) {
                                 const f = e.target.files[0];
+                                this.fileError='';
                                 if (!f) return;
+                                if (f.size > 5*1024*1024) { this.fileError='Ukuran file maksimal 5 MB'; e.target.value=''; this.fileName=''; this.fileSize=''; if(this.fileUrl) URL.revokeObjectURL(this.fileUrl); this.fileUrl=''; return; }
                                 this.fileName = f.name;
                                 this.fileSize = (f.size / 1024).toFixed(1) + ' KB';
                                 if (f.size > 1024*1024) this.fileSize = (f.size / (1024*1024)).toFixed(1) + ' MB';
                                 this.fileUrl = URL.createObjectURL(f);
                             },
-                            clear() { document.getElementById('admin_jawaban_file').value = ''; this.fileName = ''; this.fileSize = ''; this.fileUrl = ''; }
+                            clear() { document.getElementById('admin_jawaban_file').value = ''; this.fileName = ''; this.fileSize = ''; this.fileUrl = ''; this.fileError=''; }
                         }">
-                            <input type="file" id="admin_jawaban_file" name="file_jawaban" accept=".pdf,.docx,.xlsx,.zip,.rar" @change="handle($event)" class="sr-only">
+                            <input type="file" id="admin_jawaban_file" name="file_jawaban" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" @change="handle($event)" class="sr-only">
                             <div @click="document.getElementById('admin_jawaban_file').click()" class="flex items-center gap-2 w-full rounded-lg border border-slate-200 bg-white p-2 pr-2 cursor-pointer transition hover:border-slate-300">
                                 <span class="shrink-0 inline-flex items-center justify-center rounded-lg bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700">Pilih File</span>
-                                <span class="flex-1 min-w-0 truncate text-sm" :class="fileName ? 'text-slate-800' : 'text-slate-400'" x-text="fileName || 'Belum ada berkas'"></span>
+                                <span class="flex-1 min-w-0 truncate text-sm" :class="fileName ? 'text-slate-800' : 'text-slate-400'" x-text="fileName || 'Belum ada file'"></span>
                                 <template x-if="fileName">
                                     <button type="button" @click.stop="clear()" class="shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="fa-regular fa-trash-can text-sm"></i></button>
                                 </template>
@@ -134,6 +137,10 @@
                                     <a :href="fileUrl" target="_blank" class="shrink-0 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 transition">Lihat</a>
                                 </div>
                             </template>
+                            <template x-if="fileError">
+                                <p class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600"><i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="fileError"></span></p>
+                            </template>
+                            <p class="text-xs text-slate-400 mt-1">Format: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)</p>
                         </div>
                         <div x-show="tipeJawaban === 'link'">
                             <input type="url" name="link_jawaban" placeholder="https://..." value="{{ old('link_jawaban', $permohonan->link_jawaban) }}" :required="statusSelect === 'Selesai' && tipeJawaban === 'link'"

@@ -60,6 +60,12 @@ class InformasiPublikController extends Controller
                         ->orderBy('pejabat_unit_yang_menguasai_informasi', 'asc')
                         ->pluck('pejabat_unit_yang_menguasai_informasi');
 
+        $listPenanggungJawab = InformasiPublik::whereNotNull('penanggung_jawab_pembuatan_informasi')
+                        ->where('penanggung_jawab_pembuatan_informasi', '!=', '')
+                        ->distinct()
+                        ->orderBy('penanggung_jawab_pembuatan_informasi', 'asc')
+                        ->pluck('penanggung_jawab_pembuatan_informasi');
+
         $listBentuk = InformasiPublik::whereNotNull('bentuk_informasi_yang_tersedia')
                         ->where('bentuk_informasi_yang_tersedia', '!=', '')
                         ->distinct()
@@ -190,7 +196,7 @@ class InformasiPublikController extends Controller
         ]);
 
         return view('admin.informasi_publik.index', compact(
-            'informasi', 'informasiGroups', 'listJenis', 'listRincian', 'listRincianBerkala', 'listRincianSetiapSaat', 'listRincianSertaMerta', 'listJudul', 'listTahun', 'listSatker', 'listBentuk', 'listRetensi', 'listSubByRincian', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
+            'informasi', 'informasiGroups', 'listJenis', 'listRincian', 'listRincianBerkala', 'listRincianSetiapSaat', 'listRincianSertaMerta', 'listJudul', 'listTahun', 'listSatker', 'listPenanggungJawab', 'listBentuk', 'listRetensi', 'listSubByRincian', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
             'lastUpdateTotal', 'lastUpdateBerkala', 'lastUpdateSertaMerta', 'lastUpdateSetiapSaat', 'lastUpdateDikecualikan'
         ));
     }
@@ -219,11 +225,11 @@ class InformasiPublikController extends Controller
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',
             'jenis_informasi'                        => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta'])],
-            'file_informasi'                         => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp|max:5120',
+            'file_informasi'                         => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
             'link_informasi'                         => 'nullable|url',
         ], [
             'rincian_informasi.required' => 'Rincian Informasi wajib diisi.',
-            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, atau WEBP.',
+            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, atau PNG.',
             'file_informasi.max'         => 'Ukuran file melebihi batas maksimal (Maksimal 5 MB)!',
         ]);
 
@@ -339,11 +345,11 @@ class InformasiPublikController extends Controller
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',
             'jenis_informasi'                        => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta'])],
-            'file_informasi'                         => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp|max:5120',
+            'file_informasi'                         => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
             'link_informasi'                         => 'nullable|url',
         ], [
             'rincian_informasi.required' => 'Rincian Informasi wajib diisi.',
-            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, atau WEBP.',
+            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, atau PNG.',
             'file_informasi.max'         => 'Ukuran file melebihi batas maksimal (Maksimal 5 MB)!',
         ]);
 

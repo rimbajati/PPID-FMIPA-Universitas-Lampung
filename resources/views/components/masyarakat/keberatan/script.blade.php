@@ -73,8 +73,8 @@ function keberatanForm() {
             this.pendukungFileSize = '';
             if (this.pendukungFileUrl) { URL.revokeObjectURL(this.pendukungFileUrl); this.pendukungFileUrl = ''; }
             if (!file) return;
-            if (file.size > 5 * 1024 * 1024) {
-                this.pendukungErrorMsg = 'Ukuran file maksimal 5MB';
+            if (file.size > 3 * 1024 * 1024) {
+                this.pendukungErrorMsg = 'Ukuran file maksimal 3 MB';
                 event.target.value = '';
                 return;
             }

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class BerandaController extends Controller
+class KontenController extends Controller
 {
     private static $filePath = 'beranda_konten.json';
 
@@ -122,7 +122,7 @@ class BerandaController extends Controller
      */
     public function index()
     {
-        return view('admin.beranda.index', [
+        return view('admin.konten.index', [
             'faqs'   => self::getFaqs(),
             'profil' => self::getProfil()
         ]);

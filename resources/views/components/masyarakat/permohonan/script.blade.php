@@ -131,7 +131,7 @@ function permohonanSingleForm() {
             if (files && files.length > 0) {
                 const f = files[0];
                 if (f.size > 2 * 1024 * 1024) {
-                    this.ktpErrorMsg = 'Ukuran berkas maksimal 2 MB';
+                    this.ktpErrorMsg = 'Ukuran file maksimal 2 MB';
                     e.target.value = '';
                     this.ktpName = ''; this.ktpSize = ''; this.has_file = false; return;
                 }

@@ -88,7 +88,7 @@ class PermohonanController extends Controller
             'catatan_selesai'         => 'nullable|string',
             'alasan_ditolak'          => 'nullable|string',
             'pesan_ditolak'           => 'nullable|string',
-            'file_jawaban'            => 'nullable|file|mimes:pdf,docx,xlsx,zip,rar|max:5120',
+            'file_jawaban'            => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
             'link_jawaban'            => 'nullable|url',
         ]);
 

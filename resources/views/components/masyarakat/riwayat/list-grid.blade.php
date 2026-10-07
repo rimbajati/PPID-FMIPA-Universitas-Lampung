@@ -41,7 +41,6 @@
         <div class="flex items-start gap-3 px-5 py-4 bg-sky-50/60 border border-sky-100 rounded-2xl">
             <i class="fa-regular fa-circle-question text-sky-500 mt-0.5 flex-shrink-0"></i>
             <div class="text-xs md:text-sm text-slate-600 leading-relaxed">
-                <span class="font-bold text-slate-800 block mb-1">Di mana nomor tiket saya?</span>
                 Nomor tiket diberikan setelah Anda mengajukan permohonan/keberatan. Contoh:
                 <code class="font-mono font-black text-sky-700 bg-sky-100 px-1.5 py-0.5 rounded-md text-[10px] md:text-xs mx-1">PPID-20261006-A3B5</code>
                 Cek juga email Anda.

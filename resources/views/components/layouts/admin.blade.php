@@ -118,9 +118,10 @@
         <!-- Sisi Kiri: Logo PPID FMIPA + Tombol Hamburger Berjarak Lega -->
         <div class="flex items-center gap-6 md:gap-8">
             <a href="/" class="flex items-center shrink-0 gap-3 group">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo FMIPA Unila" class="h-10 w-auto">
                 <div class="text-left leading-snug">
-                    <span class="block text-white font-extrabold text-base tracking-tight">PPID FMIPA</span>
-                    <span class="block text-white/80 font-bold text-[10px] tracking-wider uppercase">Universitas Lampung</span>
+                    <span class="block text-white font-extrabold text-base tracking-tight">PPID PELAKSANA</span>
+                    <span class="block text-white/90 font-bold text-[10px] tracking-wider uppercase">FMIPA UNIVERSITAS LAMPUNG</span>
                 </div>
             </a>
 
@@ -324,7 +325,7 @@
 
             if (window.innerWidth >= 1024) {
                 // Desktop: slide sidebar in/out by margin
-                sidebar.classList.toggle('lg:-ml-[17rem]');
+                sidebar.classList.toggle('lg:-ml-[19rem]');
             } else {
                 // Mobile: slide sidebar in from left
                 const isHidden = sidebar.classList.contains('-translate-x-full');

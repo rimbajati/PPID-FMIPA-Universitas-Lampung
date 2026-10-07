@@ -210,7 +210,7 @@
         })();
 
         const helpText = document.getElementById('fileHelpText');
-        if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)';
+        if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)';
 
         // Reset default inputs
         if (document.getElementById('inputSubInformasi')) document.getElementById('inputSubInformasi').value = '';
@@ -414,7 +414,7 @@
             setAlpineFile('', '');
             if (fileDisplayName) fileDisplayName.textContent = '';
             if (fileLink) fileLink.classList.add('hidden');
-            if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)';
+            if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)';
         } else {
             if (alpine) alpine.tipe = 'file';
             window.toggleInputType('file');
@@ -434,7 +434,7 @@
                 setAlpineFile('', '');
                 if (fileLink) fileLink.classList.add('hidden');
                 if (fileDisplayName) fileDisplayName.textContent = '';
-                if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)';
+                if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)';
             }
         }
 
