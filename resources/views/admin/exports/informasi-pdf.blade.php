@@ -95,6 +95,13 @@
             padding: 2.2mm 2.5mm;
             background-color: transparent;
         }
+        .category-section-title {
+            font-size: 10pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 6mm 0 3mm;
+            page-break-after: avoid;
+        }
 
         .text-center { text-align: center !important; }
         .text-left { text-align: left !important; }
@@ -191,104 +198,55 @@
         </div>
 
         @php
-            $globalNo = 1;
+            $categoryHeadings = [
+                'Informasi Berkala' => 'Informasi Publik yang Wajib Disediakan secara Berkala',
+                'Informasi Setiap Saat' => 'Informasi Publik yang Wajib Tersedia Setiap Saat',
+                'Informasi Serta-Merta' => 'Informasi Publik yang Wajib Diumumkan secara Serta-Merta',
+            ];
         @endphp
 
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th rowspan="2" style="width: 4%;">No</th>
-                    <th rowspan="2" style="width: 35%;">Ringkasan Isi Informasi</th>
-                    <th rowspan="2" style="width: 20%;">Pejabat/Unit/Satker yang Menguasai Informasi</th>
-                    <th rowspan="2" style="width: 16%;">Waktu dan Tempat Pembuatan Informasi</th>
-                    <th colspan="2" style="width: 12%;">Bentuk Informasi yang Tersedia</th>
-                    <th rowspan="2" style="width: 13%;">Jangka Waktu Penyimpanan atau Retensi Arsip</th>
-                </tr>
-                <tr>
-                    <th style="width: 6%; white-space: nowrap; padding: 2mm 1mm;">Cetak</th>
-                    <th style="width: 6%; white-space: nowrap; padding: 2mm 1mm;">Online</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($groupedItems as $namaKelompok => $daftarItem)
-                    @php
-                        $judulKelompok = match($namaKelompok) {
-                            'Informasi Berkala'     => 'Informasi yang Wajib Disediakan dan Diumumkan Secara Berkala',
-                            'Informasi Setiap Saat' => 'Informasi yang Wajib Disediakan Setiap Saat',
-                            'Informasi Serta-Merta' => 'Informasi yang Wajib Diumumkan Secara Serta-Merta',
-                            default                 => 'Informasi ' . $namaKelompok,
-                        };
-                    @endphp
-
-                    <!-- Baris Header Kategori (Spanning Kolom 1 s/d 8) -->
+        @forelse($groupedItems as $namaKelompok => $daftarItem)
+            <h3 class="category-section-title">{{ $categoryHeadings[$namaKelompok] ?? 'Informasi ' . $namaKelompok }}</h3>
+            <table class="data-table">
+                <thead>
                     <tr>
-                        <td colspan="7" class="category-header-cell">
-                            <strong>{{ $judulKelompok }}</strong>
-                        </td>
+                        <th rowspan="2" style="width: 6%;">No</th>
+                        <th rowspan="2" style="width: 19%;">Ringkasan Isi Informasi</th>
+                        <th rowspan="2" style="width: 17%;">Pejabat/Unit/Satker yang Menguasai Informasi</th>
+                        <th rowspan="2" style="width: 17%;">Penanggung Jawab Pembuatan atau Penerbitan Informasi</th>
+                        <th rowspan="2" style="width: 13%;">Waktu dan Tempat Pembuatan Informasi</th>
+                        <th colspan="2" style="width: 14%;">Format Informasi yang Tersedia</th>
+                        <th rowspan="2" style="width: 14%;">Jangka Waktu Penyimpanan atau Retensi Arsip</th>
                     </tr>
-
-                    {{-- MODE DEFAULT DIP RESMI: Menggunakan standard HTML rowspan yang presisi dan rapi --}}
-                    @php
-                        $rincianGroups = $daftarItem->groupBy(function($item) {
-                            return $item->rincian_informasi ?: $item->sub_informasi;
-                        });
-                    @endphp
-
-                        @php $rincianGroupNo = 0; @endphp
-                        @foreach($rincianGroups as $namaRincian => $subItems)
-                            @php
-                                $rincianGroupNo++;
-                                $subCount = $subItems->count();
-                            @endphp
-
-                            {{-- Baris Rincian Informasi --}}
-                            {{-- No: rowspan = 1 (baris rincian ini) + subCount (baris sub di bawahnya) --}}
-                            {{-- Nama rincian: colspan 7 (span semua kolom selain No), tanpa data --}}
-                            <tr style="background-color: #ffffff;">
-                                <td rowspan="{{ $subCount + 1 }}" class="text-center"
-                                    style="vertical-align: middle; font-weight: bold; border-right: 1px solid #000000;">
-                                    {{ $rincianGroupNo }}
-                                </td>
-                                <td colspan="6" style="vertical-align: middle; padding: 2mm 3mm; font-weight: bold;">
-                                    {{ $namaRincian }}
-                                </td>
-                            </tr>
-
-                            {{-- Baris Sub Informasi (No tidak ada, sudah di-rowspan dari baris rincian) --}}
-                            @foreach($subItems as $sub)
-                                @php
-                                    $subText    = trim($sub->sub_informasi ?: '');
-                                    $subBentuk  = strtolower(trim($sub->bentuk_informasi_yang_tersedia ?? ''));
-                                    $subCetak   = str_contains($subBentuk, 'cetak') || str_contains($subBentuk, 'hardcopy');
-                                    $subOnline  = str_contains($subBentuk, 'online') || str_contains($subBentuk, 'softcopy')
-                                                  || !empty($sub->file_informasi) || !empty($sub->link_informasi);
-                                    $subPejabat = $sub->pejabat_unit_yang_menguasai_informasi ?: '-';
-                                    $subWaktu   = $sub->waktu_pembuatan_informasi ?: '-';
-                                    $subRetensi = $sub->retensi_arsip ?: '-';
-                                @endphp
-                                <tr>
-                                    {{-- Col 2: Sub name (sedikit indent) --}}
-                                    <td style="vertical-align: middle; padding: 2mm 3mm 2mm 5mm;">
-                                        {{ $subText }}
-                                    </td>
-                                    {{-- Col 3-7: Data milik sub ini --}}
-                                    <td class="text-center" style="vertical-align: middle;">{{ $subPejabat }}</td>
-                                    <td class="text-center" style="vertical-align: middle;">{{ $subWaktu }}</td>
-                                    <td class="text-center" style="vertical-align: middle; font-size: 11pt;">
-                                        @if($subCetak) ✔ @endif
-                                    </td>
-                                    <td class="text-center" style="vertical-align: middle; font-size: 11pt;">
-                                        @if($subOnline) ✔ @endif
-                                    </td>
-                                    <td class="text-center" style="vertical-align: middle;">{{ $subRetensi }}</td>
-                                </tr>
-                            @endforeach
-                        @endforeach
-
-
-                @endforeach
-            </tbody>
-        </table>
+                    <tr>
+                        <th style="width: 7%; white-space: nowrap; padding: 2mm 1mm;">Cetak</th>
+                        <th style="width: 7%; white-space: nowrap; padding: 2mm 1mm;">Online</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($daftarItem as $index => $item)
+                        @php
+                            $bentuk = strtolower(trim($item->bentuk_informasi_yang_tersedia ?? ''));
+                            $cetak = str_contains($bentuk, 'cetak') || str_contains($bentuk, 'hardcopy');
+                            $online = str_contains($bentuk, 'online') || str_contains($bentuk, 'softcopy')
+                                || !empty($item->file_informasi) || !empty($item->link_informasi);
+                        @endphp
+                        <tr>
+                            <td class="text-center">{{ $index + 1 }}</td>
+                            <td>{{ trim($item->sub_informasi ?: '') }}</td>
+                            <td>{{ $item->pejabat_unit_yang_menguasai_informasi ?: '-' }}</td>
+                            <td>{{ $item->penanggung_jawab_pembuatan_informasi ?: '-' }}</td>
+                            <td>{{ $item->waktu_pembuatan_informasi ?: '-' }}</td>
+                            <td class="text-center" style="font-size: 11pt;">@if($cetak) ✔ @endif</td>
+                            <td class="text-center" style="font-size: 11pt;">@if($online) ✔ @endif</td>
+                            <td>{{ $item->retensi_arsip ?: '-' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @empty
+            <p style="text-align: center; padding: 12mm 0;">Tidak ada data informasi publik untuk diekspor.</p>
+        @endforelse
 
         <!-- Tanda Tangan Pengesahan Pejabat PPID Pelaksana / Dekan -->
         <div class="signature-container">

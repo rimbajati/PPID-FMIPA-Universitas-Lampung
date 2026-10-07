@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('ringkasan_informasi', 255);
             $table->text('dasar_hukum');
-            $table->string('dibuka', 255)->default('-');
+            $table->string('dibuka', 255);
             $table->text('ditutup');
             $table->string('jangka_waktu', 255);
             $table->timestamps();

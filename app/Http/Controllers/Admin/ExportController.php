@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\InformasiPublik;
+use App\Models\InformasiDikecualikan;
 use App\Models\Permohonan;
 use App\Models\Keberatan;
 use Illuminate\Http\Request;
@@ -44,6 +45,7 @@ class ExportController extends Controller
                 $q->whereRaw('LOWER(COALESCE(sub_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(rincian_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"])
+                  ->orWhereRaw('LOWER(COALESCE(penanggung_jawab_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(waktu_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(retensi_arsip, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(bentuk_informasi_yang_tersedia, "")) LIKE ?', ["%{$term}%"]);
@@ -77,89 +79,129 @@ class ExportController extends Controller
 
         $items = $query->get();
 
-        $filename = 'Daftar_Informasi_Publik_PPID_FMIPA_' . ($request->tahun ?: date('Y')) . '_' . date('Ymd_His') . '.csv';
-
-        $headers = [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-            'Pragma'              => 'no-cache',
-            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires'             => '0',
+        $groupedItems = $items->groupBy('jenis_informasi');
+        $categorySections = [
+            'Informasi Berkala' => 'Informasi Publik yang Wajib Disediakan secara Berkala',
+            'Informasi Setiap Saat' => 'Informasi Publik yang Wajib Tersedia Setiap Saat',
+            'Informasi Serta-Merta' => 'Informasi Publik yang Wajib Diumumkan secara Serta-Merta',
         ];
-
-        $callback = function() use ($items, $request) {
-            $file = fopen('php://output', 'w');
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-
-            // Judul Dokumen Resmi
-            fputcsv($file, ['DAFTAR INFORMASI PUBLIK (DIP)']);
-            fputcsv($file, ['PPID PELAKSANA FAKULTAS MIPA - UNIVERSITAS LAMPUNG']);
-            fputcsv($file, ['Tahun Penetapan / Periode: ' . ($request->tahun ?: date('Y'))]);
-            fputcsv($file, ['Tanggal Ekspor: ' . date('d F Y H:i:s')]);
-            fputcsv($file, []);
-
-            // Header kolom standar DIP
-            fputcsv($file, [
-                'No',
-                'Ringkasan Isi Informasi',
-                'Jenis Informasi',
-                'Pejabat/Unit/Satker yang Menguasai Informasi',
-                'Waktu dan Tempat Pembuatan Informasi',
-                'Bentuk Informasi yang Tersedia',
-                'Jangka Waktu Penyimpanan atau Retensi Arsip',
-                'Tautan / Akses Berkas'
-            ]);
-
-            // Kelompokkan berdasarkan rincian_informasi — struktur hierarki DIP Unpad
-            $rincianGroups = $items->groupBy(function($item) {
-                return $item->rincian_informasi ?: ($item->sub_informasi ?: '-');
-            });
-
-            $groupNo = 0;
-            $no = 1;
-            foreach ($rincianGroups as $namaRincian => $subItems) {
-                $groupNo++;
-                $first = $subItems->first();
-
-                // Baris rincian:
-                // Nama rincian di kolom Ringkasan, data bersama dari item pertama
-                fputcsv($file, [
-                    $groupNo,
-                    $namaRincian,
-                    $first->jenis_informasi ?: '-',
-                    $first->pejabat_unit_yang_menguasai_informasi ?: '-',
-                    $first->waktu_pembuatan_informasi ?: '-',
-                    $first->bentuk_informasi_yang_tersedia ?: '-',
-                    $first->retensi_arsip ?: '-',
-                    '-'
-                ]);
-
-                // Baris sub informasi di bawahnya (indented 4 spasi)
-                foreach ($subItems as $item) {
-                    $subText  = trim($item->sub_informasi ?: '');
-                    $bentuk   = $item->bentuk_informasi_yang_tersedia ?: '-';
-                    $link     = $item->file_informasi ? url('/informasi/lihat/' . $item->id) : ($item->link_informasi ?: '-');
-                    $pejabat  = $item->pejabat_unit_yang_menguasai_informasi ?: '-';
-                    $waktu    = $item->waktu_pembuatan_informasi ?: '-';
-                    $retensi  = $item->retensi_arsip ?: '-';
-
-                    fputcsv($file, [
-                        $no++,
-                        '    ' . $subText,
-                        $item->jenis_informasi ?: '-',
-                        $pejabat,
-                        $waktu,
-                        $bentuk,
-                        $retensi,
-                        $link
-                    ]);
-                }
-            }
-
-            fclose($file);
+        $columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        $rows = [];
+        $merges = [];
+        $rowNumber = 1;
+        $addRow = function (array $cells, int $height = 30) use (&$rows, &$rowNumber) {
+            $rows[] = ['number' => $rowNumber++, 'height' => $height, 'cells' => $cells];
         };
 
-        return response()->stream($callback, 200, $headers);
+        $addRow([['DAFTAR INFORMASI PUBLIK (DIP)', 1]], 30);
+        $merges[] = 'A1:H1';
+        $addRow([['PPID PELAKSANA FAKULTAS MIPA - UNIVERSITAS LAMPUNG', 2]], 24);
+        $merges[] = 'A2:H2';
+        $addRow([['Tahun Penetapan / Periode: ' . ($request->tahun ?: date('Y')), 2]], 22);
+        $merges[] = 'A3:H3';
+        $addRow([['Tanggal Ekspor: ' . date('d F Y H:i:s'), 2]], 22);
+        $merges[] = 'A4:H4';
+        $addRow([], 12);
+
+        $categoryNumber = 0;
+        foreach ($categorySections as $jenis => $judul) {
+            $categoryItems = $groupedItems->get($jenis, collect());
+            if ($categoryItems->isEmpty()) {
+                continue;
+            }
+
+            $categoryNumber++;
+            $addRow([[chr(64 + $categoryNumber) . '. ' . $judul, 3]], 25);
+            $merges[] = 'A' . ($rowNumber - 1) . ':H' . ($rowNumber - 1);
+            $addRow(array_map(fn ($value) => [$value, 4], [
+                'No',
+                'Ringkasan Isi Informasi',
+                'Pejabat/Unit/Satker yang Menguasai Informasi',
+                'Penanggung Jawab Pembuatan atau Penerbitan Informasi',
+                'Waktu dan Tempat Pembuatan Informasi',
+                'Cetak',
+                'Online',
+                'Jangka Waktu Penyimpanan atau Retensi Arsip',
+            ]), 42);
+
+            foreach ($categoryItems as $index => $item) {
+                $bentuk = strtolower(trim($item->bentuk_informasi_yang_tersedia ?? ''));
+                $cetak = str_contains($bentuk, 'cetak') || str_contains($bentuk, 'hardcopy');
+                $online = str_contains($bentuk, 'online') || str_contains($bentuk, 'softcopy')
+                    || !empty($item->file_informasi) || !empty($item->link_informasi);
+
+                $addRow([
+                    [$index + 1, 5],
+                    [trim($item->sub_informasi ?: ''), 5],
+                    [$item->pejabat_unit_yang_menguasai_informasi ?: '-', 5],
+                    [$item->penanggung_jawab_pembuatan_informasi ?: '-', 5],
+                    [$item->waktu_pembuatan_informasi ?: '-', 5],
+                    [$cetak ? '✓' : '', 6],
+                    [$online ? '✓' : '', 6],
+                    [$item->retensi_arsip ?: '-', 5],
+                ], 0);
+            }
+            $addRow([], 12);
+        }
+
+        $escape = static fn ($value) => htmlspecialchars((string) $value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+        $sheetRows = '';
+        foreach ($rows as $row) {
+            $heightAttributes = $row['height'] > 0
+                ? ' ht="' . $row['height'] . '" customHeight="1"'
+                : '';
+            $sheetRows .= '<row r="' . $row['number'] . '"' . $heightAttributes . '>';
+            foreach ($row['cells'] as $columnIndex => [$value, $style]) {
+                $reference = $columns[$columnIndex] . $row['number'];
+                if (is_int($value) || is_float($value)) {
+                    $sheetRows .= '<c r="' . $reference . '" s="' . $style . '"><v>' . $value . '</v></c>';
+                } else {
+                    $sheetRows .= '<c r="' . $reference . '" s="' . $style . '" t="inlineStr"><is><t xml:space="preserve">' . $escape($value) . '</t></is></c>';
+                }
+            }
+            $sheetRows .= '</row>';
+        }
+
+        $mergeXml = '<mergeCells count="' . count($merges) . '">';
+        foreach ($merges as $merge) {
+            $mergeXml .= '<mergeCell ref="' . $merge . '"/>';
+        }
+        $mergeXml .= '</mergeCells>';
+
+        $sheetXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            . '<cols><col min="1" max="1" width="7" customWidth="1"/><col min="2" max="2" width="38" customWidth="1"/><col min="3" max="4" width="34" customWidth="1"/><col min="5" max="5" width="27" customWidth="1"/><col min="6" max="7" width="12" customWidth="1"/><col min="8" max="8" width="36" customWidth="1"/></cols>'
+            . '<sheetData>' . $sheetRows . '</sheetData>' . $mergeXml . '<pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.2" footer="0.2"/>'
+            . '</worksheet>';
+        $stylesXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            . '<fonts count="3"><font><sz val="11"/><name val="Arial"/></font><font><b/><sz val="16"/><name val="Arial"/></font><font><b/><sz val="11"/><name val="Arial"/></font></fonts>'
+            . '<fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0EA5E9"/><bgColor indexed="64"/></patternFill></fill></fills>'
+            . '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="FFD1D5DB"/></left><right style="thin"><color rgb="FFD1D5DB"/></right><top style="thin"><color rgb="FFD1D5DB"/></top><bottom style="thin"><color rgb="FFD1D5DB"/></bottom><diagonal/></border></borders>'
+            . '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+            . '<cellXfs count="7"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf></cellXfs>'
+            . '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+
+        $tempBase = tempnam(sys_get_temp_dir(), 'dip-');
+        $tempFile = $tempBase . '.xlsx';
+        @unlink($tempBase);
+        $archive = new \ZipArchive();
+        if ($archive->open($tempFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            return back()->with('error', 'File spreadsheet gagal dibuat. Silakan coba kembali.');
+        }
+        $archive->addFromString('[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>');
+        $archive->addFromString('_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>');
+        $archive->addFromString('xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Daftar Informasi" sheetId="1" r:id="rId1"/></sheets></workbook>');
+        $archive->addFromString('xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>');
+        $archive->addFromString('xl/worksheets/sheet1.xml', $sheetXml);
+        $archive->addFromString('xl/styles.xml', $stylesXml);
+        $archive->close();
+
+        $filename = 'Daftar_Informasi_Publik_PPID_FMIPA_' . ($request->tahun ?: date('Y')) . '_' . date('Ymd_His') . '.xlsx';
+
+        return response()->download($tempFile, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ])->deleteFileAfterSend(true);
     }
 
     /**
@@ -200,6 +242,7 @@ class ExportController extends Controller
                 $q->whereRaw('LOWER(COALESCE(sub_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(rincian_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"])
+                  ->orWhereRaw('LOWER(COALESCE(penanggung_jawab_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(waktu_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(retensi_arsip, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(bentuk_informasi_yang_tersedia, "")) LIKE ?', ["%{$term}%"]);
@@ -300,6 +343,16 @@ class ExportController extends Controller
             'kategori'     => $kategori,
             'tahun'        => $tahunLabel,
             'satker'       => $request->satker ?: null,
+        ]);
+    }
+
+    /** Export Daftar Informasi yang Dikecualikan - PDF */
+    public function exportInformasiDikecualikanPdf()
+    {
+        $items = InformasiDikecualikan::latest()->get();
+
+        return view('admin.exports.informasi-dikecualikan-pdf', [
+            'items' => $items,
         ]);
     }
 
@@ -437,13 +490,6 @@ class ExportController extends Controller
             ];
         }
 
-        // Statistik Kategori Pemohon & Klasifikasi
-        $kategoriPemohon = [
-            'Perorangan / Mahasiswa' => Permohonan::whereYear('created_at', $tahun)->where(fn($q) => $q->where('kategori_pemohon', 'like', '%perorangan%')->orWhere('kategori_pemohon', 'like', '%mahasiswa%'))->count(),
-            'Kelompok Orang'         => Permohonan::whereYear('created_at', $tahun)->where('kategori_pemohon', 'like', '%kelompok%')->count(),
-            'Badan Hukum / Lembaga'  => Permohonan::whereYear('created_at', $tahun)->where(fn($q) => $q->where('kategori_pemohon', 'like', '%badan hukum%')->orWhere('kategori_pemohon', 'like', '%lembaga%'))->count(),
-        ];
-
         return view('admin.exports.statistik-pdf', [
             'tahun'           => $tahun,
             'rekap'           => $rekap,
@@ -452,7 +498,6 @@ class ExportController extends Controller
             'totTolak'        => $totTolak,
             'totProses'       => $totProses,
             'totKeberatan'    => $totKeberatan,
-            'kategoriPemohon' => $kategoriPemohon
         ]);
     }
 
@@ -498,13 +543,15 @@ class ExportController extends Controller
                 'No. Tiket',
                 'Tanggal Masuk',
                 'Nama Pemohon',
-                'Kategori Pemohon',
                 'No. Identitas (NIK/KTM)',
                 'Email',
                 'No. Telepon/WA',
+                'Alamat Lengkap',
+                'Pekerjaan',
                 'Rincian Informasi Yang Diminta',
                 'Tujuan Penggunaan',
-                'Cara Memperoleh',
+                'Jenis Permohonan',
+                'Cara Menerima Informasi',
                 'Status Permohonan',
                 'Catatan / Alasan Penolakan'
             ]);
@@ -520,12 +567,14 @@ class ExportController extends Controller
                     $item->no_tiket,
                     $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-',
                     $item->nama_lengkap,
-                    $item->kategori_pemohon ?: '-',
                     $item->no_identitas ? "'" . $item->no_identitas : '-',
                     $item->email,
                     $item->no_telepon ? "'" . $item->no_telepon : '-',
+                    $item->alamat_lengkap ?: '-',
+                    $item->pekerjaan ?: '-',
                     $item->informasi_yang_diminta,
                     $item->tujuan_penggunaan_informasi ?: '-',
+                    $item->jenis_permohonan ?: '-',
                     $item->cara_memperoleh_informasi ?: '-',
                     strtoupper($item->status),
                     $catatan

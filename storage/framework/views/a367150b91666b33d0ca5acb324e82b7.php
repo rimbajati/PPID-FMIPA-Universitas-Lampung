@@ -13,6 +13,11 @@
 
         <!-- Tombol Aksi Header -->
         <div class="flex items-center gap-2.5 shrink-0">
+            <a href="<?php echo e(route('admin.export.informasi-dikecualikan.pdf')); ?>" target="_blank"
+               class="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition-all shadow-2xs hover:shadow-xs cursor-pointer">
+                <i class="fa-solid fa-file-pdf text-rose-500 text-sm"></i>
+                <span>Export</span>
+            </a>
             <!-- Tombol Tambah Utama -->
             <button type="button" onclick="openModalCreateDik()" 
                     class="inline-flex items-center justify-center gap-2.5 px-5 py-3 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
@@ -40,7 +45,7 @@
 
             <!-- Dropdown Show Entries -->
             <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
-                <span>Show</span>
+                <span>Tampilkan</span>
                 <select id="select-per-page-admin-dik" onchange="changePerPageAdminDik(this.value)" 
                         class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
                     <option value="10" <?php echo e((int)request('per_page', 10) === 10 ? 'selected' : ''); ?>>10</option>
@@ -48,14 +53,14 @@
                     <option value="50" <?php echo e((int)request('per_page', 10) === 50 ? 'selected' : ''); ?>>50</option>
                     <option value="100" <?php echo e((int)request('per_page', 10) === 100 ? 'selected' : ''); ?>>100</option>
                 </select>
-                <span>entries</span>
+                <span>baris</span>
             </div>
         </div>
 
         <!-- Sisi Kanan: Search Bar Pencarian Seluruh Isi Tabel (Format DataTables: Search: [_____ x]) -->
         <form id="form-search-admin-dik" onsubmit="event.preventDefault();" class="flex items-center gap-2">
             <label for="input-search-admin-dik" class="text-sm font-semibold text-slate-800 select-none cursor-pointer">
-                Search:
+                Cari:
             </label>
             <div class="relative">
                 <input type="text" 
@@ -121,7 +126,7 @@
                                     </span>
                                 </div>
                             </th>
-                            <th colspan="2" class="px-3.5 py-2 text-center border-b border-white/20">Konsekuensi / Pertimbangan Bagi Publik</th>
+                            <th colspan="2" class="consequence-group-header px-3.5 py-2 text-center border-b border-white/20">Konsekuensi / Pertimbangan Bagi Publik</th>
                             <th rowspan="2" onclick="sortAdminDikTable('jangka_waktu')" class="px-3.5 py-3.5 text-center cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jangka Waktu">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <span>Jangka Waktu</span>
@@ -162,30 +167,30 @@
                                 data-dibuka="<?php echo e(strtolower($item->dibuka ?? '')); ?>"
                                 data-ditutup="<?php echo e(strtolower($item->ditutup ?? '')); ?>"
                                 data-jangka_waktu="<?php echo e(strtolower($item->jangka_waktu ?? '')); ?>">
-                                <td class="col-checkbox-cell hidden px-2 py-3 text-center">
+                                <td class="col-checkbox-cell hidden px-2 py-3 text-center align-top">
                                     <input type="checkbox" name="ids[]" form="form-bulk-delete" value="<?php echo e($item->id); ?>" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                                 </td>
-                                <td class="col-admin-dik-no px-2 py-3 text-center font-bold text-slate-400">
+                                <td class="col-admin-dik-no px-2 py-3 text-center font-bold text-slate-400 align-top">
                                     <?php echo e($idx + 1); ?>
 
                                 </td>
-                                <td class="px-3.5 py-3 font-extrabold text-slate-900 leading-normal break-words">
+                                <td class="px-3.5 py-3 font-medium text-slate-800 leading-normal break-words align-top">
                                     <?php echo e($item->ringkasan_informasi); ?>
 
                                 </td>
-                                <td class="px-3 py-3 text-slate-700 break-words leading-normal">
+                                <td class="px-3 py-3 text-slate-700 break-words leading-normal align-top">
                                     <?php echo e($item->dasar_hukum); ?>
 
                                 </td>
-                                <td class="px-3 py-3 text-slate-700 break-words leading-normal">
+                                <td class="px-3 py-3 text-slate-700 break-words leading-normal align-top">
                                     <?php echo e($item->dibuka ?: '-'); ?>
 
                                 </td>
-                                <td class="px-3 py-3 text-slate-700 break-words leading-normal">
+                                <td class="px-3 py-3 text-slate-700 break-words leading-normal align-top">
                                     <?php echo e($item->ditutup); ?>
 
                                 </td>
-                                <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words">
+                                <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words align-top">
                                     <?php echo e($item->jangka_waktu); ?>
 
                                 </td>
@@ -193,20 +198,20 @@
                                     <div class="flex items-center justify-center gap-1.5">
                                         <!-- Tombol Lihat (Detail Pop-up) -->
                                         <button type="button" onclick="openDetailDikModal(<?php echo e(json_encode($item)); ?>)" title="Lihat Detail" 
-                                                class="w-7 h-7 flex items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer">
-                                            <i class="fa-regular fa-eye text-[11px]"></i>
+                                                class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer">
+                                            <i class="fa-regular fa-eye text-[11px] not-italic leading-none"></i>
                                         </button>
 
                                         <!-- Tombol Edit -->
                                         <button type="button" onclick="openModalEditDik(<?php echo e(json_encode($item)); ?>)" title="Edit Data" 
-                                                class="w-7 h-7 flex items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                                class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
+                                            <i class="fa-solid fa-pen-to-square text-[11px] not-italic leading-none"></i>
                                         </button>
 
                                         <!-- Tombol Hapus -->
                                         <button type="button" onclick="triggerDeleteDik('<?php echo e(url('/admin/informasi-dikecualikan/' . $item->id)); ?>', '<?php echo e(addslashes($item->ringkasan_informasi)); ?>')" title="Hapus Data" 
-                                                class="w-7 h-7 flex items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                            <i class="fa-solid fa-trash text-[11px]"></i>
+                                                class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
+                                            <i class="fa-solid fa-trash-can text-[11px] not-italic leading-none"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -225,7 +230,7 @@
             <!-- Footer Kontrol Paginasi Client-side Instan -->
             <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div id="table-admin-dik-info" class="text-xs md:text-sm text-slate-800">
-                    Menampilkan 0 sampai 0 dari 0 entri
+                    Menampilkan 0–0 dari 0 informasi
                 </div>
                 <div id="table-admin-dik-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
                     <!-- Render dinamis via JavaScript -->
@@ -235,6 +240,12 @@
     </div>
 
 </div>
+
+<style>
+    #table-admin-dik-body > .table-admin-dik-row > td {
+        vertical-align: middle !important;
+    }
+</style>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('modals'); ?>
@@ -242,10 +253,10 @@
 <!-- MODAL TAMBAH & EDIT INFORMASI DIKECUALIKAN (DIK)    -->
 <!-- =================================================== -->
 <div id="modalAddEditDik" class="hidden fixed inset-0 z-[999999] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-xs transition-opacity">
-    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border-0 overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[96vh] transition-all duration-300 ease-in-out">
+    <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border-0 overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[96vh] transition-all duration-300 ease-in-out">
 
         <!-- Header Modal (Sky-Blue) -->
-        <div class="bg-sky-500 text-white px-6 py-3.5 shrink-0 rounded-t-2xl w-full">
+        <div class="bg-sky-500 text-white px-8 py-5 shrink-0 rounded-t-2xl w-full">
             <h3 id="modalDikTitle" class="text-lg sm:text-xl font-extrabold text-white tracking-tight leading-snug">Tambah Informasi Dikecualikan</h3>
             <p id="modalDikSubtitle" class="text-xs text-white/90 font-medium mt-0.5 leading-normal">Masukkan detail informasi yang dikecualikan</p>
         </div>
@@ -255,12 +266,12 @@
             <?php echo csrf_field(); ?>
             <input type="hidden" name="_method" id="formMethodDik" value="POST">
 
-            <div class="p-6 text-xs md:text-sm overflow-y-auto flex-1 space-y-4">
+            <div class="p-8 text-xs md:text-sm overflow-y-auto flex-1 space-y-5">
 
-                <!-- 1. Ringkasan Informasi -->
+                <!-- 1. Informasi -->
                 <div class="space-y-1">
                     <label class="block text-xs md:text-sm font-bold text-slate-800">
-                        Ringkasan Informasi <span class="text-rose-500">*</span>
+                        Informasi <span class="text-rose-500">*</span>
                     </label>
                     <textarea name="ringkasan_informasi" id="inputRingkasanInformasi" rows="3" required
                               placeholder="Contoh: Dokumen Ujian Mahasiswa, Nilai Indeks Prestasi, Berkas Kepegawaian..."
@@ -270,19 +281,24 @@
                 <!-- 2. Dasar Hukum -->
                 <div class="space-y-1">
                     <label class="block text-xs md:text-sm font-bold text-slate-800">
-                        Dasar Hukum Pengecualian Informasi <span class="text-rose-500">*</span>
+                        Dasar Hukum <span class="text-rose-500">*</span>
                     </label>
                     <textarea name="dasar_hukum" id="inputDasarHukum" rows="3" required
                               placeholder="Contoh: UU KIP Pasal 17 Huruf h Angka 4 dan Angka 5..."
                               class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none"></textarea>
                 </div>
 
-                <!-- 3. Dibuka & Ditutup -->
+                <!-- 3. Konsekuensi / Pertimbangan Bagi Publik -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2 text-xs md:text-sm font-bold text-slate-800">
+                        Konsekuensi / Pertimbangan Bagi Publik
+                    </div>
                     <div class="space-y-1">
-                        <label class="block text-xs md:text-sm font-bold text-slate-800">Dibuka</label>
-                        <input type="text" name="dibuka" id="inputDibuka" value="-"
-                               placeholder="Default: -"
+                        <label class="block text-xs md:text-sm font-bold text-slate-800">
+                            Dibuka <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="text" name="dibuka" id="inputDibuka" required
+                               placeholder="Contoh: Informasi dapat dibuka untuk umum"
                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm">
                     </div>
                     <div class="space-y-1">
@@ -308,7 +324,7 @@
             </div>
 
             <!-- Footer Buttons -->
-            <div class="px-5 py-3 sm:px-6 bg-slate-50/90 border-t border-slate-100 flex items-center justify-end gap-2.5 shrink-0 rounded-b-2xl">
+            <div class="px-6 py-4 sm:px-8 bg-slate-50/90 border-t border-slate-100 flex items-center justify-end gap-2.5 shrink-0 rounded-b-2xl">
                 <button type="button" onclick="closeModalAddEditDik()"
                         class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs sm:text-sm font-extrabold rounded-xl transition cursor-pointer">
                     Batal
@@ -342,10 +358,10 @@
 
         <!-- Body Modal (Format Persis Sesuai Gambar Referensi) -->
         <div class="p-6 overflow-y-auto space-y-6 text-sm divide-y divide-slate-100">
-            <!-- 1. Dasar Hukum Pengecualian Informasi -->
+            <!-- 1. Dasar Hukum -->
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2 first:pt-0">
                 <div class="sm:col-span-4 font-bold text-slate-900">
-                    Dasar Hukum Pengecualian Informasi
+                    Dasar Hukum
                 </div>
                 <div id="dikDetailDasarHukum" class="sm:col-span-8 text-slate-700 font-medium whitespace-pre-line leading-relaxed">
                 </div>
@@ -472,7 +488,7 @@
         document.getElementById('formAddEditDik').action = "<?php echo e(url('/admin/informasi-dikecualikan')); ?>";
         document.getElementById('formMethodDik').value = 'POST';
         document.getElementById('formAddEditDik').reset();
-        document.getElementById('inputDibuka').value = '-';
+        document.getElementById('inputDibuka').value = '';
         document.getElementById('modalAddEditDik').classList.remove('hidden');
     }
 
@@ -484,7 +500,7 @@
         
         document.getElementById('inputRingkasanInformasi').value = data.ringkasan_informasi || '';
         document.getElementById('inputDasarHukum').value = data.dasar_hukum || '';
-        document.getElementById('inputDibuka').value = data.dibuka || '-';
+        document.getElementById('inputDibuka').value = data.dibuka || '';
         document.getElementById('inputDitutup').value = data.ditutup || '';
         document.getElementById('inputJangkaWaktu').value = data.jangka_waktu || '';
 
@@ -697,7 +713,7 @@
 
         if (totalItems === 0) {
             tbody.innerHTML = '<tr><td colspan="8" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data informasi dikecualikan yang sesuai.</td></tr>';
-            if (infoEl) infoEl.innerText = 'Menampilkan 0 sampai 0 dari 0 entri';
+            if (infoEl) infoEl.innerText = 'Menampilkan 0–0 dari 0 informasi';
             if (paginEl) paginEl.innerHTML = '';
             window.updateBulkState();
             return;
@@ -718,7 +734,7 @@
         });
 
         if (infoEl) {
-            infoEl.innerText = `Menampilkan ${startIndex + 1} sampai ${endIndex} dari ${totalItems} entri`;
+            infoEl.innerText = `Menampilkan ${startIndex + 1}–${endIndex} dari ${totalItems} informasi`;
         }
 
         if (paginEl) {

@@ -61,16 +61,28 @@
 
     window.isSelectMode = false;
 
+    function getAdminDipCheckboxes() {
+        const checkboxes = new Map();
+        document.querySelectorAll('.item-checkbox').forEach(input => checkboxes.set(input.value, input));
+        if (typeof adminDipTables !== 'undefined') {
+            adminDipTables.forEach(state => state.rows.forEach(row => {
+                const input = row.element.querySelector('.item-checkbox');
+                if (input) checkboxes.set(input.value, input);
+            }));
+        }
+        return [...checkboxes.values()];
+    }
+
     window.toggleSelectMode = function() {
         window.isSelectMode = !window.isSelectMode;
         const isSelectMode = window.isSelectMode;
-        const colHeader = document.getElementById('col-checkbox-header');
+        const colHeaders = document.querySelectorAll('.col-checkbox-header');
         const colCells = document.querySelectorAll('.col-checkbox-cell');
         const toggleBtn = document.getElementById('btn-toggle-select');
         const textSelectMode = document.getElementById('text-select-mode');
-        const checkAll = document.getElementById('check-all');
+        const checkAll = document.querySelectorAll('.check-all');
 
-        if (colHeader) colHeader.classList.toggle('hidden', !isSelectMode);
+        colHeaders.forEach(header => header.classList.toggle('hidden', !isSelectMode));
         colCells.forEach(cell => cell.classList.toggle('hidden', !isSelectMode));
 
         if (isSelectMode) {
@@ -82,8 +94,8 @@
             toggleBtn.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
             textSelectMode.innerText = 'Hapus';
             
-            if (checkAll) checkAll.checked = false;
-            document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = false);
+            checkAll.forEach(input => input.checked = false);
+            getAdminDipCheckboxes().forEach(cb => cb.checked = false);
             window.updateBulkState();
         }
 
@@ -93,17 +105,20 @@
     };
 
     window.toggleCheckAll = function(master) {
-        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const checkboxes = getAdminDipCheckboxes();
         checkboxes.forEach(cb => cb.checked = master.checked);
+        document.querySelectorAll('.check-all').forEach(input => input.checked = master.checked);
         window.updateBulkState();
     };
 
     window.updateBulkState = function() {
-        const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
+        const checkboxes = getAdminDipCheckboxes();
+        const selected = checkboxes.filter(input => input.checked);
+        const checkedCount = selected.length;
         const bulkBtn = document.getElementById('btn-bulk-delete');
         const selectedCount = document.getElementById('selected-count');
-        const checkAll = document.getElementById('check-all');
-        const totalItems = document.querySelectorAll('.item-checkbox').length;
+        const checkAll = document.querySelectorAll('.check-all');
+        const totalItems = checkboxes.length;
 
         if (selectedCount) selectedCount.innerText = checkedCount;
 
@@ -115,14 +130,23 @@
             }
         }
 
-        if (checkAll && totalItems > 0) {
-            checkAll.checked = (checkedCount === totalItems);
+        checkAll.forEach(input => input.checked = totalItems > 0 && checkedCount === totalItems);
+        const selectedInputs = document.getElementById('bulk-selected-inputs');
+        if (selectedInputs) {
+            selectedInputs.innerHTML = '';
+            selected.forEach(input => {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'ids[]';
+                hidden.value = input.value;
+                selectedInputs.appendChild(hidden);
+            });
         }
     }
 
     // Modal confirm delete & bulk delete sudah ditangani secara global di layout admin.blade.php
     function triggerBulkDelete() {
-        const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
+        const checkedCount = getAdminDipCheckboxes().filter(input => input.checked).length;
         if (checkedCount === 0) return;
         document.getElementById('deleteConfirmText').innerHTML = 'Apakah Anda yakin ingin menghapus <b>' + checkedCount + '</b> informasi publik yang dipilih?';
         window.currentDeleteType = 'bulk';
@@ -144,31 +168,10 @@
     }
 
     function handleFileChange(input) {
-        const fileDisplayName = document.getElementById('fileDisplayName');
-        const currentFileLink = document.getElementById('currentFileLink');
-        
-        if (input.files && input.files.length > 0) {
-            if (currentFileLink) currentFileLink.classList.add('hidden');
-            if (fileDisplayName) {
-                fileDisplayName.textContent = input.files[0].name;
-                fileDisplayName.classList.remove('hidden', 'text-slate-500');
-                fileDisplayName.classList.add('text-slate-800', 'font-semibold');
-            }
-        } else {
-            // Jika batal memilih file saat edit, kembalikan ke file saat ini bila ada
-            const isEdit = document.getElementById('formMethod').value === 'PUT';
-            const fileNameSpan = document.getElementById('currentFileName');
-            if (isEdit && fileNameSpan && fileNameSpan.textContent.trim() !== '') {
-                if (fileDisplayName) fileDisplayName.classList.add('hidden');
-                if (currentFileLink) currentFileLink.classList.remove('hidden');
-            } else {
-                if (currentFileLink) currentFileLink.classList.add('hidden');
-                if (fileDisplayName) {
-                    fileDisplayName.textContent = 'No file chosen';
-                    fileDisplayName.classList.remove('hidden', 'text-slate-800', 'font-semibold');
-                    fileDisplayName.classList.add('text-slate-500');
-                }
-            }
+        // Now handled by Alpine; keep compat so onChange legacy tidak error
+        if (input.files && input.files[0]) {
+            const disp = document.getElementById('fileDisplayName');
+            if (disp) disp.textContent = input.files[0].name;
         }
     }
 
@@ -213,42 +216,38 @@
 
     function openAddModal() {
         document.getElementById('modalTitle').innerText = 'Tambah Informasi Publik';
-        document.getElementById('modalSubtitle').innerText = 'Tambahka informasi publik baru kedalam sistem';
+        document.getElementById('modalSubtitle').innerText = 'Tambahkan informasi publik baru ke dalam sistem';
         document.getElementById('formAddEdit').action = "<?php echo e(url('/admin/informasi-publik')); ?>";
         document.getElementById('formMethod').value = 'POST';
         document.getElementById('formAddEdit').reset();
-        window.rincianSavedDuringStep = false;
         
-        // Reset file display
-        const fileDisplayName = document.getElementById('fileDisplayName');
-        const currentFileLink = document.getElementById('currentFileLink');
-        const fileNameSpan = document.getElementById('currentFileName');
-        if (fileNameSpan) fileNameSpan.textContent = '';
-        if (currentFileLink) {
-            currentFileLink.classList.add('hidden');
-            currentFileLink.href = '#';
-        }
-        if (fileDisplayName) {
-            fileDisplayName.textContent = 'No file chosen';
-            fileDisplayName.classList.remove('hidden', 'text-slate-800', 'font-semibold');
-            fileDisplayName.classList.add('text-slate-500');
-        }
+        // Reset Alpine file state + hidden compat
+        (() => {
+            const root = document.getElementById('sectionAksesOnline');
+            if (root && root._x_dataStack && root._x_dataStack[0]) {
+                const d = root._x_dataStack[0];
+                d.fileName=''; d.fileSize=''; if(d.fileUrl) URL.revokeObjectURL(d.fileUrl); d.fileUrl=''; d.tipe='file';
+            }
+            const fileNameSpan = document.getElementById('currentFileName');
+            const currentFileLink = document.getElementById('currentFileLink');
+            if (fileNameSpan) fileNameSpan.textContent = '';
+            if (currentFileLink) { currentFileLink.classList.add('hidden'); currentFileLink.href='#'; }
+        })();
 
         const helpText = document.getElementById('fileHelpText');
-        if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX (Maks 5MB)';
+        if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)';
 
         // Reset default inputs
         if (document.getElementById('inputSubInformasi')) document.getElementById('inputSubInformasi').value = '';
         if (document.getElementById('inputRincianInformasi')) document.getElementById('inputRincianInformasi').value = '';
         if (document.getElementById('inputPejabatPenguasa')) document.getElementById('inputPejabatPenguasa').value = '';
-        if (document.getElementById('inputPenanggungJawab')) document.getElementById('inputPenanggungJawab').value = '';
         if (document.getElementById('inputTahun')) document.getElementById('inputTahun').value = '';
         if (document.getElementById('inputRetensiArsip')) document.getElementById('inputRetensiArsip').value = '';
         if (document.getElementById('inputLink')) document.getElementById('inputLink').value = '';
         if (document.getElementById('inputFile')) document.getElementById('inputFile').value = '';
 
-        // Reset progressive disclosure sections
-        toggleSubDetailFields(false);
+        // Tampilkan seluruh form sejak modal tambah dibuka.
+        toggleSubDetailFields(true);
 
         // Pre-fill kategori jika sedang filter kategori
         const urlParamsAdd = new URLSearchParams(window.location.search);
@@ -269,135 +268,40 @@
         document.getElementById('modalAddEdit').classList.remove('hidden');
     }
 
-    window.toggleSubDetailFields = function(forceShow = null) {
+    window.toggleSubDetailFields = function() {
         const sectionFields = document.getElementById('section-form-fields');
-        const modalBox = document.getElementById('modalAddEditBox');
-        const btnStepNext = document.getElementById('btnStepNext');
         const btnSubmit = document.getElementById('btnSubmitAddEdit');
-        const katVal = document.getElementById('inputJenisInformasi')?.value || '';
-
         if (!sectionFields) return;
-
-        const shouldShow = forceShow !== null ? forceShow : sectionFields.classList.contains('hidden');
-        sectionFields.classList.toggle('hidden', !shouldShow);
-
-        if (modalBox) {
-            modalBox.classList.toggle('max-w-6xl', shouldShow);
-            modalBox.classList.toggle('max-w-lg', !shouldShow);
-        }
-
-        const hasCategory = Boolean(katVal && katVal.trim() !== '');
-
-        if (shouldShow) {
-            document.getElementById('inputSubInformasi')?.setAttribute('required', 'required');
-            document.getElementById('inputPejabatPenguasa')?.setAttribute('required', 'required');
-            document.getElementById('inputPenanggungJawab')?.setAttribute('required', 'required');
-            document.getElementById('inputTahun')?.setAttribute('required', 'required');
-            document.getElementById('inputRetensiArsip')?.setAttribute('required', 'required');
-
-            if (btnStepNext) btnStepNext.classList.add('hidden');
-            if (btnSubmit) btnSubmit.classList.remove('hidden');
-        } else {
-            document.getElementById('inputSubInformasi')?.removeAttribute('required');
-            document.getElementById('inputPejabatPenguasa')?.removeAttribute('required');
-            document.getElementById('inputPenanggungJawab')?.removeAttribute('required');
-            document.getElementById('inputTahun')?.removeAttribute('required');
-            document.getElementById('inputRetensiArsip')?.removeAttribute('required');
-
-            if (btnSubmit) btnSubmit.classList.add('hidden');
-            if (btnStepNext) btnStepNext.classList.toggle('hidden', !hasCategory);
-        }
-    };
-
-    window.handleStepNext = function() {
-        const rincianInput = document.getElementById('inputRincianInformasi');
-        const jenisInput = document.getElementById('inputJenisInformasi');
-        const btnStepNext = document.getElementById('btnStepNext');
-        const textBtnStep = document.getElementById('textBtnStep');
-        const iconBtnStep = document.getElementById('iconBtnStep');
-
-        if (!jenisInput || !jenisInput.value.trim()) {
-            jenisInput?.focus();
-            jenisInput?.reportValidity();
-            return;
-        }
-
-        if (!rincianInput || !rincianInput.value.trim()) {
-            rincianInput?.focus();
-            rincianInput?.reportValidity();
-            return;
-        }
-
-        const isAddMode = document.getElementById('formMethod').value === 'POST';
-
-        // Jika mode Tambah baru, simpan rincian informasi terlebih dahulu ke sistem
-        // sehingga jika admin menekan Batal pada tahap pengisian dokumen, rincian tetap tersimpan di tabel
-        if (isAddMode) {
-            if (btnStepNext) btnStepNext.disabled = true;
-            if (textBtnStep) textBtnStep.innerText = 'Menyimpan Rincian...';
-            if (iconBtnStep) iconBtnStep.className = 'fa-solid fa-spinner fa-spin';
-
-            const csrfToken = document.querySelector('input[name="_token"]')?.value;
-            const formData = new FormData();
-            formData.append('_token', csrfToken);
-            formData.append('jenis_informasi', jenisInput.value.trim());
-            formData.append('rincian_informasi', rincianInput.value.trim());
-            // sub_informasi sengaja dikosongkan agar otomatis dibuat sebagai placeholder "Dokumen sedang dilengkapi unit"
-
-            fetch("<?php echo e(url('/admin/informasi-publik')); ?>", {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(res => {
-                // Rincian berhasil tersimpan di database
-                window.rincianSavedDuringStep = true;
-                // Buka form lengkap untuk mengisi sub informasi
-                toggleSubDetailFields(true);
-                setTimeout(() => {
-                    const subInput = document.getElementById('inputSubInformasi');
-                    if (subInput) subInput.focus();
-                }, 150);
-            })
-            .catch(err => {
-                // Tetap buka form lengkap jika ada kendala jaringan
-                toggleSubDetailFields(true);
-                setTimeout(() => {
-                    const subInput = document.getElementById('inputSubInformasi');
-                    if (subInput) subInput.focus();
-                }, 150);
-            })
-            .finally(() => {
-                if (btnStepNext) btnStepNext.disabled = false;
-                if (textBtnStep) textBtnStep.innerText = 'Simpan Rincian & Lanjut';
-                if (iconBtnStep) iconBtnStep.className = 'fa-solid fa-arrow-right';
-            });
-        } else {
-            // Mode Edit: langsung buka form lengkap
-            toggleSubDetailFields(true);
-            setTimeout(() => {
-                const subInput = document.getElementById('inputSubInformasi');
-                if (subInput) subInput.focus();
-            }, 150);
-        }
+        sectionFields.classList.remove('hidden');
+        document.getElementById('inputSubInformasi')?.setAttribute('required', 'required');
+        document.getElementById('inputPejabatPenguasa')?.setAttribute('required', 'required');
+        document.getElementById('inputTahun')?.setAttribute('required', 'required');
+        document.getElementById('inputRetensiArsip')?.setAttribute('required', 'required');
+        btnSubmit?.classList.remove('hidden');
     };
 
     function handleJenisInformasiChange(kategori) {
         const sectionRincian = document.getElementById('section-rincian-field');
         const datalist = document.getElementById('list-rincian-dynamic');
-
         const hasCategory = Boolean(kategori && kategori.trim() !== '');
+        const isSertaMerta = kategori === 'Informasi Serta-Merta';
+        const rincianInput = document.getElementById('inputRincianInformasi');
+        const subLabel = document.getElementById('labelSubInformasi');
 
-        // Munculkan rincian informasi segera setelah kategori dipilih
-        if (sectionRincian) {
-            sectionRincian.classList.toggle('hidden', !hasCategory);
+        // Serta-Merta adalah satu pengumuman langsung, bukan kelompok rincian/subinformasi.
+        sectionRincian?.classList.toggle('hidden', isSertaMerta);
+        if (subLabel) subLabel.textContent = isSertaMerta ? 'Informasi' : 'Sub Informasi';
+        if (rincianInput) {
+            if (isSertaMerta) {
+                rincianInput.value = 'Pengumuman Serta-Merta';
+                rincianInput.removeAttribute('required');
+            } else {
+                if (rincianInput.value === 'Pengumuman Serta-Merta') rincianInput.value = '';
+                rincianInput.setAttribute('required', 'required');
+            }
         }
 
-        // Update tombol footer sesuai status
-        toggleSubDetailFields(false);
+        toggleSubDetailFields(true);
 
         // Reset datalist sub informasi saat kategori berubah
         updateSubInformasiDatalist('');
@@ -424,7 +328,6 @@
         });
 
         // Pasang listener oninput pada inputRincianInformasi untuk update datalist sub informasi
-        const rincianInput = document.getElementById('inputRincianInformasi');
         if (rincianInput && !rincianInput._subDatalistListenerAdded) {
             rincianInput.addEventListener('input', function() {
                 updateSubInformasiDatalist(this.value);
@@ -438,10 +341,6 @@
 
     function closeAddEditModal() {
         document.getElementById('modalAddEdit').classList.add('hidden');
-        if (window.rincianSavedDuringStep) {
-            window.rincianSavedDuringStep = false;
-            window.location.reload();
-        }
     }
 
     function handleBentukInformasiChange(val) {
@@ -461,33 +360,20 @@
         }
     }
 
-    function toggleInputType(type) {
-        const containerFile = document.getElementById('containerFile');
-        const containerLink = document.getElementById('containerLink');
+    // Sumber Berkas now x-data controlled (tipe File/Tautan); keep no-op for legacy callers + sync hidden ids for compat
+    window.toggleInputType = function(type) {
+        // Alpine x-data drives UI; just keep required attrs safe
         const inputFile = document.getElementById('inputFile');
         const inputLink = document.getElementById('inputLink');
-        const fileRequiredStar = document.getElementById('fileRequiredStar');
-        const isEdit = document.getElementById('formMethod').value === 'PUT';
         const bentukInfo = document.getElementById('inputBentukInformasi')?.value || 'Cetak dan Online';
-
         if (bentukInfo === 'Cetak') {
             if (inputFile) inputFile.removeAttribute('required');
             if (inputLink) inputLink.removeAttribute('required');
             return;
         }
-
-        if (type === 'file') {
-            containerFile.classList.remove('hidden');
-            containerLink.classList.add('hidden');
-            if (inputFile) inputFile.removeAttribute('required');
-            if (inputLink) inputLink.removeAttribute('required');
-        } else {
-            containerFile.classList.add('hidden');
-            containerLink.classList.remove('hidden');
-            if (inputLink) inputLink.removeAttribute('required');
-            if (inputFile) inputFile.removeAttribute('required');
-        }
-    }
+        if (inputFile) inputFile.removeAttribute('required');
+        if (inputLink) inputLink.removeAttribute('required');
+    };
 
     function editData(item) {
 
@@ -511,12 +397,17 @@
             document.getElementById('inputRetensiArsip').value = item.retensi_arsip || '';
         }
         if (document.getElementById('inputRincianInformasi')) {
-            document.getElementById('inputRincianInformasi').value = item.rincian_informasi || '';
+            document.getElementById('inputRincianInformasi').value = item.jenis_informasi === 'Informasi Serta-Merta'
+                ? 'Pengumuman Serta-Merta'
+                : (item.rincian_informasi || '');
             // Update datalist sub informasi sesuai rincian yang sudah terpilih
             updateSubInformasiDatalist(item.rincian_informasi || '');
         }
         if (document.getElementById('inputPejabatPenguasa')) {
             document.getElementById('inputPejabatPenguasa').value = item.pejabat_unit_yang_menguasai_informasi || item.pejabat_unit_yang_menguasai || item.pejabat_penguasa || '';
+        }
+        if (document.getElementById('inputPenanggungJawab')) {
+            document.getElementById('inputPenanggungJawab').value = item.penanggung_jawab_pembuatan_informasi || '';
         }
         if (document.getElementById('inputBentukInformasi')) {
             let bentukVal = item.bentuk_informasi_yang_tersedia || item.bentuk_informasi || 'Cetak dan Online';
@@ -531,38 +422,44 @@
         const fileLink = document.getElementById('currentFileLink');
         const helpText = document.getElementById('fileHelpText');
 
+        // sync Alpine tipe + preview file for Edit
+        const root = document.getElementById('sectionAksesOnline');
+        const alpine = root && root._x_dataStack ? root._x_dataStack[0] : null;
+        const setAlpineFile = (name, url) => {
+            if (!alpine) return;
+            alpine.fileName = name || '';
+            alpine.fileUrl = url || '';
+            alpine.fileSize = '';
+        };
+
         if (item.link_informasi && !item.file_informasi) {
-            document.querySelector('input[name="jenis_informasi_format"][value="link"]').checked = true;
-            toggleInputType('link');
+            if (alpine) alpine.tipe = 'link';
+            window.toggleInputType('link');
             document.getElementById('inputLink').value = item.link_informasi || '';
-            if (fileDisplayName) {
-                fileDisplayName.textContent = 'No file chosen';
-                fileDisplayName.classList.remove('hidden', 'text-slate-800', 'font-semibold');
-                fileDisplayName.classList.add('text-slate-500');
-            }
+            setAlpineFile('', '');
+            if (fileDisplayName) fileDisplayName.textContent = '';
             if (fileLink) fileLink.classList.add('hidden');
-            if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX (Maks 5MB)';
+            if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)';
         } else {
-            document.querySelector('input[name="jenis_informasi_format"][value="file"]').checked = true;
-            toggleInputType('file');
+            if (alpine) alpine.tipe = 'file';
+            window.toggleInputType('file');
 
             if (item.file_informasi) {
                 const displayName = item.nama_file_asli || item.file_informasi.split('/').pop();
+                const fileUrl = "<?php echo e(url('/informasi/file')); ?>/" + item.id + "/" + encodeURIComponent(displayName) + "?from_admin=1";
+                setAlpineFile(displayName, fileUrl);
                 if (fileNameSpan) fileNameSpan.innerText = displayName;
                 if (fileLink) {
-                    fileLink.href = "<?php echo e(url('/informasi/file')); ?>/" + item.id + "/" + encodeURIComponent(displayName) + "?from_admin=1";
+                    fileLink.href = fileUrl;
                     fileLink.classList.remove('hidden');
                 }
-                if (fileDisplayName) fileDisplayName.classList.add('hidden');
+                if (fileDisplayName) fileDisplayName.textContent = displayName;
                 if (helpText) helpText.innerText = 'Pilih file baru jika ingin mengganti file saat ini. Biarkan kosong jika tidak ingin mengubah file.';
             } else {
+                setAlpineFile('', '');
                 if (fileLink) fileLink.classList.add('hidden');
-                if (fileDisplayName) {
-                    fileDisplayName.textContent = 'No file chosen';
-                    fileDisplayName.classList.remove('hidden', 'text-slate-800', 'font-semibold');
-                    fileDisplayName.classList.add('text-slate-500');
-                }
-                if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX (Maks 5MB)';
+                if (fileDisplayName) fileDisplayName.textContent = '';
+                if (helpText) helpText.innerText = 'Format yang didukung: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)';
             }
         }
 
@@ -591,388 +488,233 @@
     }
 
     // =========================================================================
-    // PURE CLIENT-SIDE DATATABLES ENGINE ADMIN (0ms Instant Search & Filter)
-    // =========================================================================
-    let adminDipAllRows = [];
-    let adminDipFilteredRows = [];
-    let adminDipCurrentPage = 1;
-    let adminDipPerPage = 10;
-    let adminDipSortColumn = null;
-    let adminDipSortDirection = 'asc';
+    const adminDipTables = new Map();
 
     function initClientSideAdminDipTable() {
-        const tbody = document.getElementById('table-admin-dip-body');
-        const containerSertaMerta = document.getElementById('container-admin-serta-merta');
-        if (!tbody && !containerSertaMerta) return;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchVal = urlParams.get('search') || '';
-        const perPageVal = parseInt(urlParams.get('per_page')) || 10;
-        const sortByVal = urlParams.get('sort_by') || null;
-        const sortDirVal = urlParams.get('sort_direction') || 'asc';
-
-        adminDipPerPage = [10, 25, 50, 100].includes(perPageVal) ? perPageVal : 10;
-        adminDipSortColumn = sortByVal;
-        adminDipSortDirection = sortDirVal;
-
-        const perPageSelect = document.getElementById('select-per-page-admin-dip');
-        if (perPageSelect) perPageSelect.value = adminDipPerPage;
-
-        const searchInput = document.getElementById('input-search-admin-dip');
-        if (searchInput && searchVal) searchInput.value = searchVal;
-
-        if (containerSertaMerta) {
-            const rawCards = Array.from(containerSertaMerta.querySelectorAll('.card-admin-serta-merta'));
-            if (rawCards.length === 0) return;
-
-            adminDipAllRows = rawCards.map((card, index) => {
-                return {
-                    element: card,
+        document.querySelectorAll('[data-admin-dip-tbody]').forEach(tbody => {
+            const key = tbody.dataset.adminDipTbody;
+            const rows = Array.from(tbody.querySelectorAll('.table-admin-dip-row'));
+            const state = {
+                tbody,
+                rows: rows.map((element, index) => ({
+                    element,
                     originalIndex: index + 1,
-                    no: index + 1,
-                    dilihat: parseInt(card.getAttribute('data-dilihat')) || 0,
-                    rincian: card.getAttribute('data-rincian') || '',
-                    sub_informasi: card.getAttribute('data-sub_informasi') || '',
-                    ringkasan: card.getAttribute('data-ringkasan') || '',
-                    pejabat: card.getAttribute('data-pejabat') || '',
-                    waktu: card.getAttribute('data-waktu') || '',
-                    retensi: card.getAttribute('data-retensi') || '',
-                    bentuk: card.getAttribute('data-bentuk') || '',
-                    fullText: card.innerText.toLowerCase()
-                };
-            });
-        } else if (tbody) {
-            const rawRows = Array.from(tbody.querySelectorAll('.table-admin-dip-row'));
-            if (rawRows.length === 0) return;
-
-            adminDipAllRows = rawRows.map((tr, index) => {
-                return {
-                    element: tr,
-                    originalIndex: index + 1,
-                    no: index + 1,
-                    dilihat: parseInt(tr.getAttribute('data-dilihat')) || 0,
-                    rincian: tr.getAttribute('data-rincian') || '',
-                    sub_informasi: tr.getAttribute('data-sub_informasi') || '',
-                    ringkasan: tr.getAttribute('data-ringkasan') || '',
-                    jenis: tr.getAttribute('data-jenis') || '',
-                    pejabat: tr.getAttribute('data-pejabat') || '',
-                    waktu: tr.getAttribute('data-waktu') || '',
-                    retensi: tr.getAttribute('data-retensi') || '',
-                    bentuk: tr.getAttribute('data-bentuk') || '',
-                    fullText: tr.innerText.toLowerCase()
-                };
-            });
-        }
-
-        updateSortAdminDipIconsUI();
-        applyClientSideAdminDipFilter();
-    }
-
-    function debounceSearchAdminDip() {
-        const input = document.getElementById('input-search-admin-dip');
-        const clearBtn = document.getElementById('btn-clear-search-admin-dip');
-        if (!input) return;
-
-        const query = input.value.trim();
-        if (clearBtn) {
-            clearBtn.classList.toggle('hidden', query.length === 0);
-        }
-
-        adminDipCurrentPage = 1;
-        applyClientSideAdminDipFilter();
-    }
-
-    function clearSearchAdminDip() {
-        const input = document.getElementById('input-search-admin-dip');
-        const clearBtn = document.getElementById('btn-clear-search-admin-dip');
-        if (input) {
-            input.value = '';
-            input.focus();
-        }
-        if (clearBtn) {
-            clearBtn.classList.add('hidden');
-        }
-        adminDipCurrentPage = 1;
-        applyClientSideAdminDipFilter();
-    }
-
-    function changePerPageAdminDip(val) {
-        adminDipPerPage = parseInt(val) || 10;
-        adminDipCurrentPage = 1;
-        applyClientSideAdminDipFilter();
-    }
-
-    function sortAdminDipTable(column) {
-        if (adminDipSortColumn === column) {
-            if (adminDipSortDirection === 'asc') {
-                adminDipSortDirection = 'desc';
-            } else {
-                adminDipSortColumn = null;
-                adminDipSortDirection = 'asc';
-            }
-        } else {
-            adminDipSortColumn = column;
-            adminDipSortDirection = 'asc';
-        }
-
-        updateSortAdminDipIconsUI();
-        applyClientSideAdminDipFilter();
-    }
-
-    function updateSortAdminDipIconsUI() {
-        const headers = document.querySelectorAll('th[onclick*="sortAdminDipTable"]');
-        headers.forEach(th => {
-            const colName = th.getAttribute('onclick').match(/'(.*)'/)?.[1];
-            const iconSpan = th.querySelector('span:last-child');
-            if (!iconSpan) return;
-
-            if (colName === adminDipSortColumn) {
-                iconSpan.className = 'inline-flex items-center justify-center text-xs md:text-sm text-white transition';
-                iconSpan.innerHTML = adminDipSortDirection === 'desc' 
-                    ? '<i class="fa-solid fa-sort-down"></i>' 
-                    : '<i class="fa-solid fa-sort-up"></i>';
-            } else {
-                iconSpan.className = 'inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition';
-                iconSpan.innerHTML = '<i class="fa-solid fa-sort"></i>';
-            }
+                    rincianCellTemplate: element.querySelector('.col-admin-rincian')?.cloneNode(true) || null,
+                    dilihat: parseInt(element.dataset.dilihat, 10) || 0,
+                    rincian: element.dataset.rincian || '',
+                    sub_informasi: element.dataset.sub_informasi || '',
+                    tanggal: parseInt(element.dataset.tanggal, 10) || 0,
+                    ringkasan: element.dataset.ringkasan || '',
+                    jenis: element.dataset.jenis || '',
+                    pejabat: element.dataset.pejabat || '',
+                    penanggung_jawab: element.dataset.penanggung_jawab || '',
+                    waktu: element.dataset.waktu || '',
+                    retensi: element.dataset.retensi || '',
+                    bentuk: element.dataset.bentuk || '',
+                    fullText: element.innerText.toLowerCase()
+                })),
+                filtered: [], page: 1, perPage: 10, sortColumn: null, sortDirection: 'asc'
+            };
+            const search = document.querySelector(`[data-admin-dip-search="${key}"]`);
+            const term = search ? search.value.trim().toLowerCase() : '';
+            state.filtered = term ? state.rows.filter(row => row.fullText.includes(term)) : [...state.rows];
+            adminDipTables.set(key, state);
+            renderAdminDipTable(key);
         });
     }
 
-    function applyClientSideAdminDipFilter() {
-        const input = document.getElementById('input-search-admin-dip');
-        const query = input ? input.value.trim().toLowerCase() : '';
+    function searchAdminDipTable(key, value) {
+        const state = adminDipTables.get(key);
+        if (!state) return;
+        const term = value.trim().toLowerCase();
+        state.filtered = term ? state.rows.filter(row => row.fullText.includes(term)) : [...state.rows];
+        state.page = 1;
+        renderAdminDipTable(key);
+        updateExportLinks(term, state.sortColumn, state.sortDirection);
+    }
 
-        // 1. Filtering
-        if (!query) {
-            adminDipFilteredRows = [...adminDipAllRows];
+    function changePerPageAdminDip(key, value) {
+        const state = adminDipTables.get(key);
+        if (!state) return;
+        state.perPage = parseInt(value, 10) || 10;
+        state.page = 1;
+        renderAdminDipTable(key);
+    }
+
+    function sortAdminDipTable(key, column) {
+        const state = adminDipTables.get(key);
+        if (!state) return;
+        if (state.sortColumn === column) {
+            if (state.sortDirection === 'asc') state.sortDirection = 'desc';
+            else { state.sortColumn = null; state.sortDirection = 'asc'; }
         } else {
-            adminDipFilteredRows = adminDipAllRows.filter(row => row.fullText.includes(query));
+            state.sortColumn = column;
+            state.sortDirection = 'asc';
         }
-
-        // 2. Sorting
-        if (adminDipSortColumn) {
-            adminDipFilteredRows.sort((a, b) => {
-                let valA, valB;
-                if (adminDipSortColumn === 'no') {
-                    valA = a.originalIndex;
-                    valB = b.originalIndex;
-                    return adminDipSortDirection === 'asc' ? valA - valB : valB - valA;
-                } else if (adminDipSortColumn === 'dilihat') {
-                    valA = a.dilihat || 0;
-                    valB = b.dilihat || 0;
-                    return adminDipSortDirection === 'asc' ? valA - valB : valB - valA;
-                } else {
-                    valA = a[adminDipSortColumn] || '';
-                    valB = b[adminDipSortColumn] || '';
-                    const cmp = valA.localeCompare(valB, 'id', { numeric: true, sensitivity: 'base' });
-                    return adminDipSortDirection === 'asc' ? cmp : -cmp;
-                }
-            });
-        } else {
-            adminDipFilteredRows.sort((a, b) => a.originalIndex - b.originalIndex);
-        }
-
-        // 3. Render tabel dan kontrol paginasi
-        renderClientSideAdminDipTable();
-
-        // 4. Update URL tanpa reload
-        const url = new URL(window.location.href);
-        if (query) url.searchParams.set('search', query); else url.searchParams.delete('search');
-        if (adminDipPerPage !== 10) url.searchParams.set('per_page', adminDipPerPage); else url.searchParams.delete('per_page');
-        if (adminDipSortColumn) {
-            url.searchParams.set('sort_by', adminDipSortColumn);
-            url.searchParams.set('sort_direction', adminDipSortDirection);
-        } else {
-            url.searchParams.delete('sort_by');
-            url.searchParams.delete('sort_direction');
-        }
-        window.history.replaceState({}, '', url.toString());
-
-        // 5. Update link tombol Export PDF dan Export Excel agar mengikuti filter dan sorting saat ini
-        updateExportLinks(query, adminDipSortColumn, adminDipSortDirection);
+        renderAdminDipTable(key);
+        updateExportLinks('', state.sortColumn, state.sortDirection);
     }
 
     function updateExportLinks(query, sortBy, sortDir) {
-        const btnPdf = document.getElementById('btn-export-pdf');
-        const btnExcel = document.getElementById('btn-export-excel');
-
-        [btnPdf, btnExcel].forEach(btn => {
-            if (!btn) return;
-            try {
-                const targetUrl = new URL(btn.href, window.location.origin);
-                if (query) targetUrl.searchParams.set('search', query); else targetUrl.searchParams.delete('search');
-                if (sortBy) {
-                    targetUrl.searchParams.set('sort_by', sortBy);
-                    targetUrl.searchParams.set('sort_direction', sortDir || 'asc');
-                } else {
-                    targetUrl.searchParams.delete('sort_by');
-                    targetUrl.searchParams.delete('sort_direction');
-                }
-                btn.href = targetUrl.toString();
-            } catch (e) {}
+        ['btn-export-pdf'].forEach(id => {
+            const button = document.getElementById(id);
+            if (!button) return;
+            const target = new URL(button.href, window.location.origin);
+            if (query) target.searchParams.set('search', query);
+            else target.searchParams.delete('search');
+            if (sortBy) {
+                target.searchParams.set('sort_by', sortBy);
+                target.searchParams.set('sort_direction', sortDir || 'asc');
+            } else {
+                target.searchParams.delete('sort_by');
+                target.searchParams.delete('sort_direction');
+            }
+            button.href = target.toString();
         });
     }
 
     function renderClientSideAdminDipTable() {
-        const tbody = document.getElementById('table-admin-dip-body');
-        const containerSertaMerta = document.getElementById('container-admin-serta-merta');
-        const infoEl = document.getElementById('table-admin-dip-info');
-        const paginEl = document.getElementById('table-admin-dip-pagination');
-        if (!tbody && !containerSertaMerta) return;
-
-        const totalItems = adminDipFilteredRows.length;
-        const totalPages = Math.ceil(totalItems / adminDipPerPage) || 1;
-
-        if (adminDipCurrentPage > totalPages) adminDipCurrentPage = totalPages;
-        if (adminDipCurrentPage < 1) adminDipCurrentPage = 1;
-
-        const startIndex = (adminDipCurrentPage - 1) * adminDipPerPage;
-        const endIndex = Math.min(startIndex + adminDipPerPage, totalItems);
-
-        if (containerSertaMerta) {
-            containerSertaMerta.innerHTML = '';
-
-            if (totalItems === 0) {
-                containerSertaMerta.innerHTML = `<div class="p-12 text-center text-slate-400 font-semibold bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">Tidak ada Informasi Serta-Merta yang sesuai.</div>`;
-                if (infoEl) infoEl.innerText = 'Menampilkan 0 sampai 0 dari 0 entri';
-                if (paginEl) paginEl.innerHTML = '';
-                window.updateBulkState();
-                return;
-            }
-
-            const pageRows = adminDipFilteredRows.slice(startIndex, endIndex);
-            pageRows.forEach((row, i) => {
-                const card = row.element;
-                const cbCell = card.querySelector('.col-checkbox-cell');
-                if (cbCell) cbCell.classList.toggle('hidden', !window.isSelectMode);
-                containerSertaMerta.appendChild(card);
-            });
-        } else if (tbody) {
-            tbody.innerHTML = '';
-
-            const isKatMode = new URLSearchParams(window.location.search).has('kategori') || <?php echo e(request()->filled('kategori') ? 'true' : 'false'); ?>;
-
-            if (totalItems === 0) {
-                const colspan = isKatMode ? '2' : '9';
-                tbody.innerHTML = `<tr><td colspan="${colspan}" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik yang sesuai.</td></tr>`;
-                if (infoEl) infoEl.innerText = 'Menampilkan 0 sampai 0 dari 0 entri';
-                if (paginEl) paginEl.innerHTML = '';
-                window.updateBulkState();
-                return;
-            }
-
-            const pageRows = adminDipFilteredRows.slice(startIndex, endIndex);
-
-            if (isKatMode) {
-                // Dynamic rowspan merging pada mode kategori (Berkala & Setiap Saat)
-                let i = 0;
-                while (i < pageRows.length) {
-                    const currentRincian = (pageRows[i].rincian || '').trim();
-                    let span = 1;
-                    for (let j = i + 1; j < pageRows.length; j++) {
-                        const nextRincian = (pageRows[j].rincian || '').trim();
-                        if (currentRincian.localeCompare(nextRincian, 'id', { sensitivity: 'accent' }) === 0) {
-                            span++;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    for (let k = 0; k < span; k++) {
-                        const tr = pageRows[i + k].element;
-                        const noCell = tr.querySelector('.col-admin-dip-no');
-                        if (noCell) {
-                            noCell.innerText = pageRows[i + k].originalIndex;
-                        }
-
-                        // Sinkronkan visibility checkbox mode pilih
-                        const cbCell = tr.querySelector('.col-checkbox-cell');
-                        if (cbCell) cbCell.classList.toggle('hidden', !window.isSelectMode);
-
-                        const rincianTd = tr.querySelector('.col-admin-rincian');
-                        if (rincianTd) {
-                            if (k === 0) {
-                                rincianTd.style.display = '';
-                                rincianTd.setAttribute('rowspan', span);
-                            } else {
-                                rincianTd.style.display = 'none';
-                            }
-                        }
-                        tbody.appendChild(tr);
-                    }
-
-                    i += span;
-                }
-            } else {
-                // Mode Matriks Lengkap (Full DIP) — tampilan flat biasa
-                pageRows.forEach(row => {
-                    const tr = row.element;
-                    const noCell = tr.querySelector('.col-admin-dip-no');
-                    if (noCell) noCell.innerText = row.originalIndex;
-                    const cbCell = tr.querySelector('.col-checkbox-cell');
-                    if (cbCell) cbCell.classList.toggle('hidden', !window.isSelectMode);
-                    tbody.appendChild(tr);
-                });
-            }
-
-
-
-        }
-
-        // Teks info entri
-        if (infoEl) {
-            infoEl.innerText = `Menampilkan ${startIndex + 1} sampai ${endIndex} dari ${totalItems} entri`;
-        }
-
-        // Paginasi buttons
-        if (paginEl) {
-            paginEl.innerHTML = '';
-
-            // Previous
-            const prevBtn = document.createElement('button');
-            prevBtn.type = 'button';
-            prevBtn.innerHTML = '‹';
-            prevBtn.className = 'px-3.5 py-2 text-xs font-bold transition flex items-center justify-center ' + 
-                (adminDipCurrentPage === 1 ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-sky-500 hover:bg-sky-50 cursor-pointer');
-            prevBtn.onclick = () => { if (adminDipCurrentPage > 1) { adminDipCurrentPage--; renderClientSideAdminDipTable(); } };
-            paginEl.appendChild(prevBtn);
-
-            // Pages
-            for (let p = 1; p <= totalPages; p++) {
-                if (totalPages > 7 && Math.abs(p - adminDipCurrentPage) > 2 && p !== 1 && p !== totalPages) {
-                    if (p === 2 || p === totalPages - 1) {
-                        const dots = document.createElement('span');
-                        dots.className = 'px-3 py-2 text-xs font-bold bg-slate-100/70 text-slate-400 select-none';
-                        dots.innerText = '...';
-                        paginEl.appendChild(dots);
-                    }
-                    continue;
-                }
-
-                const pageBtn = document.createElement('button');
-                pageBtn.type = 'button';
-                pageBtn.innerText = p;
-                pageBtn.className = 'px-3.5 py-2 min-w-[38px] text-center text-xs transition cursor-pointer ' + 
-                    (p === adminDipCurrentPage ? 'font-extrabold bg-sky-500 text-white shadow-2xs' : 'font-bold bg-white text-sky-500 hover:bg-sky-50');
-                pageBtn.onclick = () => { adminDipCurrentPage = p; renderClientSideAdminDipTable(); };
-                paginEl.appendChild(pageBtn);
-            }
-
-            // Next
-            const nextBtn = document.createElement('button');
-            nextBtn.type = 'button';
-            nextBtn.innerHTML = '›';
-            nextBtn.className = 'px-3.5 py-2 text-xs font-bold transition flex items-center justify-center ' + 
-                (adminDipCurrentPage === totalPages ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-sky-500 hover:bg-sky-50 cursor-pointer');
-            nextBtn.onclick = () => { if (adminDipCurrentPage < totalPages) { adminDipCurrentPage++; renderClientSideAdminDipTable(); } };
-            paginEl.appendChild(nextBtn);
-        }
-
-        window.updateBulkState();
+        adminDipTables.forEach((_, key) => renderAdminDipTable(key));
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        initClientSideAdminDipTable();
-    });
+    function renderAdminDipTable(key) {
+        const state = adminDipTables.get(key);
+        if (!state) return;
+        const { tbody, filtered } = state;
+        const info = document.querySelector(`[data-admin-dip-info="${key}"]`);
+        const pagination = document.querySelector(`[data-admin-dip-pagination="${key}"]`);
+        const rows = [...filtered];
+        const isCategoryTable = tbody.dataset.categoryTable === 'true';
+        if (isCategoryTable) {
+            // Keep equal rincian values together, while preserving the original group order.
+            // This lets a newly added sub-information join its existing rincian group.
+            const groupOrder = new Map();
+            state.rows.forEach(row => {
+                const groupKey = (row.rincian || '').trim();
+                if (!groupOrder.has(groupKey)) groupOrder.set(groupKey, groupOrder.size);
+            });
+            rows.sort((a, b) => {
+                const groupA = (a.rincian || '').trim();
+                const groupB = (b.rincian || '').trim();
+                let groupCompare = 0;
+                if (state.sortColumn === 'rincian') {
+                    groupCompare = groupA.localeCompare(groupB, 'id', { numeric: true, sensitivity: 'base' });
+                    if (state.sortDirection === 'desc') groupCompare *= -1;
+                } else {
+                    groupCompare = (groupOrder.get(groupA) ?? 0) - (groupOrder.get(groupB) ?? 0);
+                }
+                if (groupCompare) return groupCompare;
+                if (!state.sortColumn || state.sortColumn === 'rincian') return a.originalIndex - b.originalIndex;
+
+                let result;
+                if (state.sortColumn === 'no') result = a.originalIndex - b.originalIndex;
+                else if (state.sortColumn === 'dilihat' || state.sortColumn === 'tanggal') result = a[state.sortColumn] - b[state.sortColumn];
+                else result = (a[state.sortColumn] || '').localeCompare(b[state.sortColumn] || '', 'id', { numeric: true, sensitivity: 'base' });
+                return (state.sortDirection === 'asc' ? result : -result) || (a.originalIndex - b.originalIndex);
+            });
+        } else if (state.sortColumn) {
+            rows.sort((a, b) => {
+                let result;
+                if (state.sortColumn === 'no') result = a.originalIndex - b.originalIndex;
+                else if (state.sortColumn === 'dilihat' || state.sortColumn === 'tanggal') result = a[state.sortColumn] - b[state.sortColumn];
+                else result = (a[state.sortColumn] || '').localeCompare(b[state.sortColumn] || '', 'id', { numeric: true, sensitivity: 'base' });
+                return state.sortDirection === 'asc' ? result : -result;
+            });
+        }
+        tbody.closest('table')?.querySelectorAll('th[onclick*="sortAdminDipTable"]').forEach(th => {
+            const column = th.getAttribute('onclick').match(/,\s*'([^']+)'/)?.[1];
+            const icon = th.querySelector('span:last-child');
+            if (!column || !icon) return;
+            const active = column === state.sortColumn;
+            icon.className = `inline-flex items-center justify-center text-xs md:text-sm ${active ? 'text-white' : 'text-white/70 group-hover:text-white'} transition`;
+            icon.innerHTML = active ? (state.sortDirection === 'desc' ? '<i class="fa-solid fa-sort-down"></i>' : '<i class="fa-solid fa-sort-up"></i>') : '<i class="fa-solid fa-sort"></i>';
+        });
+        const total = rows.length;
+        const totalPages = Math.ceil(total / state.perPage) || 1;
+        state.page = Math.min(Math.max(state.page, 1), totalPages);
+        const start = (state.page - 1) * state.perPage;
+        const end = Math.min(start + state.perPage, total);
+        tbody.innerHTML = '';
+        if (!total) {
+            const isCategoryMode = tbody.dataset.categoryMode === 'true';
+            const isSertaMertaTable = tbody.dataset.sertaMertaTable === 'true';
+            const emptyMessage = isCategoryMode ? 'Tidak ada data informasi untuk kategori ini.' : 'Tidak ada data Informasi Publik yang sesuai.';
+            if (isSertaMertaTable) {
+                tbody.innerHTML = `<div class="p-12 text-center text-slate-400 font-semibold border border-slate-200">${emptyMessage}</div>`;
+                if (info) info.innerText = 'Menampilkan 0–0 dari 0 informasi';
+                if (pagination) pagination.innerHTML = '';
+                return;
+            }
+            const columnCount = isSertaMertaTable ? 3 : (isCategoryMode ? 4 : 9);
+            tbody.innerHTML = `<tr><td colspan="${columnCount}" class="p-12 text-center text-slate-400 font-semibold">${emptyMessage}</td></tr>`;
+            if (info) info.innerText = 'Menampilkan 0–0 dari 0 informasi';
+            if (pagination) pagination.innerHTML = '';
+            return;
+        }
+        const visibleRows = rows.slice(start, end);
+        visibleRows.forEach(row => {
+            const numberCell = row.element.querySelector('.col-admin-dip-no');
+            if (numberCell) numberCell.innerText = row.originalIndex;
+            const checkboxCell = row.element.querySelector('.col-checkbox-cell');
+            if (checkboxCell) checkboxCell.classList.toggle('hidden', !window.isSelectMode);
+            if (tbody.dataset.categoryTable === 'true' && row.rincianCellTemplate) {
+                let rincianCell = row.element.querySelector('.col-admin-rincian');
+                if (!rincianCell) {
+                    rincianCell = row.rincianCellTemplate.cloneNode(true);
+                    row.element.insertBefore(rincianCell, row.element.querySelector('.col-admin-sub-info'));
+                }
+                rincianCell.rowSpan = 1;
+                row.element.classList.remove('category-group-end');
+                row.element.querySelectorAll('td').forEach(cell => cell.classList.remove('border-b', 'category-group-boundary-cell'));
+            }
+            tbody.appendChild(row.element);
+        });
+        if (tbody.dataset.categoryTable === 'true') {
+            const categoryGroups = [];
+            for (let index = 0; index < visibleRows.length;) {
+                const groupKey = (visibleRows[index].rincian || '').trim();
+                let groupEnd = index + 1;
+                while (groupEnd < visibleRows.length && (visibleRows[groupEnd].rincian || '').trim() === groupKey) {
+                    groupEnd++;
+                }
+                const firstCell = visibleRows[index].element.querySelector('.col-admin-rincian');
+                if (firstCell) firstCell.rowSpan = groupEnd - index;
+                for (let duplicateIndex = index + 1; duplicateIndex < groupEnd; duplicateIndex++) {
+                    visibleRows[duplicateIndex].element.querySelector('.col-admin-rincian')?.remove();
+                }
+                categoryGroups.push({ firstIndex: index, lastIndex: groupEnd - 1 });
+                index = groupEnd;
+            }
+            categoryGroups.slice(0, -1).forEach(group => {
+                const lastRow = visibleRows[group.lastIndex].element;
+                lastRow.classList.add('category-group-end');
+                visibleRows[group.firstIndex].element.querySelector('.col-admin-rincian')?.classList.add('category-group-boundary-cell');
+            });
+        }
+        if (info) info.innerText = `Menampilkan ${start + 1}–${end} dari ${total} informasi`;
+        if (!pagination) return;
+        pagination.innerHTML = '';
+        const addButton = (label, target, disabled, active = false) => {
+            const button = document.createElement('button');
+            button.type = 'button'; button.innerText = label; button.disabled = disabled;
+            button.className = 'px-3.5 py-2 min-w-[38px] text-center text-sm transition ' + (active ? 'font-extrabold bg-sky-500 text-white' : disabled ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'font-bold bg-white text-sky-500 hover:bg-sky-50 cursor-pointer');
+            if (!disabled) button.onclick = () => { state.page = target; renderAdminDipTable(key); };
+            pagination.appendChild(button);
+        };
+        addButton('‹', state.page - 1, state.page === 1);
+        const visiblePages = new Set([1, totalPages]);
+        for (let page = Math.max(1, state.page - 2); page <= Math.min(totalPages, state.page + 2); page++) visiblePages.add(page);
+        let previousPage = 0;
+        [...visiblePages].sort((a, b) => a - b).forEach(page => {
+            if (previousPage && page - previousPage > 1) {
+                const dots = document.createElement('span'); dots.className = 'px-3 py-2 text-sm text-slate-400'; dots.innerText = '…'; pagination.appendChild(dots);
+            }
+            addButton(String(page), page, page === state.page, page === state.page);
+            previousPage = page;
+        });
+        addButton('›', state.page + 1, state.page === totalPages);
+    }
+
+    document.addEventListener('DOMContentLoaded', initClientSideAdminDipTable);
 </script>
 <?php /**PATH D:\laragon\www\ppid-fmipa-baru\resources\views/components/admin/informasi_publik/script.blade.php ENDPATH**/ ?>

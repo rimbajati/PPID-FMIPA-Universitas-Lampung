@@ -1,9 +1,9 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
-<?php foreach($attributes->onlyProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => []]) as $__key => $__value) {
+<?php foreach($attributes->onlyProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false]) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
-<?php $attributes = $attributes->exceptProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => []]); ?>
-<?php foreach (array_filter((['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => []]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+<?php $attributes = $attributes->exceptProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false]); ?>
+<?php foreach (array_filter((['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
 <?php $__defined_vars = get_defined_vars(); ?>
@@ -13,32 +13,29 @@
 <?php unset($__defined_vars); ?>
 
 <!-- Table Container -->
-<div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-    <form id="form-bulk-delete" action="<?php echo e(route('admin.informasi.bulk')); ?>" method="POST">
-        <?php echo csrf_field(); ?>
-        <?php echo method_field('DELETE'); ?>
-
+<div class="bg-white <?php echo e(request('kategori') === 'Informasi Serta-Merta' ? 'rounded-none' : 'rounded-2xl'); ?> border border-slate-200/80 shadow-xs overflow-hidden">
         <?php
-            $isKategoriMode = request()->filled('kategori');
+            $isKategoriMode = request()->filled('kategori') && !$forceTable;
+            $isSertaMertaCategory = $isKategoriMode && request('kategori') === 'Informasi Serta-Merta';
             $curSortBy = request('sort_by');
             $curSortDir = request('sort_direction', 'asc');
         ?>
 
         <?php
-            $isSertaMertaMode = (request('kategori') === 'Informasi Serta-Merta');
+            $isSertaMertaMode = $isSertaMertaCategory;
         ?>
 
         <?php if($isSertaMertaMode): ?>
             <!-- Tampilan Card List Serta-Merta (Sesuai Desain Publik / Masyarakat) dengan Kontrol Admin -->
-            <div class="p-5 sm:p-7 space-y-4">
+            <div class="p-8 space-y-3">
                 <!-- Checkbox Pilih Semua Khusus Mode Serta-Merta -->
-                <div id="col-checkbox-header" class="hidden flex items-center gap-2 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 select-none">
-                    <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-0 cursor-pointer">
-                    <label for="check-all" class="cursor-pointer">Pilih Semua Pengumuman</label>
+                <div id="col-checkbox-header-<?php echo e($tableKey); ?>" class="col-checkbox-header hidden flex items-center gap-2 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 select-none">
+                    <input type="checkbox" class="check-all w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
+                    <label class="cursor-pointer">Pilih Semua Pengumuman</label>
                 </div>
 
                 <!-- Container Card List Serta-Merta -->
-                <div id="container-admin-serta-merta" class="space-y-3">
+                <div id="container-admin-serta-merta" data-admin-dip-tbody="<?php echo e($tableKey); ?>" data-category-mode="true" data-serta-merta-table="true" data-category-table="false" class="space-y-3">
                     <?php $__empty_1 = true; $__currentLoopData = $informasi; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <?php
                             $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
@@ -46,12 +43,13 @@
                             $fileTargetUrl = ($item->link_informasi && !$item->file_informasi) 
                                 ? $item->link_informasi 
                                 : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') : null);
-                            $tglPembuatan = $item->waktu_pembuatan_informasi ?: ($item->created_at ? $item->created_at->translatedFormat('d F Y') : '-');
+                            $tglPembuatan = $item->created_at ? $item->created_at->translatedFormat('d F Y') : '-';
                         ?>
-                        <div class="card-admin-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl border border-slate-200/80 bg-white hover:bg-sky-50/40 hover:border-sky-200 transition-all duration-200 shadow-2xs hover:shadow-xs"
+                        <div class="table-admin-dip-row card-admin-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-6 rounded-none border border-slate-200/80 bg-white hover:bg-sky-50/40 hover:border-sky-200 transition-all duration-200"
                              data-id="<?php echo e($item->id); ?>"
                              data-no="<?php echo e($idx + 1); ?>"
                              data-dilihat="<?php echo e((int)($item->dilihat ?? 0)); ?>"
+                             data-tanggal="<?php echo e($item->created_at?->timestamp ?? ''); ?>"
                              data-rincian="<?php echo e(strtolower($item->rincian_informasi ?? '')); ?>"
                              data-sub_informasi="<?php echo e(strtolower($item->sub_informasi ?? '')); ?>"
                              data-ringkasan="<?php echo e(strtolower($item->sub_informasi ?? '')); ?>"
@@ -63,17 +61,17 @@
                             <div class="flex items-start gap-3.5 flex-1 min-w-0">
                                 <!-- Checkbox Mode Hapus -->
                                 <div class="col-checkbox-cell hidden pt-1 shrink-0">
-                                    <input type="checkbox" name="ids[]" form="form-bulk-delete" value="<?php echo e($item->id); ?>" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
+                                    <input type="checkbox" value="<?php echo e($item->id); ?>" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                                 </div>
 
                                 <!-- Megaphone Icon -->
-                                <div class="w-10 h-10 rounded-xl bg-sky-100/70 text-sky-600 flex items-center justify-center shrink-0 group-hover/card:bg-sky-500 group-hover/card:text-white transition-colors duration-200 mt-0.5">
+                                <div class="w-11 h-11 rounded-xl bg-sky-100/70 text-sky-600 flex items-center justify-center shrink-0 group-hover/card:bg-sky-500 group-hover/card:text-white transition-colors duration-200 mt-0.5">
                                     <i class="fa-solid fa-bullhorn text-sm"></i>
                                 </div>
 
                                 <!-- Text Content -->
                                 <div class="space-y-1 flex-1 min-w-0">
-                                    <h3 class="text-sm sm:text-base font-bold text-slate-900 group-hover/card:text-sky-600 transition-colors leading-snug break-words">
+                                    <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover/card:text-sky-600 transition-colors leading-snug break-words">
                                         <?php echo e($item->sub_informasi); ?>
 
                                     </h3>
@@ -82,44 +80,35 @@
                                             <i class="fa-regular fa-calendar text-[11px]"></i>
                                             <span><?php echo e($tglPembuatan); ?></span>
                                         </span>
-                                        <?php if($item->pejabat_unit_yang_menguasai_informasi): ?>
-                                            <span class="text-slate-300">•</span>
-                                            <span class="flex items-center gap-1.5 text-slate-500">
-                                                <i class="fa-solid fa-building-columns text-[11px]"></i>
-                                                <span><?php echo e($item->pejabat_unit_yang_menguasai_informasi); ?></span>
-                                            </span>
-                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Tombol Aksi Admin & Berkas -->
+                            <!-- Tombol Lihat dan aksi pengelolaan admin -->
                             <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
                                 <?php if($fileTargetUrl): ?>
                                     <a href="<?php echo e($fileTargetUrl); ?>" target="_blank" 
-                                       class="inline-flex items-center justify-center gap-2 px-3.5 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold rounded-xl transition shadow-2xs hover:shadow-xs cursor-pointer">
-                                        <span>Lihat Berkas</span>
-                                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                       title="Lihat Berkas" aria-label="Lihat Berkas"
+                                       class="inline-flex h-8 w-8 items-center justify-center bg-sky-50 text-sky-600 hover:bg-sky-600 hover:text-white rounded-xl transition cursor-pointer">
+                                        <i class="fa-regular fa-eye text-sm"></i>
                                     </a>
                                 <?php else: ?>
-                                    <span class="text-xs font-semibold text-slate-400 italic px-3 py-1.5 bg-slate-100 rounded-xl">Dokumen Belum Ada</span>
+                                    <span class="text-xs font-semibold text-slate-400 italic px-3 py-1.5 bg-slate-100">Dokumen Belum Ada</span>
                                 <?php endif; ?>
 
                                 <button type="button" onclick="editData(<?php echo e(json_encode($item)); ?>)" title="Edit Pengumuman" 
-                                        class="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-amber-700 bg-amber-50 hover:bg-amber-600 hover:text-white text-xs font-bold rounded-xl transition shadow-2xs cursor-pointer">
-                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
-                                    <span>Edit</span>
+                                        class="inline-flex h-8 w-8 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white rounded-xl transition cursor-pointer">
+                                    <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                                 </button>
 
                                 <button type="button" onclick="triggerDelete('<?php echo e(url('/admin/informasi-publik/'.$item->id)); ?>', '<?php echo e(addslashes($item->sub_informasi)); ?>')" title="Hapus Pengumuman" 
-                                        class="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-rose-700 bg-rose-50 hover:bg-rose-600 hover:text-white text-xs font-bold rounded-xl transition shadow-2xs cursor-pointer">
-                                    <i class="fa-solid fa-trash text-xs"></i>
-                                    <span>Hapus</span>
+                                        class="inline-flex h-8 w-8 items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-xl transition cursor-pointer">
+                                    <i class="fa-solid fa-trash text-[11px]"></i>
                                 </button>
                             </div>
                         </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                        <div class="p-12 text-center text-slate-400 font-semibold bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                        <div class="p-12 text-center text-slate-400 font-semibold bg-slate-50/50 border border-dashed border-slate-200">
                             Belum ada Informasi Serta-Merta yang ditambahkan.
                         </div>
                     <?php endif; ?>
@@ -128,15 +117,28 @@
         <?php else: ?>
             <!-- Tabel Daftar Informasi Publik — horizontal scroll on mobile -->
             <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
-                <table class="w-full min-w-[900px] table-auto text-left border-collapse border border-slate-200">
+                <table class="w-full <?php echo e($isKategoriMode ? 'min-w-0 table-fixed' : 'min-w-[1200px] table-auto'); ?> text-left border-collapse border border-slate-200">
                     <thead>
-                        <?php if($isKategoriMode): ?>
-                            
-                            <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide divide-x divide-white/20 select-none">
-                                <th id="col-checkbox-header" class="hidden px-2 py-3.5 w-12 text-center">
-                                    <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
+                        <?php if($isKategoriMode && $isSertaMertaCategory): ?>
+                            <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide select-none">
+                                <th id="col-checkbox-header-<?php echo e($tableKey); ?>" class="col-checkbox-header hidden px-2 py-3.5 w-12 text-center">
+                                    <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
                                 </th>
-                                <th onclick="sortAdminDipTable('rincian')" class="px-4 py-3.5 text-left w-1/2 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Rincian Informasi">
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'sub_informasi')" class="px-4 py-3.5 text-left w-[58%] cursor-pointer hover:bg-sky-600/60 transition group">
+                                    <div class="flex items-center justify-between gap-1.5"><span>Informasi</span><span class="inline-flex items-center text-white/70 group-hover:text-white"><i class="fa-solid fa-sort"></i></span></div>
+                                </th>
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'tanggal')" class="px-4 py-3.5 text-left w-[27%] cursor-pointer hover:bg-sky-600/60 transition group">
+                                    <div class="flex items-center justify-between gap-1.5"><span>Tanggal Ditambahkan</span><span class="inline-flex items-center text-white/70 group-hover:text-white"><i class="fa-solid fa-sort"></i></span></div>
+                                </th>
+                                <th class="px-2 py-3.5 text-center w-[15%] min-w-[116px]">Aksi</th>
+                            </tr>
+                        <?php elseif($isKategoriMode): ?>
+                            
+                            <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide select-none">
+                                <th id="col-checkbox-header-<?php echo e($tableKey); ?>" class="col-checkbox-header hidden px-2 py-3.5 w-12 text-center">
+                                    <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
+                                </th>
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'rincian')" class="px-4 py-3.5 text-left w-[35%] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Rincian Informasi">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Rincian Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -144,7 +146,7 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('sub_informasi')" class="px-4 py-3.5 text-left w-1/2 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sub Informasi">
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'sub_informasi')" class="px-4 py-3.5 text-left w-[53%] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sub Informasi">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Sub Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -152,14 +154,15 @@
                                         </span>
                                     </div>
                                 </th>
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'dilihat')" class="px-2 py-3.5 text-center w-[12%] min-w-[116px] cursor-pointer hover:bg-sky-600/60 transition" title="Urutkan berdasarkan akses"><div class="flex items-center justify-center gap-1"><span>Aksi</span><i class="fa-solid fa-sort text-white/70"></i></div></th>
                             </tr>
                         <?php else: ?>
                             
-                            <tr class="bg-sky-500 text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/20 text-center leading-snug select-none">
-                                <th id="col-checkbox-header" class="hidden px-1 py-3 w-10 text-center">
-                                    <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
+                            <tr class="bg-sky-500 text-white text-xs sm:text-sm md:text-lg font-black tracking-tight text-center leading-snug select-none">
+                                <th id="col-checkbox-header-<?php echo e($tableKey); ?>" class="col-checkbox-header hidden px-1 py-3 w-10 text-center">
+                                    <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
                                 </th>
-                                <th onclick="sortAdminDipTable('no')" class="px-2 py-3 text-center w-12 min-w-[48px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'no')" class="px-2 py-3 text-center w-12 min-w-[48px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>No</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -167,15 +170,16 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('ringkasan')" class="px-3 py-3 text-center min-w-[220px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
-                                    <div class="flex items-center justify-center gap-1.5">
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'ringkasan')" class="px-3.5 py-3 text-left min-w-[300px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
+                                    <div class="flex items-center justify-between gap-1.5">
                                         <span>Ringkasan Isi Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
                                             <i class="fa-solid fa-sort"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('jenis')" class="px-2 py-3 text-center min-w-[130px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jenis Informasi">
+                                <?php if (! ($forceTable)): ?>
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'jenis')" class="px-3.5 py-3 text-center min-w-[140px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jenis Informasi">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Jenis Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -183,39 +187,48 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('pejabat')" class="px-3 py-3 text-center min-w-[180px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit/Satker">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <span>Pejabat/Unit/Satker yang Menguasai Informasi</span>
+                                <?php endif; ?>
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'pejabat')" class="px-3.5 py-3 text-left min-w-[210px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit yang Menguasai Informasi">
+                                    <div class="flex items-center justify-between gap-1.5">
+                                        <span>Pejabat/Unit yang Menguasai Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
                                             <i class="fa-solid fa-sort"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('waktu')" class="px-2 py-3 text-center min-w-[150px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <span>Waktu dan Tempat Pembuatan Informasi</span>
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'penanggung_jawab')" class="px-3.5 py-3 text-left min-w-[180px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab">
+                                    <div class="flex items-center justify-between gap-1.5">
+                                        <span>Penanggung Jawab</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
                                             <i class="fa-solid fa-sort"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('retensi')" class="px-3 py-3 text-center min-w-[170px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Retensi Arsip">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <span>Jangka Waktu Penyimpanan atau Retensi Arsip</span>
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'waktu')" class="px-3.5 py-3 text-left min-w-[170px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat Pembuatan">
+                                    <div class="flex items-center justify-between gap-1.5">
+                                        <span>Waktu dan Tempat Pembuatan</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
                                             <i class="fa-solid fa-sort"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('bentuk')" class="px-2 py-3 text-center min-w-[130px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Bentuk Informasi">
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'bentuk')" class="px-3 py-3 text-center min-w-[120px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Format">
                                     <div class="flex items-center justify-center gap-1.5">
-                                        <span>Bentuk Informasi yang Tersedia</span>
+                                        <span>Format</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
                                             <i class="fa-solid fa-sort"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('dilihat')" class="px-2 py-3 text-center w-24 min-w-[90px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sering Dilihat">
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'retensi')" class="px-3 py-3 text-center min-w-[140px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Retensi Arsip">
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <span>Retensi Arsip</span>
+                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="fa-solid fa-sort"></i>
+                                        </span>
+                                    </div>
+                                </th>
+                                <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'dilihat')" class="px-2 py-3 text-center w-24 min-w-[90px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan berdasarkan Akses / Sering Dilihat">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Aksi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
@@ -226,7 +239,7 @@
                             </tr>
                         <?php endif; ?>
                     </thead>
-                    <tbody id="table-admin-dip-body" class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
+            <tbody id="table-admin-dip-body-<?php echo e($tableKey); ?>" data-admin-dip-tbody="<?php echo e($tableKey); ?>" data-category-mode="<?php echo e($isKategoriMode ? 'true' : 'false'); ?>" data-serta-merta-table="<?php echo e($isSertaMertaCategory ? 'true' : 'false'); ?>" data-category-table="<?php echo e($isKategoriMode && !$isSertaMertaCategory ? 'true' : 'false'); ?>" class="<?php echo e($isKategoriMode ? '' : 'divide-y divide-slate-200'); ?> text-sm md:text-base font-medium text-slate-800">
                         <?php $__empty_1 = true; $__currentLoopData = $informasi; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <?php
                                 $rincianText = trim($item->rincian_informasi ?: '-');
@@ -237,20 +250,22 @@
                                     ? $item->link_informasi 
                                     : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') : null);
                             ?>
-                            <tr class="table-admin-dip-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-200"
+                            <tr class="table-admin-dip-row hover:bg-sky-50/70 transition-colors"
                                 data-id="<?php echo e($item->id); ?>"
                                 data-no="<?php echo e($idx + 1); ?>"
                                 data-dilihat="<?php echo e((int)($item->dilihat ?? 0)); ?>"
                                 data-rincian="<?php echo e(strtolower($rincianText)); ?>"
                                 data-sub_informasi="<?php echo e(strtolower($subInformasiText)); ?>"
+                                data-tanggal="<?php echo e($item->created_at?->timestamp ?? ''); ?>"
                                 data-ringkasan="<?php echo e(strtolower($item->sub_informasi ?? '')); ?>"
                                 data-jenis="<?php echo e(strtolower($item->jenis_informasi ?? '')); ?>"
                                 data-pejabat="<?php echo e(strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '')); ?>"
+                                data-penanggung_jawab="<?php echo e(strtolower($item->penanggung_jawab_pembuatan_informasi ?? '')); ?>"
                                 data-waktu="<?php echo e(strtolower($item->waktu_pembuatan_informasi ?? '')); ?>"
                                 data-retensi="<?php echo e(strtolower($item->retensi_arsip ?? '')); ?>"
                                 data-bentuk="<?php echo e(strtolower($item->bentuk_informasi_yang_tersedia ?? '')); ?>">
                                 <td class="col-checkbox-cell hidden px-2 py-3 text-center">
-                                    <input type="checkbox" name="ids[]" form="form-bulk-delete" value="<?php echo e($item->id); ?>" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
+                                    <input type="checkbox" value="<?php echo e($item->id); ?>" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                                 </td>
 
                                 <?php if(!$isKategoriMode): ?>
@@ -261,68 +276,37 @@
                                     </td>
                                 <?php endif; ?>
 
-                                <?php if($isKategoriMode): ?>
-                                    <!-- 1. Rincian Informasi (Topik Induk) - Dynamic Rowspan Handled by Client Engine -->
-                                    <td class="col-admin-rincian px-4 py-3 font-extrabold text-slate-900 leading-relaxed align-top bg-white border-r border-slate-200 break-words">
-                                        <div class="sticky top-2">
-                                            <div class="text-slate-900 font-extrabold text-xs sm:text-sm mb-2">
-                                                <?php echo e($rincianText); ?>
+                                <?php if($isSertaMertaCategory): ?>
+                                    <td class="col-admin-sub-info px-4 py-3 font-medium text-slate-800 leading-relaxed align-middle break-words">
+                                        <?php echo e($item->sub_informasi); ?>
 
-                                            </div>
-                                            <!-- Aksi Khusus Rincian Informasi (Wadah Topik) -->
-                                            <div class="flex items-center gap-1.5 flex-wrap">
-                                                <button type="button" onclick="addSubInfo(<?php echo e(json_encode($item)); ?>);" 
-                                                        title="Tambah Sub Informasi baru di bawah rincian ini"
-                                                        class="inline-flex items-center gap-1 px-2 py-1 bg-sky-50 hover:bg-sky-500 text-sky-600 hover:text-white rounded-lg text-[11px] font-bold transition shadow-2xs cursor-pointer border border-sky-200 hover:border-transparent">
-                                                    <i class="fa-solid fa-plus text-[10px]"></i>
-                                                    <span>Sub Informasi</span>
-                                                </button>
-                                                <button type="button" 
-                                                        onclick="triggerDeleteRincian('<?php echo e(addslashes($rincianText)); ?>', '<?php echo e(addslashes($item->jenis_informasi)); ?>')" 
-                                                        title="Hapus Rincian Informasi ini beserta seluruh isinya"
-                                                        class="inline-flex items-center gap-1 px-2 py-1 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-lg text-[11px] font-bold transition shadow-2xs cursor-pointer border border-rose-200 hover:border-transparent">
-                                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
-                                                    <span>Hapus Rincian</span>
-                                                </button>
-                                            </div>
+                                    </td>
+                                    <td class="px-4 py-3 text-left text-slate-600 align-middle whitespace-nowrap">
+                                        <?php echo e($item->created_at?->translatedFormat('d F Y') ?? '-'); ?>
+
+                                    </td>
+                                    <td class="px-2 py-3 text-center align-middle">
+                                        <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
+                                            <?php if($fileTargetUrl && $fileTargetUrl !== '#'): ?>
+                                                <a href="<?php echo e($fileTargetUrl); ?>" target="_blank" title="Lihat Berkas" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white rounded-lg transition"><i class="fa-regular fa-eye text-[11px]"></i></a>
+                                            <?php endif; ?>
+                                            <button type="button" onclick="editData(<?php echo e(json_encode($item)); ?>)" title="Edit" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white rounded-lg transition cursor-pointer"><i class="fa-solid fa-pen-to-square text-[11px]"></i></button>
+                                            <button type="button" onclick="triggerDelete('<?php echo e(url('/admin/informasi-publik/'.$item->id)); ?>', '<?php echo e(addslashes($subInformasiText ?: $rincianText)); ?>')" title="Hapus" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash-can text-[11px]"></i></button>
                                         </div>
                                     </td>
+                                <?php elseif($isKategoriMode): ?>
+                                    <!-- 1. Rincian Informasi (Topik Induk) - Dynamic Rowspan Handled by Client Engine -->
+                                    <td class="col-admin-rincian px-4 py-3 font-medium text-slate-800 leading-relaxed align-top bg-white break-words"><?php echo e($rincianText); ?></td>
 
                                     <!-- 2. Sub Informasi (Nama Dokumen) + Aksi Langsung di Dalamnya -->
-                                    <td class="px-4 py-3 font-medium text-slate-800 leading-relaxed align-top break-words">
+                                    <td class="col-admin-sub-info px-4 py-3 font-medium text-slate-800 leading-relaxed align-top break-words">
                                         <?php
                                             $subText = trim($item->sub_informasi ?: '');
                                             $isPending = empty($subText) || $subText === 'Dokumen sedang dilengkapi unit';
                                         ?>
                                         <div class="space-y-1.5">
                                             <?php if(!$isPending): ?>
-                                                <div class="flex items-start justify-between gap-3">
-                                                    <div class="space-y-1">
-                                                        <div class="font-extrabold text-slate-900" title="<?php echo e($subText); ?>">
-                                                            <?php echo e($subText); ?>
-
-                                                        </div>
-
-                                                    </div>
-
-                                                    <!-- Tombol Aksi Dokumen Langsung Menempel di Sub Informasi -->
-                                                    <div class="flex items-center gap-1.5 shrink-0 self-center">
-                                                        <?php if($fileTargetUrl && $fileTargetUrl !== '#'): ?>
-                                                            <a href="<?php echo e($fileTargetUrl); ?>" target="_blank" title="Lihat Tautan / Berkas" 
-                                                               class="w-7 h-7 flex items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer">
-                                                                <i class="fa-regular fa-eye text-[11px]"></i>
-                                                            </a>
-                                                        <?php endif; ?>
-                                                        <button type="button" onclick="editData(<?php echo e(json_encode($item)); ?>)" title="Edit Dokumen Ini" 
-                                                                class="w-7 h-7 flex items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
-                                                        </button>
-                                                        <button type="button" onclick="triggerDelete('<?php echo e(url('/admin/informasi-publik/'.$item->id)); ?>', '<?php echo e(addslashes($subText)); ?>')" title="Hapus Dokumen Ini" 
-                                                                class="w-7 h-7 flex items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                                            <i class="fa-solid fa-trash text-[11px]"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                <div class="font-medium text-slate-800" title="<?php echo e($subText); ?>"><?php echo e($subText); ?></div>
                                             <?php else: ?>
                                                 <div class="flex items-center gap-2 py-0.5">
                                                     <i class="fa-regular fa-clock text-[11px] text-amber-500"></i>
@@ -331,87 +315,109 @@
                                             <?php endif; ?>
                                         </div>
                                     </td>
+                                    <td class="px-2 py-3 text-center align-middle">
+                                        <div class="flex items-center justify-center gap-1 whitespace-nowrap">
+                                            <?php if($fileTargetUrl && $fileTargetUrl !== '#'): ?>
+                                                <a href="<?php echo e($fileTargetUrl); ?>" target="_blank" title="Lihat Tautan / Berkas" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white rounded-lg transition"><i class="fa-regular fa-eye text-[11px] not-italic leading-none"></i></a>
+                                            <?php endif; ?>
+                                            <button type="button" onclick="editData(<?php echo e(json_encode($item)); ?>)" title="Edit" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white rounded-lg transition cursor-pointer"><i class="fa-solid fa-pen-to-square text-[11px] not-italic leading-none"></i></button>
+                                            <button type="button" onclick="triggerDelete('<?php echo e(url('/admin/informasi-publik/'.$item->id)); ?>', '<?php echo e(addslashes($subText ?: $rincianText)); ?>')" title="Hapus" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash-can text-[11px] not-italic leading-none"></i></button>
+                                        </div>
+                                    </td>
                                 <?php else: ?>
-                                     <!-- 1. Ringkasan Isi Informasi (Rincian Informasi & Sub Informasi) -->
-                                     <td class="px-3.5 py-3 text-slate-900 leading-normal break-words text-xs sm:text-sm">
+                                     <!-- 1. Ringkasan Isi Informasi -->
+                                     <td class="px-4 py-3.5 text-slate-900 leading-normal break-words text-sm md:text-base">
                                          <?php
-                                             $rincianVal = trim($item->rincian_informasi ?: '');
                                              $subVal = trim($item->sub_informasi ?: '');
                                          ?>
                                          <div class="space-y-1">
                                              <?php if($subVal && $subVal !== 'Dokumen sedang dilengkapi unit'): ?>
-                                                 <div class="font-black text-slate-900 leading-snug"><?php echo e($subVal); ?></div>
-                                                 <?php if($rincianVal && strcasecmp($rincianVal, $subVal) !== 0): ?>
-                                                     <div class="text-[11px] text-slate-500 font-semibold flex items-center gap-1">
-                                                         <span class="px-1.5 py-0.5 bg-slate-100 rounded text-slate-600 border border-slate-200/80"><?php echo e($rincianVal); ?></span>
-                                                     </div>
-                                                 <?php endif; ?>
+                                                 <div class="font-medium text-slate-900 leading-snug"><?php echo e($subVal); ?></div>
                                              <?php else: ?>
-                                                 <div class="font-black text-slate-900 leading-snug"><?php echo e($rincianVal ?: '-'); ?></div>
-                                                 <div class="text-[11px] text-amber-600 font-semibold italic flex items-center gap-1">
+                                                 <div class="font-medium text-slate-900 leading-snug">-</div>
+                                                 <div class="text-xs text-amber-600 font-semibold italic flex items-center gap-1">
                                                      <i class="fa-regular fa-clock text-[10px]"></i>
                                                      <span>Dokumen sedang dilengkapi unit</span>
                                                  </div>
                                              <?php endif; ?>
-
                                          </div>
                                      </td>
 
-                                     <!-- 2. Jenis Informasi (Berkala / Serta Merta / Setiap Saat) -->
-                                     <td class="px-2.5 py-3 font-medium text-slate-700 text-center break-words text-xs sm:text-sm leading-normal">
+                                     <?php if (! ($forceTable)): ?>
+                                     <!-- 2. Jenis Informasi -->
+                                     <td class="px-3.5 py-3.5 text-center align-middle whitespace-nowrap">
                                          <?php
-                                             $cleanJenis = preg_replace('/^informasi\s+/i', '', trim($item->jenis_informasi ?? ''));
+                                             $jVal = trim($item->jenis_informasi ?: '');
+                                             $jBadgeClass = match($jVal) {
+                                                 'Informasi Berkala' => 'bg-[#1B365D] text-white',
+                                                 'Informasi Serta Merta', 'Informasi Serta-Merta' => 'bg-rose-500 text-white',
+                                                 'Informasi Setiap Saat' => 'bg-emerald-600 text-white',
+                                                 'Informasi Dikecualikan' => 'bg-slate-700 text-white',
+                                                 default => 'bg-sky-600 text-white'
+                                             };
                                          ?>
-                                         <?php echo e($cleanJenis ?: ($item->jenis_informasi ?: '-')); ?>
+                                         <?php if($jVal): ?>
+                                             <span class="inline-flex items-center justify-center px-2.5 py-1 text-[11px] font-bold rounded-lg <?php echo e($jBadgeClass); ?> shadow-2xs">
+                                                 <?php echo e($jVal); ?>
 
+                                             </span>
+                                         <?php else: ?>
+                                             <span class="text-slate-400 font-bold text-xs">-</span>
+                                         <?php endif; ?>
                                      </td>
 
-                                     <!-- 3. Pejabat/Unit/Satker Yang Menguasai Informasi -->
-                                     <td class="px-3 py-3 font-medium text-slate-700 text-center break-words text-xs sm:text-sm leading-normal">
+                                     <?php endif; ?>
+                                     <!-- 3. Pejabat/Unit yang Menguasai Informasi -->
+                                     <td class="px-4 py-3.5 font-medium text-slate-700 text-left break-words text-sm md:text-base leading-normal">
                                          <?php echo e($item->pejabat_unit_yang_menguasai_informasi ?: '-'); ?>
 
                                      </td>
 
+                                     <!-- 4. Penanggung Jawab -->
+                                     <td class="px-4 py-3.5 font-medium text-slate-700 text-left break-words text-sm md:text-base leading-normal">
+                                         <?php echo e($item->penanggung_jawab_pembuatan_informasi ?: '-'); ?>
 
-                                     <!-- 5. Waktu dan Tempat Pembuatan Informasi -->
-                                     <td class="px-3 py-3 text-center font-medium text-slate-700 break-words text-xs sm:text-sm leading-normal">
+                                     </td>
+
+                                     <!-- 5. Waktu dan Tempat Pembuatan -->
+                                     <td class="px-4 py-3.5 text-left font-medium text-slate-700 break-words text-sm md:text-base leading-normal">
                                          <?php echo e($item->waktu_pembuatan_informasi ?: '-'); ?>
 
                                      </td>
 
-                                     <!-- 6. Jangka Waktu Penyimpanan atau Retensi Arsip -->
-                                     <td class="px-3 py-3 text-center font-medium text-slate-700 break-words text-xs sm:text-sm leading-normal">
-                                         <?php echo e($item->retensi_arsip ?: '-'); ?>
-
-                                     </td>
-
-                                     <!-- 7. Bentuk Informasi yang Tersedia -->
-                                     <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words text-xs sm:text-sm leading-normal">
+                                     <!-- 6. Format -->
+                                     <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal">
                                          <?php echo e($item->bentuk_informasi_yang_tersedia ?: '-'); ?>
 
                                      </td>
 
-                                     <!-- Aksi (Tautan Berkas & Aksi Admin) Hanya untuk Full DIP -->
-                                     <td class="px-2 py-2.5 text-center align-middle">
-                                         <div class="flex items-center justify-center gap-1.5">
+                                     <!-- 7. Retensi Arsip -->
+                                     <td class="px-3.5 py-3.5 text-left font-medium text-slate-700 break-words text-sm md:text-base leading-normal">
+                                         <?php echo e($item->retensi_arsip ?: '-'); ?>
+
+                                     </td>
+
+                                     <!-- 8. Akses / Aksi (Kolom Paling Kanan) -->
+                                     <td class="px-3 py-3.5 text-center align-middle">
+                                         <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
                                              <?php if($fileTargetUrl && $fileTargetUrl !== '#'): ?>
                                                  <a href="<?php echo e($fileTargetUrl); ?>" target="_blank" title="Lihat Tautan / Berkas" 
-                                                    class="w-7 h-7 flex items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg">
-                                                     <i class="fa-regular fa-eye text-[11px]"></i>
+                                                    class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg">
+                                                     <i class="fa-regular fa-eye text-[11px] not-italic leading-none"></i>
                                                  </a>
                                              <?php endif; ?>
-                                             <button type="button" onclick="editData(<?php echo e(json_encode($item)); ?>)" title="Edit Data" class="w-7 h-7 flex items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                                 <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                             <button type="button" onclick="editData(<?php echo e(json_encode($item)); ?>)" title="Edit Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
+                                                 <i class="fa-solid fa-pen-to-square text-[11px] not-italic leading-none"></i>
                                              </button>
-                                             <button type="button" onclick="triggerDelete('<?php echo e(url('/admin/informasi-publik/'.$item->id)); ?>', '<?php echo e(addslashes($item->sub_informasi)); ?>')" title="Hapus Data" class="w-7 h-7 flex items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                                 <i class="fa-solid fa-trash text-[11px]"></i>
+                                             <button type="button" onclick="triggerDelete('<?php echo e(url('/admin/informasi-publik/'.$item->id)); ?>', '<?php echo e(addslashes($item->sub_informasi)); ?>')" title="Hapus Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
+                                                 <i class="fa-solid fa-trash-can text-[11px] not-italic leading-none"></i>
                                              </button>
                                          </div>
                                      </td>
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                            <tr><td colspan="<?php echo e($isKategoriMode ? '2' : '10'); ?>" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik.</td></tr>
+                            <tr><td colspan="<?php echo e($isSertaMertaCategory ? '4' : ($isKategoriMode ? '4' : ($forceTable ? '9' : '10'))); ?>" class="p-12 text-center text-slate-400 font-semibold"><?php echo e($isKategoriMode ? 'Tidak ada data informasi untuk kategori ini.' : 'Tidak ada data Informasi Publik.'); ?></td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -420,13 +426,12 @@
 
         <!-- Footer Kontrol Paginasi Client-side Instan -->
         <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div id="table-admin-dip-info" class="text-xs md:text-sm text-slate-800">
-                Menampilkan 0 sampai 0 dari 0 entri
+            <div id="table-admin-dip-info-<?php echo e($tableKey); ?>" data-admin-dip-info="<?php echo e($tableKey); ?>" class="text-sm md:text-lg text-slate-800">
+                Menampilkan 0–0 dari 0 informasi
             </div>
-            <div id="table-admin-dip-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
+            <div id="table-admin-dip-pagination-<?php echo e($tableKey); ?>" data-admin-dip-pagination="<?php echo e($tableKey); ?>" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden bg-white select-none">
                 <!-- Render dinamis via JavaScript -->
             </div>
         </div>
-    </form>
 </div>
 <?php /**PATH D:\laragon\www\ppid-fmipa-baru\resources\views/components/admin/informasi_publik/table.blade.php ENDPATH**/ ?>

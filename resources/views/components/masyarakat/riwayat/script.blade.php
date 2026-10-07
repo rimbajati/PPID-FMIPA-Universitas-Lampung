@@ -46,9 +46,9 @@ function lacakRiwayatApp(allLayansData) {
         },
 
         init() {
-            this.activeItem = null;
             this.searchQuery = '';
             this.currentPage = 1;
+            this.activeItem = this.allLayans.length > 0 ? this.allLayans[0] : null;
         },
 
         goToPage(page) {

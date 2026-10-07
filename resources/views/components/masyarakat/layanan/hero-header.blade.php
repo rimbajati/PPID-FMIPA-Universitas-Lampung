@@ -4,7 +4,7 @@
         <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
             Layanan
         </h1>
-        <p class="text-slate-600 text-sm md:text-base font-normal leading-relaxed max-w-3xl">
+        <p class="w-full max-w-none text-slate-600 text-sm md:text-base font-normal leading-relaxed">
             Portal terpadu untuk pengajuan permohonan informasi publik, penyampaian keberatan, dan pelacakan status layanan secara online.
         </p>
     </div>

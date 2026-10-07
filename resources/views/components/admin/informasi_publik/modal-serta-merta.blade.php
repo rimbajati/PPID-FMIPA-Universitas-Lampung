@@ -83,7 +83,7 @@
 
                         <!-- Custom File Input Container -->
                         <div class="relative flex items-center w-full min-h-[38px] p-1 bg-slate-50 border border-slate-200 rounded-xl transition focus-within:border-sky-500 focus-within:bg-white">
-                            <input type="file" id="inputFileSertaMerta" name="file_informasi" accept=".pdf,.doc,.docx,.xls,.xlsx" class="sr-only" onchange="handleFileChangeSertaMerta(this)">
+                            <input type="file" id="inputFileSertaMerta" name="file_informasi" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp" class="sr-only" onchange="handleFileChangeSertaMerta(this)">
 
                             <button type="button" onclick="document.getElementById('inputFileSertaMerta').click()"
                                     class="shrink-0 px-3 py-1 bg-sky-500 hover:bg-sky-600 active:bg-sky-700 text-white text-xs font-black rounded-lg transition shadow-2xs cursor-pointer">
@@ -99,7 +99,7 @@
                             </div>
                         </div>
 
-                        <p id="fileHelpTextSertaMerta" class="text-[10px] text-slate-400 font-medium">Format: PDF, DOC, DOCX, XLS, XLSX (Maks 5MB)</p>
+                        <p id="fileHelpTextSertaMerta" class="text-[10px] text-slate-400 font-medium">Format: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)</p>
                     </div>
 
                     <!-- Tautan Link Serta Merta -->

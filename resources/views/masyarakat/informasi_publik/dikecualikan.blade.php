@@ -5,20 +5,13 @@
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-100/70 min-h-screen pb-20">
 
-    <!-- Header Hero Banner Dikecualikan (Matching DIP Layout) -->
-    <section class="bg-slate-100/80 text-slate-800 py-8 md:py-10 border-b border-slate-200/80">
-        <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
-            <h1 class="text-3xl sm:text-4xl md:text-[2.6rem] font-black text-slate-900 tracking-tight leading-tight">
-                Informasi yang Dikecualikan
-            </h1>
-            <p class="text-slate-600 text-sm sm:text-base font-normal leading-relaxed max-w-5xl">
-                Memuat daftar informasi publik yang bersifat ketat, terbatas, dan rahasia yang tidak dapat diberikan kepada pemohon berdasarkan pengujian konsekuensi Pasal 17 Undang-Undang Nomor 14 Tahun 2008 tentang Keterbukaan Informasi Publik oleh PPID FMIPA Universitas Lampung. Untuk Daftar Informasi Publik yang Dikecualikan tingkat universitas dapat diakses melalui portal PPID Utama:
-                <a href="https://ppid.unila.ac.id/informasi-dikecualikan/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-sky-600 hover:text-sky-700 font-bold hover:underline ml-1">
-                    <span>Daftar Informasi Publik yang Dikecualikan Universitas Lampung &rarr;</span>
-                </a>
-            </p>
-        </div>
-    </section>
+    <!-- Header Hero Banner Informasi yang Dikecualikan -->
+    <x-masyarakat.informasi_publik.hero-banner title="Informasi yang Dikecualikan">
+        Memuat daftar informasi publik yang bersifat ketat, terbatas, dan rahasia yang tidak dapat diberikan kepada pemohon berdasarkan pengujian konsekuensi Pasal 17 Undang-Undang Nomor 14 Tahun 2008 tentang Keterbukaan Informasi Publik oleh PPID FMIPA Universitas Lampung. Untuk Daftar Informasi Publik yang Dikecualikan tingkat universitas dapat diakses melalui portal PPID Utama:
+        <a href="https://ppid.unila.ac.id/informasi-dikecualikan/" target="_blank" rel="noopener noreferrer" class="font-bold text-white underline decoration-white/50 underline-offset-4 hover:decoration-white">
+            Daftar Informasi Publik yang Dikecualikan Universitas Lampung &rarr;
+        </a>
+    </x-masyarakat.informasi_publik.hero-banner>
 
     <!-- Container Konten Daftar Informasi Dikecualikan -->
     <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
@@ -27,7 +20,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
                 <!-- Dropdown Show Entries -->
                 <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
-                    <span>Show</span>
+                    <span>Tampilkan</span>
                     <select id="select-per-page-dik" onchange="changePerPageDik(this.value)" 
                             class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
                         <option value="10">10</option>
@@ -35,13 +28,13 @@
                         <option value="50">50</option>
                         <option value="100">100</option>
                     </select>
-                    <span>entries</span>
+                    <span>baris</span>
                 </div>
 
                 <!-- Search Bar Pencarian Seluruh Isi Tabel (Format DataTables Style: Search: [_____ x]) -->
                 <form id="form-search-dik" onsubmit="event.preventDefault();" class="flex items-center gap-2">
                     <label for="input-search-dik" class="text-sm font-semibold text-slate-800 select-none cursor-pointer">
-                        Search:
+                        Cari:
                     </label>
                     <div class="relative">
                         <input type="text" 
@@ -89,7 +82,7 @@
                                         </span>
                                     </div>
                                 </th>
-                                <th colspan="2" class="px-4 py-2 text-center border-b border-r border-white/40">
+                                <th colspan="2" class="consequence-group-header px-4 py-2 text-center border-b border-r border-white/40">
                                     Konsekuensi / Pertimbangan Bagi Publik
                                 </th>
                                 <th rowspan="2" onclick="sortDikTable('jangka_waktu')" class="px-4 py-3.5 text-center min-w-[180px] max-w-[240px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jangka Waktu">
@@ -131,32 +124,32 @@
                                     data-ditutup="{{ strtolower($item->ditutup ?? '') }}"
                                     data-jangka_waktu="{{ strtolower($item->jangka_waktu ?? '') }}">
                                     <!-- 1. NO -->
-                                    <td class="col-dik-no px-3 py-3 text-center font-bold text-slate-400 align-top">
+                                    <td class="col-dik-no px-2 py-3 text-center font-bold text-slate-400">
                                         {{ $idx + 1 }}
                                     </td>
 
                                     <!-- 2. INFORMASI -->
-                                    <td class="px-5 py-3 font-extrabold text-slate-900 align-top leading-relaxed [word-break:break-word]">
+                                    <td class="px-3.5 py-3 font-extrabold text-slate-900 leading-normal break-words">
                                         {{ $item->ringkasan_informasi }}
                                     </td>
 
                                     <!-- 3. DASAR HUKUM -->
-                                    <td class="px-5 py-3 text-slate-700 align-top leading-relaxed [word-break:break-word] whitespace-pre-line font-medium">
+                                    <td class="px-3 py-3 text-slate-700 break-words leading-normal">
                                         {{ $item->dasar_hukum ?: '-' }}
                                     </td>
 
                                     <!-- 4. KONSEKUENSI DIBUKA -->
-                                    <td class="px-4 py-3 text-slate-700 align-top leading-relaxed [word-break:break-word] whitespace-pre-line font-medium">
+                                    <td class="px-3 py-3 text-slate-700 break-words leading-normal">
                                         {{ $item->dibuka ?: '-' }}
                                     </td>
 
                                     <!-- 5. KONSEKUENSI DITUTUP -->
-                                    <td class="px-4 py-3 text-slate-700 align-top leading-relaxed [word-break:break-word] whitespace-pre-line font-medium">
+                                    <td class="px-3 py-3 text-slate-700 break-words leading-normal">
                                         {{ $item->ditutup ?: '-' }}
                                     </td>
 
                                     <!-- 6. JANGKA WAKTU -->
-                                    <td class="px-4 py-3 text-slate-700 align-top leading-relaxed [word-break:break-word] whitespace-pre-line font-semibold">
+                                    <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words">
                                         {{ $item->jangka_waktu ?: '-' }}
                                     </td>
                                 </tr>
@@ -174,7 +167,7 @@
                 <!-- Footer Pagination Client-side Instan -->
                 <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div id="table-dik-info" class="text-xs md:text-sm text-slate-800">
-                        Menampilkan 0 sampai 0 dari 0 entri
+                        Menampilkan 0–0 dari 0 informasi
                     </div>
                     <div id="table-dik-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
                         <!-- Tombol dibuat via JavaScript secara instan -->
@@ -331,7 +324,7 @@
 
         if (totalItems === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data Informasi Publik yang Dikecualikan yang sesuai.</td></tr>';
-            if (infoEl) infoEl.innerText = 'Menampilkan 0 sampai 0 dari 0 entri';
+            if (infoEl) infoEl.innerText = 'Menampilkan 0–0 dari 0 informasi';
             if (paginEl) paginEl.innerHTML = '';
             return;
         }
@@ -345,7 +338,7 @@
         });
 
         if (infoEl) {
-            infoEl.innerText = `Menampilkan ${startIndex + 1} sampai ${endIndex} dari ${totalItems} entri`;
+            infoEl.innerText = `Menampilkan ${startIndex + 1}–${endIndex} dari ${totalItems} informasi`;
         }
 
         if (paginEl) {

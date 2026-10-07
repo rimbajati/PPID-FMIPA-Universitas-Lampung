@@ -85,21 +85,7 @@ class StatistikController extends Controller
             'Informasi Dikecualikan' => \App\Models\InformasiDikecualikan::count(),
         ];
 
-        // 2. Kategori Pemohon Informasi
-        $kategoriPemohonList = ['Perorangan', 'Kelompok', 'Organisasi', 'Lembaga'];
-        $statPemohon = [];
-        foreach ($kategoriPemohonList as $kat) {
-            $statPemohon[$kat] = Permohonan::where('kategori_pemohon', $kat)->count();
-        }
-        $pemohonLain = Permohonan::whereNotIn('kategori_pemohon', $kategoriPemohonList)
-            ->whereNotNull('kategori_pemohon')
-            ->where('kategori_pemohon', '!=', '')
-            ->count();
-        if ($pemohonLain > 0) {
-            $statPemohon['Lainnya'] = $pemohonLain;
-        }
-
-        // 3. Cara Memperoleh Informasi
+        // 2. Cara Memperoleh Informasi
         $statCara = [
             'Melalui Email' => Permohonan::where('cara_memperoleh_informasi', 'like', '%email%')->count(),
             'Datang langsung ke Dekanat FMIPA Universitas Lampung' => Permohonan::where('cara_memperoleh_informasi', 'like', '%langsung%')->count(),
@@ -146,7 +132,6 @@ class StatistikController extends Controller
             'chartBulanan',
             'chartBulananPerTahun',
             'statKlasifikasi',
-            'statPemohon',
             'statCara',
             'statAlasanKeberatan'
         ));

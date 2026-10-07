@@ -1,12 +1,5 @@
 <!-- Header Hero Banner Pengajuan Keberatan -->
-<section class="bg-slate-100/80 text-slate-800 py-10 border-b border-slate-200/80">
-    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 space-y-2">
-        <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
-            Pengajuan Keberatan
-        </h1>
-        <p class="text-slate-600 text-sm md:text-base font-normal leading-relaxed max-w-3xl">
-            Ajukan keberatan informasi publik secara online sesuai ketentuan UU No. 14 Tahun 2008 tentang Keterbukaan Informasi Publik.
-        </p>
-    </div>
-</section>
+<x-masyarakat.informasi_publik.hero-banner title="Pengajuan Keberatan" container-class="max-w-7xl mx-auto px-4 md:px-8 lg:px-12" theme="keberatan">
+    Jika Anda merasa informasi publik tidak diberikan sesuai dengan permohonan, Anda dapat mengajukan keberatan sesuai dengan ketentuan UU No. 14 Tahun 2008 tentang Keterbukaan Informasi Publik.
+</x-masyarakat.informasi_publik.hero-banner>
 

@@ -75,11 +75,11 @@
                     <p class="leading-relaxed text-slate-800 font-semibold whitespace-pre-line" 
                        x-text="activeItem.catatan_selesai ? activeItem.catatan_selesai : (
                            activeItem.type === 'keberatan' 
-                           ? 'Pengajuan keberatan Anda telah diterima dan disetujui. Silakan periksa kotak masuk email Anda (termasuk folder Spam) untuk tanggapan resmi dari Atasan PPID.' 
+                           ? 'Pengajuan keberatan telah diputuskan. Tanggapan resmi disampaikan melalui saluran yang didaftarkan saat pengajuan.' 
                            : (
-                               activeItem.cara_memperoleh_informasi && activeItem.cara_memperoleh_informasi.toLowerCase().includes('email') 
-                               ? 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam) untuk mengakses informasi yang diminta.' 
-                               : 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan informasi.'
+                               activeItem.saluran_digital
+                               ? 'Permohonan telah dipenuhi. Salinan digital disampaikan melalui saluran yang dipilih saat pengajuan.' 
+                               : 'Permohonan telah dipenuhi. Silakan datang ke Dekanat FMIPA Universitas Lampung pada jam kerja untuk pengambilan atau melihat informasi di tempat.'
                            )
                        )"></p>
                 </div>

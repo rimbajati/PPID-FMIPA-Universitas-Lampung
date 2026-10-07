@@ -133,14 +133,16 @@
         <thead>
             <tr>
                 <th style="width: 3%; text-align: center;">No</th>
-                <th style="width: 10%;">No. Tiket</th>
+                <th style="width: 9%;">No. Tiket</th>
                 <th style="width: 8%;">Tanggal</th>
-                <th style="width: 14%;">Nama Pemohon</th>
-                <th style="width: 11%;">Kategori / NIK</th>
-                <th style="width: 24%;">Informasi Yang Diminta</th>
-                <th style="width: 14%;">Tujuan</th>
+                <th style="width: 12%;">Nama Pemohon</th>
+                <th style="width: 9%;">NIK</th>
+                <th style="width: 12%;">Alamat</th>
+                <th style="width: 7%;">Pekerjaan</th>
+                <th style="width: 16%;">Informasi Yang Diminta</th>
+                <th style="width: 9%;">Tujuan</th>
+                <th style="width: 7%;">Jenis</th>
                 <th style="width: 8%; text-align: center;">Status</th>
-                <th style="width: 8%;">Catatan</th>
             </tr>
         </thead>
         <tbody>
@@ -159,21 +161,20 @@
                     <td>{{ $item->created_at ? $item->created_at->format('d/m/Y') : '-' }}</td>
                     <td style="font-weight: 600;">{{ $item->nama_lengkap }}</td>
                     <td>
-                        {{ $item->kategori_pemohon ?: '-' }}<br>
-                        <span style="color: #64748b; font-size: 8.5px;">{{ $item->no_identitas }}</span>
+                        {{ $item->no_identitas ?: '-' }}
                     </td>
+                    <td>{{ $item->alamat_lengkap ?: '-' }}</td>
+                    <td>{{ $item->pekerjaan ?: '-' }}</td>
                     <td>{{ $item->informasi_yang_diminta }}</td>
                     <td>{{ $item->tujuan_penggunaan_informasi ?: '-' }}</td>
+                    <td>{{ $item->jenis_permohonan ?: '-' }}</td>
                     <td style="text-align: center;">
                         <span class="badge {{ $badgeClass }}">{{ strtoupper($item->status) }}</span>
-                    </td>
-                    <td style="font-size: 8.5px;">
-                        {{ $item->status === 'Ditolak' ? ($item->alasan_ditolak ?: '-') : ($item->catatan_selesai ?: '-') }}
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" style="text-align: center; padding: 20px; color: #94a3b8;">
+                    <td colspan="11" style="text-align: center; padding: 20px; color: #94a3b8;">
                         Tidak ada data permohonan.
                     </td>
                 </tr>

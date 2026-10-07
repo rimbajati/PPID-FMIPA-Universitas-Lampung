@@ -112,13 +112,7 @@
                 </h4>
                 <ul class="space-y-2.5 text-xs font-medium text-slate-600">
                     <li>
-                        <a href="{{ route('login') }}" class="hover:text-sky-600 transition-colors">Masuk Akun</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('register') }}" class="hover:text-sky-600 transition-colors">Pendaftaran Pemohon</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('password.request') }}" class="hover:text-sky-600 transition-colors">Lupa Kata Sandi</a>
+                    <a href="{{ route('admin.login') }}" class="hover:text-sky-600 transition-colors">Login Admin</a>
                     </li>
                     <li>
                         <a href="{{ route('beranda') }}" class="hover:text-sky-600 transition-colors">Beranda Utama</a>

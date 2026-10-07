@@ -60,6 +60,61 @@
             font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; 
             font-size: 1rem; 
         }
+        /* Samakan tipografi semua tabel masyarakat, termasuk isi, status, dan pagination. */
+        table th, table td,
+        table th :not(i):not(svg), table td :not(i):not(svg),
+        [data-dip-info], [data-dip-pagination] *,
+        [data-admin-dip-info], [data-admin-dip-pagination] *,
+        #table-kat-info, #table-kat-pagination *,
+        #select-per-page-kat, #input-search-kat, label[for="input-search-kat"] {
+            font-size: 15px !important;
+        }
+        table thead th {
+            text-align: left !important;
+        }
+        table thead th.consequence-group-header {
+            text-align: center !important;
+        }
+        table tbody td {
+            text-align: left !important;
+        }
+        table tbody td .flex {
+            justify-content: flex-start !important;
+        }
+        table thead th > div {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between !important;
+            text-align: left !important;
+        }
+        /* Semua tabel masyarakat memakai pemisah horizontal tanpa garis vertikal. */
+        table {
+            border-left: 0 !important;
+            border-right: 0 !important;
+        }
+        table th,
+        table td {
+            border-left: 0 !important;
+            border-right: 0 !important;
+        }
+        table tbody tr:not(:last-child) td {
+            border-bottom: 1px solid #d1d5db;
+        }
+        /* Pada tabel kategori masyarakat, garis hanya membatasi rincian yang berbeda. */
+        table tbody[data-category-table="true"] > tr > td {
+            border-bottom: 0 !important;
+        }
+        table tbody[data-category-table="true"] > tr.category-group-end > td,
+        table tbody[data-category-table="true"] > tr > td.category-group-boundary-cell {
+            border-bottom: 1px solid #d1d5db !important;
+        }
+        table tbody td[colspan] {
+            padding: 0.625rem 0.75rem !important;
+            text-align: left !important;
+            color: #0f172a !important;
+            font-weight: 500 !important;
+        }
         /* Mencegah pemotongan suku kata di tengah kata (seperti: penyimpa - nan) */
         th, td, p, span, h1, h2, h3, h4, h5, h6, a, div {
             word-break: normal !important;
@@ -77,7 +132,10 @@
             border-radius: 0px !important;
         }
         /* Kontainer pembungkus tabel dibuat siku tajam */
-        div:has(> .overflow-x-auto), div:has(> table) {
+        div[class*="rounded"]:has(table),
+        section[class*="rounded"]:has(table),
+        div:has(> .overflow-x-auto),
+        div:has(> table) {
             border-radius: 0px !important;
         }
     </style>

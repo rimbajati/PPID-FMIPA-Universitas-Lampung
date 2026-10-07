@@ -46,14 +46,10 @@ class InformasiDikecualikanController extends Controller
         $validated = $request->validate([
             'ringkasan_informasi' => 'required|string',
             'dasar_hukum'         => 'required|string',
-            'dibuka'              => 'nullable|string',
+            'dibuka'              => 'required|string',
             'ditutup'             => 'required|string',
             'jangka_waktu'        => 'required|string',
         ]);
-
-        if (empty($validated['dibuka'])) {
-            $validated['dibuka'] = '-';
-        }
 
         InformasiDikecualikan::create($validated);
 
@@ -67,14 +63,10 @@ class InformasiDikecualikanController extends Controller
         $validated = $request->validate([
             'ringkasan_informasi' => 'required|string',
             'dasar_hukum'         => 'required|string',
-            'dibuka'              => 'nullable|string',
+            'dibuka'              => 'required|string',
             'ditutup'             => 'required|string',
             'jangka_waktu'        => 'required|string',
         ]);
-
-        if (empty($validated['dibuka'])) {
-            $validated['dibuka'] = '-';
-        }
 
         $item->update($validated);
 

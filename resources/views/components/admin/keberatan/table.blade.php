@@ -2,62 +2,58 @@
 
 <!-- Table Container -->
 <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-    <!-- Filter & Action Bar Header -->
-    <div class="p-6 border-b border-slate-100">
-        <form id="filter-search-form" action="{{ route('admin.keberatan.index') }}" method="GET" class="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 w-full">
-            @if(request('status'))
-                <input type="hidden" name="status" value="{{ request('status') }}">
-            @endif
+    <!-- Filter Bar: Selaras dengan Daftar Informasi Publik -->
+    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50/60">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 
-            <!-- Sisi Kiri: Tombol Pilih & Pill Filter Status -->
+            <!-- Kiri: Tombol Hapus + Filter Status -->
             <div class="flex flex-wrap items-center gap-2.5">
-                <div class="flex items-center gap-2 shrink-0">
-                    <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()"
-                            class="inline-flex items-center justify-center gap-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs md:text-sm font-extrabold rounded-xl transition cursor-pointer h-10 whitespace-nowrap">
-                        <i class="fa-solid fa-list-check"></i> <span id="text-select-mode">Hapus</span>
-                    </button>
 
-                    <button type="button" id="btn-bulk-delete" onclick="triggerBulkDelete()"
-                            class="hidden inline-flex items-center justify-center gap-2 px-4 bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-extrabold rounded-xl transition shadow-xs cursor-pointer h-10 whitespace-nowrap">
-                        <i class="fa-solid fa-trash"></i> <span>Hapus (<span id="selected-count">0</span>)</span>
-                    </button>
-                </div>
+                <!-- Tombol Hapus -->
+                <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()"
+                        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition shadow-2xs hover:shadow-xs cursor-pointer shrink-0 whitespace-nowrap select-none">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span id="text-select-mode">Hapus</span>
+                </button>
 
-                <div class="flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/50 overflow-x-auto max-w-full">
-                    <a href="{{ route('admin.keberatan.index') }}" 
-                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ !request('status') || request('status') == 'Semua' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
+                <!-- Tombol Bulk Delete -->
+                <button type="button" id="btn-bulk-delete" onclick="triggerBulkDelete()"
+                        class="hidden inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-extrabold rounded-2xl transition shadow-xs cursor-pointer shrink-0 whitespace-nowrap select-none">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>Hapus (<span id="selected-count">0</span>) data terpilih</span>
+                </button>
+
+                <!-- Separator -->
+                <div class="w-px h-6 bg-slate-300 mx-0.5 shrink-0"></div>
+
+                <!-- Filter Status Pills -->
+                <div class="flex items-center gap-1.5 flex-wrap">
+                    <a href="{{ route('admin.keberatan.index', request()->except(['status', 'page'])) }}"
+                       class="px-3.5 py-2 text-sm font-bold rounded-xl transition whitespace-nowrap {{ !request('status') ? 'bg-sky-500 text-white shadow-xs' : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100' }}">
                         Semua
                     </a>
-                    <a href="{{ route('admin.keberatan.index', array_merge(request()->query(), ['status' => 'Diajukan'])) }}" 
-                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Diajukan' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
-                        Diajukan
+                    @foreach(['Diajukan','Diproses','Selesai','Ditolak'] as $st)
+                    <a href="{{ route('admin.keberatan.index', array_merge(request()->except(['page']), ['status' => $st])) }}"
+                       class="px-3.5 py-2 text-sm font-bold rounded-xl transition whitespace-nowrap {{ request('status') === $st ? 'bg-sky-500 text-white shadow-xs' : 'bg-white border border-slate-300 text-slate-800 hover:bg-slate-100' }}">
+                        {{ $st }}
                     </a>
-                    <a href="{{ route('admin.keberatan.index', array_merge(request()->query(), ['status' => 'Diproses'])) }}" 
-                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Diproses' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
-                        Diproses
-                    </a>
-                    <a href="{{ route('admin.keberatan.index', array_merge(request()->query(), ['status' => 'Selesai'])) }}" 
-                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Selesai' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
-                        Selesai
-                    </a>
-                    <a href="{{ route('admin.keberatan.index', array_merge(request()->query(), ['status' => 'Ditolak'])) }}" 
-                       class="px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-200 whitespace-nowrap {{ request('status') == 'Ditolak' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 font-bold hover:text-slate-900' }}">
-                        Ditolak
-                    </a>
+                    @endforeach
                 </div>
             </div>
 
-            <!-- Sisi Kanan: Search Bar & Tombol Cari Fleksibel -->
-            <div class="flex items-center gap-2 flex-1 lg:max-w-[480px] w-full">
-                <div class="flex-1 min-w-0 h-10 relative">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari tiket keberatan, nama, NIK..." class="w-full h-full px-3.5 bg-slate-50 border border-slate-200 text-xs md:text-sm font-semibold text-slate-800 placeholder-slate-400 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500 transition-all shadow-xs" autocomplete="off">
-                </div>
-
-                <button type="submit" class="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-xl transition cursor-pointer shadow-xs h-10 shrink-0 whitespace-nowrap">
-                    <i class="fa-solid fa-magnifying-glass text-xs"></i> <span>Cari</span>
-                </button>
-            </div>
-        </form>
+            <!-- Kanan: Label Cari + Input (persis gaya DIP) -->
+            <form id="filter-search-form" action="{{ route('admin.keberatan.index') }}" method="GET">
+                @if(request('status'))
+                    <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
+                <label class="flex items-center gap-2 text-sm font-semibold text-slate-800">Cari:
+                    <input type="text" name="search" value="{{ request('search') }}"
+                           placeholder="No. tiket, nama, NIK pemohon..."
+                           autocomplete="off"
+                           class="w-48 sm:w-64 px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-normal focus:outline-none focus:ring-2 focus:ring-sky-500/30">
+                </label>
+            </form>
+        </div>
     </div>
 
     <!-- Form Bulk Delete Tersembunyi -->
@@ -66,101 +62,130 @@
         @method('DELETE')
 
         <!-- Tabel Data Pengajuan Keberatan -->
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+        <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
+            <table class="w-full min-w-[1000px] text-left border-collapse border border-slate-200">
                 <thead>
-                    <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide whitespace-nowrap">
-                        <th id="col-checkbox-header" class="hidden px-4 py-4 w-10 text-center">
+                    <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide select-none whitespace-nowrap">
+                        <th id="col-checkbox-header" class="hidden px-2 py-3.5 w-12 text-center">
                             <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                         </th>
-                        <th class="px-6 py-4 whitespace-nowrap">No. Tiket</th>
-                        <th class="px-6 py-4 whitespace-nowrap">Pemohon</th>
-                        <th class="px-6 py-4 whitespace-nowrap">Tgl. Pengajuan</th>
-                        <th class="px-6 py-4 whitespace-nowrap">Alasan Keberatan</th>
-                        <th class="px-6 py-4 whitespace-nowrap text-center">Status</th>
-                        <th class="px-6 py-4 text-center whitespace-nowrap">Aksi</th>
+                        <th onclick="sortKeberatanTable('no_tiket')" class="px-4 py-3.5 text-center w-40 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <span>No. Tiket</span>
+                                <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
+                                    <i class="fa-solid fa-sort"></i>
+                                </span>
+                            </div>
+                        </th>
+                        <th onclick="sortKeberatanTable('nama')" class="px-4 py-3.5 text-left min-w-[220px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                            <div class="flex items-center gap-1.5">
+                                <span>Pemohon</span>
+                                <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
+                                    <i class="fa-solid fa-sort"></i>
+                                </span>
+                            </div>
+                        </th>
+                        <th onclick="sortKeberatanTable('tanggal')" class="px-4 py-3.5 text-center w-36 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <span>Tgl. Pengajuan</span>
+                                <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
+                                    <i class="fa-solid fa-sort"></i>
+                                </span>
+                            </div>
+                        </th>
+                        <th class="px-4 py-3.5 text-left">Alasan Keberatan</th>
+                        <th onclick="sortKeberatanTable('status')" class="px-3.5 py-3.5 text-center w-32 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <span>Status</span>
+                                <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
+                                    <i class="fa-solid fa-sort"></i>
+                                </span>
+                            </div>
+                        </th>
+                        <th class="px-3 py-3.5 text-center w-28">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
+                <tbody class="divide-y divide-slate-200 text-sm md:text-base font-medium text-slate-800">
                     @forelse($keberatans as $item)
                         <tr class="hover:bg-sky-50/70 transition-colors">
-                            <td class="col-checkbox-cell hidden px-4 py-2.5 text-center">
+                            <td class="col-checkbox-cell hidden px-2 py-3 text-center align-middle">
                                 <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                             </td>
 
-                            <td class="px-6 py-2.5 font-black text-slate-600 whitespace-nowrap">
+                            <td class="px-4 py-3.5 font-mono font-bold text-amber-600 text-center whitespace-nowrap align-middle">
                                 {{ $item->no_tiket ?? '-' }}
                             </td>
 
-                            <td class="px-6 py-2.5">
-                                <div class="text-xs md:text-sm font-extrabold text-slate-900">{{ $item->permohonan->nama_lengkap ?? ($item->user->nama_lengkap ?? '-') }}</div>
-                                <div class="text-xs text-slate-400 font-semibold">NIK: {{ $item->permohonan->no_identitas ?? '-' }}</div>
+                            <td class="px-4 py-3.5 align-middle">
+                                <div class="font-bold text-slate-900 leading-snug">{{ $item->permohonan->nama_lengkap ?? ($item->user->nama_lengkap ?? '-') }}</div>
                             </td>
 
-                            <td class="px-6 py-2.5 text-slate-500 whitespace-nowrap font-semibold">
+                            <td class="px-4 py-3.5 text-slate-600 font-medium text-center whitespace-nowrap align-middle">
                                 {{ $item->created_at ? $item->created_at->translatedFormat('d M Y') : '-' }}
                             </td>
 
-                            <td class="px-6 py-2.5 font-semibold text-slate-700 min-w-[14rem] max-w-md whitespace-normal break-words leading-relaxed" title="{{ $item->alasan_keberatan }}">
+                            <td class="px-4 py-3.5 leading-relaxed break-words align-middle text-slate-800" title="{{ $item->alasan_keberatan }}">
                                 {{ $item->alasan_keberatan ?? '-' }}
                             </td>
 
-                            <td class="px-6 py-2.5 text-center whitespace-nowrap">
-                                @if($item->status === 'Diajukan' || $item->status === 'Menunggu')
-                                    <span class="inline-block px-3.5 py-1 text-xs font-extrabold bg-slate-100 text-slate-700 rounded-lg border border-slate-200">
-                                        Diajukan
-                                    </span>
-                                @elseif($item->status === 'Perlu Tindakan' || $item->status === 'Diproses' || $item->status === 'Proses')
-                                    <span class="inline-block px-3.5 py-1 text-xs font-extrabold bg-amber-50 text-amber-700 rounded-lg border border-amber-200">
-                                        Diproses
-                                    </span>
-                                @elseif($item->status === 'Terima' || $item->status === 'Selesai' || $item->status === 'Disetujui')
-                                     <span class="inline-block px-3.5 py-1 text-xs font-extrabold bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-200">
-                                         Selesai
-                                     </span>
-                                 @elseif($item->status === 'Ditolak')
-                                     <span class="inline-block px-3.5 py-1 text-xs font-extrabold bg-rose-50 text-rose-700 rounded-lg border border-rose-200">
-                                         Ditolak
-                                     </span>
-                                 @endif
-                             </td>
-                             <td class="px-6 py-2.5 text-center whitespace-nowrap">
-                                 <div class="flex items-center justify-center gap-2">
-                                     @php
-                                         $statusAwal = $item->status;
-                                     @endphp
+                            <td class="px-3.5 py-3.5 text-center align-middle whitespace-nowrap">
+                                <div class="flex flex-col items-center gap-1">
+                                    @if($item->status === 'Diajukan' || $item->status === 'Menunggu')
+                                        <span class="inline-block px-3 py-1 text-xs font-bold bg-slate-100 text-slate-700 rounded-lg border border-slate-200">
+                                            Diajukan
+                                        </span>
+                                    @elseif($item->status === 'Perlu Tindakan' || $item->status === 'Diproses' || $item->status === 'Proses')
+                                        <span class="inline-block px-3 py-1 text-xs font-bold bg-orange-50 text-orange-700 rounded-lg border border-orange-200">
+                                            Diproses
+                                        </span>
+                                    @elseif($item->status === 'Terima' || $item->status === 'Selesai' || $item->status === 'Disetujui')
+                                        <span class="inline-block px-3 py-1 text-xs font-bold bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-200">
+                                            Selesai
+                                        </span>
+                                    @elseif($item->status === 'Ditolak')
+                                        <span class="inline-block px-3 py-1 text-xs font-bold bg-rose-50 text-rose-700 rounded-lg border border-rose-200">
+                                            Ditolak
+                                        </span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-3 py-3.5 text-center align-middle whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
+                                    @php
+                                        $statusAwal = $item->status;
+                                    @endphp
 
-                                     @if($statusAwal === 'Diajukan' || $statusAwal === 'Menunggu')
-                                         <a href="{{ route('admin.keberatan.show', $item->id) }}"
-                                            class="w-8 h-8 flex items-center justify-center rounded-xl text-amber-700 bg-amber-50 hover:bg-amber-500 hover:text-white transition cursor-pointer shadow-2xs border border-amber-200"
-                                            title="Proses Keberatan">
-                                             <i class="fa-solid fa-gears text-xs"></i>
-                                         </a>
-                                     @elseif($statusAwal === 'Perlu Tindakan' || $statusAwal === 'Diproses' || $statusAwal === 'Proses')
-                                         <a href="{{ route('admin.keberatan.show', $item->id) }}"
-                                            class="w-8 h-8 flex items-center justify-center rounded-xl text-sky-700 bg-sky-50 hover:bg-sky-500 hover:text-white transition cursor-pointer shadow-2xs border border-sky-200"
-                                            title="Tindaklanjuti">
-                                             <i class="fa-solid fa-reply text-xs"></i>
-                                         </a>
-                                     @else
-                                         <a href="{{ route('admin.keberatan.show', $item->id) }}"
-                                            class="w-8 h-8 flex items-center justify-center rounded-xl text-slate-500 bg-slate-100 hover:bg-slate-200 hover:text-slate-800 transition cursor-pointer shadow-2xs border border-slate-200"
-                                            title="Lihat Detail">
-                                             <i class="fa-solid fa-eye text-xs"></i>
-                                         </a>
-                                     @endif
+                                    @if($statusAwal === 'Diajukan' || $statusAwal === 'Menunggu')
+                                        <a href="{{ route('admin.keberatan.show', $item->id) }}"
+                                           class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer"
+                                           title="Proses Keberatan">
+                                            <i class="fa-solid fa-gears text-xs"></i>
+                                        </a>
+                                    @elseif($statusAwal === 'Perlu Tindakan' || $statusAwal === 'Diproses' || $statusAwal === 'Proses')
+                                        <a href="{{ route('admin.keberatan.show', $item->id) }}"
+                                           class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer"
+                                           title="Tindaklanjuti">
+                                            <i class="fa-solid fa-reply text-xs"></i>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('admin.keberatan.show', $item->id) }}"
+                                           class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-slate-600 bg-slate-100 hover:bg-slate-200 transition shadow-2xs rounded-lg cursor-pointer"
+                                           title="Lihat Detail">
+                                            <i class="fa-regular fa-eye text-xs"></i>
+                                        </a>
+                                    @endif
 
-                                     <button type="button" onclick="triggerDelete('{{ route('admin.keberatan.destroy', $item->id) }}', '{{ addslashes($item->no_tiket ?? $item->id) }}')"
-                                             class="w-8 h-8 flex items-center justify-center rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white transition cursor-pointer shadow-2xs border border-rose-200"
-                                             title="Hapus Data Keberatan">
-                                         <i class="fa-solid fa-trash text-xs"></i>
-                                     </button>
-                                 </div>
-                             </td>
+                                    <button type="button" onclick="triggerDelete('{{ route('admin.keberatan.destroy', $item->id) }}', '{{ addslashes($item->no_tiket ?? $item->id) }}')"
+                                            class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer"
+                                            title="Hapus Data Keberatan">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-slate-400 font-semibold">
+                            <td colspan="7" class="p-12 text-center text-slate-400 font-semibold text-sm">
                                 Tidak ada data pengajuan keberatan.
                             </td>
                         </tr>

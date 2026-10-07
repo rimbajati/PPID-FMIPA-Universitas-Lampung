@@ -33,8 +33,6 @@ class LayananTest extends TestCase
             'no_identitas' => '1234567890123456',
             'telepon' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'identitas' => $identitasFile,
             'info_diminta' => 'Permohonan informasi kurikulum FMIPA',
             'tujuan' => 'Untuk keperluan penelitian tugas akhir',
@@ -52,8 +50,6 @@ class LayananTest extends TestCase
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'info_diminta' => 'Permohonan informasi kurikulum FMIPA',
             'tujuan_permohonan' => 'Untuk keperluan penelitian tugas akhir',
             'cara_memperoleh' => 'Melalui Email atau Website',
@@ -93,8 +89,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-12345',
             'nama' => 'Rimba Jati Dwi Djatmiko',
             'email' => 'rimbamiko1@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
@@ -115,8 +109,6 @@ class LayananTest extends TestCase
             'no_identitas' => '1234567890123456',
             'telepon' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'lampiran_pendukung' => $dokumenKeberatanFile,
             'pernyataan' => '1',
         ]);
@@ -133,8 +125,6 @@ class LayananTest extends TestCase
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'nama' => 'Rimba Jati Dwi Djatmiko',
             'email' => 'rimbamiko1@gmail.com',
         ]);
@@ -170,8 +160,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-12345',
             'nama' => 'Rimba Jati Dwi Djatmiko',
             'email' => 'rimbamiko1@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
@@ -183,8 +171,6 @@ class LayananTest extends TestCase
         ]);
 
         $response = $this->put(route('layanan.update', $permohonan->id), [
-            'pekerjaan' => 'Masyarakat Umum',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '9876543210987654',
             'telepon' => '08987654321',
             'alamat' => 'Jl. Baru No. 10',
@@ -196,7 +182,6 @@ class LayananTest extends TestCase
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('pengajuans', [
             'id' => $permohonan->id,
-            'pekerjaan' => 'Masyarakat Umum',
             'no_identitas' => '9876543210987654',
             'no_hp' => '08987654321',
             'alamat' => 'Jl. Baru No. 10',
@@ -221,8 +206,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-12345',
             'nama' => 'Rimba Jati Dwi Djatmiko',
             'email' => 'rimbamiko1@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
@@ -255,8 +238,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-12345',
             'nama' => 'Rimba Jati Dwi Djatmiko',
             'email' => 'rimbamiko1@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
@@ -290,8 +271,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-PERBAIKAN-DEL',
             'nama' => $user->nama_lengkap,
             'email' => $user->email,
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Bandar Lampung',
@@ -327,8 +306,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-12345',
             'nama' => 'Rimba Jati Dwi Djatmiko',
             'email' => 'rimbamiko1@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
@@ -369,8 +346,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-12345',
             'nama' => 'Rimba Jati Dwi Djatmiko',
             'email' => 'rimbamiko1@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
@@ -454,8 +429,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-12345',
             'nama' => 'Rimba Jati Dwi Djatmiko',
             'email' => 'rimbamiko1@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
@@ -506,8 +479,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-12345',
             'nama' => 'Rimba Jati Dwi Djatmiko',
             'email' => 'rimbamiko1@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Sumantri Brojonegoro No. 1, Bandar Lampung',
@@ -546,8 +517,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-1',
             'nama' => 'User One',
             'email' => 'one@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Alamat One',
@@ -564,8 +533,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-2',
             'nama' => 'User Two',
             'email' => 'two@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Alamat Two',
@@ -598,16 +565,14 @@ class LayananTest extends TestCase
 
         $p1 = Pengajuan::create([
             'user_id' => $user->id, 'jenis_layanan' => 'Permohonan', 'no_tiket' => 'T-1',
-            'nama' => 'User One', 'email' => 'one@gmail.com', 'pekerjaan' => 'Mahasiswa', 'kategori_pemohon' => 'Perorangan',
-            'no_identitas' => '1234567890123456', 'no_hp' => '081234567890', 'alamat' => 'Alamat',
+            'nama' => 'User One', 'email' => 'one@gmail.com', 'no_identitas' => '1234567890123456', 'no_hp' => '081234567890',
             'info_diminta' => 'Minta info', 'tujuan_permohonan' => 'Tujuan', 'cara_memperoleh' => 'Email', 'status' => 'DIAJUKAN',
             'lampiran_identitas' => 'temp.jpg'
         ]);
 
         $p2 = Pengajuan::create([
             'user_id' => $user->id, 'jenis_layanan' => 'Permohonan', 'no_tiket' => 'T-2',
-            'nama' => 'User Two', 'email' => 'two@gmail.com', 'pekerjaan' => 'Mahasiswa', 'kategori_pemohon' => 'Perorangan',
-            'no_identitas' => '1234567890123456', 'no_hp' => '081234567890', 'alamat' => 'Alamat',
+            'nama' => 'User Two', 'email' => 'two@gmail.com', 'no_identitas' => '1234567890123456', 'no_hp' => '081234567890',
             'info_diminta' => 'Minta info', 'tujuan_permohonan' => 'Tujuan', 'cara_memperoleh' => 'Email', 'status' => 'DIPROSES',
             'lampiran_identitas' => 'temp.jpg'
         ]);
@@ -630,16 +595,14 @@ class LayananTest extends TestCase
 
         $p1 = Pengajuan::create([
             'user_id' => $user->id, 'jenis_layanan' => 'Permohonan', 'no_tiket' => 'T-1',
-            'nama' => 'User One', 'email' => 'one@gmail.com', 'pekerjaan' => 'Mahasiswa', 'kategori_pemohon' => 'Perorangan',
-            'no_identitas' => '1234567890123456', 'no_hp' => '081234567890', 'alamat' => 'Alamat',
+            'nama' => 'User One', 'email' => 'one@gmail.com', 'no_identitas' => '1234567890123456', 'no_hp' => '081234567890',
             'info_diminta' => 'Minta info', 'tujuan_permohonan' => 'Tujuan', 'cara_memperoleh' => 'Email', 'status' => 'DIAJUKAN',
             'lampiran_identitas' => 'temp.jpg'
         ]);
 
         $p2 = Pengajuan::create([
             'user_id' => $user->id, 'jenis_layanan' => 'Keberatan', 'no_tiket' => 'T-2',
-            'nama' => 'User Two', 'email' => 'two@gmail.com', 'pekerjaan' => 'Mahasiswa', 'kategori_pemohon' => 'Perorangan',
-            'no_identitas' => '1234567890123456', 'no_hp' => '081234567890', 'alamat' => 'Alamat',
+            'nama' => 'User Two', 'email' => 'two@gmail.com', 'no_identitas' => '1234567890123456', 'no_hp' => '081234567890',
             'tujuan_keberatan' => 'Tujuan keberatan', 'alasan_keberatan' => 'Alasan keberatan', 'status' => 'DIAJUKAN',
             'lampiran_identitas' => 'temp.jpg'
         ]);
@@ -661,16 +624,14 @@ class LayananTest extends TestCase
 
         $p1 = Pengajuan::create([
             'user_id' => $user->id, 'jenis_layanan' => 'Permohonan', 'no_tiket' => 'TIKET-XYZ',
-            'nama' => 'Budi Santoso', 'email' => 'budi@gmail.com', 'pekerjaan' => 'Mahasiswa', 'kategori_pemohon' => 'Perorangan',
-            'no_identitas' => '1234567890123456', 'no_hp' => '081234567890', 'alamat' => 'Alamat',
+            'nama' => 'Budi Santoso', 'email' => 'budi@gmail.com', 'no_identitas' => '1234567890123456', 'no_hp' => '081234567890',
             'info_diminta' => 'Minta dokumen Rektorat', 'tujuan_permohonan' => 'Tujuan', 'cara_memperoleh' => 'Email', 'status' => 'DIAJUKAN',
             'lampiran_identitas' => 'temp.jpg'
         ]);
 
         $p2 = Pengajuan::create([
             'user_id' => $user->id, 'jenis_layanan' => 'Permohonan', 'no_tiket' => 'TIKET-ABC',
-            'nama' => 'Ani Wijaya', 'email' => 'ani@gmail.com', 'pekerjaan' => 'Mahasiswa', 'kategori_pemohon' => 'Perorangan',
-            'no_identitas' => '1234567890123456', 'no_hp' => '081234567890', 'alamat' => 'Alamat',
+            'nama' => 'Ani Wijaya', 'email' => 'ani@gmail.com', 'no_identitas' => '1234567890123456', 'no_hp' => '081234567890',
             'info_diminta' => 'Minta jadwal kuliah', 'tujuan_permohonan' => 'Tujuan', 'cara_memperoleh' => 'Email', 'status' => 'DIAJUKAN',
             'lampiran_identitas' => 'temp.jpg'
         ]);
@@ -703,8 +664,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'TIKET-PEMOHON-1',
             'nama' => $user->nama_lengkap,
             'email' => $user->email,
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Bandar Lampung',
@@ -721,8 +680,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'TIKET-PEMOHON-2',
             'nama' => $user->nama_lengkap,
             'email' => $user->email,
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Bandar Lampung',
@@ -768,8 +725,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-PERBAIKAN-1',
             'nama' => 'User Perbaikan',
             'email' => 'userperbaikan@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Bandar Lampung',
@@ -815,8 +770,6 @@ class LayananTest extends TestCase
             'no_tiket' => 'REQ-PERBAIKAN-2',
             'nama' => 'User Perbaikan 2',
             'email' => 'user2@gmail.com',
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'no_hp' => '081234567890',
             'alamat' => 'Bandar Lampung',
@@ -829,8 +782,6 @@ class LayananTest extends TestCase
         ]);
 
         $response = $this->put(route('layanan.update', $permohonan->id), [
-            'pekerjaan' => 'Mahasiswa',
-            'kategori_pemohon' => 'Perorangan',
             'no_identitas' => '1234567890123456',
             'telepon' => '081234567890',
             'alamat' => 'Bandar Lampung',

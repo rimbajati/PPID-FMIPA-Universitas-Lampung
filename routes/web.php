@@ -143,57 +143,28 @@ Route::get('/regulasi', function () {
 // Rute Halaman Hub Layanan PPID Online (Dialihkan langsung ke Permohonan)
 Route::get('/layanan', function () { return redirect()->route('layanan.permohonan'); })->name('layanan');
 
-// Rute Autentikasi Guest (Belum Login)
-Route::middleware('guest')->group(function () {
-    // Login Pemohon & Admin
-    Route::get('/login', function () { return view('auth.login.index'); })->name('login');
-    Route::get('/admin-panel/login', function () { return view('auth.admin_login'); })->name('admin.login');
+// Login admin only. Permohonan masyarakat dapat diajukan tanpa membuat akun.
+Route::get('/admin-panel/login', function () {
+    if (auth()->check() && auth()->user()->role === 'admin') {
+        return redirect('/admin/informasi-publik');
+    }
 
-    Route::controller(AuthController::class)->group(function () {
-        Route::post('/login', 'publicLoginProcess');
-        Route::post('/admin-panel/login', 'adminLoginProcess');
-        Route::get('/auth/google', 'redirectToGoogle');
-        Route::get('/auth/google/callback', 'handleGoogleCallback');
-    });
+    return view('auth.admin_login');
+})->name('admin.login');
+Route::post('/admin-panel/login', [AuthController::class, 'adminLoginProcess']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-    // Lupa & Reset Kata Sandi
-    Route::get('/forgot-password', function () { return view('auth.password.forgot'); })->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
-    Route::get('/reset-password/{token}', function ($token) { return view('auth.password.reset', ['token' => $token]); })->name('password.reset');
-    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
-
-    // Registrasi Pemohon (3 Tahap)
-    Route::controller(AuthController::class)->group(function () {
-        Route::get('/register', 'showRegisterStep1')->name('register');
-        Route::post('/register/step1', 'processRegisterStep1')->name('register.step1.process');
-
-        Route::get('/register/verifikasi', 'showRegisterStep2')->name('register.step2')->middleware('signed');
-        Route::post('/register/verifikasi', 'processRegisterStep2')->name('register.step2.process');
-        Route::post('/register/resend-otp', 'resendOtp')->name('register.resend');
-
-        Route::get('/register/lengkapi-profil', 'showRegisterStep3')->name('register.step3')->middleware('signed');
-        Route::post('/register/lengkapi-profil', 'processRegisterStep3')->name('register.step3.process');
-    });
+Route::get('/riwayat-layanan', [MasyarakatRiwayatLayananController::class, 'index'])->name('layanan.riwayat');
+Route::post('/riwayat-layanan', [MasyarakatRiwayatLayananController::class, 'index'])->name('layanan.riwayat.track');
+Route::controller(MasyarakatPermohonanController::class)->group(function () {
+    Route::get('/permohonan', 'index')->name('layanan.permohonan');
+    Route::post('/permohonan', 'store')->name('layanan.permohonan.store');
+    Route::get('/permohonan-informasi', function () { return redirect('/permohonan'); });
+    Route::get('/layanan/permohonan-informasi', function () { return redirect('/permohonan'); });
 });
-
-// Rute Logout & Sesi Terproteksi Pemohon (Wajib Login)
-Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/riwayat-layanan', [MasyarakatRiwayatLayananController::class, 'index'])->name('layanan.riwayat');
-
-    // Rute Formulir Permohonan Informasi Publik (Wajib Login)
-    Route::controller(MasyarakatPermohonanController::class)->group(function () {
-        Route::get('/permohonan', 'index')->name('layanan.permohonan');
-        Route::post('/permohonan', 'store')->name('layanan.permohonan.store');
-        Route::get('/permohonan-informasi', function () { return redirect('/permohonan'); });
-        Route::get('/layanan/permohonan-informasi', function () { return redirect('/permohonan'); });
-    });
-
-    // Rute Formulir Pengajuan Keberatan Informasi (Wajib Login)
-    Route::controller(MasyarakatKeberatanController::class)->group(function () {
-        Route::get('/pengajuan-keberatan', 'index')->name('layanan.keberatan');
-        Route::post('/pengajuan-keberatan', 'store')->name('layanan.keberatan.store');
-    });
+Route::controller(MasyarakatKeberatanController::class)->group(function () {
+    Route::get('/pengajuan-keberatan', 'index')->name('layanan.keberatan');
+    Route::post('/pengajuan-keberatan', 'store')->name('layanan.keberatan.store');
 });
 
 // Rute Lihat Berkas Dokumen Informasi Publik (Publik / Masyarakat)
@@ -272,9 +243,10 @@ Route::get('/informasi/file/{id}/{filename}', function (Request $request, $id, $
 // Rute preview berkas permohonan dengan nama file asli pada URL
 Route::get('/permohonan/file/{id}/{type}/{filename}', function (Request $request, $id, $type, $filename) {
     $permohonan = \App\Models\Permohonan::findOrFail($id);
-    
-    $filePath = ($type === 'identitas') ? $permohonan->file_identitas : $permohonan->file_pendukung;
-    $namaAsli = ($type === 'identitas') ? $permohonan->nama_file_identitas_asli : $permohonan->nama_file_pendukung_asli;
+
+    abort_unless($type === 'identitas', 404, 'File tidak ditemukan');
+    $filePath = $permohonan->file_identitas;
+    $namaAsli = $permohonan->nama_file_identitas_asli;
 
     if ($filePath) {
         $path = null;
@@ -382,6 +354,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::controller(\App\Http\Controllers\Admin\ExportController::class)->prefix('export')->group(function () {
         Route::get('/informasi/excel', 'exportInformasiExcel')->name('admin.export.informasi.excel');
         Route::get('/informasi/pdf', 'exportInformasiPdf')->name('admin.export.informasi.pdf');
+        Route::get('/informasi-dikecualikan/pdf', 'exportInformasiDikecualikanPdf')->name('admin.export.informasi-dikecualikan.pdf');
         
         Route::get('/statistik/excel', 'exportStatistikExcel')->name('admin.export.statistik.excel');
         Route::get('/statistik/pdf', 'exportStatistikPdf')->name('admin.export.statistik.pdf');
@@ -395,7 +368,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 
-// Utility Route
-Route::post('/login/with-email', function (Request $request) {
-    return redirect()->route('login')->with('auto_email', $request->input('email'));
-})->name('login.with.email');
+

@@ -1,82 +1,64 @@
 @props(['keberatan'])
 
-<div class="space-y-4">
-    <!-- TABEL DATA KEBERATAN SEAMLESS -->
-    <table class="w-full text-sm border-collapse">
-        <tbody class="divide-y divide-slate-100/60 [&>tr:nth-child(odd)]:bg-slate-100/70 [&>tr:nth-child(even)]:bg-white">
-            <!-- 1. Permohonan Asal (Tiket) -->
-            <tr>
-                <td class="w-[30%] px-4 py-2 font-black text-slate-900 whitespace-nowrap align-middle">Permohonan Asal</td>
-                <td class="px-4 py-2 align-middle">
-                    @if($keberatan->permohonan)
-                        <a href="{{ route('admin.permohonan.show', $keberatan->permohonan->id) }}"
-                           class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black bg-blue-600 text-white rounded hover:bg-blue-700 transition shadow-2xs">
-                            <span>{{ $keberatan->permohonan->no_tiket }}</span>
-                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                        </a>
-                    @else
-                        <span class="text-xs text-slate-500 font-semibold">-</span>
-                    @endif
-                </td>
-            </tr>
-
-            <!-- 2. Alasan Penolakan dari Admin (alasan_ditolak di permohonan asal) -->
-            <tr>
-                <td class="w-[30%] px-4 py-2 font-black text-slate-900 whitespace-nowrap align-middle">Alasan Penolakan dari PPID</td>
-                <td class="px-4 py-2 font-medium text-slate-800 leading-relaxed align-middle">
-                    {{ trim($keberatan->permohonan->alasan_ditolak ?? '-') ?: '-' }}
-                </td>
-            </tr>
-
-            <!-- 3. Alasan Keberatan -->
-            <tr>
-                <td class="w-[30%] px-4 py-2 font-black text-slate-900 whitespace-nowrap align-middle">Alasan Pengajuan Keberatan</td>
-                <td class="px-4 py-2 font-bold text-slate-800 leading-relaxed align-middle">
-                    {{ trim($keberatan->alasan_keberatan) }}
-                </td>
-            </tr>
-
-            <!-- 4. Kronologi Keberatan -->
-            <tr>
-                <td class="w-[30%] px-4 py-2 font-black text-slate-900 whitespace-nowrap align-middle">Kronologi Pengajuan Keberatan</td>
-                <td class="px-4 py-2 font-medium text-slate-800 leading-relaxed align-middle">
-                    {{ trim($keberatan->kronologi_keberatan ?: 'Pemohon tidak menyertakan penjelasan kronologi tambahan.') }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- BERKAS LAMPIRAN KEBERATAN -->
-    <div class="pt-2">
-        <div class="flex items-center gap-2 text-slate-700 font-extrabold text-xs sm:text-sm mb-2.5">
-            <i class="fa-regular fa-folder-open text-slate-700 text-sm"></i>
-            <span>Lampiran Pendukung Keberatan</span>
-        </div>
-
-        <div class="inline-flex items-center gap-3.5 p-2.5 sm:p-3 bg-slate-50 border border-slate-200/90 rounded max-w-full hover:bg-slate-100/70 transition">
-            <div class="flex items-center gap-2.5 min-w-0">
-                <div class="w-8 h-8 rounded bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 text-sm font-bold">
-                    <i class="fa-solid fa-file-lines"></i>
-                </div>
-                <span class="font-extrabold text-slate-800 text-xs sm:text-sm truncate" title="{{ $keberatan->nama_file_pendukung_asli ?: ($keberatan->file_pendukung ? basename($keberatan->file_pendukung) : '') }}">
-                    {{ $keberatan->nama_file_pendukung_asli ?: ($keberatan->file_pendukung ? basename($keberatan->file_pendukung) : 'Tidak dilampirkan oleh pemohon') }}
-                </span>
-            </div>
-
-            @if($keberatan->file_pendukung)
-                @php
-                    $namaPendukungTampil = $keberatan->nama_file_pendukung_asli ?: basename($keberatan->file_pendukung);
-                    $urlPendukung = route('keberatan.file', ['id' => $keberatan->id, 'filename' => rawurlencode($namaPendukungTampil)]);
-                @endphp
-                <a href="{{ $urlPendukung }}" target="_blank" 
-                   class="inline-flex items-center px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded transition shadow-2xs shrink-0 cursor-pointer">
-                    <span>Lihat</span>
-                </a>
-            @else
-                <span class="px-2.5 py-1 text-xs font-semibold text-slate-400 bg-slate-200/60 rounded shrink-0">
-                    Tidak Ada
-                </span>
+<div class="divide-y divide-slate-200">
+    {{-- Rincian Keberatan --}}
+    <div class="pb-6">
+        <div class="flex items-center justify-between gap-3 mb-4">
+            <h3 class="text-sm font-bold tracking-widest uppercase text-slate-500">Rincian Keberatan</h3>
+            @if($keberatan->status === 'Diajukan')
+                <span class="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Diajukan</span>
+            @elseif($keberatan->status === 'Diproses')
+                <span class="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-medium"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Diproses</span>
+            @elseif($keberatan->status === 'Selesai')
+                <span class="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Selesai</span>
+            @elseif($keberatan->status === 'Ditolak')
+                <span class="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-medium"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Ditolak</span>
             @endif
         </div>
+        <dl class="space-y-0 divide-y divide-slate-200">
+            <div class="grid grid-cols-[180px_1fr] gap-3 py-3 items-center">
+                <dt class="text-[13px] font-semibold text-slate-600">Permohonan Asal</dt>
+                <dd>
+                    @if($keberatan->permohonan)
+                        <a href="{{ route('admin.permohonan.show', $keberatan->permohonan->id) }}" class="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-mono text-xs font-bold rounded-lg transition">
+                            {{ $keberatan->permohonan->no_tiket }}
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
+                        </a>
+                    @else
+                        <span class="text-sm text-slate-400">-</span>
+                    @endif
+                </dd>
+            </div>
+            <div class="py-3">
+                <dt class="text-[13px] font-semibold text-slate-600 mb-1.5">Alasan Penolakan dari PPID</dt>
+                <dd class="rounded-lg bg-slate-50 border border-slate-200 px-4 py-3.5 text-[15px] leading-relaxed font-medium text-slate-900 whitespace-pre-wrap">{{ trim($keberatan->permohonan->alasan_ditolak ?? '-') ?: '-' }}</dd>
+            </div>
+            <div class="py-3">
+                <dt class="text-[13px] font-semibold text-slate-600 mb-1.5">Alasan Pengajuan Keberatan</dt>
+                <dd class="rounded-lg bg-slate-50 border border-slate-200 px-4 py-3.5 text-[15px] leading-relaxed font-medium text-slate-900 whitespace-pre-wrap">{{ trim($keberatan->alasan_keberatan) ?: '-' }}</dd>
+            </div>
+            <div class="py-3">
+                <dt class="text-[13px] font-semibold text-slate-600 mb-1.5">Kronologi Pengajuan Keberatan</dt>
+                <dd class="rounded-lg bg-slate-50 border border-slate-200 px-4 py-3.5 text-[15px] leading-relaxed font-medium text-slate-900 whitespace-pre-wrap">{{ trim($keberatan->kronologi_keberatan ?: 'Pemohon tidak menyertakan kronologi tambahan.') }}</dd>
+            </div>
+            <div class="grid grid-cols-[180px_1fr] gap-3 py-3 items-center">
+                <dt class="text-[13px] font-semibold text-slate-600">Lampiran</dt>
+                <dd>
+                    @if($keberatan->file_pendukung)
+                        @php
+                            $namaPendukungTampil = $keberatan->nama_file_pendukung_asli ?: basename($keberatan->file_pendukung);
+                            $urlPendukung = route('keberatan.file', ['id' => $keberatan->id, 'filename' => rawurlencode($namaPendukungTampil)]);
+                        @endphp
+                        <a href="{{ $urlPendukung }}" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-sm rounded-lg transition">
+                            <i class="fa-regular fa-file text-slate-400"></i>
+                            <span class="truncate max-w-[200px]">{{ $namaPendukungTampil }}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-slate-400"></i>
+                        </a>
+                    @else
+                        <span class="text-sm text-slate-400">Tidak ada lampiran</span>
+                    @endif
+                </dd>
+            </div>
+        </dl>
     </div>
 </div>

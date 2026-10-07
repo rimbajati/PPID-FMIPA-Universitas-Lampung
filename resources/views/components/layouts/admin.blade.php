@@ -47,6 +47,33 @@
             -webkit-hyphens: none !important;
         }
 
+        /* Semua tabel admin memakai pemisah horizontal tanpa garis vertikal. */
+        table {
+            border-left: 0 !important;
+            border-right: 0 !important;
+        }
+        table th,
+        table td {
+            border-left: 0 !important;
+            border-right: 0 !important;
+        }
+        table tbody tr:not(:last-child) td {
+            border-bottom: 1px solid #d1d5db;
+        }
+        /* Pada tabel kategori, garis hanya membatasi kelompok rincian yang berbeda. */
+        table tbody[data-category-table="true"] > tr > td {
+            border-bottom: 0 !important;
+        }
+        table tbody[data-category-table="true"] > tr.category-group-end > td,
+        table tbody[data-category-table="true"] > tr > td.category-group-boundary-cell {
+            border-bottom: 1px solid #d1d5db !important;
+        }
+        table tbody td[colspan] {
+            padding: 0.625rem 0.75rem !important;
+            text-align: left !important;
+            color: #0f172a !important;
+            font-weight: 500 !important;
+        }
         /* Aturan Sudut Siku 90 Derajat (Sharp / Minimal Radius) untuk Semua Tabel Admin */
         table, table th, table td, table tr,
         .overflow-x-auto {

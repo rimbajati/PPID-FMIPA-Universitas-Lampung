@@ -87,16 +87,6 @@ class InformasiPublikController extends Controller
                         ->map(fn($items) => $items->pluck('sub_informasi')->values()->toArray())
                         ->toArray();
 
-        if ($request->filled('kategori')) {
-            $query->where('jenis_informasi', $request->kategori);
-        } else {
-            // Pada halaman Daftar Informasi Publik (DIP) Utama: hanya tampilkan dokumen yang sudah siap (bukan sedang dilengkapi unit)
-            $query->where(function($q) {
-                $q->where('sub_informasi', '!=', 'Dokumen sedang dilengkapi unit')
-                  ->orWhereNull('sub_informasi');
-            });
-        }
-
         if ($request->filled('judul')) {
             $query->where('sub_informasi', $request->judul);
         }
@@ -115,15 +105,6 @@ class InformasiPublikController extends Controller
 
         if ($request->filled('retensi')) {
             $query->where('retensi_arsip', $request->retensi);
-        }
-
-        if ($request->filled('search')) {
-            $term = strtolower(trim($request->search));
-            $query->where(function($q) use ($term) {
-                $q->whereRaw('LOWER(COALESCE(sub_informasi, "")) LIKE ?', ["%{$term}%"])
-                  ->orWhereRaw('LOWER(COALESCE(rincian_informasi, "")) LIKE ?', ["%{$term}%"])
-                  ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"]);
-            });
         }
 
         // Sorting: Serta-Merta (pengumuman) tampil terbaru di atas (latest), sedangkan kategori DIP lainnya dikelompokkan berdasarkan Rincian Informasi (Topik) agar sub-informasi satu topik selalu berkumpul berurutan
@@ -202,9 +183,14 @@ class InformasiPublikController extends Controller
         $lastUpdateDikecualikan = \App\Models\InformasiDikecualikan::max('updated_at');
 
         $informasi = $query->get();
+        $informasiGroups = collect([
+            'Informasi Berkala' => $informasi->where('jenis_informasi', 'Informasi Berkala')->values(),
+            'Informasi Serta-Merta' => $informasi->where('jenis_informasi', 'Informasi Serta-Merta')->sortByDesc('created_at')->values(),
+            'Informasi Setiap Saat' => $informasi->where('jenis_informasi', 'Informasi Setiap Saat')->values(),
+        ]);
 
         return view('admin.informasi_publik.index', compact(
-            'informasi', 'listJenis', 'listRincian', 'listRincianBerkala', 'listRincianSetiapSaat', 'listRincianSertaMerta', 'listJudul', 'listTahun', 'listSatker', 'listBentuk', 'listRetensi', 'listSubByRincian', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
+            'informasi', 'informasiGroups', 'listJenis', 'listRincian', 'listRincianBerkala', 'listRincianSetiapSaat', 'listRincianSertaMerta', 'listJudul', 'listTahun', 'listSatker', 'listBentuk', 'listRetensi', 'listSubByRincian', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
             'lastUpdateTotal', 'lastUpdateBerkala', 'lastUpdateSertaMerta', 'lastUpdateSetiapSaat', 'lastUpdateDikecualikan'
         ));
     }
@@ -228,15 +214,16 @@ class InformasiPublikController extends Controller
             'rincian_informasi'                      => 'required|string|max:255',
             'sub_informasi'                          => 'nullable|string|max:255',
             'pejabat_unit_yang_menguasai_informasi'  => 'nullable|string|max:255',
+            'penanggung_jawab_pembuatan_informasi'   => 'required|string|max:255',
             'waktu_pembuatan_informasi'              => 'nullable|string|max:255',
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',
             'jenis_informasi'                        => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta'])],
-            'file_informasi'                         => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+            'file_informasi'                         => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp|max:5120',
             'link_informasi'                         => 'nullable|url',
         ], [
             'rincian_informasi.required' => 'Rincian Informasi wajib diisi.',
-            'file_informasi.mimes'       => 'Format file tidak didukung! Hanya diperbolehkan file PDF, DOC, DOCX, XLS, atau XLSX.',
+            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, atau WEBP.',
             'file_informasi.max'         => 'Ukuran file melebihi batas maksimal (Maksimal 5 MB)!',
         ]);
 
@@ -263,6 +250,10 @@ class InformasiPublikController extends Controller
         // Nilai kolom detail: simpan null jika dikosongkan oleh admin
         $validated['pejabat_unit_yang_menguasai_informasi'] = !empty(trim($validated['pejabat_unit_yang_menguasai_informasi'] ?? '')) 
             ? trim($validated['pejabat_unit_yang_menguasai_informasi']) 
+            : null;
+
+        $validated['penanggung_jawab_pembuatan_informasi'] = !empty(trim($validated['penanggung_jawab_pembuatan_informasi'] ?? ''))
+            ? trim($validated['penanggung_jawab_pembuatan_informasi'])
             : null;
 
         $validated['waktu_pembuatan_informasi'] = !empty(trim($validated['waktu_pembuatan_informasi'] ?? '')) 
@@ -343,15 +334,16 @@ class InformasiPublikController extends Controller
             'rincian_informasi'                      => 'required|string|max:255',
             'sub_informasi'                          => 'nullable|string|max:255',
             'pejabat_unit_yang_menguasai_informasi'  => 'nullable|string|max:255',
+            'penanggung_jawab_pembuatan_informasi'   => 'required|string|max:255',
             'waktu_pembuatan_informasi'              => 'nullable|string|max:255',
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',
             'jenis_informasi'                        => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta'])],
-            'file_informasi'                         => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+            'file_informasi'                         => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp|max:5120',
             'link_informasi'                         => 'nullable|url',
         ], [
             'rincian_informasi.required' => 'Rincian Informasi wajib diisi.',
-            'file_informasi.mimes'       => 'Format file tidak didukung! Hanya diperbolehkan file PDF, DOC, DOCX, XLS, atau XLSX.',
+            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, atau WEBP.',
             'file_informasi.max'         => 'Ukuran file melebihi batas maksimal (Maksimal 5 MB)!',
         ]);
 
@@ -366,6 +358,10 @@ class InformasiPublikController extends Controller
 
         $validated['pejabat_unit_yang_menguasai_informasi'] = !empty(trim($validated['pejabat_unit_yang_menguasai_informasi'] ?? '')) 
             ? trim($validated['pejabat_unit_yang_menguasai_informasi']) 
+            : null;
+
+        $validated['penanggung_jawab_pembuatan_informasi'] = !empty(trim($validated['penanggung_jawab_pembuatan_informasi'] ?? ''))
+            ? trim($validated['penanggung_jawab_pembuatan_informasi'])
             : null;
 
         $validated['waktu_pembuatan_informasi'] = !empty(trim($validated['waktu_pembuatan_informasi'] ?? '')) 
@@ -422,36 +418,13 @@ class InformasiPublikController extends Controller
     public function destroy($id)
     {
         $info = InformasiPublik::findOrFail($id);
-        $rincian = $info->rincian_informasi;
-        $jenis = $info->jenis_informasi;
 
         if ($info->file_informasi && Storage::disk('public')->exists($info->file_informasi)) {
             Storage::disk('public')->delete($info->file_informasi);
         }
 
-        // Cek berapa banyak entri dokumen untuk rincian informasi ini
-        $siblingsCount = InformasiPublik::where('rincian_informasi', $rincian)
-            ->where('jenis_informasi', $jenis)
-            ->count();
-
-        // Jika ini adalah dokumen terakhir pada rincian informasi tersebut,
-        // ubah menjadi status kosong (Dokumen sedang dilengkapi unit) agar Rincian Informasinya TIDAK hilang!
-        if ($siblingsCount <= 1) {
-            $info->update([
-                'sub_informasi' => 'Dokumen sedang dilengkapi unit',
-                'pejabat_unit_yang_menguasai_informasi' => null,
-                'waktu_pembuatan_informasi' => null,
-                'bentuk_informasi_yang_tersedia' => null,
-                'retensi_arsip' => null,
-                'file_informasi' => null,
-                'nama_file_asli' => null,
-                'link_informasi' => null,
-            ]);
-            return redirect()->back()->with('success', 'Dokumen berhasil dihapus. Rincian Informasi tetap dipertahankan.');
-        }
-
         $info->delete();
-        return redirect()->back()->with('success', 'Dokumen berhasil dihapus.');
+        return redirect()->back()->with('success', 'Sub informasi berhasil dihapus. Jika ini sub informasi terakhir, rincian informasinya juga ikut terhapus.');
     }
 
     public function destroyRincian(Request $request)

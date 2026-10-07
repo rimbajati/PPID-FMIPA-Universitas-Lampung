@@ -14,23 +14,16 @@
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-100/70 min-h-screen pb-20">
 
-    <!-- Header Hero Banner Kategori (Matching DIP Layout) -->
-    <section class="bg-slate-100/80 text-slate-800 py-8 md:py-10 border-b border-slate-200/80">
-        <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
-            <h1 class="text-3xl sm:text-4xl md:text-[2.6rem] font-black text-slate-900 tracking-tight leading-tight">
-                {{ $displayTitle }}
-            </h1>
-            <p class="text-slate-600 text-sm sm:text-base font-normal leading-relaxed max-w-5xl">
-                @if($slug === 'berkala')
-                    Informasi publik yang wajib disediakan dan diumumkan secara berkala sekurang-kurangnya 6 (enam) bulan sekali, meliputi informasi tentang profil Badan Publik, kegiatan dan kinerja, laporan keuangan, serta informasi lain yang diatur dalam peraturan perundang-undangan (Pasal 9 UU No. 14 Tahun 2008).
-                @elseif($slug === 'serta-merta')
-                    Informasi publik yang wajib diumumkan secara serta-merta tanpa penundaan mengenai suatu informasi yang dapat mengancam hajat hidup orang banyak dan ketertiban umum (Pasal 10 UU No. 14 Tahun 2008).
-                @elseif($slug === 'setiap-saat')
-                    Informasi publik yang wajib disediakan oleh Badan Publik setiap saat untuk dapat diakses oleh pengguna informasi publik, meliputi daftar regulasi, keputusan dan pertimbangannya, rencana kerja dan anggaran tahunan, perjanjian dengan pihak ketiga, serta prosedur kerja pelayanan (Pasal 11 UU No. 14 Tahun 2008).
-                @endif
-            </p>
-        </div>
-    </section>
+    <!-- Header Hero Banner Kategori Informasi -->
+    <x-masyarakat.informasi_publik.hero-banner :title="$displayTitle">
+        @if($slug === 'berkala')
+            Informasi publik yang wajib disediakan dan diumumkan secara berkala sekurang-kurangnya 6 (enam) bulan sekali, meliputi informasi tentang profil Badan Publik, kegiatan dan kinerja, laporan keuangan, serta informasi lain yang diatur dalam peraturan perundang-undangan (Pasal 9 UU No. 14 Tahun 2008).
+        @elseif($slug === 'serta-merta')
+            Informasi publik yang wajib diumumkan secara serta-merta tanpa penundaan mengenai suatu informasi yang dapat mengancam hajat hidup orang banyak dan ketertiban umum (Pasal 10 UU No. 14 Tahun 2008).
+        @elseif($slug === 'setiap-saat')
+            Informasi publik yang wajib disediakan oleh Badan Publik setiap saat untuk dapat diakses oleh pengguna informasi publik, meliputi daftar regulasi, keputusan dan pertimbangannya, rencana kerja dan anggaran tahunan, perjanjian dengan pihak ketiga, serta prosedur kerja pelayanan (Pasal 11 UU No. 14 Tahun 2008).
+        @endif
+    </x-masyarakat.informasi_publik.hero-banner>
 
     <!-- Container Konten Daftar Informasi (List Minimalis Modern ala Contoh Unpad) -->
     <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
@@ -39,7 +32,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
                 <!-- Dropdown Show Entries -->
                 <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
-                    <span>Show</span>
+                    <span>Tampilkan</span>
                     <select id="select-per-page-kat" onchange="changePerPageKat(this.value)" 
                             class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
                         <option value="10">10</option>
@@ -47,13 +40,13 @@
                         <option value="50">50</option>
                         <option value="100">100</option>
                     </select>
-                    <span>entries</span>
+                    <span>baris</span>
                 </div>
 
                 <!-- Search Bar Pencarian Seluruh Isi Tabel (Format DataTables Style: Search: [_____ x]) -->
                 <form id="form-search-kat" onsubmit="event.preventDefault();" class="flex items-center gap-2">
                     <label for="input-search-kat" class="text-sm font-semibold text-slate-800 select-none cursor-pointer">
-                        Search:
+                        Cari:
                     </label>
                     <div class="relative">
                         <input type="text" 
@@ -72,7 +65,7 @@
 
             @if($slug === 'serta-merta')
                 <!-- Pengumuman Tipe Card List ala Unpad untuk Informasi Serta-Merta -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-4">
+                <div class="bg-white rounded-none border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-4">
                     <!-- Container Card List Serta-Merta (Terhubung dengan Client-Side Instant Search) -->
                     <div id="container-serta-merta" class="space-y-3">
                         @forelse($items as $idx => $item)
@@ -82,9 +75,9 @@
                                 $fileTargetUrl = ($item->link_informasi && !$item->file_informasi) 
                                     ? $item->link_informasi 
                                     : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName)) : null);
-                                $tglPembuatan = $item->waktu_pembuatan_informasi ?: ($item->created_at ? $item->created_at->translatedFormat('d F Y') : '-');
+                                $tglPembuatan = $item->created_at ? $item->created_at->translatedFormat('d F Y') : '-';
                             @endphp
-                            <div class="card-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl border border-slate-200/80 bg-white hover:bg-sky-50/40 hover:border-sky-200 transition-all duration-200 shadow-2xs hover:shadow-xs"
+                            <div class="card-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-none border border-slate-200/80 bg-white hover:bg-sky-50/40 hover:border-sky-200 transition-all duration-200 shadow-2xs hover:shadow-xs"
                                  data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
                                  data-rincian="{{ strtolower($item->rincian_informasi ?? '') }}"
                                  data-sub_informasi="{{ strtolower($item->sub_informasi ?? '') }}">
@@ -93,7 +86,7 @@
                                         <i class="fa-solid fa-bullhorn text-sm"></i>
                                     </div>
                                     <div class="space-y-1">
-                                        <h3 class="text-sm sm:text-base font-bold text-slate-900 group-hover/card:text-sky-600 transition-colors leading-snug">
+                                        <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover/card:text-sky-600 transition-colors leading-snug">
                                             {{ $item->sub_informasi }}
                                         </h3>
                                         <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 font-semibold">
@@ -101,20 +94,6 @@
                                                 <i class="fa-regular fa-calendar text-[11px]"></i>
                                                 <span>{{ $tglPembuatan }}</span>
                                             </span>
-                                            @if($item->pejabat_unit_yang_menguasai_informasi)
-                                                <span class="text-slate-300">•</span>
-                                                <span class="flex items-center gap-1.5 text-slate-500">
-                                                    <i class="fa-solid fa-building-columns text-[11px]"></i>
-                                                    <span>{{ $item->pejabat_unit_yang_menguasai_informasi }}</span>
-                                                </span>
-                                            @endif
-                                            @if($item->dilihat)
-                                                <span class="text-slate-300">•</span>
-                                                <span class="flex items-center gap-1.5">
-                                                    <i class="fa-regular fa-eye text-[11px]"></i>
-                                                    <span>{{ number_format($item->dilihat) }} dilihat</span>
-                                                </span>
-                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -123,7 +102,7 @@
                                     @if($fileTargetUrl)
                                         <a href="{{ $fileTargetUrl }}" target="_blank" 
                                            class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold rounded-xl transition shadow-2xs hover:shadow-xs cursor-pointer">
-                                            <span>Lihat Berkas</span>
+                                            <span>Lihat</span>
                                             <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                                         </a>
                                     @else
@@ -141,7 +120,7 @@
                     <!-- Footer Pagination Serta-Merta -->
                     <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div id="table-kat-info" class="text-xs md:text-sm text-slate-800">
-                            Menampilkan 0 sampai 0 dari 0 entri
+                            Menampilkan 0–0 dari 0 informasi
                         </div>
                         <div id="table-kat-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
                             <!-- Tombol dibuat via JavaScript secara instan -->
@@ -173,7 +152,7 @@
                                     </th>
                                     <th onclick="sortKatTable('dilihat')" class="px-4 py-3 text-center w-28 shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan berdasarkan Sering Dilihat">
                                         <div class="flex items-center justify-center gap-1.5">
-                                            <span>Akses</span>
+                                            <span>Aksi</span>
                                             <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
                                                 <i class="fa-solid fa-sort"></i>
                                             </span>
@@ -181,7 +160,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody id="table-kat-body" class="divide-y divide-slate-300 text-xs sm:text-sm font-medium text-slate-800">
+                            <tbody id="table-kat-body" data-category-table="true" class="text-xs sm:text-sm font-medium text-slate-800">
                                 @forelse($items as $idx => $item)
                                     @php
                                         $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
@@ -196,7 +175,7 @@
                                         data-rincian="{{ strtolower($rincianText) }}"
                                         data-sub_informasi="{{ strtolower($item->sub_informasi ?? '') }}">
                                         <!-- 1. Rincian Informasi -->
-                                        <td class="col-kat-rincian px-5 py-3.5 font-extrabold text-slate-900 align-top leading-relaxed bg-white border-r border-slate-300 [word-break:break-word]">
+                                        <td class="col-kat-rincian px-5 py-3.5 font-medium text-slate-900 align-top leading-relaxed bg-white border-r border-slate-300 [word-break:break-word]">
                                             {{ $rincianText }}
                                         </td>
 
@@ -208,7 +187,7 @@
                                              @endphp
                                              <div class="space-y-1.5">
                                                  @if(!$isPending)
-                                                     <div class="font-bold text-slate-900">
+                                                     <div class="font-medium text-slate-900">
                                                          {{ $subText }}
                                                      </div>
 
@@ -258,7 +237,7 @@
                     <!-- Footer Pagination Client-side Instan -->
                     <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div id="table-kat-info" class="text-xs md:text-sm text-slate-800">
-                            Menampilkan 0 sampai 0 dari 0 entri
+                            Menampilkan 0–0 dari 0 informasi
                         </div>
                         <div id="table-kat-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
                             <!-- Tombol dibuat via JavaScript secara instan -->
@@ -461,15 +440,27 @@
         const startIndex = (katCurrentPage - 1) * katPerPage;
         const endIndex = Math.min(startIndex + katPerPage, totalItems);
 
+        if (!isCards) {
+            katAllRows.forEach(row => {
+                row.element.classList.remove('category-group-end');
+                const rincianCell = row.element.querySelector('.col-kat-rincian');
+                if (rincianCell) {
+                    rincianCell.classList.remove('category-group-boundary-cell');
+                    rincianCell.style.display = '';
+                    rincianCell.rowSpan = 1;
+                }
+            });
+        }
+
         targetContainer.innerHTML = '';
 
         if (totalItems === 0) {
             if (isCards) {
-                targetContainer.innerHTML = '<div class="p-12 text-center text-slate-400 font-semibold bg-slate-50/50 rounded-2xl border border-slate-100">Tidak ada pengumuman yang sesuai dengan pencarian.</div>';
+                targetContainer.innerHTML = '<div class="p-12 text-center text-slate-400 font-semibold bg-slate-50/50 rounded-none border border-slate-100">Tidak ada pengumuman yang sesuai dengan pencarian.</div>';
             } else {
                 targetContainer.innerHTML = '<tr><td colspan="3" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data informasi untuk kategori ini yang sesuai.</td></tr>';
             }
-            if (infoEl) infoEl.innerText = 'Menampilkan 0 sampai 0 dari 0 entri';
+            if (infoEl) infoEl.innerText = 'Menampilkan 0–0 dari 0 informasi';
             if (paginEl) paginEl.innerHTML = '';
             return;
         }
@@ -510,12 +501,17 @@
                     targetContainer.appendChild(tr);
                 }
 
+                if (i + span < pageRows.length) {
+                    pageRows[i + span - 1].element.classList.add('category-group-end');
+                    pageRows[i].element.querySelector('.col-kat-rincian')?.classList.add('category-group-boundary-cell');
+                }
+
                 i += span;
             }
         }
 
         if (infoEl) {
-            infoEl.innerText = `Menampilkan ${startIndex + 1} sampai ${endIndex} dari ${totalItems} entri`;
+            infoEl.innerText = `Menampilkan ${startIndex + 1}–${endIndex} dari ${totalItems} informasi`;
         }
 
         if (paginEl) {

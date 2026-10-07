@@ -17,11 +17,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
 
-            // Kolom password dibuat nullable agar user Google tidak error saat dikosongkan
             $table->string('password')->nullable();
 
             $table->string('role')->default('masyarakat'); // Kolom role
-            $table->string('google_id')->nullable();       // INI KOLOM YANG DIMINTA OLEH ERROR TADI
 
             $table->rememberToken();
             $table->timestamps();

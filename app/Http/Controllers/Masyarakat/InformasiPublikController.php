@@ -28,6 +28,7 @@ class InformasiPublikController extends Controller
                 $q->where('sub_informasi', 'like', "%{$term}%")
                   ->orWhere('rincian_informasi', 'like', "%{$term}%")
                   ->orWhere('pejabat_unit_yang_menguasai_informasi', 'like', "%{$term}%")
+                  ->orWhere('penanggung_jawab_pembuatan_informasi', 'like', "%{$term}%")
                   ->orWhere('waktu_pembuatan_informasi', 'like', "%{$term}%")
                   ->orWhere('retensi_arsip', 'like', "%{$term}%")
                   ->orWhere('bentuk_informasi_yang_tersedia', 'like', "%{$term}%");
@@ -41,16 +42,6 @@ class InformasiPublikController extends Controller
                 $query->whereIn('pejabat_unit_yang_menguasai_informasi', array_filter($tp));
             } else {
                 $query->where('pejabat_unit_yang_menguasai_informasi', $tp);
-            }
-        }
-
-        // Filter berdasarkan kategori/jenis informasi
-        if ($request->filled('kategori')) {
-            $kat = $request->kategori;
-            if (is_array($kat)) {
-                $query->whereIn('jenis_informasi', array_filter($kat));
-            } else {
-                $query->where('jenis_informasi', $kat);
             }
         }
 
@@ -127,6 +118,7 @@ class InformasiPublikController extends Controller
             'no'              => 'id',
             'ringkasan'       => 'sub_informasi',
             'pejabat'         => 'pejabat_unit_yang_menguasai_informasi',
+            'penanggung_jawab' => 'penanggung_jawab_pembuatan_informasi',
             'waktu'           => 'waktu_pembuatan_informasi',
             'retensi'         => 'retensi_arsip',
             'bentuk'          => 'bentuk_informasi_yang_tersedia',
@@ -153,8 +145,8 @@ class InformasiPublikController extends Controller
                 $query->orderByRaw("
                     CASE 
                         WHEN jenis_informasi = 'Informasi Berkala' THEN 1
-                        WHEN jenis_informasi = 'Informasi Setiap Saat' THEN 2
-                        WHEN jenis_informasi = 'Informasi Serta-Merta' THEN 3
+                        WHEN jenis_informasi = 'Informasi Serta-Merta' THEN 2
+                        WHEN jenis_informasi = 'Informasi Setiap Saat' THEN 3
                         ELSE 4
                     END ASC
                 ")->orderByRaw("
@@ -178,6 +170,11 @@ class InformasiPublikController extends Controller
 
         // Ambil seluruh data agar DataTables client-side berjalan instan 0 milidetik persis seperti Unpad
         $informasiList = $query->get();
+        $informasiGroups = collect([
+            'Informasi Berkala' => $informasiList->where('jenis_informasi', 'Informasi Berkala')->values(),
+            'Informasi Serta-Merta' => $informasiList->where('jenis_informasi', 'Informasi Serta-Merta')->values(),
+            'Informasi Setiap Saat' => $informasiList->where('jenis_informasi', 'Informasi Setiap Saat')->values(),
+        ]);
 
         $years = $listTahun;
         $topiks = $listSatker;
@@ -211,6 +208,7 @@ class InformasiPublikController extends Controller
 
         return view('masyarakat.informasi_publik.index', compact(
             'informasiList',
+            'informasiGroups',
             'years',
             'topiks',
             'totalCount',
@@ -269,7 +267,8 @@ class InformasiPublikController extends Controller
             $query->where(function($q) use ($term) {
                 $q->whereRaw('LOWER(COALESCE(sub_informasi, "")) LIKE ?', ["%{$term}%"])
                   ->orWhereRaw('LOWER(COALESCE(rincian_informasi, "")) LIKE ?', ["%{$term}%"])
-                  ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"]);
+                  ->orWhereRaw('LOWER(COALESCE(pejabat_unit_yang_menguasai_informasi, "")) LIKE ?', ["%{$term}%"])
+                  ->orWhereRaw('LOWER(COALESCE(penanggung_jawab_pembuatan_informasi, "")) LIKE ?', ["%{$term}%"]);
             });
         }
 

@@ -37,8 +37,10 @@ class InformasiSertaMertaController extends Controller
             'waktu_pembuatan_informasi'            => 'required|string|max:100',
             'pejabat_unit_yang_menguasai_informasi'=> 'required|string|max:255',
             'format_serta_merta'                   => 'required|in:file,link',
-            'file_informasi'                       => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+            'file_informasi'                       => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp|max:5120',
             'link_informasi'                       => 'nullable|url|max:500',
+        ], [
+            'file_informasi.extensions' => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, atau WEBP.',
         ]);
 
         $format = $request->input('format_serta_merta', 'file');
@@ -70,8 +72,10 @@ class InformasiSertaMertaController extends Controller
             'waktu_pembuatan_informasi'            => 'required|string|max:100',
             'pejabat_unit_yang_menguasai_informasi'=> 'required|string|max:255',
             'format_serta_merta'                   => 'required|in:file,link',
-            'file_informasi'                       => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+            'file_informasi'                       => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp|max:5120',
             'link_informasi'                       => 'nullable|url|max:500',
+        ], [
+            'file_informasi.extensions' => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, atau WEBP.',
         ]);
 
         $format = $request->input('format_serta_merta', 'file');

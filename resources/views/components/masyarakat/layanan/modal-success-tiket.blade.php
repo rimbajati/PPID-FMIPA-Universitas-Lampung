@@ -32,10 +32,10 @@
         </p>
 
         <!-- Badge Nomor Tiket Ringkas -->
-        <div class="bg-slate-50 border border-dashed border-slate-200 rounded-2xl py-3 px-4 mb-6">
-            <p class="text-[11px] text-slate-400 font-medium mb-1">Nomor Tiket Anda</p>
+        <div class="rounded-2xl py-3 px-4 mb-6 border border-dashed {{ $isKeberatan ? 'bg-amber-50/50 border-amber-200' : 'bg-slate-50 border-slate-200' }}">
+            <p class="text-[11px] font-medium mb-1 {{ $isKeberatan ? 'text-amber-700/70' : 'text-slate-400' }}">Nomor Tiket Anda</p>
             <div class="flex items-center justify-center gap-2">
-                <span class="font-mono text-base font-bold text-slate-800 tracking-wide select-all">
+                <span class="font-mono text-base font-bold tracking-wide select-all {{ $isKeberatan ? 'text-amber-600' : 'text-slate-800' }}">
                     {{ $nomorTiket }}
                 </span>
                 <button type="button"

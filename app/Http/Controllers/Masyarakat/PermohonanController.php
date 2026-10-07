@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Masyarakat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Permohonan;
-use App\Models\Keberatan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class PermohonanController extends Controller
 {
@@ -15,8 +13,7 @@ class PermohonanController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        return view('masyarakat.layanan.permohonan.index', compact('user'));
+        return view('masyarakat.layanan.permohonan.index');
     }
 
     /**
@@ -24,23 +21,47 @@ class PermohonanController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
-
         $validated = $request->validate([
-            'kategori_pemohon'       => 'required|string|in:Perorangan,Kelompok,Organisasi,Lembaga',
-            'nama_organisasi_lembaga'=> 'nullable|required_if:kategori_pemohon,Organisasi,Lembaga|string|max:255',
-            'no_identitas'           => 'required|string|max:50',
+            'nama_lengkap'          => 'required|string|max:255',
+            'jenis_identitas'        => 'required|string|in:KTP,Paspor,Badan hukum',
+            'no_identitas'           => [
+                'required',
+                'string',
+                'max:50',
+                function ($attribute, $value, $fail) use ($request) {
+                    $jenis = $request->input('jenis_identitas');
+                    if ($jenis === 'KTP') {
+                        if (!preg_match('/^[0-9]{16}$/', $value)) {
+                            $fail('Nomor Induk Kependudukan (NIK) harus terdiri dari 16 digit angka.');
+                        }
+                    } elseif ($jenis === 'Paspor') {
+                        if (strlen($value) < 6 || strlen($value) > 20) {
+                            $fail('Nomor Paspor harus memiliki panjang antara 6 sampai 20 karakter.');
+                        }
+                    } elseif ($jenis === 'Badan hukum') {
+                        if (strlen($value) < 3) {
+                            $fail('Nomor Akta Notaris / SK Pendirian tidak boleh kurang dari 3 karakter.');
+                        }
+                    }
+                }
+            ],
+            'email'                  => 'required|email|max:255',
             'no_telepon'             => 'required|string|max:20',
-            'alamat_lengkap'         => 'required|string',
+            'alamat_lengkap'         => 'required|string|max:1000',
             'pekerjaan'              => 'required|string|max:255',
             'tujuan_penggunaan_informasi' => 'required|string',
             'informasi_yang_diminta' => 'required|string',
-            'cara_memperoleh_informasi'   => 'required|string|in:Dikirim melalui Email,Datang langsung ke Dekanat FMIPA Universitas Lampung',
-            'file_identitas'         => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'file_pendukung'         => 'nullable|required_if:kategori_pemohon,Organisasi,Lembaga|file|mimes:pdf,docx|max:5120',
+            'cara_memperoleh_informasi'   => 'required|string|in:Salinan Digital (Dikirim melalui Email),Datang Langsung ke Dekanat FMIPA Universitas Lampung,Dikirim melalui Email,Diambil langsung di Dekanat FMIPA Universitas Lampung,Melihat/Membaca di tempat',
+            'file_identitas'         => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
         ]);
 
-        // Upload File Identitas (KTP/SIM) - Maks 2MB
+        // Normalisasi dan petakan jenis_permohonan secara otomatis
+        $caraMemperoleh = $validated['cara_memperoleh_informasi'];
+        $jenisPermohonan = ($caraMemperoleh === 'Salinan Digital (Dikirim melalui Email)' || $caraMemperoleh === 'Dikirim melalui Email') 
+            ? 'Mendapatkan salinan' 
+            : 'Melihat/Membaca di tempat atau Mengambil Salinan Fisik';
+
+        // Upload File Identitas (KTP/Paspor/Akta) - Maks 2MB
         $identitasPath = null;
         $namaIdentitasAsli = null;
         if ($request->hasFile('file_identitas')) {
@@ -49,44 +70,30 @@ class PermohonanController extends Controller
             $namaIdentitasAsli = $fileId->getClientOriginalName();
         }
 
-        // Upload File Pendukung (Opsional) - Maks 5MB
-        $pendukungPath = null;
-        $namaPendukungAsli = null;
-        if ($request->hasFile('file_pendukung')) {
-            $filePendukung = $request->file('file_pendukung');
-            $pendukungPath = $filePendukung->store('pendukung', 'public');
-            $namaPendukungAsli = $filePendukung->getClientOriginalName();
-        }
-
-        // Generate Nomor Tiket Otomatis yang Dijamin Unik (Format: PER-YYYYMMDD-XXX)
+        // Generate Nomor Tiket Otomatis yang Dijamin Unik (Format: PPID-YYYYMMDD-XXXX)
         $todayStr = date('Ymd');
-        $countToday = Permohonan::whereDate('created_at', date('Y-m-d'))->count();
-        $seq = $countToday + 1;
         do {
-            $nextSequence = str_pad($seq, 3, '0', STR_PAD_LEFT);
-            $noTiket = 'PER-' . $todayStr . '-' . $nextSequence;
-            $seq++;
+            $random  = strtoupper(substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 4));
+            $noTiket = 'PPID-' . $todayStr . '-' . $random;
         } while (Permohonan::where('no_tiket', $noTiket)->exists());
 
         // Simpan ke Database (Tabel permohonans)
         $permohonan = Permohonan::create([
-            'user_id'                        => Auth::id(),
+            'user_id'                        => null,
             'no_tiket'                       => $noTiket,
-            'kategori_pemohon'               => $validated['kategori_pemohon'],
-            'nama_organisasi_lembaga'        => in_array($validated['kategori_pemohon'], ['Organisasi', 'Lembaga']) ? ($validated['nama_organisasi_lembaga'] ?? null) : null,
+            'nama_lengkap'                   => $validated['nama_lengkap'],
+            'jenis_identitas'                => $validated['jenis_identitas'],
             'no_identitas'                   => $validated['no_identitas'],
-            'nama_lengkap'                   => $user ? ($user->nama_lengkap ?? $user->name) : $request->input('nama_lengkap'),
-            'email'                          => $user ? $user->email : $request->input('email'),
+            'email'                          => $validated['email'],
             'no_telepon'                     => $validated['no_telepon'],
             'alamat_lengkap'                 => $validated['alamat_lengkap'],
             'pekerjaan'                      => $validated['pekerjaan'],
+            'jenis_permohonan'               => $jenisPermohonan,
             'tujuan_penggunaan_informasi'    => $validated['tujuan_penggunaan_informasi'],
             'informasi_yang_diminta'         => $validated['informasi_yang_diminta'],
-            'cara_memperoleh_informasi'      => $validated['cara_memperoleh_informasi'],
+            'cara_memperoleh_informasi'      => $caraMemperoleh,
             'file_identitas'                 => $identitasPath,
             'nama_file_identitas_asli'       => $namaIdentitasAsli,
-            'file_pendukung'                 => $pendukungPath,
-            'nama_file_pendukung_asli'       => $namaPendukungAsli,
             'status'                         => 'Diajukan',
         ]);
 
@@ -110,6 +117,6 @@ class PermohonanController extends Controller
             }
         }
 
-        return redirect()->route('layanan')->with('success_tiket', $noTiket)->with('success', 'Permohonan Informasi Publik berhasil dikirim.');
+        return redirect()->route('layanan.permohonan')->with('success_tiket', $noTiket)->with('success', 'Permohonan Informasi Publik berhasil dikirim.');
     }
 }

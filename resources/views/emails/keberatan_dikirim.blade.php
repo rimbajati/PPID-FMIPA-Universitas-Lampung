@@ -4,195 +4,78 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengajuan Keberatan Berhasil Terkirim - PPID FMIPA Unila</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f1f5f9;
-            color: #1e293b;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-        .wrapper {
-            width: 100%;
-            background-color: #f1f5f9;
-            padding: 32px 16px;
-            box-sizing: border-box;
-        }
-        .main-card {
-            max-width: 580px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-        }
-        .header {
-            background-color: #1B365D;
-            padding: 28px 32px;
-            color: #ffffff;
-        }
-        .brand-title {
-            font-size: 18px;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: 0.3px;
-            color: #ffffff;
-        }
-        .brand-sub {
-            font-size: 11px;
-            color: #93c5fd;
-            margin: 3px 0 0 0;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-        .content {
-            padding: 32px;
-        }
-        .greeting {
-            font-size: 16px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 6px;
-        }
-        .message-text {
-            font-size: 14px;
-            color: #475569;
-            margin-bottom: 24px;
-        }
-        .ticket-box {
-            background-color: #fff7ed;
-            border: 1px dashed #f97316;
-            border-radius: 12px;
-            padding: 16px 20px;
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        .ticket-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #c2410c;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        .ticket-number {
-            font-size: 22px;
-            font-weight: 900;
-            color: #9a3412;
-            letter-spacing: 1px;
-        }
-        .section-title {
-            font-size: 13px;
-            font-weight: 800;
-            color: #334155;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-        .details-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 24px;
-            background-color: #f8fafc;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-        }
-        .details-table td {
-            padding: 12px 16px;
-            font-size: 13px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .details-table tr:last-child td {
-            border-bottom: none;
-        }
-        .label-col {
-            width: 36%;
-            color: #64748b;
-            font-weight: 600;
-        }
-        .value-col {
-            color: #0f172a;
-            font-weight: 700;
-        }
-        .btn-wrapper {
-            text-align: center;
-            margin-top: 24px;
-            margin-bottom: 8px;
-        }
-        .btn-primary {
-            display: inline-block;
-            background-color: #1B365D;
-            color: #ffffff !important;
-            padding: 12px 28px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 13.5px;
-            text-decoration: none;
-        }
-        .footer {
-            padding: 24px 32px;
-            background-color: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            text-align: center;
-            font-size: 12px;
-            color: #94a3b8;
-        }
-    </style>
 </head>
-<body>
+<body style="margin: 0; padding: 0; background-color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #333333;">
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto;">
+        <tr>
+            <td style="padding: 24px 16px;">
+                <div style="font-size: 14px; font-weight: 600; color: #555555; margin-bottom: 16px;">
+                    PPID FMIPA Universitas Lampung
+                </div>
 
-<div class="wrapper">
-    <div class="main-card">
-        <div class="header">
-            <h1 class="brand-title">PPID FMIPA UNILA</h1>
-            <p class="brand-sub">Pejabat Pengelola Informasi & Dokumentasi</p>
-        </div>
+                <div style="font-size: 18px; font-weight: 700; color: #000000; margin-bottom: 12px;">
+                    Pengajuan Keberatan Diterima
+                </div>
 
-        <div class="content">
-            <div class="greeting">Halo, {{ $keberatan->nama }}</div>
-            
-            <p class="message-text">
-                Pengajuan Keberatan Informasi Publik Anda telah berhasil kami terima. Atasan PPID FMIPA Unila akan segera memeriksa berkas pengajuan keberatan Anda.
-            </p>
+                <p style="font-size: 14px; line-height: 1.6; color: #555555; margin-bottom: 20px;">
+                    Halo {{ $keberatan->nama ?? 'Pemohon' }},
+                </p>
 
-            <div class="ticket-box">
-                <div class="ticket-label">Nomor Tiket Keberatan</div>
-                <div class="ticket-number">{{ $keberatan->no_tiket }}</div>
-            </div>
+                <p style="font-size: 14px; line-height: 1.6; color: #555555; margin-bottom: 20px;">
+                    Pengajuan keberatan atas permohonan informasi publik Anda telah kami terima dan tercatat di sistem kami. Atasan PPID FMIPA Unila akan menindaklanjuti permohonan keberatan ini.
+                </p>
 
-            <div class="section-title">Ringkasan Keberatan</div>
-            <table class="details-table">
-                <tr>
-                    <td class="label-col">Jenis Layanan</td>
-                    <td class="value-col">Pengajuan Keberatan Informasi</td>
-                </tr>
-                <tr>
-                    <td class="label-col">Status Awal</td>
-                    <td class="value-col">
-                        <span style="color: #ea580c; font-weight: 700;">{{ $keberatan->status }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="label-col">Alasan Keberatan</td>
-                    <td class="value-col">{{ $keberatan->alasan_keberatan }}</td>
-                </tr>
-            </table>
+                <!-- Nomor Tiket -->
+                <div style="margin-bottom: 24px;">
+                    <div style="font-size: 12px; color: #888888; margin-bottom: 6px; font-weight: 600;">
+                        NOMOR TIKET KEBERATAN
+                    </div>
+                    <div style="font-size: 20px; font-weight: 700; color: #0066cc; font-family: 'Courier New', monospace; letter-spacing: 1px;">
+                        {{ $keberatan->no_tiket ?? '-' }}
+                    </div>
+                    <p style="font-size: 12px; color: #888888; margin-top: 6px;">
+                        Gunakan nomor ini untuk melacak status penanganan keberatan.
+                    </p>
+                </div>
 
-            <div class="btn-wrapper">
-                <a href="{{ url('/riwayat-layanan') }}" class="btn-primary">Lacak Status Keberatan</a>
-            </div>
-        </div>
+                <!-- Detail Singkat -->
+                <div style="margin-bottom: 24px;">
+                    <div style="font-size: 12px; font-weight: 600; color: #555555; margin-bottom: 12px; text-transform: uppercase;">
+                        Rincian Keberatan
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.8; color: #555555;">
+                        <div style="margin-bottom: 8px;">
+                            <strong>Alasan Keberatan:</strong><br>
+                            {{ $keberatan->alasan_keberatan ?? '-' }}
+                        </div>
+                        <div>
+                            <strong>Tanggal Pengajuan:</strong> {{ date('d F Y, H:i') }} WIB
+                        </div>
+                    </div>
+                </div>
 
-        <div class="footer">
-            Email ini dikirim secara otomatis oleh Sistem PPID FMIPA Universitas Lampung.<br>
-            Mohon tidak membalas email ini secara langsung.
-        </div>
-    </div>
-</div>
+                <!-- CTA Button -->
+                <div style="margin-bottom: 24px; text-align: center;">
+                    <a href="{{ url('/riwayat-layanan') }}" target="_blank" style="display: inline-block; background-color: #0066cc; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 4px; font-size: 14px; font-weight: 600;">
+                        Lacak Keberatan
+                    </a>
+                </div>
 
+                <p style="font-size: 12px; color: #888888; line-height: 1.6; margin-bottom: 24px;">
+                    Berdasarkan regulasi, Atasan PPID akan memberikan tanggapan tertulis paling lambat 30 (tiga puluh) hari kerja sejak diterimanya pengajuan keberatan.
+                </p>
+
+                <div style="border-top: 1px solid #cccccc; padding-top: 16px; font-size: 12px; color: #888888; line-height: 1.6;">
+                    <div style="margin-bottom: 4px;">
+                        PPID Pelaksana FMIPA Universitas Lampung
+                    </div>
+                    <div>
+                        Gedung Dekanat FMIPA Unila, Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Bandar Lampung<br>
+                        Email ini dikirim otomatis. Jangan balas email ini.
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

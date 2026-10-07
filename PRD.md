@@ -22,20 +22,16 @@ Sistem ini melayani 2 aktor/peran utama:
 - **Framework Backend**: Laravel 10.x (PHP 8.1+)
 - **Frontend / View Engine**: Blade Templates + Alpine.js / Dynamic JS + CSS (TailwindCSS / Custom UI)
 - **Database**: MySQL / MariaDB
-- **Autentikasi**: Laravel Auth Native (Multi-step Registration, Email Verification, Google OAuth SSO)
+- **Autentikasi**: Login hanya untuk Admin PPID; layanan permohonan dan keberatan tersedia tanpa akun masyarakat.
 - **Storage**: Laravel Local File Storage (Protected file serving)
 
 ---
 
 ### 4. Daftar Fitur & Spesifikasi Modul (Functional Requirements)
 
-#### Modul 1: Autentikasi & Pengelolaan Akun (Authentication & Profile)
-* **Login Multi-Role**: Login terpisah untuk Pemohon Publik (Masyarakat/Mahasiswa) dan Admin Panel.
-* **Registrasi 3-Tahap (Multi-step Register)**:
-  1. *Step 1*: Pengisian email & kata sandi / pilihan login cepat Google OAuth.
-  2. *Step 2*: Verifikasi OTP via email.
-  3. *Step 3*: Kelengkapan profil pemohon (Nama lengkap, NIK/No Identitas, No HP/WhatsApp, Alamat, Pekerjaan, Upload KTP/Identitas).
-* **Lupa & Reset Password**: Pengiriman tautan reset kata sandi aman via email.
+#### Modul 1: Akses Admin
+* **Login Admin**: Autentikasi diperlukan untuk mengelola katalog dan memproses layanan PPID.
+* **Akses Masyarakat**: Tidak memerlukan registrasi atau login. Pemohon mengisi identitas saat mengajukan permohonan dan memakai nomor tiket serta email untuk melacak layanan atau mengajukan keberatan.
 
 #### Modul 2: Katalog Informasi Publik (Public Information Catalog)
 * **Kategori Informasi**:
@@ -48,8 +44,8 @@ Sistem ini melayani 2 aktor/peran utama:
 
 #### Modul 3: Layanan Permohonan Informasi Publik (Public Information Request)
 * **Pengajuan Permohonan (Form Permohonan)**:
-  * Pengisian rincian informasi yang dibutuhkan, tujuan penggunaan informasi, serta cara memperoleh/mendapatkan salinan (softcopy/hardcopy).
-  * Auto-fill data pemohon dari profil pengguna terautentikasi.
+  * Pengisian nama, alamat, pekerjaan, NIK, salinan identitas, email, nomor telepon, informasi yang diminta, tujuan, jenis permohonan, dan cara menerima informasi.
+  * Pemohon mengisi data langsung pada formulir tanpa membuat akun.
 * **Penomoran & Pelacakan Otomatis (Tracking Ticket)**: Generasi nomor tiket/kode registrasi unik untuk setiap permohonan.
 * **Status Permohonan**: `diajukan` $\rightarrow$ `diproses` $\rightarrow$ `selesai` (disertai lampiran berkas jawaban) atau `ditolak` (disertai alasan penolakan).
 

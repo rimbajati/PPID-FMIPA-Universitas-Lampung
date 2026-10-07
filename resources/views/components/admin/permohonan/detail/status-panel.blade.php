@@ -1,6 +1,6 @@
 @props(['permohonan'])
 
-<div class="bg-white rounded border border-slate-200/90 shadow-2xs overflow-hidden" 
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden"
      x-data="{
         statusSelect: '{{ in_array($permohonan->status, ['Selesai', 'Ditolak']) ? $permohonan->status : 'Diproses' }}',
         tipeJawaban: '{{ $permohonan->link_jawaban ? 'link' : 'file' }}',
@@ -13,282 +13,161 @@
         }
      }">
 
-    <!-- Header Panel Kanan: Background abu-abu terang, ikon + teks persis referensi -->
-    <div class="bg-slate-50/80 px-5 py-3 border-b border-slate-200/90 flex items-center justify-between">
-        <div class="flex items-center gap-2 text-slate-900 font-extrabold text-sm sm:text-base">
-            <i class="fa-solid fa-sliders text-slate-900 text-sm"></i>
-            <span>Status & Aksi Pemrosesan</span>
-        </div>
+    {{-- header ringkas dengan badge di kanan --}}
+    <div class="px-5 py-4 border-b border-slate-100">
+        <p class="text-sm font-semibold text-slate-900">Status Permohonan</p>
+        <p class="text-xs text-slate-500 mt-0.5">Tentukan keputusan atas permohonan informasi</p>
     </div>
 
-    <div class="p-6 space-y-6">
-
-        <!-- Status Saat Ini (Tanpa Kotak Abu-Abu Besar) -->
-        <div class="text-center py-2 space-y-2 border-b border-slate-100 pb-5">
-            <span class="text-sm font-bold text-slate-500 block">Status Saat Ini:</span>
-            
-            @if($permohonan->status === 'Diajukan')
-                <span class="inline-block px-4 py-1.5 text-xs font-black bg-slate-100 text-slate-800 rounded-xl border border-slate-300 shadow-2xs">
-                    Diajukan
-                </span>
-            @elseif($permohonan->status === 'Diproses')
-                <span class="inline-block px-4 py-1.5 text-xs font-black bg-orange-100 text-orange-800 rounded-xl border border-orange-300 shadow-2xs">
-                    Diproses
-                </span>
-            @elseif($permohonan->status === 'Selesai')
-                <span class="inline-block px-4 py-1.5 text-xs font-black bg-emerald-100 text-emerald-800 rounded-xl border border-emerald-300 shadow-2xs">
-                    Selesai
-                </span>
-            @elseif($permohonan->status === 'Ditolak')
-                <span class="inline-block px-4 py-1.5 text-xs font-black bg-rose-100 text-rose-800 rounded-xl border border-rose-300 shadow-2xs">
-                    Ditolak
-                </span>
-            @endif
-
-            <div class="pt-1 flex items-center justify-center gap-1 text-[11px] text-slate-400 font-semibold">
-                <i class="fa-regular fa-clock"></i>
-                <span>Diperbarui: {{ $permohonan->updated_at ? $permohonan->updated_at->diffForHumans() : '-' }}</span>
-            </div>
-        </div>
-
-        <!-- KONDISI JIKA STATUS SUDAH FINAL (SELESAI / DITOLAK) -->
+    <div class="p-5">
         @if(in_array($permohonan->status, ['Selesai', 'Ditolak']))
-            <div class="p-4 rounded-2xl border {{ $permohonan->status === 'Selesai' ? 'bg-emerald-50/60 border-emerald-200' : 'bg-rose-50/60 border-rose-200' }} space-y-3">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid {{ $permohonan->status === 'Selesai' ? 'fa-circle-check text-emerald-600' : 'fa-circle-xmark text-rose-600' }}"></i>
-                    <span class="font-black text-xs sm:text-sm {{ $permohonan->status === 'Selesai' ? 'text-emerald-900' : 'text-rose-900' }}">
-                        Keputusan Final
-                    </span>
-                </div>
-                <p class="text-xs font-medium {{ $permohonan->status === 'Selesai' ? 'text-emerald-700' : 'text-rose-700' }} leading-relaxed">
-                    Permohonan ini telah berstatus <span class="font-bold">{{ $permohonan->status }}</span> dan keputusan tidak dapat diubah lagi.
-                </p>
-
-                <!-- Catatan untuk Pemohon yang Tersimpan -->
-                @php
-                    $pesanTersimpan = $permohonan->status === 'Selesai' ? $permohonan->catatan_selesai : ($permohonan->alasan_ditolak ?: $permohonan->pesan_ditolak);
-                @endphp
+            <div class="space-y-3">
+                <p class="text-sm text-slate-600 leading-relaxed">Tiket berstatus <span class="font-semibold text-slate-900">{{ $permohonan->status }}</span> — tidak dapat diubah.</p>
+                @php $pesanTersimpan = $permohonan->status === 'Selesai' ? $permohonan->catatan_selesai : ($permohonan->alasan_ditolak ?: $permohonan->pesan_ditolak); @endphp
                 @if($pesanTersimpan)
-                    <div class="pt-2 border-t {{ $permohonan->status === 'Selesai' ? 'border-emerald-200' : 'border-rose-200' }}">
-                        <span class="text-[11px] font-black uppercase tracking-wider block mb-1.5 text-slate-600">Catatan untuk Pemohon:</span>
-                        <div class="bg-white/90 p-3 rounded-md border border-slate-200 text-xs font-semibold text-slate-800 whitespace-pre-line leading-relaxed">{{ trim($pesanTersimpan) }}</div>
-                    </div>
+                    <div class="rounded-lg bg-slate-50 border border-slate-200 px-3 py-3 text-xs leading-relaxed text-slate-700 whitespace-pre-line">{{ trim($pesanTersimpan) }}</div>
                 @endif
-
-                <!-- Berkas / Link Balasan jika Selesai -->
                 @if($permohonan->status === 'Selesai')
                     @if($permohonan->file_jawaban)
-                        <div class="pt-2">
-                            <a href="{{ asset('storage/' . $permohonan->file_jawaban) }}" target="_blank" 
-                               class="w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-2xs">
-                                <i class="fa-solid fa-file-arrow-down"></i>
-                                <span>Unduh File Jawaban Informasi</span>
-                            </a>
-                        </div>
+                        <a href="{{ asset('storage/' . $permohonan->file_jawaban) }}" target="_blank" class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 hover:bg-black text-white text-xs font-medium py-2.5 transition"><i class="fa-solid fa-download text-xs"></i> Unduh file jawaban</a>
                     @elseif($permohonan->link_jawaban)
-                        <div class="pt-2">
-                            <a href="{{ $permohonan->link_jawaban }}" target="_blank" 
-                               class="w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-2xs">
-                                <i class="fa-solid fa-link"></i>
-                                <span>Buka Tautan Jawaban Informasi</span>
-                            </a>
-                        </div>
+                        <a href="{{ $permohonan->link_jawaban }}" target="_blank" class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 hover:bg-black text-white text-xs font-medium py-2.5 transition"><i class="fa-solid fa-link text-xs"></i> Buka tautan</a>
                     @endif
                 @endif
+                <p class="text-[11px] text-slate-400">Diperbarui {{ $permohonan->updated_at ? $permohonan->updated_at->diffForHumans() : '-' }}</p>
             </div>
 
-        <!-- KONDISI JIKA ADA SENGKETA KEBERATAN (KUNCI AKSI JIKA STATUS BELUM FINAL) -->
         @elseif($permohonan->keberatan)
-            <div class="p-4 bg-slate-100 border border-slate-200 rounded-2xl space-y-2 text-center">
-                <i class="fa-solid fa-lock text-slate-400 text-xl"></i>
-                <h4 class="font-black text-slate-700 text-xs sm:text-sm">Pemrosesan Dialihkan</h4>
-                <p class="text-[11px] text-slate-500 font-medium leading-relaxed">
-                    Pemrosesan tiket ini dikunci karena sedang dalam penanganan berkas keberatan.
-                </p>
+            <div class="text-center py-6">
+                <div class="w-8 h-8 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-xs"><i class="fa-solid fa-lock"></i></div>
+                <p class="text-xs font-medium text-slate-700 mt-2">Terkunci — ada keberatan</p>
+                <p class="text-xs text-slate-500 mt-1">Kelola di halaman keberatan.</p>
             </div>
 
-        <!-- KONDISI NORMAL: FORM PEMROSESAN AKTIF -->
         @else
-            <form x-ref="statusForm" action="{{ route('admin.permohonan.update-status', $permohonan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+            <form x-ref="statusForm" action="{{ route('admin.permohonan.update-status', $permohonan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 @method('PUT')
 
-                <div class="space-y-3">
-                    <label class="block font-black text-slate-800 text-xs sm:text-sm">
-                        Pilih Keputusan / Tahap <span class="text-rose-500">*</span>
-                    </label>
-
-                    <!-- Pilihan Radio Keputusan -->
-                    <div class="grid grid-cols-3 gap-2">
-                        <!-- 1. DIPROSES -->
-                        <label class="flex flex-col items-center justify-center p-2 sm:p-2.5 rounded-xl border-2 cursor-pointer transition text-center"
-                               :class="statusSelect === 'Diproses' ? 'border-orange-500 bg-orange-50/50 shadow-2xs' : 'border-slate-200 hover:border-slate-300 bg-white'">
-                            <input type="radio" name="status" value="Diproses" x-model="statusSelect" class="sr-only">
-                            <div class="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold shrink-0 mb-1"
-                                 :class="statusSelect === 'Diproses' ? 'bg-orange-500' : 'bg-slate-200 text-slate-400'">
-                                <i class="fa-solid fa-gears text-[11px]" :class="statusSelect === 'Diproses' ? 'fa-spin' : ''"></i>
-                            </div>
-                            <span class="block font-black text-slate-900 text-xs">Diproses</span>
+                {{-- segmented control simpel --}}
+                <div>
+                    <p class="text-sm font-medium text-slate-700 mb-2">Keputusan <span class="text-rose-500">*</span></p>
+                    <div class="inline-flex p-1 bg-slate-100 rounded-full">
+                        <label class="px-4 py-2 rounded-full text-sm font-medium cursor-pointer transition" :class="statusSelect === 'Diproses' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'">
+                            <input type="radio" name="status" value="Diproses" x-model="statusSelect" class="sr-only"> Diproses
                         </label>
-
-                        <!-- 2. SELESAI -->
-                        <label class="flex flex-col items-center justify-center p-2 sm:p-2.5 rounded-xl border-2 cursor-pointer transition text-center"
-                               :class="statusSelect === 'Selesai' ? 'border-emerald-500 bg-emerald-50/50 shadow-2xs' : 'border-slate-200 hover:border-slate-300 bg-white'">
-                            <input type="radio" name="status" value="Selesai" x-model="statusSelect" class="sr-only">
-                            <div class="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold shrink-0 mb-1"
-                                 :class="statusSelect === 'Selesai' ? 'bg-emerald-500' : 'bg-slate-200 text-slate-400'">
-                                <i class="fa-solid fa-check text-[11px]"></i>
-                            </div>
-                            <span class="block font-black text-slate-900 text-xs">Selesai</span>
+                        <label class="px-4 py-2 rounded-full text-sm font-medium cursor-pointer transition" :class="statusSelect === 'Selesai' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'">
+                            <input type="radio" name="status" value="Selesai" x-model="statusSelect" class="sr-only"> Selesai
                         </label>
-
-                        <!-- 3. DITOLAK -->
-                        <label class="flex flex-col items-center justify-center p-2 sm:p-2.5 rounded-xl border-2 cursor-pointer transition text-center"
-                               :class="statusSelect === 'Ditolak' ? 'border-rose-500 bg-rose-50/50 shadow-2xs' : 'border-slate-200 hover:border-slate-300 bg-white'">
-                            <input type="radio" name="status" value="Ditolak" x-model="statusSelect" class="sr-only">
-                            <div class="w-6 h-6 rounded-md flex items-center justify-center text-white text-xs font-bold shrink-0 mb-1"
-                                 :class="statusSelect === 'Ditolak' ? 'bg-rose-500' : 'bg-slate-200 text-slate-400'">
-                                <i class="fa-solid fa-xmark text-[11px]"></i>
-                            </div>
-                            <span class="block font-black text-slate-900 text-xs">Ditolak</span>
+                        <label class="px-4 py-2 rounded-full text-sm font-medium cursor-pointer transition" :class="statusSelect === 'Ditolak' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'">
+                            <input type="radio" name="status" value="Ditolak" x-model="statusSelect" class="sr-only"> Ditolak
                         </label>
                     </div>
                 </div>
 
-                <!-- SUB-FORM: JIKA STATUS DIPROSES -->
-                <div x-show="statusSelect === 'Diproses'" x-cloak class="p-4 bg-orange-50/80 border border-orange-200 rounded-md space-y-2.5">
-                    <label class="block font-black text-orange-950 text-xs">
-                        Catatan untuk Pemohon <span class="text-rose-500">*</span>
-                    </label>
-                    <textarea name="catatan_diproses" rows="3" 
-                              :required="statusSelect === 'Diproses'"
-                              placeholder="Berikan catatan kepada pemohon apabila informasi yang diminta membutuhkan waktu untuk disiapkan. Contoh: Dokumen sedang dikoordinasikan dengan bagian terkait..."
-                              class="w-full p-3 bg-white border border-orange-300 rounded text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400">{{ old('catatan_diproses', $permohonan->catatan_diproses) }}</textarea>
-                    
+                {{-- Diproses --}}
+                <div x-show="statusSelect === 'Diproses'" x-cloak class="space-y-1.5">
+                    <label class="text-sm font-medium text-slate-700">Catatan pemrosesan <span class="text-rose-500">*</span></label>
+                    <textarea name="catatan_diproses" rows="9" :required="statusSelect === 'Diproses'" placeholder="Tulis catatan pemrosesan..."
+                              class="w-full rounded-lg border border-slate-200 px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-300 placeholder:text-slate-400">{{ old('catatan_diproses', $permohonan->catatan_diproses) }}</textarea>
                     <x-admin.input-error name="catatan_diproses" />
-
-                    <p class="text-[10px] text-amber-800 font-medium">Catatan ini akan otomatis dikirimkan ke email pemohon.</p>
+                    <p class="text-xs text-slate-400">Terkirim otomatis ke email pemohon.</p>
                 </div>
 
-                <!-- SUB-FORM: JIKA STATUS SELESAI -->
-                <div x-show="statusSelect === 'Selesai'" x-cloak class="p-4 bg-emerald-50/80 border border-emerald-200 rounded-md space-y-3.5">
+                {{-- Selesai --}}
+                <div x-show="statusSelect === 'Selesai'" x-cloak class="space-y-3">
                     <div class="space-y-1.5">
-                        <label class="block font-black text-emerald-950 text-xs">
-                            Catatan untuk Pemohon <span class="text-rose-500">*</span>
-                        </label>
+                        <label class="text-sm font-medium text-slate-700">Catatan penyelesaian <span class="text-rose-500">*</span></label>
                         @php
                             $defaultCatatanSelesai = $permohonan->catatan_selesai;
                             if (!$defaultCatatanSelesai) {
                                 $cara = strtolower($permohonan->cara_memperoleh_informasi ?? '');
-                                if (str_contains($cara, 'email')) {
-                                    $defaultCatatanSelesai = 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam) untuk mengakses informasi yang diminta.';
-                                } else {
-                                    $defaultCatatanSelesai = 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan informasi.';
-                                }
+                                $defaultCatatanSelesai = str_contains($cara, 'email')
+                                    ? 'Permohonan telah dipenuhi. Silakan cek email Anda (termasuk Spam).'
+                                    : 'Permohonan telah dipenuhi. Silakan ambil di Dekanat FMIPA Unila jam kerja.';
                             }
                         @endphp
-                        <textarea name="catatan_selesai" rows="3"
-                                  :required="statusSelect === 'Selesai'"
-                                  placeholder="Tuliskan catatan penyelesaian permohonan..."
-                                  class="w-full p-3 bg-white border border-emerald-300 rounded text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-400">{{ old('catatan_selesai', $defaultCatatanSelesai) }}</textarea>
-                        
+                        <textarea name="catatan_selesai" rows="9" :required="statusSelect === 'Selesai'"
+                                  class="w-full rounded-lg border border-slate-200 px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-300">{{ old('catatan_selesai', $defaultCatatanSelesai) }}</textarea>
                         <x-admin.input-error name="catatan_selesai" />
                     </div>
-
-                    <!-- Jenis Dokumen Jawaban -->
-                    <div class="pt-2 border-t border-emerald-200 space-y-2">
-                        <label class="block font-black text-emerald-950 text-xs">Jenis Jawaban Permohonan <span class="text-rose-500">*</span></label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <label class="flex items-center justify-center gap-2 p-2 bg-white rounded border border-emerald-300 cursor-pointer text-xs font-bold text-emerald-900">
-                                <input type="radio" value="file" x-model="tipeJawaban" class="accent-emerald-600">
-                                <span>File</span>
+                    <div class="space-y-2">
+                        <p class="text-sm font-medium text-slate-700">Jawaban <span class="text-rose-500">*</span></p>
+                        <div class="flex gap-2">
+                            <label class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-xs font-medium cursor-pointer" :class="tipeJawaban === 'file' ? 'border-sky-500 bg-sky-500 text-white' : 'border-slate-200 bg-white text-slate-600'">
+                                <input type="radio" value="file" x-model="tipeJawaban" class="sr-only"> File
                             </label>
-                            <label class="flex items-center justify-center gap-2 p-2 bg-white rounded border border-emerald-300 cursor-pointer text-xs font-bold text-emerald-900">
-                                <input type="radio" value="link" x-model="tipeJawaban" class="accent-emerald-600">
-                                <span>Tautan</span>
+                            <label class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-xs font-medium cursor-pointer" :class="tipeJawaban === 'link' ? 'border-sky-500 bg-sky-500 text-white' : 'border-slate-200 bg-white text-slate-600'">
+                                <input type="radio" value="link" x-model="tipeJawaban" class="sr-only"> Tautan
                             </label>
                         </div>
-
-                        <div x-show="tipeJawaban === 'file'" class="pt-1.5 space-y-1">
-                            <input type="file" name="file_jawaban" accept=".pdf,.docx,.xlsx,.zip,.rar"
-                                   :required="statusSelect === 'Selesai' && tipeJawaban === 'file' && !hasFileJawaban"
-                                   class="w-full p-2 bg-white border border-emerald-300 rounded text-xs text-slate-700 file:mr-2 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-[11px] file:font-black file:bg-emerald-600 file:text-white">
-                            
-                            <x-admin.input-error name="file_jawaban" />
-
-                            <p class="text-[10px] text-emerald-800 font-medium">PDF, DOCX, ZIP (Maks. 5MB)</p>
+                        <div x-show="tipeJawaban === 'file'" x-data="{
+                            fileName: '',
+                            fileSize: '',
+                            fileUrl: '{{ $permohonan->file_jawaban ? asset('storage/' . $permohonan->file_jawaban) : '' }}',
+                            init() { if (this.fileUrl) { let name = '{{ $permohonan->file_jawaban ? basename($permohonan->file_jawaban) : '' }}'; this.fileName = name; } },
+                            handle(e) {
+                                const f = e.target.files[0];
+                                if (!f) return;
+                                this.fileName = f.name;
+                                this.fileSize = (f.size / 1024).toFixed(1) + ' KB';
+                                if (f.size > 1024*1024) this.fileSize = (f.size / (1024*1024)).toFixed(1) + ' MB';
+                                this.fileUrl = URL.createObjectURL(f);
+                            },
+                            clear() { document.getElementById('admin_jawaban_file').value = ''; this.fileName = ''; this.fileSize = ''; this.fileUrl = ''; }
+                        }">
+                            <input type="file" id="admin_jawaban_file" name="file_jawaban" accept=".pdf,.docx,.xlsx,.zip,.rar" @change="handle($event)" class="sr-only">
+                            <div @click="document.getElementById('admin_jawaban_file').click()" class="flex items-center gap-2 w-full rounded-lg border border-slate-200 bg-white p-2 pr-2 cursor-pointer transition hover:border-slate-300">
+                                <span class="shrink-0 inline-flex items-center justify-center rounded-lg bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700">Pilih File</span>
+                                <span class="flex-1 min-w-0 truncate text-sm" :class="fileName ? 'text-slate-800' : 'text-slate-400'" x-text="fileName || 'Belum ada berkas'"></span>
+                                <template x-if="fileName">
+                                    <button type="button" @click.stop="clear()" class="shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="fa-regular fa-trash-can text-sm"></i></button>
+                                </template>
+                            </div>
+                            <template x-if="fileName">
+                                <div class="mt-2 flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2">
+                                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600"><i class="fa-regular fa-file text-xs"></i></span>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="truncate text-xs font-semibold text-slate-800" x-text="fileName"></p>
+                                        <p class="text-[10px] text-slate-500" x-text="fileSize"></p>
+                                    </div>
+                                    <a :href="fileUrl" target="_blank" class="shrink-0 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 transition">Lihat</a>
+                                </div>
+                            </template>
                         </div>
-
-                        <div x-show="tipeJawaban === 'link'" class="pt-1.5 space-y-1">
-                            <input type="url" name="link_jawaban" placeholder="https://fmipa.unila.ac.id/dokumen/..." 
-                                   value="{{ old('link_jawaban', $permohonan->link_jawaban) }}"
-                                   :required="statusSelect === 'Selesai' && tipeJawaban === 'link'"
-                                   class="w-full p-2.5 bg-white border border-emerald-300 rounded text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-400">
-                            
+                        <div x-show="tipeJawaban === 'link'">
+                            <input type="url" name="link_jawaban" placeholder="https://..." value="{{ old('link_jawaban', $permohonan->link_jawaban) }}" :required="statusSelect === 'Selesai' && tipeJawaban === 'link'"
+                                   class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200">
                             <x-admin.input-error name="link_jawaban" />
                         </div>
                     </div>
                 </div>
 
-                <!-- SUB-FORM: JIKA STATUS DITOLAK -->
-                <div x-show="statusSelect === 'Ditolak'" x-cloak class="p-4 bg-rose-50/80 border border-rose-200 rounded-md space-y-2.5">
-                    <label class="block font-black text-rose-950 text-xs">
-                        Alasan Penolakan <span class="text-rose-600">*</span>
-                    </label>
-                    <textarea name="alasan_ditolak" rows="3" 
-                              :required="statusSelect === 'Ditolak'"
-                              placeholder="Berikan dasar/alasan penolakan permohonan informasi ini..."
-                              class="w-full p-3 bg-white border border-rose-300 rounded text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-400">{{ old('alasan_ditolak', $permohonan->alasan_ditolak) }}</textarea>
-                    
+                {{-- Ditolak --}}
+                <div x-show="statusSelect === 'Ditolak'" x-cloak class="space-y-1.5">
+                    <label class="text-sm font-medium text-slate-700">Alasan penolakan <span class="text-rose-500">*</span></label>
+                    <textarea name="alasan_ditolak" rows="9" :required="statusSelect === 'Ditolak'" placeholder="Tulis alasan penolakan..."
+                              class="w-full rounded-lg border border-slate-200 px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200">{{ old('alasan_ditolak', $permohonan->alasan_ditolak) }}</textarea>
                     <x-admin.input-error name="alasan_ditolak" />
-
-                    <p class="text-[10px] text-rose-800 font-medium">Alasan ini akan disampaikan secara transparan kepada pemohon.</p>
                 </div>
 
-                <!-- Tombol Trigger Konfirmasi -->
-                <div class="pt-2">
-                    <button type="button" 
-                            @click="triggerConfirm()"
-                            class="w-full py-3.5 px-4 font-black text-xs sm:text-sm rounded-md transition flex items-center justify-center gap-2 shadow-md cursor-pointer text-white"
-                            :class="{
-                                'bg-orange-500 hover:bg-orange-600': statusSelect === 'Diproses',
-                                'bg-emerald-600 hover:bg-emerald-700': statusSelect === 'Selesai',
-                                'bg-rose-600 hover:bg-rose-700': statusSelect === 'Ditolak'
-                            }">
-                        <i class="fa-solid fa-paper-plane text-xs"></i>
-                        <span x-text="statusSelect === 'Selesai' ? 'Setujui & Selesaikan Permohonan' : (statusSelect === 'Ditolak' ? 'Tolak Permohonan' : 'Simpan & Perbarui Status')"></span>
-                    </button>
+                <div class="pt-1">
+                    <button type="button" @click="triggerConfirm()" class="w-full rounded-lg bg-sky-500 hover:bg-sky-600 text-white text-sm font-medium py-2.5 transition">Perbarui Status</button>
+                    <p class="text-[11px] text-center text-slate-400 mt-2">Diperbarui {{ $permohonan->updated_at ? $permohonan->updated_at->diffForHumans() : '-' }}</p>
                 </div>
 
-                <!-- Modal Konfirmasi Perubahan Status (Teleported ke body) -->
                 @include('components.admin.permohonan.detail.modal-konfirmasi', ['noTiket' => $permohonan->no_tiket])
-        </form>
+            </form>
         @endif
-
     </div>
 </div>
 
-<!-- BOX SENGKETA KEBERATAN (Tampil di bawah Status & Aksi Pemrosesan) -->
 @if($permohonan->keberatan)
-    <div class="bg-gradient-to-br from-amber-500 to-amber-600 rounded-md shadow-2xs p-5 text-white space-y-3.5 border border-amber-600">
-        <div class="flex items-start gap-3">
-            <div class="w-10 h-10 rounded bg-white/20 flex items-center justify-center text-white shrink-0 text-lg">
-                <i class="fa-solid fa-scale-balanced"></i>
-            </div>
-            <div>
-                <h4 class="font-black text-sm leading-tight text-white">Dalam Pengajuan Keberatan</h4>
-                <p class="text-[11px] text-amber-100 font-semibold mt-1 leading-relaxed">
-                    Pemohon telah mengajukan keberatan atas permohonan ini dengan nomor tiket <span class="font-bold underline text-white">{{ $permohonan->keberatan->no_tiket }}</span>.
-                </p>
-            </div>
+    <div class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-center justify-between gap-3">
+        <div>
+            <p class="text-xs font-semibold text-amber-900">Ada keberatan</p>
+            <p class="text-xs font-mono text-amber-800">{{ $permohonan->keberatan->no_tiket }}</p>
         </div>
-
-        <div class="pt-2 border-t border-amber-400/40">
-            <a href="{{ route('admin.keberatan.show', $permohonan->keberatan->id) }}" 
-               class="w-full py-2.5 px-4 bg-white hover:bg-amber-50 text-amber-900 font-black text-xs rounded transition flex items-center justify-center gap-2 shadow-sm cursor-pointer">
-                <span>Buka Pengajuan Keberatan</span>
-                <i class="fa-solid fa-arrow-right text-[11px]"></i>
-            </a>
-        </div>
+        <a href="{{ route('admin.keberatan.show', $permohonan->keberatan->id) }}" class="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white border border-amber-200 text-amber-800 text-xs font-medium hover:bg-amber-100 transition">Buka <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
     </div>
 @endif

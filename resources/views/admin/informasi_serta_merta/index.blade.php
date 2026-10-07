@@ -19,14 +19,7 @@
             <a id="btn-export-serta-merta-pdf" href="{{ route('admin.export.informasi.pdf', ['kategori' => 'Informasi Serta-Merta']) }}" target="_blank"
                class="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition-all shadow-2xs hover:shadow-xs cursor-pointer">
                 <i class="fa-solid fa-file-pdf text-rose-500 text-sm"></i>
-                <span>Export PDF</span>
-            </a>
-
-            <!-- Tombol Export Excel Informasi Serta-Merta Sesuai Sort & Search -->
-            <a id="btn-export-serta-merta-excel" href="{{ route('admin.export.informasi.excel', ['kategori' => 'Informasi Serta-Merta']) }}" target="_blank"
-               class="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-slate-50 text-emerald-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition-all shadow-2xs hover:shadow-xs cursor-pointer">
-                <i class="fa-solid fa-file-excel text-emerald-600 text-sm"></i>
-                <span>Export Excel</span>
+                <span>Export</span>
             </a>
 
             <!-- Tombol Tambah Utama -->
@@ -56,7 +49,7 @@
 
             <!-- Dropdown Show Entries -->
             <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
-                <span>Show</span>
+                <span>Tampilkan</span>
                 <select id="select-per-page-serta-merta" onchange="changePerPageSertaMerta(this.value)" 
                         class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
                     <option value="10">10</option>
@@ -64,14 +57,14 @@
                     <option value="50">50</option>
                     <option value="100">100</option>
                 </select>
-                <span>entries</span>
+                <span>baris</span>
             </div>
         </div>
 
         <!-- Sisi Kanan: Search Bar Pencarian Seluruh Isi Tabel (Format DataTables: Search: [_____ x]) -->
         <form id="form-search-serta-merta" onsubmit="event.preventDefault();" class="flex items-center gap-2">
             <label for="input-search-serta-merta" class="text-sm font-semibold text-slate-800 select-none cursor-pointer">
-                Search:
+                Cari:
             </label>
             <div class="relative">
                 <input type="text" 
@@ -217,7 +210,7 @@
         <!-- Footer Client-side Pagination DataTables Style -->
         <div class="p-4 sm:p-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div id="table-serta-merta-info" class="text-xs md:text-sm text-slate-800 font-medium">
-                Menampilkan 0 sampai 0 dari 0 entri
+                Menampilkan 0–0 dari 0 informasi
             </div>
             <div id="table-serta-merta-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
             </div>
@@ -301,7 +294,7 @@
                         <label class="block text-xs md:text-sm font-bold text-slate-800">Upload File <span id="fileRequiredStarSertaMerta" class="text-rose-500">*</span></label>
 
                         <div class="relative flex items-center w-full min-h-[38px] p-1 bg-slate-50 border border-slate-200 rounded-xl transition focus-within:border-sky-500 focus-within:bg-white">
-                            <input type="file" id="inputFileSertaMerta" name="file_informasi" accept=".pdf,.doc,.docx,.xls,.xlsx" class="sr-only" onchange="handleFileChangeSertaMerta(this)">
+                            <input type="file" id="inputFileSertaMerta" name="file_informasi" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp" class="sr-only" onchange="handleFileChangeSertaMerta(this)">
 
                             <button type="button" onclick="document.getElementById('inputFileSertaMerta').click()"
                                     class="shrink-0 px-3 py-1 bg-sky-500 hover:bg-sky-600 active:bg-sky-700 text-white text-xs font-black rounded-lg transition shadow-2xs cursor-pointer">
@@ -317,7 +310,7 @@
                             </div>
                         </div>
 
-                        <p id="fileHelpTextSertaMerta" class="text-[10px] text-slate-400 font-medium">Format: PDF, DOC, DOCX, XLS, XLSX (Maks 5MB)</p>
+                        <p id="fileHelpTextSertaMerta" class="text-[10px] text-slate-400 font-medium">Format: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)</p>
                     </div>
 
                     <!-- Tautan Link Serta Merta -->
@@ -343,8 +336,6 @@
     </div>
 </div>
 
-<!-- Modal Konfirmasi Hapus Global -->
-<x-modals.delete />
 @endsection
 
 @push('scripts')
@@ -546,7 +537,7 @@
                 fileDisplayName.classList.add('text-slate-500');
             }
             if (fileLink) fileLink.classList.add('hidden');
-            if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX (Maks 5MB)';
+            if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)';
         } else {
             document.querySelector('input[name="format_serta_merta"][value="file"]').checked = true;
             toggleFormatSertaMerta('file');
@@ -567,7 +558,7 @@
                     fileDisplayName.classList.remove('hidden', 'text-slate-800', 'font-semibold');
                     fileDisplayName.classList.add('text-slate-500');
                 }
-                if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX (Maks 5MB)';
+                if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP (Maks 5MB)';
             }
         }
 
@@ -677,11 +668,10 @@
 
     function updateSertaMertaExportLinks() {
         const btnPdf = document.getElementById('btn-export-serta-merta-pdf');
-        const btnExcel = document.getElementById('btn-export-serta-merta-excel');
         const searchInput = document.getElementById('input-search-serta-merta');
         const query = searchInput ? searchInput.value.trim() : '';
 
-        [btnPdf, btnExcel].forEach(btn => {
+        [btnPdf].forEach(btn => {
             if (!btn) return;
             try {
                 const targetUrl = new URL(btn.href, window.location.origin);
@@ -746,8 +736,8 @@
         const infoEl = document.getElementById('table-serta-merta-info');
         if (infoEl) {
             infoEl.innerText = totalFiltered === 0 
-                ? 'Menampilkan 0 sampai 0 dari 0 entri'
-                : `Menampilkan ${startIdx + 1} sampai ${endIdx} dari ${totalFiltered} entri`;
+                ? 'Menampilkan 0–0 dari 0 informasi'
+                : `Menampilkan ${startIdx + 1}–${endIdx} dari ${totalFiltered} informasi`;
         }
 
         // Pagination buttons

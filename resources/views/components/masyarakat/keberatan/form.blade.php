@@ -1,188 +1,226 @@
-<!-- WIDE LAYOUT SINGLE FORM CONTAINER (/keberatan) -->
-<main class="w-full bg-white border border-slate-200/90 rounded-3xl shadow-xl overflow-hidden">
-
-    <form action="{{ route('layanan.keberatan.store') }}" method="POST" enctype="multipart/form-data"
-          @submit="if(!isValidForm()) { $event.preventDefault(); scrollToFirstError(); }">
-        @csrf
-
-        <!-- SECTION HEADER UTAMA (Warm Amber / Orange Header) -->
-        <div class="bg-gradient-to-r from-amber-500 via-amber-500 to-amber-600 text-white p-6 md:p-8 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-white/20 border border-white/30 rounded-2xl flex items-center justify-center text-2xl shrink-0 text-white shadow-inner">
-                    <i class="fa-solid fa-file-circle-exclamation"></i>
-                </div>
-                <div>
-                    <h2 class="text-xl md:text-2xl font-black text-white tracking-tight">Formulir Pengajuan Keberatan</h2>
-                    <p class="text-xs md:text-sm text-amber-100 font-medium mt-0.5">Lengkapi data berikut untuk mengajukan keberatan informasi publik.</p>
-                </div>
+<div class="w-full">
+    <!-- Loading Splash Overlay -->
+    <div x-show="isLoading" 
+         class="fixed inset-0 z-[999999] flex items-center justify-center bg-slate-900/70 backdrop-blur-sm"
+         x-cloak>
+        <div class="flex flex-col items-center justify-center gap-4">
+            <!-- Spinner -->
+            <div class="relative w-16 h-16">
+                <div class="absolute inset-0 rounded-full border-4 border-slate-300/30"></div>
+                <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-white border-r-white animate-spin"></div>
+            </div>
+            <!-- Text -->
+            <div class="text-center">
+                <p class="text-lg font-bold text-white mb-1">Memproses Pengajuan Keberatan</p>
+                <p class="text-sm text-slate-200">Mohon tunggu sebentar...</p>
             </div>
         </div>
+    </div>
 
-        <!-- Hidden Inputs Data Pemohon -->
-        <input type="hidden" name="permohonan_id" :value="permohonan_id">
-        <input type="hidden" name="kategori_pemohon" :value="selectedKategori || 'Perorangan'">
-        <input type="hidden" name="nama_organisasi_lembaga" :value="nama_organisasi_lembaga">
-        <input type="hidden" name="nik" :value="nik || '1234567890123456'">
-        <input type="hidden" name="no_hp" :value="no_hp || '-'">
-        <input type="hidden" name="alamat" :value="alamat || '-'">
-        <input type="hidden" name="pekerjaan" :value="pekerjaan || 'Lainnya'">
+    <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(260px,0.95fr)]">
+        <form action="{{ route('layanan.keberatan.store') }}" method="POST" enctype="multipart/form-data" novalidate @submit="submitForm($event)" class="space-y-4">
+            @csrf
 
-        <div class="p-6 md:p-10 space-y-8">
-
-            <!-- LAYOUT 2 KOLOM PARALEL UNTUK MENGHEMAT VERTIKAL SCROLLING -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-
-                <!-- KOLOM KIRI: TIKET ASAL & ALASAN KEBERATAN -->
-                <div class="space-y-5">
-
-                    <!-- Pilihan Tiket Permohonan Asal -->
-                    <div class="space-y-2 relative" @click.away="dropdownOpen = false">
-                        <div class="flex items-center justify-between">
-                            <label class="block text-xs font-black text-slate-700 tracking-wide uppercase">
-                                Nomor Tiket Permohonan Asal <span class="text-rose-500">*</span>
-                            </label>
-                        </div>
-
-                        <div class="relative">
-                            <input type="hidden" name="nomor_tracking_asal" :value="nomor_tracking_asal" required>
-
-                            <!-- Tombol Trigger Dropdown Murni (Tanpa Input Teks / Autofill Browser) -->
-                            <button type="button"
-                                    @click="dropdownOpen = !dropdownOpen"
-                                    class="w-full p-3.5 text-left text-sm bg-slate-50/50 border border-slate-200 hover:bg-slate-100/60 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 focus:outline-none transition rounded-2xl flex items-center justify-between gap-2 cursor-pointer"
-                                    :class="submitted && !nomor_tracking_asal.trim() ? 'border-rose-500 ring-2 ring-rose-100' : ''">
-                                <span class="font-mono font-bold"
-                                      :class="nomor_tracking_asal ? 'text-slate-800 text-sm md:text-base' : 'text-slate-400 font-sans font-medium text-xs md:text-sm'"
-                                      x-text="nomor_tracking_asal ? ('#' + nomor_tracking_asal) : '-- Pilih Tiket Permohonan Asal --'"></span>
-                                <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0" :class="dropdownOpen ? 'rotate-180' : ''"></i>
-                            </button>
-
-                            <!-- Dropdown List Tiket Permohonan User -->
-                            <div x-show="dropdownOpen" x-transition
-                                 class="absolute z-30 left-0 right-0 mt-1.5 bg-white border border-slate-200 shadow-xl max-h-72 overflow-y-auto rounded-2xl divide-y divide-slate-100">
-                                <template x-if="permohonanList.length === 0">
-                                    <div class="p-5 text-center text-xs sm:text-sm text-slate-400 italic">
-                                        Belum ada permohonan informasi yang memenuhi syarat untuk diajukan keberatan.
-                                    </div>
-                                </template>
-                                <template x-for="item in permohonanList" :key="item.id">
-                                     <div @click="selectPermohonan(item)"
-                                          class="p-4 hover:bg-amber-50/60 cursor-pointer transition flex items-center justify-between gap-3"
-                                          :class="nomor_tracking_asal === item.no_tiket ? 'bg-amber-50/80' : ''">
-                                         <div class="flex-1 min-w-0">
-                                             <div class="flex items-center gap-2 flex-wrap">
-                                                 <span class="font-extrabold text-slate-900 font-mono text-sm sm:text-base" x-text="'#' + item.no_tiket"></span>
-                                                 <span class="text-[11px] px-2.5 py-0.5 rounded-full font-black uppercase tracking-wide border"
-                                                       :class="{
-                                                           'bg-slate-100 text-slate-700 border-slate-200': item.status === 'Diajukan' || item.status === 'Menunggu',
-                                                           'bg-amber-100 text-amber-900 border-amber-300': item.status === 'Diproses' || item.status === 'Proses',
-                                                           'bg-emerald-100 text-emerald-900 border-emerald-300': item.status === 'Selesai' || item.status === 'Terima',
-                                                           'bg-rose-100 text-rose-900 border-rose-300': item.status === 'Ditolak'
-                                                       }"
-                                                       x-text="item.status"></span>
-                                             </div>
-                                             <span class="block text-xs sm:text-sm text-slate-600 line-clamp-2 font-medium mt-1 leading-relaxed" x-text="item.informasi_yang_diminta"></span>
-                                         </div>
-                                         <span class="text-xs sm:text-sm bg-slate-100 text-slate-700 px-3 py-1 rounded-full font-extrabold shrink-0 ml-2" x-text="item.tgl_diajukan"></span>
-                                     </div>
-                                 </template>
-                            </div>
-                        </div>
-                        <p x-show="submitted && !nomor_tracking_asal.trim()" x-cloak class="text-xs font-bold text-rose-500 mt-1 flex items-center gap-1">
-                            <i class="fa-solid fa-circle-exclamation text-xs"></i> Silakan pilih nomor tiket permohonan terlebih dahulu.
-                        </p>
-                    </div>
-
-                    <!-- Detail Informasi Yang Diminta Permohonan Asal -->
-                    <div x-show="rincian_informasi_asal" x-transition class="space-y-1.5 pt-1">
-                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase">
-                            Permohonan Asal yang Akan Diajukan Keberatan
-                        </label>
-                        <p class="text-sm text-slate-800 font-medium leading-relaxed"
-                           x-text="rincian_informasi_asal"></p>
-                    </div>
-
-                    <!-- Alasan Pengajuan Keberatan -->
+            <!-- CARD 1: DATA PERMOHONAN ASAL -->
+            <section class="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-7">
+                <div class="mb-6 flex items-center gap-3.5">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 text-lg">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </span>
                     <div>
-                        <label class="block text-xs font-black text-slate-700 tracking-wide uppercase mb-2">
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">1. Data Permohonan Asal</h2>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Masukkan nomor tiket permohonan yang ingin diajukan keberatan.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <!-- Nomor Tiket Permohonan -->
+                    <div class="sm:col-span-2" data-field="no_tiket_permohonan">
+                        <label for="no_tiket_permohonan" class="mb-1.5 block text-xs sm:text-sm font-semibold text-slate-800">
+                            Nomor Tiket Permohonan <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                <i class="fa-regular fa-clipboard text-sm"></i>
+                            </span>
+                            <input id="no_tiket_permohonan" type="text" name="no_tiket_permohonan" value="{{ old('no_tiket_permohonan') }}" x-model="no_tiket_permohonan" autocomplete="off"
+                                   placeholder="Contoh: PPID-20261006-A3B5"
+                                   :class="hasError('no_tiket_permohonan') ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-50'"
+                                   class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">
+                        </div>
+                        <p x-show="hasError('no_tiket_permohonan')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
+                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('no_tiket_permohonan')"></span>
+                        </p>
+                        <p x-show="!hasError('no_tiket_permohonan')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Nomor tiket diberikan saat Anda mengajukan permohonan informasi.</p>
+                        @error('no_tiket_permohonan') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Email Pemohon -->
+                    <div class="sm:col-span-2" data-field="email">
+                        <label for="email_pemohon" class="mb-1.5 block text-xs sm:text-sm font-semibold text-slate-800">
+                            Email yang Digunakan Saat Pengajuan <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                <i class="fa-regular fa-envelope text-sm"></i>
+                            </span>
+                            <input id="email_pemohon" type="email" name="email" value="{{ old('email') }}" x-model="email" autocomplete="email"
+                                   placeholder="nama@contoh.ac.id"
+                                   :class="hasError('email') ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-50'"
+                                   class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">
+                        </div>
+                        <p x-show="hasError('email')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
+                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('email')"></span>
+                        </p>
+                        <p x-show="!hasError('email')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Email harus sama dengan saat mengajukan permohonan untuk verifikasi.</p>
+                        @error('email') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+            </section>
+
+            <!-- CARD 2: ALASAN & KRONOLOGI KEBERATAN -->
+            <section class="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-7">
+                <div class="mb-6 flex items-center gap-3.5">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 text-lg">
+                        <i class="fa-regular fa-comment"></i>
+                    </span>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">2. Alasan & Kronologi</h2>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Pilih alasan pengajuan keberatan dan jelaskan kronologinya.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- Alasan Keberatan -->
+                    <div data-field="alasan_keberatan">
+                        <label for="alasan_keberatan" class="mb-1.5 block text-xs sm:text-sm font-semibold text-slate-800">
                             Alasan Pengajuan Keberatan <span class="text-rose-500">*</span>
                         </label>
-                        <select name="alasan_keberatan" x-model="alasan_keberatan" required
-                                class="w-full p-3.5 text-sm bg-slate-50/50 border border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 focus:bg-white focus:outline-none transition rounded-2xl text-slate-800 font-semibold cursor-pointer"
-                                :class="submitted && !alasan_keberatan ? 'border-rose-500 ring-2 ring-rose-100' : ''">
-                            <option value="">-- Pilih Alasan Pengajuan Keberatan --</option>
-                            <option value="Permohonan Informasi Ditolak">Permohonan Informasi Ditolak</option>
-                            <option value="Informasi Berkala Tidak Disediakan">Informasi Berkala Tidak Disediakan</option>
-                            <option value="Permohonan Informasi Tidak Ditanggapi">Permohonan Informasi Tidak Ditanggapi</option>
-                            <option value="Permohonan Informasi Ditanggapi Tidak Sebagaimana Yang Diminta">Permohonan Informasi Ditanggapi Tidak Sebagaimana Yang Diminta</option>
-                            <option value="Permohonan Informasi Tidak Dipenuhi">Permohonan Informasi Tidak Dipenuhi</option>
-                            <option value="Biaya Yang Dikenakan Tidak Wajar">Biaya Yang Dikenakan Tidak Wajar</option>
-                            <option value="Penyampaian Informasi Melebihi Waktu Yang Ditentukan">Penyampaian Informasi Melebihi Waktu Yang Ditentukan</option>
-                        </select>
-                        <p x-show="submitted && !alasan_keberatan" x-cloak class="text-xs font-bold text-rose-500 mt-1 flex items-center gap-1">
-                            <i class="fa-solid fa-circle-exclamation text-xs"></i> Alasan pengajuan keberatan wajib dipilih.
-                        </p>
-                    </div>
-
-                </div>
-
-                <!-- KOLOM KANAN: RINCIAN KRONOLOGI & BERKAS PENDUKUNG -->
-                <div class="space-y-5">
-
-                    <!-- Rincian Alasan & Kronologi Keberatan -->
-                    <div x-data="{ len: 0 }" x-init="len = kronologi_keberatan.length">
-                        <div class="flex items-center justify-between mb-2">
-                            <label class="block text-xs font-black text-slate-700 tracking-wide uppercase">
-                                Kronologi Pengajuan Keberatan <span class="text-rose-500">*</span>
-                            </label>
-                            <span class="text-[11px] font-bold text-slate-400" :class="kronologi_keberatan.length >= 1000 ? 'text-rose-500 font-extrabold' : ''">
-                                <span x-text="kronologi_keberatan.length">0</span>/1000 Karakter
+                        <div class="relative">
+                            <select id="alasan_keberatan" name="alasan_keberatan" x-model="alasan_keberatan" required
+                                    :class="hasError('alasan_keberatan') ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-50'"
+                                    class="w-full appearance-none rounded-xl border bg-white py-3 pl-10 pr-10 text-sm text-slate-800 transition focus:outline-none cursor-pointer">
+                                <option value="">-- Pilih Alasan Keberatan --</option>
+                                <option value="Permohonan Informasi Ditolak">Permohonan Informasi Ditolak</option>
+                                <option value="Informasi Berkala Tidak Disediakan">Informasi Berkala Tidak Disediakan</option>
+                                <option value="Permohonan Informasi Tidak Ditanggapi">Permohonan Informasi Tidak Ditanggapi</option>
+                                <option value="Permohonan Informasi Ditanggapi Tidak Sebagaimana Yang Diminta">Permohonan Informasi Ditanggapi Tidak Sebagaimana Yang Diminta</option>
+                                <option value="Permohonan Informasi Tidak Dipenuhi">Permohonan Informasi Tidak Dipenuhi</option>
+                                <option value="Biaya Yang Dikenakan Tidak Wajar">Biaya Yang Dikenakan Tidak Wajar</option>
+                                <option value="Penyampaian Informasi Melebihi Waktu Yang Ditentukan">Penyampaian Informasi Melebihi Waktu Yang Ditentukan</option>
+                            </select>
+                            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </span>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
                             </span>
                         </div>
-                        <textarea name="kronologi_keberatan" x-model="kronologi_keberatan" rows="5" required maxlength="1000"
-                                  class="w-full p-3.5 text-sm bg-slate-50/50 border border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 focus:bg-white focus:outline-none transition rounded-2xl font-semibold text-slate-800"
-                                  :class="submitted && !kronologi_keberatan.trim() ? 'border-rose-500 ring-2 ring-rose-100' : ''"
-                                  placeholder="Jelaskan rincian dan kronologi pengajuan keberatan atau tuntutan yang Anda ajukan sedetail mungkin agar mudah diproses."></textarea>
-                        <p x-show="submitted && !kronologi_keberatan.trim()" x-cloak class="text-xs font-bold text-rose-500 mt-1 flex items-center gap-1">
-                            <i class="fa-solid fa-circle-exclamation text-xs"></i> Rincian kronologi keberatan wajib diisi.
+                        <p x-show="hasError('alasan_keberatan')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
+                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('alasan_keberatan')"></span>
                         </p>
+                        @error('alasan_keberatan') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
                     </div>
 
-                    <!-- Dokumen Pendukung Keberatan -->
-                    <div>
-                        <label class="block text-xs font-black text-slate-700 tracking-wide uppercase mb-2">
-                            Dokumen Pendukung Keberatan <span class="text-slate-400 font-semibold uppercase">(Opsional)</span>
+                    <!-- Kronologi Keberatan -->
+                    <div data-field="kronologi_keberatan">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="kronologi_keberatan" class="block text-xs sm:text-sm font-semibold text-slate-800">
+                                Kronologi Pengajuan Keberatan <span class="text-rose-500">*</span>
+                            </label>
+                            <span class="text-[11px] font-semibold text-slate-400" :class="kronologi_keberatan.length >= 1000 ? 'text-rose-500' : ''" x-text="`${kronologi_keberatan.length}/1000`"></span>
+                        </div>
+                        <textarea id="kronologi_keberatan" name="kronologi_keberatan" x-model="kronologi_keberatan" rows="4" required maxlength="1000"
+                                  placeholder="Jelaskan rincian dan kronologi pengajuan keberatan Anda sedetail mungkin agar mudah diproses."
+                                  :class="hasError('kronologi_keberatan') ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-50'"
+                                  class="w-full rounded-xl border bg-white py-3 px-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none resize-none"></textarea>
+                        <p x-show="hasError('kronologi_keberatan')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
+                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('kronologi_keberatan')"></span>
+                        </p>
+                        @error('kronologi_keberatan') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Dokumen Pendukung -->
+                    <div data-field="pendukung_file">
+                        <label class="mb-1.5 block text-xs sm:text-sm font-semibold text-slate-800">
+                            Dokumen Pendukung <span class="text-slate-400 text-xs font-normal">(Opsional)</span>
                         </label>
-                        <input type="file" id="pendukung_file_input" name="pendukung_file" accept=".jpg,.jpeg,.png,.pdf,.docx"
-                               @change="handlePendukungFileChange($event)"
-                               class="w-full text-xs text-slate-600 font-semibold file:mr-3 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-extrabold file:bg-amber-500 file:text-white hover:file:bg-amber-600 file:cursor-pointer border border-slate-200 rounded-2xl bg-slate-50/50 p-1.5 focus:outline-none">
-                        <span class="block text-[10px] text-slate-400 mt-1 font-medium">Format: PDF, DOCX, JPG, PNG (Maksimal 5 MB)</span>
-                        <template x-if="pendukungErrorMsg">
-                            <p class="text-xs font-bold text-rose-500 mt-1 flex items-center gap-1" x-text="pendukungErrorMsg"></p>
+                        <input type="file" id="pendukung_file_input" name="pendukung_file" accept=".jpg,.jpeg,.png,.pdf,.docx,.doc"
+                               @change="handlePendukungFileChange($event)" class="sr-only">
+                        <div @click="document.getElementById('pendukung_file_input').click()"
+                             class="flex items-center gap-2 w-full rounded-xl border border-slate-200 bg-white p-2 pr-2 cursor-pointer transition hover:border-slate-300">
+                            <span class="shrink-0 inline-flex items-center justify-center rounded-full bg-amber-600 px-4 py-2 text-xs font-extrabold text-white">Pilih File</span>
+                            <span class="flex-1 min-w-0 truncate text-sm" :class="pendukungFileName ? 'text-slate-800' : 'text-slate-400'" x-text="pendukungFileName || 'Belum ada berkas dipilih'"></span>
+                            <template x-if="pendukungFileName">
+                                <button type="button" @click.stop="clearPendukungFile()" class="shrink-0 ml-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="fa-regular fa-trash-can text-sm"></i></button>
+                            </template>
+                        </div>
+                        <template x-if="pendukungFileName">
+                            <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5">
+                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600"><i class="fa-regular fa-file text-sm"></i></span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="truncate text-sm font-semibold text-slate-800" x-text="pendukungFileName"></p>
+                                    <p class="text-xs text-slate-500" x-text="pendukungFileSize"></p>
+                                </div>
+                                <a :href="pendukungFileUrl" target="_blank" class="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> Lihat</a>
+                            </div>
                         </template>
+                        <template x-if="pendukungErrorMsg">
+                            <p class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
+                                <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="pendukungErrorMsg"></span>
+                            </p>
+                        </template>
+                        <p x-show="!pendukungErrorMsg" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Format: PDF, DOCX, JPG, PNG (Maksimal 5 MB)</p>
                     </div>
-
                 </div>
+            </section>
 
-            </div>
-
-            <!-- BAGIAN PERNYATAAN & TOMBOL SUBMIT -->
-            <div class="pt-6 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <label class="flex items-center gap-3 cursor-pointer bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 w-fit">
-                    <input type="checkbox" x-model="disetujui" required class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 border-slate-300 shrink-0">
-                    <span class="text-xs text-slate-700 leading-relaxed font-extrabold">
-                        Saya menyatakan bahwa seluruh informasi yang diserahkan adalah benar dan sah serta dapat dipertanggungjawabkan.
-                    </span>
+            <!-- CARD 3: PERNYATAAN & SUBMIT -->
+            <section class="rounded-2xl border bg-amber-50/60 p-4 sm:p-5 transition"
+                     data-field="disetujui"
+                     :class="hasError('disetujui') ? 'border-rose-400 bg-rose-50/50 ring-2 ring-rose-100' : 'border-amber-100'">
+                <label class="flex items-start gap-3 text-xs sm:text-sm leading-relaxed text-slate-700 cursor-pointer">
+                    <input type="checkbox" name="disetujui" id="checkbox_disetujui" x-model="disetujui" class="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-amber-600 focus:ring-amber-500">
+                    <span>Saya menyatakan bahwa seluruh informasi yang diserahkan adalah benar dan sah serta dapat dipertanggungjawabkan sesuai dengan ketentuan hukum yang berlaku.</span>
                 </label>
+                <p x-show="hasError('disetujui')" x-cloak class="mt-2.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
+                </p>
+            </section>
 
-                <button type="submit" @click="submitted = true" :disabled="!disetujui"
-                        class="w-full sm:w-auto px-9 py-4 bg-amber-500 hover:bg-amber-600 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none text-white text-xs md:text-sm font-extrabold transition rounded-full flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 hover:shadow-xl cursor-pointer shrink-0">
-                    <i class="fa-solid fa-paper-plane text-xs"></i> Kirim Pengajuan Keberatan
+            <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center pt-2">
+                <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-amber-700 active:scale-[0.99] shadow-sm">
+                    <i class="fa-solid fa-paper-plane text-xs"></i> Kirim Keberatan
                 </button>
+                <p class="text-xs sm:text-sm text-slate-500">Keberatan akan diproses sesuai ketentuan UU KIP.</p>
             </div>
+        </form>
 
-        </div>
-
-    </form>
-
-</main>
+        <!-- TIPS ASIDE -->
+        <aside class="rounded-2xl border border-amber-100 bg-amber-50/50 p-5 sm:p-6 lg:sticky lg:top-24">
+            <div class="mb-3 flex items-center gap-2.5 text-amber-800">
+                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+                    <i class="fa-regular fa-lightbulb text-sm"></i>
+                </span>
+                <h2 class="text-sm font-bold text-slate-800">Ketentuan Keberatan</h2>
+            </div>
+            <p class="mb-4 text-xs sm:text-sm leading-relaxed text-slate-600">Keberatan dapat diajukan apabila permohonan informasi tidak ditanggapi sesuai ketentuan UU KIP.</p>
+            <ol class="space-y-3">
+                <li class="flex gap-2.5 text-xs sm:text-sm leading-relaxed text-slate-600">
+                    <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-200/70 text-[10px] font-bold text-amber-800">1</span>
+                    <span>Pastikan nomor tiket permohonan asal valid dan terdaftar.</span>
+                </li>
+                <li class="flex gap-2.5 text-xs sm:text-sm leading-relaxed text-slate-600">
+                    <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-200/70 text-[10px] font-bold text-amber-800">2</span>
+                    <span>Jelaskan kronologi keberatan secara rinci dan kronologis.</span>
+                </li>
+                <li class="flex gap-2.5 text-xs sm:text-sm leading-relaxed text-slate-600">
+                    <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-200/70 text-[10px] font-bold text-amber-800">3</span>
+                    <span>Lampirkan dokumen pendukung jika diperlukan.</span>
+                </li>
+            </ol>
+            <div class="mt-4 border-t border-amber-100 pt-3 text-xs sm:text-sm leading-relaxed text-slate-600">
+                <p><i class="fa-regular fa-clock mr-1.5 text-amber-600"></i>Keberatan akan ditanggapi maksimal 30 hari kerja sejak pengajuan sesuai UU No. 14 Tahun 2008.</p>
+            </div>
+        </aside>
+    </div>
+</div>

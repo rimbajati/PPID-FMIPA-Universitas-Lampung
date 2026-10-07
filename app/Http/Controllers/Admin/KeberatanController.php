@@ -137,40 +137,43 @@ class KeberatanController extends Controller
 
         $keberatan->update($updateData);
 
-        // Kirim Notifikasi Email Pembaruan Keberatan
-        $recipientEmail = $keberatan->permohonan->email ?? ($keberatan->user->email ?? null);
-        if ($recipientEmail) {
-            try {
-                if ($keberatan->status === 'Selesai') {
-                    $pesanAktif = $keberatan->catatan_selesai;
-                } elseif ($keberatan->status === 'Ditolak') {
-                    $pesanAktif = $keberatan->alasan_ditolak;
-                } else {
-                    $pesanAktif = $keberatan->catatan_diproses;
+        // Kirim Email Notifikasi HANYA untuk Status Final Keberatan (Selesai / Ditolak)
+        $statusFinalEmail = ['Selesai', 'Ditolak'];
+        if (in_array($keberatan->status, $statusFinalEmail)) {
+            $recipientEmail = $keberatan->permohonan->email ?? ($keberatan->user->email ?? null);
+            if ($recipientEmail) {
+                try {
+                    // Cek cara memperoleh informasi dari permohonan terkait
+                    $caraPeroleh = strtolower($keberatan->permohonan->cara_memperoleh_informasi ?? '');
+                    $isKirimEmail = str_contains($caraPeroleh, 'email');
+
+                    $fileJawabanEmail = $isKirimEmail ? $keberatan->file_jawaban : null;
+                    $linkJawabanEmail = $isKirimEmail ? $keberatan->link_jawaban : null;
+
+                    $emailData = [
+                        'nama'             => $keberatan->permohonan->nama_lengkap ?? ($keberatan->user->nama_lengkap ?? 'Pemohon'),
+                        'no_tiket'         => $keberatan->no_tiket,
+                        'alasan_keberatan' => $keberatan->alasan_keberatan ?? '-',
+                        'file_jawaban'     => $fileJawabanEmail,
+                        'link_jawaban'     => $linkJawabanEmail,
+                    ];
+
+                    if ($keberatan->status === 'Selesai') {
+                        $emailData['catatan_selesai'] = $keberatan->catatan_selesai;
+                        $template = 'emails.keberatan_jawaban_selesai';
+                        $subject  = 'Keberatan ' . $keberatan->no_tiket . ' Telah Dikabulkan — PPID FMIPA Universitas Lampung';
+                    } else {
+                        $emailData['alasan_ditolak'] = $keberatan->alasan_ditolak;
+                        $template = 'emails.keberatan_jawaban_ditolak';
+                        $subject  = 'Keberatan ' . $keberatan->no_tiket . ' Tidak Dikabulkan — PPID FMIPA Universitas Lampung';
+                    }
+
+                    \Illuminate\Support\Facades\Mail::send($template, ['keberatan' => $emailData], function($m) use ($recipientEmail, $subject) {
+                        $m->to($recipientEmail)->subject($subject);
+                    });
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Gagal mengirim email keberatan jawaban: ' . $e->getMessage());
                 }
-                
-                // Cek cara memperoleh informasi dari permohonan terkait
-                $caraPeroleh = strtolower($keberatan->permohonan->cara_memperoleh_informasi ?? '');
-                $isKirimEmail = str_contains($caraPeroleh, 'email');
-
-                // Jika bukan lewat email (misal: mengambil langsung), file/link jawaban tidak dikirimkan lewat email
-                $fileJawabanEmail = $isKirimEmail ? $keberatan->file_jawaban : null;
-                $linkJawabanEmail = $isKirimEmail ? $keberatan->link_jawaban : null;
-
-                $emailData = [
-                    'nama'          => $keberatan->permohonan->nama_lengkap ?? ($keberatan->user->nama_lengkap ?? 'Pemohon'),
-                    'no_tiket'      => $keberatan->no_tiket,
-                    'status'        => $keberatan->status,
-                    'pesan'         => $pesanAktif,
-                    'file_jawaban'  => $fileJawabanEmail,
-                    'link_jawaban'  => $linkJawabanEmail,
-                ];
-
-                \Illuminate\Support\Facades\Mail::send('emails.keberatan_status_berubah', ['keberatan' => $emailData], function($m) use ($recipientEmail, $keberatan) {
-                    $m->to($recipientEmail)->subject('Pembaruan Status Pengajuan Keberatan ' . $keberatan->no_tiket . ' - PPID FMIPA Unila');
-                });
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Gagal mengirim email keberatan status: ' . $e->getMessage());
             }
         }
 

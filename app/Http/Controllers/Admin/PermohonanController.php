@@ -14,14 +14,7 @@ class PermohonanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Permohonan::query();
-
-        // Pengurutan Waktu Pengajuan (Terbaru / Terlama)
-        if ($request->input('urutan') === 'terlama') {
-            $query->oldest();
-        } else {
-            $query->latest(); // Default: Terbaru
-        }
+        $query = Permohonan::query()->latest();
 
         // Filter pencarian berdasarkan No Tiket, Nama Pemohon, NIK, Email, atau Detail Informasi
         if ($request->filled('search')) {
@@ -160,42 +153,45 @@ class PermohonanController extends Controller
             'link_jawaban'            => $linkInput ?: $permohonan->link_jawaban,
         ]);
 
-        // Kirim Email Notifikasi Pembaruan Status ke Email Pemohon
-        $recipientEmail = $permohonan->email ?? ($permohonan->user->email ?? null);
-        if ($recipientEmail) {
-            try {
-                if ($permohonan->status === 'Selesai') {
-                    $pesanAktif = $permohonan->catatan_selesai;
-                } elseif ($permohonan->status === 'Ditolak') {
-                    $pesanAktif = $permohonan->alasan_ditolak;
-                } else {
-                    $pesanAktif = $permohonan->catatan_diproses;
+        // Kirim Email Notifikasi HANYA untuk Status Final (Selesai / Ditolak)
+        $statusFinalEmail = ['Selesai', 'Ditolak'];
+        if (in_array($permohonan->status, $statusFinalEmail)) {
+            $recipientEmail = $permohonan->email ?? ($permohonan->user->email ?? null);
+            if ($recipientEmail) {
+                try {
+                    // Cek cara memperoleh informasi
+                    $caraPeroleh = strtolower($permohonan->cara_memperoleh_informasi ?? '');
+                    $isKirimEmail = str_contains($caraPeroleh, 'email');
+
+                    // Jika bukan lewat email, file/link jawaban tidak dikirimkan
+                    $fileJawabanEmail = $isKirimEmail ? $permohonan->file_jawaban : null;
+                    $linkJawabanEmail = $isKirimEmail ? $permohonan->link_jawaban : null;
+
+                    $emailData = [
+                        'nama'              => $permohonan->nama_lengkap ?? ($permohonan->user->nama_lengkap ?? 'Pemohon'),
+                        'no_tiket'          => $permohonan->no_tiket,
+                        'info_diminta'      => $permohonan->informasi_yang_diminta ?? '-',
+                        'tujuan_permohonan' => $permohonan->tujuan_penggunaan_informasi ?? '-',
+                        'file_jawaban'      => $fileJawabanEmail,
+                        'link_jawaban'      => $linkJawabanEmail,
+                    ];
+
+                    if ($permohonan->status === 'Selesai') {
+                        $emailData['catatan_selesai'] = $permohonan->catatan_selesai;
+                        $template = 'emails.permohonan_jawaban_selesai';
+                        $subject  = 'Permohonan ' . $permohonan->no_tiket . ' Telah Selesai — PPID FMIPA Universitas Lampung';
+                    } else {
+                        $emailData['alasan_ditolak'] = $permohonan->alasan_ditolak;
+                        $template = 'emails.permohonan_jawaban_ditolak';
+                        $subject  = 'Permohonan ' . $permohonan->no_tiket . ' Tidak Dapat Dipenuhi — PPID FMIPA Universitas Lampung';
+                    }
+
+                    \Illuminate\Support\Facades\Mail::send($template, ['permohonan' => $emailData], function($m) use ($recipientEmail, $subject) {
+                        $m->to($recipientEmail)->subject($subject);
+                    });
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Gagal mengirim email permohonan jawaban: ' . $e->getMessage());
                 }
-                
-                // Cek cara memperoleh informasi
-                $caraPeroleh = strtolower($permohonan->cara_memperoleh_informasi ?? '');
-                $isKirimEmail = str_contains($caraPeroleh, 'email');
-
-                // Jika bukan lewat email (misal: mengambil langsung), file/link jawaban tidak dikirimkan lewat email
-                $fileJawabanEmail = $isKirimEmail ? $permohonan->file_jawaban : null;
-                $linkJawabanEmail = $isKirimEmail ? $permohonan->link_jawaban : null;
-
-                $emailData = [
-                    'nama'              => $permohonan->nama_lengkap ?? ($permohonan->user->nama_lengkap ?? 'Pemohon'),
-                    'no_tiket'          => $permohonan->no_tiket,
-                    'status'            => $permohonan->status,
-                    'pesan'             => $pesanAktif,
-                    'info_diminta'      => $permohonan->informasi_yang_diminta ?? ($permohonan->info_diminta ?? '-'),
-                    'tujuan_permohonan' => $permohonan->tujuan_penggunaan_informasi ?? ($permohonan->tujuan_permohonan ?? '-'),
-                    'file_jawaban'      => $fileJawabanEmail,
-                    'link_jawaban'      => $linkJawabanEmail,
-                ];
-
-                \Illuminate\Support\Facades\Mail::send('emails.permohonan_status_berubah', ['permohonan' => $emailData], function($m) use ($recipientEmail, $permohonan) {
-                    $m->to($recipientEmail)->subject('Pembaruan Status Permohonan Informasi ' . $permohonan->no_tiket . ' - PPID FMIPA Universitas Lampung');
-                });
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Gagal mengirim email permohonan status: ' . $e->getMessage());
             }
         }
 

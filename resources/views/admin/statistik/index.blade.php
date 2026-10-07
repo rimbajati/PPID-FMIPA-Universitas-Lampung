@@ -207,31 +207,8 @@
 
     </div>
 
-    <!-- SECTION DIAGRAM DONAT (1 BARIS DENGAN 3 KOLOM, SATUAN REM, & DESAIN CLEAN) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <!-- 1. Kategori Pemohon Informasi -->
-        <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all flex flex-col items-center justify-between">
-            <!-- Centered Header -->
-            <div class="text-center mb-4">
-                <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">Kategori Pemohon Informasi</h3>
-            </div>
-
-            <!-- Centered Doughnut Chart (Satuan rem) -->
-            <div class="relative w-[13rem] h-[13rem] sm:w-[14.5rem] sm:h-[14.5rem] shrink-0 flex items-center justify-center my-auto">
-                <canvas id="chartDonutPemohon"></canvas>
-                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                    <span class="text-3xl sm:text-4xl font-black text-slate-900 leading-none tracking-tight">
-                        {{ array_sum($statPemohon) }}
-                    </span>
-                    <span class="text-xs font-semibold text-slate-400 mt-1">Total</span>
-                </div>
-            </div>
-
-            <!-- Clean Bottom Legend (Sejajar ke Kanan / Horizontal Wrap) -->
-            <div id="legendDonutPemohon" class="w-full flex flex-row flex-wrap items-center justify-center gap-x-5 gap-y-2.5 mt-5 pt-4 border-t border-slate-100 text-xs font-medium text-slate-700"></div>
-        </div>
-
+    <!-- SECTION DIAGRAM DONAT LAYANAN -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- 2. Cara Memperoleh Informasi -->
         <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all flex flex-col items-center justify-between">
             <!-- Centered Header -->
@@ -637,19 +614,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. Donut Kategori Pemohon Informasi
-    const ctxPemohon = document.getElementById('chartDonutPemohon');
-    if (ctxPemohon) {
-        const dataPemohon = @json($statPemohon);
-        const labelsPemohon = Object.keys(dataPemohon);
-        const valuesPemohon = Object.values(dataPemohon);
-        // Palette Kontras Tinggi & Cerah: Sky Blue, Emerald Green, Amber/Orange, Violet, Crimson
-        const pemohonColors = ['#0284c7', '#10b981', '#f59e0b', '#8b5cf6', '#e11d48', '#06b6d4'];
-        createSmartDonutChart(ctxPemohon, labelsPemohon, valuesPemohon, pemohonColors);
-        renderCustomLegend('legendDonutPemohon', labelsPemohon, valuesPemohon, pemohonColors);
-    }
-
-    // 3. Donut Cara Memperoleh Informasi
+    // 2. Donut Cara Memperoleh Informasi
     const ctxCara = document.getElementById('chartDonutCara');
     if (ctxCara) {
         const dataCara = @json($statCara);

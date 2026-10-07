@@ -8,57 +8,41 @@
     <!-- Header Hero Banner (Matching Reference UI Title & Subtitle) -->
     <x-masyarakat.informasi_publik.hero-header />
 
-    <!-- Main Content Container: Tabel Informasi Publik (Matching Admin DIP Table) -->
-    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div class="space-y-4">
+    <!-- Tiga daftar terpisah berdasarkan jenis informasi -->
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-10">
+        @php
+            $jenisPublik = [
+                ['nama' => 'Informasi Berkala', 'judul' => 'A. Informasi Publik yang Wajib Disediakan secara Berkala', 'key' => 'berkala', 'deskripsi' => 'informasi yang wajib disediakan dan dapat diakses secara berkala.'],
+                ['nama' => 'Informasi Setiap Saat', 'judul' => 'B. Informasi Publik yang Wajib Tersedia Setiap Saat', 'key' => 'setiap-saat', 'deskripsi' => 'informasi yang wajib tersedia dan dapat diakses setiap saat.'],
+                ['nama' => 'Informasi Serta-Merta', 'judul' => 'C. Informasi Publik yang Wajib Diumumkan secara Serta-Merta', 'key' => 'serta-merta', 'deskripsi' => 'informasi yang wajib diumumkan segera tanpa penundaan.'],
+            ];
+        @endphp
 
-            <!-- Bar Kontrol Tabel: Show Entries di Kiri & Search di Kanan (DataTables Style) -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
-                <!-- Dropdown Show Entries -->
-                <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
-                    <span>Show</span>
-                    <select id="select-per-page-dip" onchange="changePerPageDip(this.value)" 
-                            class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
-                        <option value="10" {{ (int)request('per_page', 10) === 10 ? 'selected' : '' }}>10</option>
-                        <option value="25" {{ (int)request('per_page', 10) === 25 ? 'selected' : '' }}>25</option>
-                        <option value="50" {{ (int)request('per_page', 10) === 50 ? 'selected' : '' }}>50</option>
-                        <option value="100" {{ (int)request('per_page', 10) === 100 ? 'selected' : '' }}>100</option>
-                    </select>
-                    <span>entries</span>
+        @foreach($jenisPublik as $jenis)
+            @php $daftarJenis = $informasiGroups->get($jenis['nama'], collect()); @endphp
+            <section class="space-y-4" aria-labelledby="judul-{{ $jenis['key'] }}">
+                <header class="space-y-1">
+                    <h2 id="judul-{{ $jenis['key'] }}" class="text-xl md:text-2xl font-extrabold text-slate-900">{{ $jenis['judul'] }}</h2>
+                    <p class="text-sm md:text-base text-slate-600">{{ number_format($daftarJenis->count(), 0, ',', '.') }} informasi {{ $jenis['deskripsi'] }}</p>
+                </header>
+
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
+                    <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                        <span>Tampilkan</span>
+                        <select data-dip-per-page="{{ $jenis['key'] }}" onchange="changePerPageDip('{{ $jenis['key'] }}', this.value)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/30 cursor-pointer">
+                            <option value="10" selected>10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option>
+                        </select>
+                        <span>baris</span>
+                    </div>
+                    <form onsubmit="event.preventDefault();" class="flex items-center gap-2">
+                        <label for="cari-{{ $jenis['key'] }}" class="text-sm font-semibold text-slate-800">Cari:</label>
+                        <input id="cari-{{ $jenis['key'] }}" data-dip-search="{{ $jenis['key'] }}" oninput="searchDipTable('{{ $jenis['key'] }}', this.value)" value="{{ request('search') }}" autocomplete="off" class="w-48 sm:w-64 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/30">
+                    </form>
                 </div>
 
-                <!-- Search Bar Pencarian Seluruh Isi Tabel (Format DataTables Style: Search: [_____ x]) -->
-                <form id="form-search-dip" onsubmit="event.preventDefault();" class="flex items-center gap-2">
-                    <label for="input-search-dip" class="text-sm font-semibold text-slate-800 select-none cursor-pointer">
-                        Search:
-                    </label>
-                    <div class="relative">
-                        <input type="text" 
-                               name="search" 
-                               id="input-search-dip"
-                               value="{{ request('search') }}" 
-                               autocomplete="off"
-                               oninput="debounceSearchDip()"
-                               class="w-48 sm:w-56 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-2xl text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
-                        <button type="button" id="btn-clear-search" onclick="clearSearchDip()" title="Hapus pencarian" 
-                                class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Tabel Informasi Publik dengan Filter Terpadu (Akses Hanya Tautan Berkas) -->
-            <div id="table-dip-wrapper" class="relative transition-opacity duration-150">
-                <x-masyarakat.informasi_publik.table 
-                    :informasi="$informasiList" 
-                    :listJenis="$listJenis ?? []" 
-                    :listTahun="$listTahun ?? []" 
-                    :listSatker="$listSatker ?? []" 
-                    :listBentuk="$listBentuk ?? []" 
-                    :listRetensi="$listRetensi ?? []" 
-                />
-            </div>
+                <x-masyarakat.informasi_publik.table :informasi="$daftarJenis" :tableKey="$jenis['key']" />
+            </section>
+        @endforeach
 
             <!-- Card Bantuan / Ajukan Permohonan Jika Tidak Menemukan Informasi -->
             <div class="bg-gradient-to-r from-sky-600 via-sky-700 to-blue-800 text-white rounded-2xl p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">

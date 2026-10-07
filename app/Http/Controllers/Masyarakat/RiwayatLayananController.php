@@ -3,75 +3,163 @@
 namespace App\Http\Controllers\Masyarakat;
 
 use App\Http\Controllers\Controller;
-use App\Models\Permohonan;
 use App\Models\Keberatan;
+use App\Models\Permohonan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class RiwayatLayananController extends Controller
 {
-    /**
-     * Halaman Riwayat Layanan Publik Pemohon (Permohonan & Keberatan)
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $userId = Auth::id();
-        $user = Auth::user();
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'no_tiket' => 'required|string|max:40',
+            ]);
+        }
 
-        // 1. Ambil Permohonan milik user
-        $permohonans = Permohonan::where('user_id', $userId)->latest()->get()->map(function ($item) use ($user) {
-            $item->type = 'permohonan';
-            $item->jenis_label = 'Permohonan Informasi';
-            $item->judul = $item->informasi_yang_diminta ?? $item->rincian_informasi;
-            $item->deskripsi = $item->tujuan_penggunaan_informasi ?? $item->tujuan_penggunaan;
-            $item->nama_pemohon = !empty($item->nama_lengkap) ? $item->nama_lengkap : ($user ? $user->name : 'Pemohon');
-            $item->tanggal_pengajuan = $item->created_at ? $item->created_at->translatedFormat('d F Y') : '-';
-            $item->created_at_formatted = $item->created_at ? $item->created_at->translatedFormat('d F Y, H:i') . ' WIB' : '';
-            $item->updated_at_formatted = $item->updated_at ? $item->updated_at->translatedFormat('d F Y, H:i') . ' WIB' : '';
-            $item->estimasi_selesai = $item->created_at ? $item->created_at->addDays(10)->translatedFormat('d F Y') : '-';
-            $item->identitas_file = $item->file_identitas ?? $item->identitas_file;
-            $item->identitas_file_url = $item->identitas_file ? asset('storage/' . $item->identitas_file) : null;
-            $item->file_pendukung_url = $item->file_pendukung ? asset('storage/' . $item->file_pendukung) : null;
-            
-            // Pesan Tanggapan Admin berdasarkan standar 4 status
-            $item->catatan_diproses = $item->catatan_diproses ?? null;
-            $item->catatan_selesai  = $item->catatan_selesai ?? null;
-            $item->alasan_ditolak   = $item->alasan_ditolak ?? $item->pesan_ditolak ?? null;
+        $ticket = strtoupper(trim((string) $request->input('no_tiket', '')));
+        $allLayans = collect();
+        $hasSearched = $ticket !== '';
+        $notFound = false;
 
-            $item->has_keberatan = Keberatan::where('permohonan_id', $item->id)->exists();
-            return $item;
-        });
+        if ($ticket !== '') {
+            $permohonan = Permohonan::whereRaw('UPPER(no_tiket) = ?', [$ticket])->first();
 
-        // 2. Ambil Keberatan milik user
-        $keberatans = Keberatan::with('permohonan')->where('user_id', $userId)->latest()->get()->map(function ($item) use ($user) {
-            $item->type = 'keberatan';
-            $item->jenis_label = 'Pengajuan Keberatan';
-            $item->no_tiket_asal = $item->permohonan ? $item->permohonan->no_tiket : null;
-            $item->informasi_asal = $item->permohonan ? $item->permohonan->informasi_yang_diminta : null;
-            
-            $item->judul = $item->informasi_asal ?: ($item->no_tiket_asal ? 'Permohonan #' . $item->no_tiket_asal : $item->alasan_keberatan);
-            $item->deskripsi = $item->alasan_keberatan;
-            
-            $item->nama_pemohon = !empty($item->nama_lengkap) ? $item->nama_lengkap : ($user ? $user->name : 'Pemohon');
-            $item->tanggal_pengajuan = $item->created_at ? $item->created_at->translatedFormat('d F Y') : '-';
-            $item->created_at_formatted = $item->created_at ? $item->created_at->translatedFormat('d F Y, H:i') . ' WIB' : '';
-            $item->updated_at_formatted = $item->updated_at ? $item->updated_at->translatedFormat('d F Y, H:i') . ' WIB' : '';
-            $item->estimasi_selesai = $item->created_at ? $item->created_at->addDays(30)->translatedFormat('d F Y') : '-';
-            $item->identitas_file = $item->permohonan ? ($item->permohonan->file_identitas ?? $item->permohonan->identitas_file) : null;
-            $item->identitas_file_url = $item->identitas_file ? asset('storage/' . $item->identitas_file) : null;
-            $item->file_pendukung_url = $item->file_pendukung ? asset('storage/' . $item->file_pendukung) : ($item->pendukung_file ? asset('storage/' . $item->pendukung_file) : null);
-            
-            // Pesan Tanggapan Admin berdasarkan standar 4 status
-            $item->catatan_diproses = $item->catatan_diproses ?? null;
-            $item->catatan_selesai  = $item->catatan_selesai ?? null;
-            $item->alasan_ditolak   = $item->alasan_ditolak ?? $item->pesan_ditolak ?? null;
+            if ($permohonan) {
+                $allLayans->push($this->payloadPermohonan($permohonan));
 
-            return $item;
-        });
+                $keberatans = Keberatan::where('permohonan_id', $permohonan->id)->latest()->get();
+                foreach ($keberatans as $keberatan) {
+                    $allLayans->push($this->payloadKeberatan($keberatan, $permohonan));
+                }
+            } else {
+                $keberatan = Keberatan::whereRaw('UPPER(no_tiket) = ?', [$ticket])->first();
+                if ($keberatan) {
+                    $permohonanRef = Permohonan::find($keberatan->permohonan_id);
+                    $allLayans->push($this->payloadKeberatan($keberatan, $permohonanRef));
+                } else {
+                    $notFound = true;
+                }
+            }
+        }
 
-        // Gabungkan permohonan dan keberatan, diurutkan dari terbaru
-        $allLayans = $permohonans->concat($keberatans)->sortByDesc('created_at')->values();
+        return view('masyarakat.layanan.riwayat.index', compact('allLayans', 'ticket', 'hasSearched', 'notFound'));
+    }
 
-        return view('masyarakat.layanan.riwayat.index', compact('allLayans', 'permohonans', 'keberatans'));
+    /**
+     * Payload publik: cukup untuk pelacakan, tanpa identitas, kontak, atau berkas pemohon.
+     */
+    private function payloadPermohonan(Permohonan $permohonan): array
+    {
+        $status = $permohonan->status ?: 'Diajukan';
+        $saluranDigital = $this->isSaluranDigital($permohonan->cara_memperoleh_informasi);
+
+        return [
+            'type' => 'permohonan',
+            'jenis_label' => 'Permohonan Informasi',
+            'no_tiket' => $permohonan->no_tiket,
+            'status' => $status,
+            'nama_pemohon' => $permohonan->nama_lengkap,
+            'waktu_pengajuan' => $permohonan->created_at?->translatedFormat('d F Y, H:i') . ' WIB',
+            'cara_memperoleh' => $permohonan->cara_memperoleh_informasi,
+            'info_diminta' => $permohonan->informasi_yang_diminta,
+            'tujuan_penggunaan' => $permohonan->tujuan_penggunaan_informasi,
+            'no_identitas' => $permohonan->no_identitas,
+            'pekerjaan' => $permohonan->pekerjaan,
+            'jenis_identitas' => $permohonan->jenis_identitas,
+            'judul' => $permohonan->informasi_yang_diminta,
+            'pokok_layanan' => $permohonan->informasi_yang_diminta,
+            'jenis_permohonan' => $permohonan->jenis_permohonan,
+            'saluran_penyampaian' => $saluranDigital
+                ? 'Salinan digital'
+                : 'Pengambilan atau melihat di tempat',
+            'saluran_digital' => $saluranDigital,
+            'tanggal_pengajuan' => $permohonan->created_at?->translatedFormat('d F Y') ?? '-',
+            'created_at_formatted' => $permohonan->created_at?->translatedFormat('d F Y, H:i') . ' WIB',
+            'updated_at_formatted' => $permohonan->updated_at?->translatedFormat('d F Y, H:i') . ' WIB',
+            'estimasi_selesai' => $permohonan->created_at?->copy()->addDays(10)->translatedFormat('d F Y') ?? '-',
+            'sla_keterangan' => 'Paling lambat 10 hari kerja sejak pengajuan, sesuai UU KIP.',
+            'status_keterangan' => $this->keteranganStatus('permohonan', $status),
+            'langkah_berikutnya' => $this->langkahBerikutnya('permohonan', $status),
+            'berkas_identitas_diterima' => filled($permohonan->file_identitas),
+            'catatan_diproses' => $permohonan->catatan_diproses,
+            'catatan_selesai' => $permohonan->catatan_selesai,
+            'alasan_ditolak' => $permohonan->alasan_ditolak,
+            'has_keberatan' => $permohonan->keberatans()->exists(),
+        ];
+    }
+
+    private function payloadKeberatan(Keberatan $keberatan, ?Permohonan $permohonan): array
+    {
+        $status = $keberatan->status ?: 'Diajukan';
+
+        return [
+            'type' => 'keberatan',
+            'jenis_label' => 'Pengajuan Keberatan',
+            'no_tiket' => $keberatan->no_tiket,
+            'status' => $status,
+            'nama_pemohon' => $permohonan?->nama_lengkap,
+            'waktu_pengajuan' => $keberatan->created_at?->translatedFormat('d F Y, H:i') . ' WIB',
+            'judul' => $keberatan->alasan_keberatan,
+            'alasan_keberatan' => $keberatan->alasan_keberatan,
+            'kronologi_keberatan' => $keberatan->kronologi_keberatan,
+            'pokok_layanan' => $keberatan->alasan_keberatan,
+            'tiket_permohonan_asal' => $permohonan?->no_tiket,
+            'cara_memperoleh' => $permohonan?->cara_memperoleh_informasi,
+            'tanggal_pengajuan' => $keberatan->created_at?->translatedFormat('d F Y') ?? '-',
+            'created_at_formatted' => $keberatan->created_at?->translatedFormat('d F Y, H:i') . ' WIB',
+            'updated_at_formatted' => $keberatan->updated_at?->translatedFormat('d F Y, H:i') . ' WIB',
+            'estimasi_selesai' => $keberatan->created_at?->copy()->addDays(30)->translatedFormat('d F Y') ?? '-',
+            'sla_keterangan' => 'Paling lambat 30 hari kerja sejak pengajuan keberatan.',
+            'status_keterangan' => $this->keteranganStatus('keberatan', $status),
+            'langkah_berikutnya' => $this->langkahBerikutnya('keberatan', $status),
+            'berkas_pendukung_diterima' => filled($keberatan->file_pendukung),
+            'catatan_diproses' => $keberatan->catatan_diproses,
+            'catatan_selesai' => $keberatan->catatan_selesai,
+            'alasan_ditolak' => $keberatan->alasan_ditolak,
+        ];
+    }
+
+    private function isSaluranDigital(?string $cara): bool
+    {
+        $cara = strtolower((string) $cara);
+
+        return $cara !== '' && (str_contains($cara, 'email') || str_contains($cara, 'digital'));
+    }
+
+    private function keteranganStatus(string $type, string $status): string
+    {
+        $isKeberatan = $type === 'keberatan';
+
+        return match ($status) {
+            'Diproses' => $isKeberatan
+                ? 'Keberatan sedang ditinjau dan dikoordinasikan dengan Atasan PPID.'
+                : 'Permohonan sedang diperiksa dan disiapkan oleh petugas PPID.',
+            'Selesai' => $isKeberatan
+                ? 'Tanggapan atas keberatan telah diputuskan.'
+                : 'Permohonan telah dipenuhi. Hasil disampaikan sesuai saluran yang dipilih saat pengajuan.',
+            'Ditolak' => $isKeberatan
+                ? 'Pengajuan keberatan tidak dapat dikabulkan. Alasan tercantum pada riwayat proses.'
+                : 'Permohonan tidak dapat dipenuhi. Alasan tercantum pada riwayat proses.',
+            default => $isKeberatan
+                ? 'Keberatan sudah masuk sistem dan menunggu pemeriksaan Atasan PPID.'
+                : 'Permohonan sudah masuk sistem dan menunggu pemeriksaan petugas PPID.',
+        };
+    }
+
+    private function langkahBerikutnya(string $type, string $status): string
+    {
+        $isKeberatan = $type === 'keberatan';
+
+        return match ($status) {
+            'Diproses' => 'Tidak ada tindakan yang perlu Anda lakukan saat ini. Pantau halaman ini hingga status diperbarui.',
+            'Selesai' => $isKeberatan
+                ? 'Periksa pemberitahuan resmi yang dikirim ke saluran yang Anda daftarkan saat pengajuan.'
+                : 'Terima hasil sesuai saluran penyampaian: salinan digital atau pengambilan/melihat di Dekanat FMIPA Unila pada jam kerja.',
+            'Ditolak' => $isKeberatan
+                ? 'Proses keberatan di tingkat PPID FMIPA telah selesai. Anda dapat menempuh upaya hukum lanjutan sesuai ketentuan UU KIP.'
+                : 'Anda dapat mengajukan keberatan atas permohonan ini jika tidak sependapat dengan keputusan PPID.',
+            default => 'Simpan nomor tiket ini. Gunakan halaman ini untuk memantau progres tanpa membagikan data pribadi Anda.',
+        };
     }
 }

@@ -16,12 +16,6 @@ class Authenticate extends Middleware
             return null;
         }
 
-        // Jika mencoba mengakses area admin (AFK / sesi habis), alihkan ke Halaman Login Admin
-        if ($request->is('admin*') || $request->is('admin-panel*')) {
-            return route('admin.login');
-        }
-
-        // Jika masyarakat belum login dan mengakses layanan berproteksi, alihkan ke Halaman Login Masyarakat
-        return route('login');
+        return route('admin.login');
     }
 }
