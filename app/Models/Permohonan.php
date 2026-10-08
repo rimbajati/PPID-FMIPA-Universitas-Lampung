@@ -32,10 +32,14 @@ class Permohonan extends Model
         'status',
         'catatan_diproses',
         'catatan_selesai',
+        'jawaban',
         'alasan_ditolak',
-        'file_jawaban',
-        'link_jawaban',
     ];
+
+    public function jawabanFiles()
+    {
+        return $this->morphMany(JawabanFile::class, 'jawabanable');
+    }
 
     public function user(): BelongsTo
     {

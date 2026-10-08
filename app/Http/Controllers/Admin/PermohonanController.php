@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class PermohonanController extends Controller
 {
-    /**
-     * Halaman Admin: Manajemen Daftar Permohonan Informasi Publik
-     */
     public function index(Request $request)
     {
         $query = Permohonan::query()->latest();
@@ -86,98 +83,74 @@ class PermohonanController extends Controller
             'status'                  => 'required|in:Diproses,Selesai,Ditolak',
             'catatan_diproses'        => 'nullable|string',
             'catatan_selesai'         => 'nullable|string',
+            'jawaban'                 => 'nullable|string',
             'alasan_ditolak'          => 'nullable|string',
-            'pesan_ditolak'           => 'nullable|string',
             'file_jawaban'            => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
-            'link_jawaban'            => 'nullable|url',
         ]);
 
         $statusBaru = $request->input('status');
-        $alasanDitolak = $request->input('alasan_ditolak') ?: $request->input('pesan_ditolak');
 
         // Logika 1: Jika Ditolak, Alasan Penolakan Wajib Diisi
-        if ($statusBaru === 'Ditolak' && empty(trim($alasanDitolak))) {
-            return redirect()->back()->withErrors(['alasan_ditolak' => 'Alasan penolakan (pesan ditolak) wajib diisi sebelum menolak permohonan.'])->withInput();
+        if ($statusBaru === 'Ditolak' && empty(trim($request->input('alasan_ditolak')))) {
+            return redirect()->back()->withErrors(['alasan_ditolak' => 'Alasan penolakan wajib diisi.'])->withInput();
         }
 
         // Logika 1b: Jika Diproses, Catatan Diproses Wajib Diisi
         if ($statusBaru === 'Diproses' && empty(trim($request->input('catatan_diproses')))) {
-            return redirect()->back()->withErrors(['catatan_diproses' => 'Catatan untuk pemohon wajib diisi saat memproses permohonan.'])->withInput();
+            return redirect()->back()->withErrors(['catatan_diproses' => 'Pesan PPID wajib diisi.'])->withInput();
         }
 
-        $fileUploaded = $request->file('file_jawaban');
-        $linkInput = $request->input('link_jawaban');
-
-        // Logika 2: Jika Selesai, Wajib ada Catatan untuk Pemohon (otomatis terisi default jika tidak diubah)
+        // Logika 2: Jika Selesai/Ditolak, Pesan PPID wajib diisi
         $catatanSelesaiInput = $request->input('catatan_selesai');
-        if ($statusBaru === 'Selesai') {
+        if (in_array($statusBaru, ['Selesai', 'Ditolak'])) {
             if (empty(trim($catatanSelesaiInput ?? ''))) {
-                $cara = strtolower($permohonan->cara_memperoleh_informasi ?? '');
-                if (str_contains($cara, 'email')) {
-                    $catatanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Silakan periksa kotak masuk email Anda (termasuk folder Spam/Junk) untuk mengunduh dokumen atau mengakses tautan jawaban informasi yang diminta.';
-                } else {
-                    $catatanSelesaiInput = 'Permohonan Anda telah selesai dipenuhi. Silakan datang langsung ke Dekanat FMIPA Universitas Lampung pada jam kerja untuk mengambil salinan dokumen informasi yang diminta.';
-                }
-            }
-
-            if (empty(trim($catatanSelesaiInput))) {
-                return redirect()->back()->withErrors(['catatan_selesai' => 'Catatan untuk pemohon wajib diisi sebelum menyelesaikan permohonan.'])->withInput();
-            }
-
-            // Validasi Jawaban: Wajib ada file atau tautan informasi yang diinputkan jika belum ada sebelumnya
-            $hasFile = !empty($fileUploaded) || !empty($permohonan->file_jawaban);
-            $hasLink = !empty(trim($linkInput ?? '')) || !empty($permohonan->link_jawaban);
-            if (!$hasFile && !$hasLink) {
-                return redirect()->back()->withErrors([
-                    'file_jawaban' => 'Berkas file jawaban atau tautan link informasi wajib dilampirkan sebelum menyelesaikan permohonan.'
-                ])->withInput();
+                return redirect()->back()->withErrors(['catatan_selesai' => 'Pesan PPID wajib diisi.'])->withInput();
             }
         }
-
-        // Upload Berkas Jawaban jika ada file baru
-        $filePath = null;
-        if (!empty($fileUploaded)) {
-            if ($permohonan->file_jawaban) {
-                Storage::disk('public')->delete($permohonan->file_jawaban);
-            }
-            $filePath = $fileUploaded->store('jawaban', 'public');
+        
+        // Logika 3: Jika Selesai, Jawaban email wajib diisi
+        $jawabanInput = $request->input('jawaban');
+        if ($statusBaru === 'Selesai' && empty(trim($jawabanInput ?? ''))) {
+            return redirect()->back()->withErrors(['jawaban' => 'Jawaban email wajib diisi.'])->withInput();
         }
-
-        // Update Database dengan nama kolom baru
+        
+        // Update Catatan & Status
         $permohonan->update([
             'status'                  => $statusBaru,
             'catatan_diproses'        => $request->input('catatan_diproses', $permohonan->catatan_diproses),
             'catatan_selesai'         => $catatanSelesaiInput ?: $permohonan->catatan_selesai,
-            'alasan_ditolak'          => $alasanDitolak ?: $permohonan->alasan_ditolak,
-            'file_jawaban'            => $filePath ?: $permohonan->file_jawaban,
-            'link_jawaban'            => $linkInput ?: $permohonan->link_jawaban,
+            'jawaban'                 => $jawabanInput ?: $permohonan->jawaban,
+            'alasan_ditolak'          => $request->input('alasan_ditolak') ?: $permohonan->alasan_ditolak,
         ]);
 
-        // Kirim Email Notifikasi HANYA untuk Status Final (Selesai / Ditolak)
+        // Upload Berkas Jawaban (single file, opsional)
+        if ($request->hasFile('file_jawaban')) {
+            $file = $request->file('file_jawaban');
+            $path = $file->store('jawaban', 'public');
+            $permohonan->jawabanFiles()->create([
+                'file_path' => $path,
+                'file_name' => $file->getClientOriginalName(),
+                'file_size' => $file->getSize(),
+            ]);
+        }
+
+        // Kirim Email Notifikasi
+        $permohonan->load('jawabanFiles');
         $statusFinalEmail = ['Selesai', 'Ditolak'];
         if (in_array($permohonan->status, $statusFinalEmail)) {
             $recipientEmail = $permohonan->email ?? ($permohonan->user->email ?? null);
             if ($recipientEmail) {
                 try {
-                    // Cek cara memperoleh informasi
-                    $caraPeroleh = strtolower($permohonan->cara_memperoleh_informasi ?? '');
-                    $isKirimEmail = str_contains($caraPeroleh, 'email');
-
-                    // Jika bukan lewat email, file/link jawaban tidak dikirimkan
-                    $fileJawabanEmail = $isKirimEmail ? $permohonan->file_jawaban : null;
-                    $linkJawabanEmail = $isKirimEmail ? $permohonan->link_jawaban : null;
-
                     $emailData = [
                         'nama'              => $permohonan->nama_lengkap ?? ($permohonan->user->nama_lengkap ?? 'Pemohon'),
                         'no_tiket'          => $permohonan->no_tiket,
                         'info_diminta'      => $permohonan->informasi_yang_diminta ?? '-',
                         'tujuan_permohonan' => $permohonan->tujuan_penggunaan_informasi ?? '-',
-                        'file_jawaban'      => $fileJawabanEmail,
-                        'link_jawaban'      => $linkJawabanEmail,
+                        'files'             => $permohonan->jawabanFiles,
                     ];
 
                     if ($permohonan->status === 'Selesai') {
-                        $emailData['catatan_selesai'] = $permohonan->catatan_selesai;
+                        $emailData['catatan_selesai'] = $permohonan->jawaban;
                         $template = 'emails.permohonan_jawaban_selesai';
                         $subject  = 'Permohonan ' . $permohonan->no_tiket . ' Telah Selesai — PPID FMIPA Universitas Lampung';
                     } else {
@@ -186,8 +159,13 @@ class PermohonanController extends Controller
                         $subject  = 'Permohonan ' . $permohonan->no_tiket . ' Tidak Dapat Dipenuhi — PPID FMIPA Universitas Lampung';
                     }
 
-                    \Illuminate\Support\Facades\Mail::send($template, ['permohonan' => $emailData], function($m) use ($recipientEmail, $subject) {
+                    \Illuminate\Support\Facades\Mail::send($template, ['permohonan' => $emailData], function($m) use ($recipientEmail, $subject, $permohonan) {
                         $m->to($recipientEmail)->subject($subject);
+                        foreach ($permohonan->jawabanFiles as $file) {
+                            if (Storage::disk('public')->exists($file->file_path)) {
+                                $m->attach(Storage::disk('public')->path($file->file_path), ['as' => $file->file_name]);
+                            }
+                        }
                     });
                 } catch (\Exception $e) {
                     \Illuminate\Support\Facades\Log::error('Gagal mengirim email permohonan jawaban: ' . $e->getMessage());
@@ -214,11 +192,15 @@ class PermohonanController extends Controller
         $permohonan = Permohonan::findOrFail($id);
         
         // Hapus berkas lampiran jika ada
+        if ($permohonan->file_identitas) {
+            Storage::disk('public')->delete($permohonan->file_identitas);
+        }
         if ($permohonan->identitas_file) {
             Storage::disk('public')->delete($permohonan->identitas_file);
         }
-        if ($permohonan->file_jawaban) {
-            Storage::disk('public')->delete($permohonan->file_jawaban);
+        foreach ($permohonan->jawabanFiles as $jf) {
+            Storage::disk('public')->delete($jf->file_path);
+            $jf->delete();
         }
 
         $permohonan->delete();
@@ -235,11 +217,13 @@ class PermohonanController extends Controller
         if (!empty($ids)) {
             $items = Permohonan::whereIn('id', $ids)->get();
             foreach ($items as $item) {
-                if ($item->identitas_file) {
-                    Storage::disk('public')->delete($item->identitas_file);
+                $fileIdentitas = $item->file_identitas ?? $item->identitas_file;
+                if ($fileIdentitas) {
+                    Storage::disk('public')->delete($fileIdentitas);
                 }
-                if ($item->file_jawaban) {
-                    Storage::disk('public')->delete($item->file_jawaban);
+                foreach ($item->jawabanFiles as $jf) {
+                    Storage::disk('public')->delete($jf->file_path);
+                    $jf->delete();
                 }
                 $item->delete();
             }

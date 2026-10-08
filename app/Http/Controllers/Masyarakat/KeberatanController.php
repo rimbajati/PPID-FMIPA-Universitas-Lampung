@@ -92,7 +92,7 @@ class KeberatanController extends Controller
                 ];
 
                 \Illuminate\Support\Facades\Mail::send('emails.keberatan_dikirim', ['keberatan' => $emailData], function($m) use ($recipientEmail, $noTiket) {
-                    $m->to($recipientEmail)->subject('Pengajuan Keberatan ' . $noTiket . ' Berhasil Terkirim - PPID FMIPA Universitas Lampung');
+                    $m->to($recipientEmail)->subject('Pengajuan Keberatan Anda Telah Diterima - PPID FMIPA Universitas Lampung');
                 });
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('Gagal mengirim email keberatan baru: ' . $e->getMessage());

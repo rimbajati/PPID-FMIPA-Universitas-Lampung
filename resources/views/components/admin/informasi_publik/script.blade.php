@@ -443,8 +443,22 @@
     }
 
     function handleFormSubmit(event) {
-        // Form submitted normally
+        const form = event.target;
+        if (!form.checkValidity()) return false;
+        const submitBtn = document.getElementById('btnSubmitAddEdit');
+        const splash = document.getElementById('adminSplashInformasi');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = 'Memproses...'; }
+        if (splash) splash.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
         return true;
+    }
+
+    function showAdminGlobalSplash(text) {
+        const splash = document.getElementById('adminGlobalSplash');
+        const titleEl = document.getElementById('adminGlobalSplashTitle');
+        if (titleEl && text) titleEl.textContent = text;
+        if (splash) splash.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
     }
 
     function submitFilterForm() {
@@ -559,7 +573,8 @@
         const info = document.querySelector(`[data-admin-dip-info="${key}"]`);
         const pagination = document.querySelector(`[data-admin-dip-pagination="${key}"]`);
         const rows = [...filtered];
-        const isCategoryTable = tbody.dataset.categoryTable === 'true';
+        const isUnified = tbody.dataset.unified === 'true';
+        const isCategoryTable = !isUnified && tbody.dataset.categoryTable === 'true';
         if (isCategoryTable) {
             // Keep equal rincian values together, while preserving the original group order.
             // This lets a newly added sub-information join its existing rincian group.
@@ -620,14 +635,26 @@
                 if (pagination) pagination.innerHTML = '';
                 return;
             }
-            const columnCount = isSertaMertaTable ? 3 : (isCategoryMode ? 4 : 9);
+            const columnCount = (isSertaMertaTable ? 3 : (isUnified ? 9 : (isCategoryMode ? 4 : 9)));
             tbody.innerHTML = `<tr><td colspan="${columnCount}" class="p-12 text-center text-slate-400 font-semibold">${emptyMessage}</td></tr>`;
             if (info) info.innerText = 'Menampilkan 0–0 dari 0 informasi';
             if (pagination) pagination.innerHTML = '';
             return;
         }
+        let unifiedGroupRendered = null;
+        const colCountUnified = 9;
         const visibleRows = rows.slice(start, end);
+        const unifiedLabelMap = { 'informasi berkala': 'Informasi Publik yang Wajib Disediakan Secara Berkala', 'informasi setiap saat': 'Informasi Publik yang Wajib Tersedia Setiap Saat', 'informasi serta-merta': 'Informasi Publik yang Wajib Diumumkan Secara Serta-Merta' };
+        const toUnifiedLabel = (v) => unifiedLabelMap[(v||'').toLowerCase().trim()] || v;
         visibleRows.forEach(row => {
+            if (isUnified && unifiedGroupRendered !== row.jenis) {
+                unifiedGroupRendered = row.jenis;
+                const label = toUnifiedLabel(unifiedGroupRendered);
+                const tr = document.createElement('tr');
+                tr.className = 'table-admin-dip-group bg-sky-50/80';
+                tr.innerHTML = `<td colspan="${colCountUnified}" class="px-4 py-3 font-black text-xs md:text-sm tracking-wide text-sky-700 border-t border-sky-100"><span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-500"></span>${label}</span></td>`;
+                tbody.appendChild(tr);
+            }
             const numberCell = row.element.querySelector('.col-admin-dip-no');
             if (numberCell) numberCell.innerText = row.originalIndex;
             const checkboxCell = row.element.querySelector('.col-checkbox-cell');

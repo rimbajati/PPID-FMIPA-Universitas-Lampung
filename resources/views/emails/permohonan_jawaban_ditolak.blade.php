@@ -5,103 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Permohonan Informasi Tidak Dapat Dipenuhi - PPID FMIPA Unila</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #333333;">
-    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto;">
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:Arial,Helvetica,sans-serif;color:#222222;">
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="width:100%;">
         <tr>
-            <td style="padding: 24px 16px;">
-                <div style="font-size: 14px; font-weight: 600; color: #555555; margin-bottom: 16px;">
-                    PPID FMIPA Universitas Lampung
-                </div>
+            <td style="padding:32px 24px;">
+                <div style="font-size:13px;color:#6b7280;margin-bottom:20px;">PPID FMIPA Universitas Lampung</div>
 
-                <div style="font-size: 18px; font-weight: 700; color: #000000; margin-bottom: 12px;">
-                    Permohonan Tidak Dapat Dipenuhi
-                </div>
+                <p style="font-size:14px;line-height:1.7;color:#222222;margin:0 0 16px 0;">Yth. Sdr/i {{ $permohonan['nama'] ?? 'Pemohon' }},</p>
 
-                <p style="font-size: 14px; line-height: 1.6; color: #555555; margin-bottom: 20px;">
-                    Yth. {{ $permohonan['nama'] ?? 'Pemohon' }},
-                </p>
+                <p style="font-size:14px;line-height:1.7;color:#222222;margin:0 0 16px 0;">Permohonan informasi publik Anda dengan nomor tiket <strong style="font-family:'Courier New',monospace;letter-spacing:0.5px;color:#1e4bd8;">{{ $permohonan['no_tiket'] ?? '-' }}</strong> tidak dapat kami penuhi dengan alasan berikut.</p>
 
-                <p style="font-size: 14px; line-height: 1.6; color: #555555; margin-bottom: 20px;">
-                    Setelah melalui proses pemeriksaan dan penelaahan, permohonan informasi publik yang Anda ajukan kepada PPID FMIPA Universitas Lampung tidak dapat kami penuhi berdasarkan ketentuan yang berlaku.
-                </p>
-
-                <!-- Status -->
-                <div style="margin-bottom: 24px; padding: 12px 16px; background-color: #fff1f2; border-left: 4px solid #ef4444; border-radius: 4px;">
-                    <div style="font-size: 11px; color: #dc2626; margin-bottom: 4px; font-weight: 600; text-transform: uppercase;">
-                        Status
-                    </div>
-                    <div style="font-size: 16px; font-weight: 700; color: #ef4444;">
-                        DITOLAK
-                    </div>
-                </div>
-
-                <!-- Nomor Tiket -->
-                <div style="margin-bottom: 24px;">
-                    <div style="font-size: 12px; color: #888888; margin-bottom: 6px; font-weight: 600;">
-                        NOMOR TIKET
-                    </div>
-                    <div style="font-size: 20px; font-weight: 700; color: #0066cc; font-family: 'Courier New', monospace; letter-spacing: 1px;">
-                        {{ $permohonan['no_tiket'] ?? '-' }}
-                    </div>
-                </div>
-
-                <!-- Detail -->
-                <div style="margin-bottom: 24px;">
-                    <div style="font-size: 12px; font-weight: 600; color: #555555; margin-bottom: 12px; text-transform: uppercase;">
-                        Rincian Permohonan
-                    </div>
-                    <div style="font-size: 13px; line-height: 1.8; color: #555555;">
-                        <div style="margin-bottom: 8px;">
-                            <strong>Informasi Diminta:</strong><br>
-                            {{ $permohonan['info_diminta'] ?? '-' }}
-                        </div>
-                        <div>
-                            <strong>Tujuan Penggunaan:</strong><br>
-                            {{ $permohonan['tujuan_permohonan'] ?? '-' }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Alasan -->
                 @if(!empty($permohonan['alasan_ditolak']))
-                    <div style="margin-bottom: 24px; padding: 12px 16px; background-color: #fff1f2; border-radius: 4px;">
-                        <div style="font-size: 12px; font-weight: 600; color: #dc2626; margin-bottom: 8px; text-transform: uppercase;">
-                            Alasan Penolakan
-                        </div>
-                        <div style="font-size: 13px; line-height: 1.6; color: #555555;">
-                            {!! nl2br(e($permohonan['alasan_ditolak'])) !!}
-                        </div>
-                    </div>
+                    <div style="font-size:14px;line-height:1.8;color:#222222;margin:16px 0;white-space:pre-line;">{!! nl2br(e($permohonan['alasan_ditolak'])) !!}</div>
                 @endif
 
-                <!-- Info Keberatan -->
-                <div style="margin-bottom: 24px; padding: 12px 16px; background-color: #eff6ff; border-radius: 4px;">
-                    <div style="font-size: 12px; font-weight: 600; color: #1d4ed8; margin-bottom: 8px; text-transform: uppercase;">
-                        Hak Pengajuan Keberatan
-                    </div>
-                    <div style="font-size: 13px; line-height: 1.6; color: #555555;">
-                        Apabila Anda tidak menerima keputusan ini, Anda berhak mengajukan keberatan kepada Atasan PPID FMIPA Universitas Lampung sesuai Pasal 35 UU No. 14 Tahun 2008 tentang Keterbukaan Informasi Publik.
-                    </div>
-                </div>
-
-                <!-- CTA Buttons -->
-                <div style="margin-bottom: 24px; text-align: center;">
-                    <a href="{{ url('/pengajuan-keberatan?tiket=' . urlencode($permohonan['no_tiket'] ?? '')) }}" target="_blank" style="display: inline-block; background-color: #dc2626; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 4px; font-size: 14px; font-weight: 600; margin-right: 8px;">
-                        Ajukan Keberatan
-                    </a>
-                    <a href="{{ url('/riwayat-layanan') }}" target="_blank" style="display: inline-block; background-color: #f5f5f5; color: #555555; text-decoration: none; padding: 12px 28px; border-radius: 4px; font-size: 14px; font-weight: 600; border: 1px solid #cccccc;">
-                        Lihat Riwayat
-                    </a>
-                </div>
-
-                <div style="border-top: 1px solid #cccccc; padding-top: 16px; font-size: 12px; color: #888888; line-height: 1.6;">
-                    <div style="margin-bottom: 4px;">
-                        PPID Pelaksana FMIPA Universitas Lampung
-                    </div>
-                    <div>
-                        Gedung Dekanat FMIPA Unila, Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Bandar Lampung<br>
-                        Email ini dikirim otomatis. Jangan balas email ini.
-                    </div>
+                <div style="margin-top:24px;padding:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;text-align:center;">
+                    <p style="font-size:13px;color:#64748b;margin:0 0 12px 0;line-height:1.6;">Tidak puas dengan jawaban yang diberikan? Anda bisa mengajukan keberatan di sistem ini.</p>
+                    <a href="{{ url('/pengajuan-keberatan?tiket=' . urlencode($permohonan['no_tiket'] ?? '')) }}" target="_blank" style="display:inline-block;background-color:#ea580c;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:4px;font-size:14px;font-weight:600;">Ajukan Keberatan</a>
                 </div>
             </td>
         </tr>

@@ -149,6 +149,9 @@
         @yield('content')
     </main>
 
-    <x-ui.footer />
+    @php
+        $footerProfil = \App\Http\Controllers\Admin\KontenController::getProfil();
+    @endphp
+    <x-ui.footer :profil="$footerProfil" />
 </body>
 </html>

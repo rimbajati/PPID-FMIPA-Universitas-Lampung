@@ -8,7 +8,7 @@
              @click.away="showConfirmModal = false">
             <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-inner"
                  :class="{
-                    'bg-orange-100 text-orange-600': statusSelect === 'Diproses',
+                    'bg-sky-100 text-sky-600': statusSelect === 'Diproses',
                     'bg-emerald-100 text-emerald-600': statusSelect === 'Selesai',
                     'bg-rose-100 text-rose-600': statusSelect === 'Ditolak'
                  }">
@@ -25,7 +25,7 @@
                     Apakah Anda yakin ingin mengubah status pengajuan keberatan ini menjadi 
                     <span class="font-black px-2 py-0.5 rounded text-xs inline-block"
                           :class="{
-                            'bg-orange-100 text-orange-800': statusSelect === 'Diproses',
+                            'bg-sky-100 text-sky-800': statusSelect === 'Diproses',
                             'bg-emerald-100 text-emerald-800': statusSelect === 'Selesai',
                             'bg-rose-100 text-rose-800': statusSelect === 'Ditolak'
                           }"
@@ -41,10 +41,10 @@
                         class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-extrabold rounded-xl transition cursor-pointer">
                     Batal
                 </button>
-                <button type="button" @click="$refs.statusForm.submit()" 
-                        class="w-full py-3 text-white text-sm font-extrabold rounded-xl transition shadow-md cursor-pointer"
+                <button type="button" @click="$el.textContent='Memproses...'; $el.disabled=true; $el.classList.add('opacity-70','cursor-not-allowed'); $refs.statusForm.submit()" 
+                        class="w-full py-3 text-white text-sm font-extrabold rounded-xl transition shadow-md cursor-pointer disabled:opacity-70"
                         :class="{
-                            'bg-orange-500 hover:bg-orange-600': statusSelect === 'Diproses',
+                            'bg-sky-500 hover:bg-sky-600': statusSelect === 'Diproses',
                             'bg-emerald-600 hover:bg-emerald-700': statusSelect === 'Selesai',
                             'bg-rose-600 hover:bg-rose-700': statusSelect === 'Ditolak'
                         }">

@@ -127,7 +127,8 @@ Route::get('/profil-ppid', function () {
 
 // Rute Tata Cara Permohonan dan Keberatan Layanan Informasi
 Route::get('/tata-cara-permohonan-dan-keberatan', function () {
-    return view('masyarakat.tata_cara.index');
+    $tataCara = \App\Http\Controllers\Admin\KontenController::getTataCara();
+    return view('masyarakat.tata_cara.index', compact('tataCara'));
 })->name('tata-cara');
 Route::get('/tata-cara', function () {
     return redirect()->route('tata-cara');
@@ -138,7 +139,8 @@ Route::get('/alur-layanan', function () {
 
 // Rute Regulasi Keterbukaan Informasi Publik
 Route::get('/regulasi', function () {
-    return view('masyarakat.regulasi.index');
+    $regulasi = \App\Http\Controllers\Admin\KontenController::getRegulasi();
+    return view('masyarakat.regulasi.index', compact('regulasi'));
 })->name('regulasi');
 
 // Rute Halaman Hub Layanan PPID Online (Dialihkan langsung ke Permohonan)
@@ -339,14 +341,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/keberatan/bulk-delete', [AdminKeberatanController::class, 'destroyBulk'])->name('admin.keberatan.bulk');
     Route::delete('/keberatan/{id}', [AdminKeberatanController::class, 'destroy'])->name('admin.keberatan.destroy');
 
-    // Rute Admin: Kelola Beranda (Profil PPID & FAQ)
-    Route::get('/faq', [AdminKontenController::class, 'index'])->name('admin.faq.index');
+    // Rute Admin: Kelola Beranda (Profil PPID & FAQ) — terpisah
+    Route::get('/profil-ppid', [AdminKontenController::class, 'profil'])->name('admin.profil.index');
+    Route::post('/profil-ppid', [AdminKontenController::class, 'updateProfil'])->name('admin.profil.update');
+    Route::get('/faq', [AdminKontenController::class, 'faq'])->name('admin.faq.index');
     Route::post('/faq', [AdminKontenController::class, 'storeFaq'])->name('admin.faq.store');
     Route::delete('/faq/{id}', [AdminKontenController::class, 'destroyFaq'])->name('admin.faq.destroy');
-    Route::post('/profil-ppid', [AdminKontenController::class, 'updateProfil'])->name('admin.profil.update');
+    Route::get('/regulasi-admin', [AdminKontenController::class, 'regulasi'])->name('admin.regulasi.index');
+    Route::post('/regulasi-admin', [AdminKontenController::class, 'storeRegulasi'])->name('admin.regulasi.store');
+    Route::delete('/regulasi-admin/{id}', [AdminKontenController::class, 'destroyRegulasi'])->name('admin.regulasi.destroy');
+    Route::get('/tata-cara-admin', [AdminKontenController::class, 'tataCara'])->name('admin.tata_cara.index');
+    Route::post('/tata-cara-admin', [AdminKontenController::class, 'updateTataCara'])->name('admin.tata_cara.update');
     // Alias redirect rute lama
     Route::get('/beranda-konten', function () { return redirect()->route('admin.faq.index'); });
-    Route::get('/profil-ppid-admin', function () { return redirect()->route('admin.faq.index'); });
+    Route::get('/profil-ppid-admin', function () { return redirect()->route('admin.profil.index'); });
 
     // Rute Admin: Statistik Layanan
     Route::get('/statistik', [AdminStatistikController::class, 'index'])->name('admin.statistik.index');

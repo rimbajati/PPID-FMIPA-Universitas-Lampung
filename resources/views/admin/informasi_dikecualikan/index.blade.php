@@ -81,7 +81,7 @@
     </div>
 
     <!-- Table Container & Data Tabel -->
-    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-none border border-slate-200/80 shadow-xs overflow-hidden">
         <form id="form-bulk-delete" action="{{ route('admin.informasi-dikecualikan.bulk') }}" method="POST">
             @csrf
             @method('DELETE')

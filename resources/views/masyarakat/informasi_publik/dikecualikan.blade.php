@@ -52,7 +52,7 @@
             </div>
 
             <!-- Tabel Informasi Publik yang Dikecualikan (Desain Seragam dengan Tabel DIP) -->
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden mb-6">
+            <div class="bg-white rounded-none border border-slate-200/80 shadow-xs overflow-hidden mb-6">
                 <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
                     <table class="w-full min-w-[900px] text-left border-collapse border border-slate-300">
                         <thead>
@@ -129,7 +129,7 @@
                                     </td>
 
                                     <!-- 2. INFORMASI -->
-                                    <td class="px-3.5 py-3 font-extrabold text-slate-900 leading-normal break-words">
+                                    <td class="px-3.5 py-3 font-medium text-slate-700 leading-normal break-words">
                                         {{ $item->ringkasan_informasi }}
                                     </td>
 

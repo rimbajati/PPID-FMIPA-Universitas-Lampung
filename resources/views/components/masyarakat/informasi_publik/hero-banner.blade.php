@@ -6,20 +6,20 @@
 
 @php
 $gradientClass = match($theme) {
-    'keberatan' => 'bg-amber-500',
-    'permohonan' => 'bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800',
+    'keberatan' => 'bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700',
+    'permohonan' => 'bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700',
     default => 'bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700',
 };
 
 $accentClass = match($theme) {
-    'keberatan' => 'bg-amber-400/20',
-    'permohonan' => 'bg-blue-500/30',
+    'keberatan' => 'bg-sky-400/20',
+    'permohonan' => 'bg-sky-400/20',
     default => 'bg-sky-400/20',
 };
 
 $textAccentClass = match($theme) {
-    'keberatan' => 'text-amber-50',
-    'permohonan' => 'text-blue-100',
+    'keberatan' => 'text-sky-100',
+    'permohonan' => 'text-sky-100',
     default => 'text-sky-100',
 };
 @endphp

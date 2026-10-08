@@ -14,13 +14,9 @@
 
     <!-- HEADER SECTION -->
     <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10 space-y-2.5">
-        <!-- <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-black border border-sky-200 shadow-2xs">
-            <i class="fa-solid fa-id-card text-sky-500"></i>
-            <span>Struktur Pelaksana</span>
-        </div> -->
 
         <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-            Profil <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">PPID Pelaksana</span>
+            Profil PPID Pelaksana
         </h2>
 
         <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">

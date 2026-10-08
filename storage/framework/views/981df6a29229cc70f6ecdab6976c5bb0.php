@@ -4,14 +4,23 @@
 <?php $__env->startSection('content'); ?>
 <div class="space-y-6">
 
+    <?php $dipSelectedKategori = trim((string) request()->query('kategori', '')); ?>
     <!-- Section Header: Dinamis sesuai Klasifikasi yang Dipilih -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
-                Daftar Informasi Publik
+                <?php if($dipSelectedKategori === 'Informasi Berkala'): ?> Informasi Publik yang Wajib Disediakan Secara Berkala
+                <?php elseif($dipSelectedKategori === 'Informasi Setiap Saat'): ?> Informasi Publik yang Wajib Tersedia Setiap Saat
+                <?php elseif($dipSelectedKategori === 'Informasi Serta-Merta'): ?> Informasi Publik yang Wajib Diumumkan Secara Serta-Merta
+                <?php else: ?> Daftar Informasi Publik
+                <?php endif; ?>
             </h1>
             <p class="text-xs md:text-sm font-semibold text-slate-400 mt-1">
-                Kelola dan publikasikan informasi publik PPID FMIPA Universitas Lampung
+                <?php if($dipSelectedKategori === 'Informasi Berkala'): ?> Kelola informasi publik yang wajib disediakan secara berkala
+                <?php elseif($dipSelectedKategori === 'Informasi Setiap Saat'): ?> Kelola informasi yang wajib tersedia setiap saat
+                <?php elseif($dipSelectedKategori === 'Informasi Serta-Merta'): ?> Kelola informasi yang wajib diumumkan secara serta-merta
+                <?php else: ?> Kelola dan publikasikan informasi publik PPID FMIPA Universitas Lampung
+                <?php endif; ?>
             </p>
         </div>
 
@@ -33,68 +42,76 @@
             </div>
     </div>
 
+    <?php if($dipSelectedKategori === ''): ?>
+    <!-- Kartu Visual Klasifikasi Informasi Publik — hanya tampil di mode keseluruhan -->
+    <?php if (isset($component)) { $__componentOriginalbf342e152c40846d770036f471804fd1 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalbf342e152c40846d770036f471804fd1 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.informasi_publik.summary-cards','data' => ['totalInformasi' => $totalInformasi,'totalBerkala' => $totalBerkala,'totalSertaMerta' => $totalSertaMerta,'totalSetiapSaat' => $totalSetiapSaat,'lastUpdateTotal' => $lastUpdateTotal,'lastUpdateBerkala' => $lastUpdateBerkala,'lastUpdateSertaMerta' => $lastUpdateSertaMerta,'lastUpdateSetiapSaat' => $lastUpdateSetiapSaat]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('admin.informasi_publik.summary-cards'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['totalInformasi' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($totalInformasi),'totalBerkala' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($totalBerkala),'totalSertaMerta' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($totalSertaMerta),'totalSetiapSaat' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($totalSetiapSaat),'lastUpdateTotal' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($lastUpdateTotal),'lastUpdateBerkala' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($lastUpdateBerkala),'lastUpdateSertaMerta' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($lastUpdateSertaMerta),'lastUpdateSetiapSaat' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($lastUpdateSetiapSaat)]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalbf342e152c40846d770036f471804fd1)): ?>
+<?php $attributes = $__attributesOriginalbf342e152c40846d770036f471804fd1; ?>
+<?php unset($__attributesOriginalbf342e152c40846d770036f471804fd1); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalbf342e152c40846d770036f471804fd1)): ?>
+<?php $component = $__componentOriginalbf342e152c40846d770036f471804fd1; ?>
+<?php unset($__componentOriginalbf342e152c40846d770036f471804fd1); ?>
+<?php endif; ?>
+    <?php endif; ?>
+
     <form id="form-bulk-delete" action="<?php echo e(route('admin.informasi.bulk')); ?>" method="POST" class="hidden">
         <?php echo csrf_field(); ?>
         <?php echo method_field('DELETE'); ?>
         <div id="bulk-selected-inputs"></div>
     </form>
 
-    <!-- Kontrol pemilihan berlaku untuk semua tabel kategori -->
-    <div class="flex items-center gap-3 flex-wrap">
-            <!-- Tombol Mode Hapus -->
+    <?php
+        $selectedKategori = trim((string) request()->query('kategori', ''));
+        $isUnifiedView = $selectedKategori === '';
+        $displayInformasi = $isUnifiedView ? $informasi : $informasiGroups->get($selectedKategori, collect());
+        $dipTableKey = $isUnifiedView ? 'unified' : 'kategori';
+    ?>
+
+    
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3 flex-wrap">
             <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()"
                     class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition shadow-2xs hover:shadow-xs cursor-pointer shrink-0 whitespace-nowrap">
                 <i class="fa-solid fa-list-check"></i> <span id="text-select-mode">Hapus</span>
             </button>
-
-            <!-- Tombol Hapus Bulk (Muncul saat mode pilih aktif & ada item dicentang) -->
             <button type="button" id="btn-bulk-delete" onclick="triggerBulkDelete()"
                     class="hidden inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-extrabold rounded-2xl transition shadow-xs cursor-pointer shrink-0 whitespace-nowrap">
                 <i class="fa-solid fa-trash"></i> <span>Hapus (<span id="selected-count">0</span>) data terpilih</span>
             </button>
-
+            <label class="flex items-center gap-2 text-sm font-semibold text-slate-800">Tampilkan
+                <select data-admin-dip-per-page="<?php echo e($dipTableKey); ?>" onchange="changePerPageAdminDip('<?php echo e($dipTableKey); ?>', this.value)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-900">
+                    <option value="10" selected>10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option>
+                </select> baris
+            </label>
+        </div>
+        <label class="flex items-center gap-2 text-sm font-semibold text-slate-800">Cari:
+            <input data-admin-dip-search="<?php echo e($dipTableKey); ?>" oninput="searchAdminDipTable('<?php echo e($dipTableKey); ?>', this.value)" value="<?php echo e(request('search')); ?>" class="w-48 sm:w-64 px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-normal focus:outline-none focus:ring-2 focus:ring-sky-500/30">
+        </label>
     </div>
 
-    <?php
-        $jenisPublik = [
-            ['nama' => 'Informasi Berkala', 'judul' => 'Informasi Publik yang Wajib Disediakan secara Berkala', 'key' => 'berkala', 'deskripsi' => 'informasi yang wajib disediakan secara berkala.'],
-            ['nama' => 'Informasi Setiap Saat', 'judul' => 'Informasi Publik yang Wajib Tersedia Setiap Saat', 'key' => 'setiap-saat', 'deskripsi' => 'informasi yang tersedia untuk diakses setiap saat.'],
-            ['nama' => 'Informasi Serta-Merta', 'judul' => 'Informasi Publik yang Wajib Diumumkan secara Serta-Merta', 'key' => 'serta-merta', 'deskripsi' => 'informasi yang wajib diumumkan segera.'],
-        ];
-    ?>
-
-    <?php $selectedKategori = trim((string) request()->query('kategori', '')); ?>
-    <div class="space-y-10">
-        <?php $__currentLoopData = $jenisPublik; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $jenis): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <?php if($selectedKategori === '' || mb_strtolower($selectedKategori) === mb_strtolower($jenis['nama'])): ?>
-            <?php $daftarJenis = $informasiGroups->get($jenis['nama'], collect()); ?>
-            <section class="space-y-4" aria-labelledby="judul-admin-<?php echo e($jenis['key']); ?>">
-                <header class="space-y-1">
-                    <h2 id="judul-admin-<?php echo e($jenis['key']); ?>" class="text-xl md:text-2xl font-extrabold text-slate-900"><?php echo e($jenis['judul']); ?></h2>
-                    <p class="text-sm md:text-base text-slate-600"><?php echo e(number_format($daftarJenis->count(), 0, ',', '.')); ?> informasi <?php echo e($jenis['deskripsi']); ?></p>
-                </header>
-
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <label class="flex items-center gap-2 text-sm font-semibold text-slate-800">Tampilkan
-                        <select data-admin-dip-per-page="<?php echo e($jenis['key']); ?>" onchange="changePerPageAdminDip('<?php echo e($jenis['key']); ?>', this.value)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-900">
-                            <option value="10" selected>10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option>
-                        </select> baris
-                    </label>
-                    <label class="flex items-center gap-2 text-sm font-semibold text-slate-800">Cari:
-                        <input data-admin-dip-search="<?php echo e($jenis['key']); ?>" oninput="searchAdminDipTable('<?php echo e($jenis['key']); ?>', this.value)" value="<?php echo e(request('search')); ?>" class="w-48 sm:w-64 px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-normal focus:outline-none focus:ring-2 focus:ring-sky-500/30">
-                    </label>
-                </div>
-
-                <?php if (isset($component)) { $__componentOriginal4e54bfa09d6d407e669b3077e7e173e7 = $component; } ?>
+    <?php if($isUnifiedView): ?>
+        <?php if (isset($component)) { $__componentOriginal4e54bfa09d6d407e669b3077e7e173e7 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e54bfa09d6d407e669b3077e7e173e7 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.informasi_publik.table','data' => ['informasi' => $daftarJenis,'tableKey' => $jenis['key'],'forceTable' => $selectedKategori === '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.informasi_publik.table','data' => ['informasi' => $displayInformasi,'tableKey' => 'unified','forceTable' => false,'unified' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('admin.informasi_publik.table'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['informasi' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($daftarJenis),'table-key' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($jenis['key']),'force-table' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($selectedKategori === '')]); ?>
+<?php $component->withAttributes(['informasi' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($displayInformasi),'table-key' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('unified'),'force-table' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(false),'unified' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4e54bfa09d6d407e669b3077e7e173e7)): ?>
@@ -105,10 +122,28 @@
 <?php $component = $__componentOriginal4e54bfa09d6d407e669b3077e7e173e7; ?>
 <?php unset($__componentOriginal4e54bfa09d6d407e669b3077e7e173e7); ?>
 <?php endif; ?>
-            </section>
-            <?php endif; ?>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    </div>
+    <?php else: ?>
+        <?php if (isset($component)) { $__componentOriginal4e54bfa09d6d407e669b3077e7e173e7 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e54bfa09d6d407e669b3077e7e173e7 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.informasi_publik.table','data' => ['informasi' => $displayInformasi,'tableKey' => 'kategori','forceTable' => false,'unified' => false]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('admin.informasi_publik.table'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['informasi' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($displayInformasi),'table-key' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('kategori'),'force-table' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(false),'unified' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(false)]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e54bfa09d6d407e669b3077e7e173e7)): ?>
+<?php $attributes = $__attributesOriginal4e54bfa09d6d407e669b3077e7e173e7; ?>
+<?php unset($__attributesOriginal4e54bfa09d6d407e669b3077e7e173e7); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e54bfa09d6d407e669b3077e7e173e7)): ?>
+<?php $component = $__componentOriginal4e54bfa09d6d407e669b3077e7e173e7; ?>
+<?php unset($__componentOriginal4e54bfa09d6d407e669b3077e7e173e7); ?>
+<?php endif; ?>
+    <?php endif; ?>
 
 </div>
 <?php $__env->stopSection(); ?>

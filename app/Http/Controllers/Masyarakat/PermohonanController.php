@@ -110,7 +110,7 @@ class PermohonanController extends Controller
                 ];
 
                 \Illuminate\Support\Facades\Mail::send('emails.permohonan_dikirim', ['permohonan' => $emailData], function($m) use ($recipientEmail, $permohonan) {
-                    $m->to($recipientEmail)->subject('Permohonan Informasi Berhasil Masuk ke Sistem PPID FMIPA Universitas Lampung');
+                    $m->to($recipientEmail)->subject('Permohonan Informasi Anda Telah Diterima - PPID FMIPA Universitas Lampung');
                 });
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('Gagal mengirim email permohonan baru: ' . $e->getMessage());

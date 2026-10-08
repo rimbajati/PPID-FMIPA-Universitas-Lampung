@@ -54,7 +54,7 @@
         </div>
 
         <!-- Form Body -->
-        <form id="formAddEdit" method="POST" enctype="multipart/form-data" class="flex flex-col flex-1 min-h-0" onsubmit="handleFormSubmit(event)">
+        <form id="formAddEdit" method="POST" enctype="multipart/form-data" class="flex flex-col flex-1 min-h-0" onsubmit="return handleFormSubmit(event)">
             <?php echo csrf_field(); ?>
             <input type="hidden" id="formMethod" name="_method" value="POST">
 

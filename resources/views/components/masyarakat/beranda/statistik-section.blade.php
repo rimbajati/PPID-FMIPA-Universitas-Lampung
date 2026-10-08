@@ -35,7 +35,7 @@
         </div> -->
 
         <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-            Statistik <span class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 bg-clip-text text-transparent">Permohonan Informasi</span>
+            Statistik Permohonan Informasi
         </h2>
 
         <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">

@@ -48,7 +48,7 @@
                                 <span>Pengajuan Keberatan</span>
                             </a>
                             <a href="{{ url('/riwayat-layanan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Lacak & Riwayat Layanan</span>
+                                <span>Lacak Tiket Layanan</span>
                             </a>
                             <a href="{{ url('/#statistik-layanan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
                                 <span>Statistik Layanan</span>

@@ -1,3 +1,13 @@
+@props(['profil' => []])
+
+@php
+    $email = $profil['email'] ?? 'ppid.fmipa@unila.ac.id';
+    $waRaw = preg_replace('/[^0-9]/', '', $profil['whatsapp'] ?? '6281320178069');
+    $waDisplay = '+' . substr($waRaw, 0, 2) . ' ' . substr($waRaw, 2, 3) . '-' . substr($waRaw, 5, 4) . '-' . substr($waRaw, 9);
+    $namaPIC = $profil['nama'] ?? 'Aristoeteles';
+    $jabatanPIC = $profil['jabatan'] ?? 'Kasubag TU';
+@endphp
+
 <footer class="bg-[#F0F9FF] text-slate-700 py-16 border-t border-sky-200/60">
     <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
         
@@ -16,9 +26,9 @@
 
                 <div class="pt-2 space-y-1.5 text-xs text-slate-600 font-normal">
                     <p class="font-bold text-slate-900">PPID Pelaksana FMIPA Universitas Lampung</p>
-                    <p class="text-slate-500 font-medium">PIC: <b>Aristoeteles</b> (Kasubag TU)</p>
-                    <p><i class="fa-solid fa-envelope text-sky-500 mr-1.5"></i>ppid.fmipa@unila.ac.id</p>
-                    <p><a href="https://wa.me/6281320178069" target="_blank" class="hover:text-emerald-600 transition"><i class="fa-brands fa-whatsapp text-emerald-500 mr-1.5"></i>+62 813-2017-8069</a></p>
+                    <p class="text-slate-500 font-medium">PIC: <b>{{ $namaPIC }}</b> ({{ $jabatanPIC }})</p>
+                    <p><i class="fa-solid fa-envelope text-sky-500 mr-1.5"></i>{{ $email }}</p>
+                    <p><a href="https://wa.me/{{ $waRaw }}" target="_blank" class="hover:text-emerald-600 transition"><i class="fa-brands fa-whatsapp text-emerald-500 mr-1.5"></i>{{ $waDisplay }}</a></p>
                     <p><i class="fa-solid fa-location-dot text-rose-500 mr-1.5"></i>Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Gedong Meneng, Bandar Lampung</p>
                 </div>
 

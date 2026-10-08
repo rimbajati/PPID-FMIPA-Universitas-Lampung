@@ -84,8 +84,14 @@ class RiwayatLayananController extends Controller
             'berkas_identitas_diterima' => filled($permohonan->file_identitas),
             'catatan_diproses' => $permohonan->catatan_diproses,
             'catatan_selesai' => $permohonan->catatan_selesai,
+            'jawaban' => $permohonan->jawaban,
             'alasan_ditolak' => $permohonan->alasan_ditolak,
             'has_keberatan' => $permohonan->keberatans()->exists(),
+            'jawaban_files' => $permohonan->jawabanFiles->map(fn($f) => [
+                'name' => $f->file_name,
+                'url'  => asset('storage/' . $f->file_path),
+                'size' => $f->file_size,
+            ])->values()->all(),
         ];
     }
 
@@ -116,7 +122,13 @@ class RiwayatLayananController extends Controller
             'berkas_pendukung_diterima' => filled($keberatan->file_pendukung),
             'catatan_diproses' => $keberatan->catatan_diproses,
             'catatan_selesai' => $keberatan->catatan_selesai,
+            'jawaban' => $keberatan->jawaban,
             'alasan_ditolak' => $keberatan->alasan_ditolak,
+            'jawaban_files' => $keberatan->jawabanFiles->map(fn($f) => [
+                'name' => $f->file_name,
+                'url'  => asset('storage/' . $f->file_path),
+                'size' => $f->file_size,
+            ])->values()->all(),
         ];
     }
 
@@ -139,7 +151,7 @@ class RiwayatLayananController extends Controller
                 ? 'Tanggapan atas keberatan telah diputuskan.'
                 : 'Permohonan telah dipenuhi. Hasil disampaikan sesuai saluran yang dipilih saat pengajuan.',
             'Ditolak' => $isKeberatan
-                ? 'Pengajuan keberatan tidak dapat dikabulkan. Alasan tercantum pada riwayat proses.'
+                ? 'Pengajuan keberatan tidak dapat dipenuhi. Alasan tercantum pada riwayat proses.'
                 : 'Permohonan tidak dapat dipenuhi. Alasan tercantum pada riwayat proses.',
             default => $isKeberatan
                 ? 'Keberatan sudah masuk sistem dan menunggu pemeriksaan Atasan PPID.'

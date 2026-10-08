@@ -23,9 +23,8 @@ class Keberatan extends Model
         'status',
         'catatan_diproses',
         'catatan_selesai',
+        'jawaban',
         'alasan_ditolak',
-        'file_jawaban',
-        'link_jawaban',
     ];
 
     public function user(): BelongsTo
@@ -36,5 +35,10 @@ class Keberatan extends Model
     public function permohonan(): BelongsTo
     {
         return $this->belongsTo(Permohonan::class, 'permohonan_id');
+    }
+
+    public function jawabanFiles()
+    {
+        return $this->morphMany(JawabanFile::class, 'jawabanable');
     }
 }

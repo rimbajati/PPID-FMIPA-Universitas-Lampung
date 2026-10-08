@@ -111,47 +111,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="bg-[#f1f5f9] text-slate-800 antialiased overflow-hidden flex flex-col h-screen relative">
+<body class="bg-[#f1f5f9] text-slate-800 antialiased overflow-hidden flex h-screen relative">
 
-    <!-- 1. Header Topbar Biru Muda Sistem (bg-sky-600) -->
-    <header class="bg-sky-600 h-14 md:h-16 flex items-center justify-between px-4 md:px-6 text-white shadow-md w-full flex-shrink-0">
-        <!-- Sisi Kiri: Logo PPID FMIPA + Tombol Hamburger Berjarak Lega -->
-        <div class="flex items-center gap-6 md:gap-8">
-            <a href="/" class="flex items-center shrink-0 gap-3 group">
-                <img src="<?php echo e(asset('images/logo.png')); ?>" alt="Logo FMIPA Unila" class="h-10 w-auto">
-                <div class="text-left leading-snug">
-                    <span class="block text-white font-extrabold text-base tracking-tight">PPID PELAKSANA</span>
-                    <span class="block text-white/90 font-bold text-[10px] tracking-wider uppercase">FMIPA UNIVERSITAS LAMPUNG</span>
-                </div>
-            </a>
-
-            <!-- Tombol Hamburger (Berjarak Rapi & Fit Dengan Batas Sidebar) -->
-            <button onclick="toggleSidebar()" type="button" class="ml-2 md:ml-4 p-1.5 text-white/90 hover:text-white text-xl transition-all cursor-pointer focus:outline-none" title="Tampilkan/Sembunyikan Menu Sidebar">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-
-        <!-- Sisi Kanan: Teks Tanggal Clean Tanpa Icon & Border -->
-        <div class="flex items-center">
-            <div class="text-right">
-                <span class="text-xs md:text-sm font-black text-white/90 uppercase tracking-wider">
-                    <?php echo e(\Carbon\Carbon::now()->translatedFormat('d F Y')); ?>
-
-                </span>
-            </div>
-        </div>
-    </header>
-
-    <!-- 2. Container Bawah Header (Sidebar Navigasi Menu + Main Content) -->
-    <div class="flex flex-1 min-h-0 w-full relative">
-
-        <!-- Mobile Sidebar Backdrop Overlay -->
-        <div id="sidebar-backdrop" 
-             onclick="closeSidebar()" 
-             class="hidden fixed inset-0 bg-black/40 z-10 lg:hidden backdrop-blur-sm transition-opacity"></div>
-
-        <!-- Sidebar Container Navigasi Admin -->
-        <?php if (isset($component)) { $__componentOriginal866058266f1aa33777f53f753d6dbe46 = $component; } ?>
+    <!-- Sidebar kiri full-height (biru ikut sampai atas) -->
+    <?php if (isset($component)) { $__componentOriginal866058266f1aa33777f53f753d6dbe46 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal866058266f1aa33777f53f753d6dbe46 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.ui.sidebar-admin','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('ui.sidebar-admin'); ?>
@@ -171,6 +134,35 @@
 <?php $component = $__componentOriginal866058266f1aa33777f53f753d6dbe46; ?>
 <?php unset($__componentOriginal866058266f1aa33777f53f753d6dbe46); ?>
 <?php endif; ?>
+
+    <!-- Kolom kanan: Header putih + Konten -->
+    <div class="flex flex-1 flex-col min-w-0 min-h-0">
+
+        <!-- Header Topbar Putih -->
+        <header class="bg-white h-14 md:h-16 flex items-center justify-between px-4 md:px-6 text-slate-800 shadow-sm border-b border-slate-200 w-full flex-shrink-0">
+            <!-- Sisi Kiri: Tombol Hamburger -->
+            <button onclick="toggleSidebar()" type="button" class="p-1.5 text-slate-500 hover:text-slate-800 text-xl transition-all cursor-pointer focus:outline-none" title="Tampilkan/Sembunyikan Menu Sidebar">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Sisi Kanan: Teks Tanggal -->
+            <div class="flex items-center">
+                <div class="text-right">
+                    <span class="text-xs md:text-sm font-black text-slate-600 uppercase tracking-wider">
+                        <?php echo e(\Carbon\Carbon::now()->translatedFormat('d F Y')); ?>
+
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Container Konten -->
+        <div class="flex flex-1 min-h-0 w-full relative">
+
+        <!-- Mobile Sidebar Backdrop Overlay -->
+        <div id="sidebar-backdrop" 
+             onclick="closeSidebar()" 
+             class="hidden fixed inset-0 bg-black/40 z-10 lg:hidden backdrop-blur-sm transition-opacity"></div>
 
         <!-- Main Content (Warna latar Slate-100 #f1f5f9 Soft & Terang) -->
         <div class="flex-1 flex flex-col min-w-0 bg-[#f1f5f9] relative">

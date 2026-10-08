@@ -1,9 +1,9 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
-<?php foreach($attributes->onlyProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false]) as $__key => $__value) {
+<?php foreach($attributes->onlyProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false, 'unified' => false]) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
-<?php $attributes = $attributes->exceptProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false]); ?>
-<?php foreach (array_filter((['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+<?php $attributes = $attributes->exceptProps(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false, 'unified' => false]); ?>
+<?php foreach (array_filter((['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false, 'unified' => false]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 } ?>
 <?php $__defined_vars = get_defined_vars(); ?>
@@ -13,9 +13,10 @@
 <?php unset($__defined_vars); ?>
 
 <!-- Table Container -->
-<div class="bg-white <?php echo e(request('kategori') === 'Informasi Serta-Merta' ? 'rounded-none' : 'rounded-2xl'); ?> border border-slate-200/80 shadow-xs overflow-hidden">
+<div class="bg-white <?php echo e(($unified && request('kategori') === '') ? 'rounded-2xl' : (request('kategori') === 'Informasi Serta-Merta' ? 'rounded-none' : 'rounded-2xl')); ?> border border-slate-200/80 shadow-xs overflow-hidden">
         <?php
-            $isKategoriMode = request()->filled('kategori') && !$forceTable;
+            $isUnified = (bool) $unified;
+            $isKategoriMode = !$isUnified && request()->filled('kategori') && !$forceTable;
             $isSertaMertaCategory = $isKategoriMode && request('kategori') === 'Informasi Serta-Merta';
             $curSortBy = request('sort_by');
             $curSortDir = request('sort_direction', 'asc');
@@ -119,7 +120,37 @@
             <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
                 <table class="w-full <?php echo e($isKategoriMode ? 'min-w-0 table-fixed' : 'min-w-[1200px] table-auto'); ?> text-left border-collapse border border-slate-200">
                     <thead>
-                        <?php if($isKategoriMode && $isSertaMertaCategory): ?>
+                        <?php if($isUnified): ?>
+                        <tr class="bg-sky-500 text-white text-xs sm:text-sm md:text-lg font-black tracking-tight text-center leading-snug select-none">
+                            <th id="col-checkbox-header-<?php echo e($tableKey); ?>" class="col-checkbox-header hidden px-1 py-3 w-10 text-center">
+                                <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
+                            </th>
+                            <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'no')" class="px-2 py-3 text-center w-12 min-w-[48px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
+                                <div class="flex items-center justify-center gap-1.5">
+                                    <span>No</span>
+                                    <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                        <i class="fa-solid fa-sort"></i>
+                                    </span>
+                                </div>
+                            </th>
+                            <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'ringkasan')" class="px-3.5 py-3 text-left min-w-[300px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
+                                <div class="flex items-center justify-between gap-1.5">
+                                    <span>Ringkasan Isi Informasi</span>
+                                    <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                        <i class="fa-solid fa-sort"></i>
+                                    </span>
+                                </div>
+                            </th>
+                            <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'pejabat')" class="px-3.5 py-3 text-left min-w-[210px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit yang Menguasai Informasi">
+                                <div class="flex items-center justify-between gap-1.5"><span>Pejabat/Unit yang Menguasai Informasi</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div>
+                            </th>
+                            <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'penanggung_jawab')" class="px-3.5 py-3 text-left min-w-[180px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab"><div class="flex items-center justify-between gap-1.5"><span>Penanggung Jawab</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div></th>
+                            <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'waktu')" class="px-3.5 py-3 text-left min-w-[170px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat Pembuatan"><div class="flex items-center justify-between gap-1.5"><span>Waktu dan Tempat Pembuatan</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div></th>
+                            <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'bentuk')" class="px-3 py-3 text-center min-w-[120px] cursor-pointer hover:bg-sky-600/60 transition group"><div class="flex items-center justify-center gap-1.5"><span>Format</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div></th>
+                            <th onclick="sortAdminDipTable('<?php echo e($tableKey); ?>', 'retensi')" class="px-3 py-3 text-center min-w-[140px] cursor-pointer hover:bg-sky-600/60 transition group"><div class="flex items-center justify-center gap-1.5"><span>Retensi Arsip</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div></th>
+                            <th class="px-2 py-3 text-center w-24 min-w-[90px] shrink-0"><span>Aksi</span></th>
+                        </tr>
+                        <?php elseif($isKategoriMode && $isSertaMertaCategory): ?>
                             <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide select-none">
                                 <th id="col-checkbox-header-<?php echo e($tableKey); ?>" class="col-checkbox-header hidden px-2 py-3.5 w-12 text-center">
                                     <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
@@ -239,8 +270,31 @@
                             </tr>
                         <?php endif; ?>
                     </thead>
-            <tbody id="table-admin-dip-body-<?php echo e($tableKey); ?>" data-admin-dip-tbody="<?php echo e($tableKey); ?>" data-category-mode="<?php echo e($isKategoriMode ? 'true' : 'false'); ?>" data-serta-merta-table="<?php echo e($isSertaMertaCategory ? 'true' : 'false'); ?>" data-category-table="<?php echo e($isKategoriMode && !$isSertaMertaCategory ? 'true' : 'false'); ?>" class="<?php echo e($isKategoriMode ? '' : 'divide-y divide-slate-200'); ?> text-sm md:text-base font-medium text-slate-800">
+            <tbody id="table-admin-dip-body-<?php echo e($tableKey); ?>" data-admin-dip-tbody="<?php echo e($tableKey); ?>" data-unified="<?php echo e($isUnified ? 'true' : 'false'); ?>" data-category-mode="<?php echo e($isKategoriMode ? 'true' : 'false'); ?>" data-serta-merta-table="<?php echo e($isSertaMertaCategory ? 'true' : 'false'); ?>" data-category-table="<?php echo e($isKategoriMode && !$isSertaMertaCategory ? 'true' : 'false'); ?>" class="<?php echo e($isUnified ? 'divide-y divide-slate-200' : ($isKategoriMode ? '' : 'divide-y divide-slate-200')); ?> text-sm md:text-base font-medium text-slate-800">
+                        <?php $unifiedGroupCurrent = null; $unifiedColspan = 9; ?>
                         <?php $__empty_1 = true; $__currentLoopData = $informasi; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $idx => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <?php if($isUnified && !request()->filled('kategori')): ?>
+                                <?php if($unifiedGroupCurrent !== ($item->jenis_informasi ?? '')): ?>
+                                    <?php
+                                        $unifiedGroupCurrent = $item->jenis_informasi ?? '';
+                                        $unifiedGroupLabel = match($unifiedGroupCurrent) {
+                                            'Informasi Berkala' => 'Informasi Publik yang Wajib Disediakan Secara Berkala',
+                                            'Informasi Setiap Saat' => 'Informasi Publik yang Wajib Tersedia Setiap Saat',
+                                            'Informasi Serta-Merta' => 'Informasi Publik yang Wajib Diumumkan Secara Serta-Merta',
+                                            default => \Illuminate\Support\Str::title($unifiedGroupCurrent),
+                                        };
+                                    ?>
+                                    <tr class="table-admin-dip-group bg-sky-50/80">
+                                        <td colspan="<?php echo e($unifiedColspan); ?>" class="px-4 py-3 font-black text-xs md:text-sm tracking-wide text-sky-700 border-t border-sky-100">
+                                            <span class="inline-flex items-center gap-2">
+                                                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                                                <?php echo e($unifiedGroupLabel); ?>
+
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            <?php endif; ?>
                             <?php
                                 $rincianText = trim($item->rincian_informasi ?: '-');
                                 $subInformasiText = trim($item->sub_informasi ?: '');
@@ -268,15 +322,34 @@
                                     <input type="checkbox" value="<?php echo e($item->id); ?>" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                                 </td>
 
-                                <?php if(!$isKategoriMode): ?>
-                                    <!-- 0. Kolom No (Hanya untuk Full DIP) -->
-                                    <td class="col-admin-dip-no px-2 py-3 text-center font-bold text-slate-400">
-                                        <?php echo e($idx + 1); ?>
-
+                                <?php if($isUnified): ?>
+                                    <td class="col-admin-dip-no px-2 py-3 text-center font-bold text-slate-400"><?php echo e($idx + 1); ?></td>
+                                    <td class="px-4 py-3.5 text-slate-900 leading-normal break-words text-sm md:text-base">
+                                        <?php $subValU = trim($item->sub_informasi ?: ''); ?>
+                                        <div class="space-y-1">
+                                            <?php if($subValU && $subValU !== 'Dokumen sedang dilengkapi unit'): ?>
+                                                <div class="font-medium text-slate-900 leading-snug"><?php echo e($subValU); ?></div>
+                                            <?php else: ?>
+                                                <div class="font-medium text-slate-900 leading-snug">-</div>
+                                                <div class="text-xs text-amber-600 font-semibold italic flex items-center gap-1"><i class="fa-regular fa-clock text-[10px]"></i><span>Dokumen sedang dilengkapi unit</span></div>
+                                            <?php endif; ?>
+                                        </div>
                                     </td>
-                                <?php endif; ?>
-
-                                <?php if($isSertaMertaCategory): ?>
+                                    <td class="px-4 py-3.5 font-medium text-slate-700 text-left break-words text-sm md:text-base leading-normal"><?php echo e($item->pejabat_unit_yang_menguasai_informasi ?: '-'); ?></td>
+                                    <td class="px-4 py-3.5 font-medium text-slate-700 text-left break-words text-sm md:text-base leading-normal"><?php echo e($item->penanggung_jawab_pembuatan_informasi ?: '-'); ?></td>
+                                    <td class="px-4 py-3.5 text-left font-medium text-slate-700 break-words text-sm md:text-base leading-normal"><?php echo e($item->waktu_pembuatan_informasi ?: '-'); ?></td>
+                                    <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal"><?php echo e($item->bentuk_informasi_yang_tersedia ?: '-'); ?></td>
+                                    <td class="px-3.5 py-3.5 text-left font-medium text-slate-700 break-words text-sm md:text-base leading-normal"><?php echo e($item->retensi_arsip ?: '-'); ?></td>
+                                    <td class="px-3 py-3.5 text-center align-middle">
+                                        <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
+                                            <?php if($fileTargetUrl && $fileTargetUrl !== '#'): ?>
+                                                <a href="<?php echo e($fileTargetUrl); ?>" target="_blank" title="Lihat Tautan / Berkas" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg"><i class="fa-regular fa-eye text-[11px] not-italic leading-none"></i></a>
+                                            <?php endif; ?>
+                                            <button type="button" onclick="editData(<?php echo e(json_encode($item)); ?>)" title="Edit Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg"><i class="fa-solid fa-pen-to-square text-[11px] not-italic leading-none"></i></button>
+                                            <button type="button" onclick="triggerDelete('<?php echo e(url('/admin/informasi-publik/'.$item->id)); ?>', '<?php echo e(addslashes($item->sub_informasi)); ?>')" title="Hapus Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg"><i class="fa-solid fa-trash-can text-[11px] not-italic leading-none"></i></button>
+                                        </div>
+                                    </td>
+                                <?php elseif($isSertaMertaCategory): ?>
                                     <td class="col-admin-sub-info px-4 py-3 font-medium text-slate-800 leading-relaxed align-middle break-words">
                                         <?php echo e($item->sub_informasi); ?>
 

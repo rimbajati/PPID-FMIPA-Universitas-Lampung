@@ -146,7 +146,7 @@
                                         <a href="{{ url('/riwayat-layanan') }}" 
                                            @click="open = false"
                                            class="block px-4 py-3 rounded-xl hover:bg-sky-50 text-slate-800 hover:text-sky-600 transition-all duration-150 group/item {{ request()->is('riwayat-layanan*') ? 'bg-sky-50 text-sky-600 font-bold' : '' }}">
-                                            <span class="block text-base font-bold leading-tight">Lacak & Riwayat Layanan</span>
+                                            <span class="block text-base font-bold leading-tight">Lacak Tiket Layanan</span>
                                         </a>
 
                                         <div class="my-1 border-t border-slate-100"></div>

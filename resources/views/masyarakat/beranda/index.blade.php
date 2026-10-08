@@ -30,7 +30,7 @@
     <x-masyarakat.beranda.faq-section :faqs="$faqs" />
 
     <!-- Banner Call to Action & Bantuan Helpdesk -->
-    <x-masyarakat.beranda.cta-helpdesk />
+    <x-masyarakat.beranda.cta-helpdesk :profil="$profil" />
 
 </main>
 @endsection
