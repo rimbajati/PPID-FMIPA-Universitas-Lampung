@@ -84,7 +84,7 @@ class KeberatanController extends Controller
             'catatan_selesai'  => 'nullable|string',
             'jawaban'          => 'nullable|string',
             'alasan_ditolak'   => 'nullable|string',
-            'file_jawaban'     => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
+            'file_jawaban'     => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
         ]);
 
         $statusInput = $validated['status'];

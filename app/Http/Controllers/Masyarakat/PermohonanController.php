@@ -52,7 +52,7 @@ class PermohonanController extends Controller
             'tujuan_penggunaan_informasi' => 'required|string',
             'informasi_yang_diminta' => 'required|string',
             'cara_memperoleh_informasi'   => 'required|string|in:Salinan Digital (Dikirim melalui Email),Datang Langsung ke Dekanat FMIPA Universitas Lampung,Dikirim melalui Email,Diambil langsung di Dekanat FMIPA Universitas Lampung,Melihat/Membaca di tempat',
-            'file_identitas'         => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'file_identitas'         => 'required|file|extensions:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         // Normalisasi dan petakan jenis_permohonan secara otomatis

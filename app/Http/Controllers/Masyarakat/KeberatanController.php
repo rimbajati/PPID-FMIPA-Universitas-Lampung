@@ -27,7 +27,7 @@ class KeberatanController extends Controller
             'email'               => 'required|email|max:255',
             'alasan_keberatan'    => 'required|string',
             'kronologi_keberatan' => 'required|string',
-            'pendukung_file'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:3072',
+            'pendukung_file'      => 'nullable|file|extensions:pdf,jpg,jpeg,png|max:3072',
         ]);
 
         $permohonan = Permohonan::whereRaw('UPPER(no_tiket) = ?', [strtoupper($validated['no_tiket_permohonan'])])
