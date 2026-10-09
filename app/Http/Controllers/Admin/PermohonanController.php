@@ -85,7 +85,7 @@ class PermohonanController extends Controller
             'catatan_selesai'         => 'nullable|string',
             'jawaban'                 => 'nullable|string',
             'alasan_ditolak'          => 'nullable|string',
-            'file_jawaban'            => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
+            'file_jawaban'            => 'nullable|file|extensions:pdf,xls,xlsx,jpg,jpeg,png|max:5120',
         ]);
 
         $statusBaru = $request->input('status');

@@ -27,7 +27,7 @@
                     <div class="space-y-3">
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             @php
-                                $jenisDoc = $doc->jenis_informasi ?: $doc->kategori_informasi;
+                                $jenisDoc = $doc->kategori_informasi ?: $doc->kategori_informasi;
                                 $badgeColor = match($jenisDoc) {
                                     'Informasi Berkala' => 'bg-sky-50 text-sky-700 border-sky-200',
                                     'Informasi Setiap Saat' => 'bg-emerald-50 text-emerald-700 border-emerald-200',

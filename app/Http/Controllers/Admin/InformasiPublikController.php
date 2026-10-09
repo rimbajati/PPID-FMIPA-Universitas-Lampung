@@ -14,11 +14,12 @@ class InformasiPublikController extends Controller
     {
         $query = InformasiPublik::query();
 
-        $listJenis = InformasiPublik::whereNotNull('jenis_informasi')
-                        ->where('jenis_informasi', '!=', '')
+        $listKategori = InformasiPublik::whereNotNull('kategori_informasi')
+                        ->where('kategori_informasi', '!=', '')
                         ->distinct()
-                        ->orderBy('jenis_informasi', 'asc')
-                        ->pluck('jenis_informasi');
+                        ->orderBy('kategori_informasi', 'asc')
+                        ->pluck('kategori_informasi');
+        $listJenis = $listKategori; // backward compat
 
         $listRincian = InformasiPublik::whereNotNull('rincian_informasi')
                         ->where('rincian_informasi', '!=', '')
@@ -26,21 +27,21 @@ class InformasiPublikController extends Controller
                         ->orderBy('rincian_informasi', 'asc')
                         ->pluck('rincian_informasi');
 
-        $listRincianBerkala = InformasiPublik::where('jenis_informasi', 'Informasi Berkala')
+        $listRincianBerkala = InformasiPublik::where('kategori_informasi', 'Informasi Berkala')
                         ->whereNotNull('rincian_informasi')
                         ->where('rincian_informasi', '!=', '')
                         ->distinct()
                         ->orderBy('rincian_informasi', 'asc')
                         ->pluck('rincian_informasi');
 
-        $listRincianSetiapSaat = InformasiPublik::where('jenis_informasi', 'Informasi Setiap Saat')
+        $listRincianSetiapSaat = InformasiPublik::where('kategori_informasi', 'Informasi Setiap Saat')
                         ->whereNotNull('rincian_informasi')
                         ->where('rincian_informasi', '!=', '')
                         ->distinct()
                         ->orderBy('rincian_informasi', 'asc')
                         ->pluck('rincian_informasi');
 
-        $listRincianSertaMerta = InformasiPublik::where('jenis_informasi', 'Informasi Serta-Merta')
+        $listRincianSertaMerta = InformasiPublik::where('kategori_informasi', 'Informasi Serta-Merta')
                         ->whereNotNull('rincian_informasi')
                         ->where('rincian_informasi', '!=', '')
                         ->distinct()
@@ -151,9 +152,9 @@ class InformasiPublikController extends Controller
                 // (1. Informasi Berkala [dengan urutan 1-11 standar], 2. Informasi Setiap Saat, 3. Informasi Serta-Merta)
                 $query->orderByRaw("
                     CASE 
-                        WHEN jenis_informasi = 'Informasi Berkala' THEN 1
-                        WHEN jenis_informasi = 'Informasi Setiap Saat' THEN 2
-                        WHEN jenis_informasi = 'Informasi Serta-Merta' THEN 3
+                        WHEN kategori_informasi = 'Informasi Berkala' THEN 1
+                        WHEN kategori_informasi = 'Informasi Setiap Saat' THEN 2
+                        WHEN kategori_informasi = 'Informasi Serta-Merta' THEN 3
                         ELSE 4
                     END ASC
                 ")->orderByRaw("
@@ -176,27 +177,27 @@ class InformasiPublikController extends Controller
         }
 
         $totalInformasi = InformasiPublik::count();
-        $totalSetiapSaat = InformasiPublik::where('jenis_informasi', 'Informasi Setiap Saat')->count();
-        $totalBerkala = InformasiPublik::where('jenis_informasi', 'Informasi Berkala')->count();
-        $totalSertaMerta = InformasiPublik::where('jenis_informasi', 'Informasi Serta-Merta')->count();
+        $totalSetiapSaat = InformasiPublik::where('kategori_informasi', 'Informasi Setiap Saat')->count();
+        $totalBerkala = InformasiPublik::where('kategori_informasi', 'Informasi Berkala')->count();
+        $totalSertaMerta = InformasiPublik::where('kategori_informasi', 'Informasi Serta-Merta')->count();
         $totalDikecualikan = \App\Models\InformasiDikecualikan::count();
 
         // Tanggal Update Terakhir per Kategori
         $lastUpdateTotal = InformasiPublik::max('updated_at');
-        $lastUpdateBerkala = InformasiPublik::where('jenis_informasi', 'Informasi Berkala')->max('updated_at');
-        $lastUpdateSertaMerta = InformasiPublik::where('jenis_informasi', 'Informasi Serta-Merta')->max('updated_at');
-        $lastUpdateSetiapSaat = InformasiPublik::where('jenis_informasi', 'Informasi Setiap Saat')->max('updated_at');
+        $lastUpdateBerkala = InformasiPublik::where('kategori_informasi', 'Informasi Berkala')->max('updated_at');
+        $lastUpdateSertaMerta = InformasiPublik::where('kategori_informasi', 'Informasi Serta-Merta')->max('updated_at');
+        $lastUpdateSetiapSaat = InformasiPublik::where('kategori_informasi', 'Informasi Setiap Saat')->max('updated_at');
         $lastUpdateDikecualikan = \App\Models\InformasiDikecualikan::max('updated_at');
 
         $informasi = $query->get();
         $informasiGroups = collect([
-            'Informasi Berkala' => $informasi->where('jenis_informasi', 'Informasi Berkala')->values(),
-            'Informasi Serta-Merta' => $informasi->where('jenis_informasi', 'Informasi Serta-Merta')->sortByDesc('created_at')->values(),
-            'Informasi Setiap Saat' => $informasi->where('jenis_informasi', 'Informasi Setiap Saat')->values(),
+            'Informasi Berkala' => $informasi->where('kategori_informasi', 'Informasi Berkala')->values(),
+            'Informasi Serta-Merta' => $informasi->where('kategori_informasi', 'Informasi Serta-Merta')->sortByDesc('created_at')->values(),
+            'Informasi Setiap Saat' => $informasi->where('kategori_informasi', 'Informasi Setiap Saat')->values(),
         ]);
 
         return view('admin.informasi_publik.index', compact(
-            'informasi', 'informasiGroups', 'listJenis', 'listRincian', 'listRincianBerkala', 'listRincianSetiapSaat', 'listRincianSertaMerta', 'listJudul', 'listTahun', 'listSatker', 'listPenanggungJawab', 'listBentuk', 'listRetensi', 'listSubByRincian', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
+            'informasi', 'informasiGroups', 'listKategori', 'listJenis', 'listRincian', 'listRincianBerkala', 'listRincianSetiapSaat', 'listRincianSertaMerta', 'listJudul', 'listTahun', 'listSatker', 'listPenanggungJawab', 'listBentuk', 'listRetensi', 'listSubByRincian', 'totalInformasi', 'totalSetiapSaat', 'totalBerkala', 'totalSertaMerta', 'totalDikecualikan',
             'lastUpdateTotal', 'lastUpdateBerkala', 'lastUpdateSertaMerta', 'lastUpdateSetiapSaat', 'lastUpdateDikecualikan'
         ));
     }
@@ -224,12 +225,12 @@ class InformasiPublikController extends Controller
             'waktu_pembuatan_informasi'              => 'nullable|string|max:255',
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',
-            'jenis_informasi'                        => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta'])],
-            'file_informasi'                         => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
+            'kategori_informasi'                        => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta'])],
+            'file_informasi'                         => 'nullable|file|extensions:pdf,xls,xlsx,jpg,jpeg,png|max:5120',
             'link_informasi'                         => 'nullable|url',
         ], [
             'rincian_informasi.required' => 'Rincian Informasi wajib diisi.',
-            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, atau PNG.',
+            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, XLS, XLSX, JPG, JPEG, atau PNG.',
             'file_informasi.max'         => 'Ukuran file melebihi batas maksimal (Maksimal 5 MB)!',
         ]);
 
@@ -299,7 +300,7 @@ class InformasiPublikController extends Controller
         // Jika sub_informasi kosong (hanya rincian informasi), cek apakah topik ini sudah pernah dibuat sebelumnya.
         // Jika sudah ada, jangan buat baris duplikat baru!
         if (empty($sub)) {
-            $existingRincian = InformasiPublik::where('jenis_informasi', $validated['jenis_informasi'])
+            $existingRincian = InformasiPublik::where('kategori_informasi', $validated['kategori_informasi'])
                 ->where('rincian_informasi', $rincian)
                 ->first();
 
@@ -312,7 +313,7 @@ class InformasiPublikController extends Controller
         // dan admin sekarang mengisi dokumen baru (sub_informasi terisi), maka update baris placeholder tersebut
         // agar tidak menimbulkan baris ganda yang membingungkan.
         if (!empty($sub)) {
-            $existingPlaceholder = InformasiPublik::where('jenis_informasi', $validated['jenis_informasi'])
+            $existingPlaceholder = InformasiPublik::where('kategori_informasi', $validated['kategori_informasi'])
                 ->where('rincian_informasi', $rincian)
                 ->where(function($q) {
                     $q->where('sub_informasi', 'Dokumen sedang dilengkapi unit')
@@ -344,12 +345,12 @@ class InformasiPublikController extends Controller
             'waktu_pembuatan_informasi'              => 'nullable|string|max:255',
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',
-            'jenis_informasi'                        => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta'])],
-            'file_informasi'                         => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:5120',
+            'kategori_informasi'                        => ['required', Rule::in(['Informasi Setiap Saat', 'Informasi Berkala', 'Informasi Serta-Merta'])],
+            'file_informasi'                         => 'nullable|file|extensions:pdf,xls,xlsx,jpg,jpeg,png|max:5120',
             'link_informasi'                         => 'nullable|url',
         ], [
             'rincian_informasi.required' => 'Rincian Informasi wajib diisi.',
-            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, atau PNG.',
+            'file_informasi.extensions'  => 'Format file tidak didukung! Gunakan PDF, XLS, XLSX, JPG, JPEG, atau PNG.',
             'file_informasi.max'         => 'Ukuran file melebihi batas maksimal (Maksimal 5 MB)!',
         ]);
 
@@ -390,7 +391,7 @@ class InformasiPublikController extends Controller
             $validated['link_informasi'] = null;
             $validated['nama_file_asli'] = null;
         } else {
-            $inputFormat = $request->input('jenis_informasi_format', 'file');
+            $inputFormat = $request->input('kategori_informasi_format', 'file');
 
             if ($inputFormat === 'file') {
                 if ($request->hasFile('file_informasi')) {
@@ -436,15 +437,15 @@ class InformasiPublikController extends Controller
     public function destroyRincian(Request $request)
     {
         $rincian = $request->input('rincian');
-        $jenis = $request->input('jenis');
+        $kategori = $request->input('kategori') ?? $request->input('jenis');
 
         if (empty($rincian)) {
             return redirect()->back()->with('error', 'Rincian Informasi tidak valid.');
         }
 
         $query = InformasiPublik::where('rincian_informasi', $rincian);
-        if (!empty($jenis)) {
-            $query->where('jenis_informasi', $jenis);
+        if (!empty($kategori)) {
+            $query->where('kategori_informasi', $kategori);
         }
 
         $items = $query->get();
@@ -462,15 +463,15 @@ class InformasiPublikController extends Controller
     {
         $oldRincian = trim($request->input('old_rincian', ''));
         $newRincian = trim($request->input('new_rincian', ''));
-        $jenis      = trim($request->input('jenis_informasi', ''));
+        $kategori   = trim($request->input('kategori_informasi', '') ?: ($request->input('kategori', '') ?: $request->input('jenis', '')));
 
         if (empty($oldRincian) || empty($newRincian)) {
             return response()->json(['success' => false, 'message' => 'Nama rincian tidak boleh kosong.'], 422);
         }
 
         $query = InformasiPublik::where('rincian_informasi', $oldRincian);
-        if (!empty($jenis)) {
-            $query->where('jenis_informasi', $jenis);
+        if (!empty($kategori)) {
+            $query->where('kategori_informasi', $kategori);
         }
 
         $updated = $query->update(['rincian_informasi' => $newRincian]);

@@ -31,14 +31,14 @@
                 <!-- Grid 2 Kolom -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                    <!-- Jenis Informasi -->
+                    <!-- Kategori Informasi -->
                     <div class="space-y-2">
                         <label class="block text-sm font-semibold text-slate-700">
-                            Jenis Informasi <span class="text-rose-500">*</span>
+                            Kategori Informasi <span class="text-rose-500">*</span>
                         </label>
-                        <select id="inputJenisInformasi" name="jenis_informasi" required onchange="handleJenisInformasiChange(this.value)"
+                        <select id="inputKategoriInformasi" name="kategori_informasi" required onchange="handleKategoriInformasiChange(this.value)"
                                 class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 transition text-sm">
-                            <option value="">-- Pilih Jenis Informasi --</option>
+                            <option value="">-- Pilih Kategori Informasi --</option>
                             <option value="Informasi Berkala">Informasi Berkala</option>
                             <option value="Informasi Setiap Saat">Informasi Setiap Saat</option>
                             <option value="Informasi Serta-Merta">Informasi Serta-Merta</option>
@@ -182,14 +182,14 @@
                             <!-- File / Tautan 1 baris kiri-kanan -->
                             <div class="flex gap-2">
                                 <label class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-xs font-medium cursor-pointer" :class="tipe==='file' ? 'border-sky-500 bg-sky-500 text-white' : 'border-slate-200 bg-white text-slate-600'">
-                                    <input type="radio" name="jenis_informasi_format" value="file" x-model="tipe" class="sr-only"> File
+                                    <input type="radio" name="kategori_informasi_format" value="file" x-model="tipe" class="sr-only"> File
                                 </label>
                                 <label class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-xs font-medium cursor-pointer" :class="tipe==='link' ? 'border-sky-500 bg-sky-500 text-white' : 'border-slate-200 bg-white text-slate-600'">
-                                    <input type="radio" name="jenis_informasi_format" value="link" x-model="tipe" class="sr-only"> Tautan
+                                    <input type="radio" name="kategori_informasi_format" value="link" x-model="tipe" class="sr-only"> Tautan
                                 </label>
                             </div>
                             <div x-show="tipe==='file'">
-                                <input type="file" id="inputFile" name="file_informasi" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" class="sr-only" @change="handle($event)">
+                                <input type="file" id="inputFile" name="file_informasi" accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png" class="sr-only" @change="handle($event)">
                                 <div @click="document.getElementById('inputFile').click()" class="flex items-center gap-2 w-full rounded-lg border border-slate-200 bg-white p-2 pr-2 cursor-pointer transition hover:border-slate-300">
                                     <span class="shrink-0 inline-flex items-center justify-center rounded-lg bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700">Pilih File</span>
                                     <span class="flex-1 min-w-0 truncate text-sm" :class="fileName ? 'text-slate-800' : 'text-slate-400'" x-text="fileName || 'Belum ada file'"></span>
@@ -212,7 +212,7 @@
                                 </template>
                                 <span id="fileDisplayName" class="hidden"></span>
                                 <a id="currentFileLink" href="#" class="hidden"><span id="currentFileName"></span></a>
-                                <p class="text-xs text-slate-400 mt-1">Format: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)</p>
+                                <p class="text-xs text-slate-400 mt-1">Format: PDF, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)</p>
                             </div>
                             <div x-show="tipe==='link'">
                                 <input type="url" id="inputLink" name="link_informasi" placeholder="Contoh: https://drive.google.com/..." class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-sky-500 transition text-sm">

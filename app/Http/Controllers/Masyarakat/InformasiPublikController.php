@@ -55,7 +55,7 @@ class InformasiPublikController extends Controller
             }
         }
 
-        // Filter berdasarkan format file (pdf, docx, xlsx, link)
+        // Filter berdasarkan format file (pdf, xlsx, link)
         if ($request->filled('format')) {
             $fmtReq = strtolower($request->format);
             if ($fmtReq === 'link') {
@@ -80,11 +80,12 @@ class InformasiPublikController extends Controller
             $query->where('retensi_arsip', $request->retensi);
         }
 
-        $listJenis = InformasiPublik::whereNotNull('jenis_informasi')
-            ->where('jenis_informasi', '!=', '')
+        $listKategori = InformasiPublik::whereNotNull('kategori_informasi')
+            ->where('kategori_informasi', '!=', '')
             ->distinct()
-            ->orderBy('jenis_informasi', 'asc')
-            ->pluck('jenis_informasi');
+            ->orderBy('kategori_informasi', 'asc')
+            ->pluck('kategori_informasi');
+        $listJenis = $listKategori; // backward compat
 
         $listTahun = InformasiPublik::whereNotNull('waktu_pembuatan_informasi')
             ->where('waktu_pembuatan_informasi', '!=', '')
@@ -144,9 +145,9 @@ class InformasiPublikController extends Controller
                 // Default: Kelompokkan berdasarkan jenis informasi resmi UU No. 14 Tahun 2008, lalu urutkan rincian dan id
                 $query->orderByRaw("
                     CASE 
-                        WHEN jenis_informasi = 'Informasi Berkala' THEN 1
-                        WHEN jenis_informasi = 'Informasi Serta-Merta' THEN 2
-                        WHEN jenis_informasi = 'Informasi Setiap Saat' THEN 3
+                        WHEN kategori_informasi = 'Informasi Berkala' THEN 1
+                        WHEN kategori_informasi = 'Informasi Serta-Merta' THEN 2
+                        WHEN kategori_informasi = 'Informasi Setiap Saat' THEN 3
                         ELSE 4
                     END ASC
                 ")->orderByRaw("
@@ -171,9 +172,9 @@ class InformasiPublikController extends Controller
         // Ambil seluruh data agar DataTables client-side berjalan instan 0 milidetik persis seperti Unpad
         $informasiList = $query->get();
         $informasiGroups = collect([
-            'Informasi Berkala' => $informasiList->where('jenis_informasi', 'Informasi Berkala')->values(),
-            'Informasi Serta-Merta' => $informasiList->where('jenis_informasi', 'Informasi Serta-Merta')->values(),
-            'Informasi Setiap Saat' => $informasiList->where('jenis_informasi', 'Informasi Setiap Saat')->values(),
+            'Informasi Berkala' => $informasiList->where('kategori_informasi', 'Informasi Berkala')->values(),
+            'Informasi Serta-Merta' => $informasiList->where('kategori_informasi', 'Informasi Serta-Merta')->values(),
+            'Informasi Setiap Saat' => $informasiList->where('kategori_informasi', 'Informasi Setiap Saat')->values(),
         ]);
 
         $years = $listTahun;
@@ -190,15 +191,16 @@ class InformasiPublikController extends Controller
         $totalCount = InformasiPublik::count();
 
         $kategoryCounts = [
-            'Informasi Berkala'      => InformasiPublik::where('jenis_informasi', 'Informasi Berkala')->count(),
-            'Informasi Serta-Merta'  => InformasiPublik::where('jenis_informasi', 'Informasi Serta-Merta')->count(),
-            'Informasi Setiap Saat'  => InformasiPublik::where('jenis_informasi', 'Informasi Setiap Saat')->count(),
+            'Informasi Berkala'      => InformasiPublik::where('kategori_informasi', 'Informasi Berkala')->count(),
+            'Informasi Serta-Merta'  => InformasiPublik::where('kategori_informasi', 'Informasi Serta-Merta')->count(),
+            'Informasi Setiap Saat'  => InformasiPublik::where('kategori_informasi', 'Informasi Setiap Saat')->count(),
         ];
 
         if ($request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return view('components.masyarakat.informasi_publik.table', [
                 'informasi' => $informasiList,
-                'listJenis' => $listJenis,
+                'listKategori' => $listKategori,
+                'listJenis'    => $listJenis,
                 'listTahun' => $listTahun,
                 'listSatker' => $listSatker,
                 'listBentuk' => $listBentuk,
@@ -214,7 +216,7 @@ class InformasiPublikController extends Controller
             'totalCount',
             'kategoryCounts',
             'topikCounts',
-            'listJenis',
+            'listKategori', 'listJenis',
             'listTahun',
             'listSatker',
             'listBentuk',
@@ -235,7 +237,7 @@ class InformasiPublikController extends Controller
         }
 
         $relatedList = InformasiPublik::where('id', '<>', $id)
-            ->where('jenis_informasi', $info->jenis_informasi)
+            ->where('kategori_informasi', $info->kategori_informasi)
             ->take(5)
             ->get();
 
@@ -260,7 +262,7 @@ class InformasiPublikController extends Controller
 
         $namaKategori = $kategoriMap[$slug];
 
-        $query = InformasiPublik::where('jenis_informasi', $namaKategori);
+        $query = InformasiPublik::where('kategori_informasi', $namaKategori);
 
         if ($request->filled('search')) {
             $term = strtolower(trim($request->search));
@@ -305,7 +307,7 @@ class InformasiPublikController extends Controller
                            ->get();
         }
 
-        $years = InformasiPublik::where('jenis_informasi', $namaKategori)
+        $years = InformasiPublik::where('kategori_informasi', $namaKategori)
                     ->whereNotNull('waktu_pembuatan_informasi')
                     ->where('waktu_pembuatan_informasi', '!=', '')
                     ->distinct()

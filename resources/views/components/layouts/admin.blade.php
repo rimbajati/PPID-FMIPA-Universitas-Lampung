@@ -299,12 +299,12 @@
                         @csrf
                         @method('DELETE')
                         <input type="hidden" name="rincian" id="delRincianName">
-                        <input type="hidden" name="jenis" id="delRincianJenis">
+                        <input type="hidden" name="kategori" id="delRincianKategori">
                     `;
                     document.body.appendChild(rincianForm);
                 }
                 document.getElementById('delRincianName').value = window.currentDeleteRincianData.rincian || '';
-                document.getElementById('delRincianJenis').value = window.currentDeleteRincianData.jenis || '';
+                document.getElementById('delRincianKategori').value = window.currentDeleteRincianData.kategori || window.currentDeleteRincianData.jenis || '';
                 rincianForm.submit();
             } else if (window.currentDeleteType === 'single' && window.currentDeleteUrl) {
                 const singleForm = document.getElementById('globalDeleteForm');

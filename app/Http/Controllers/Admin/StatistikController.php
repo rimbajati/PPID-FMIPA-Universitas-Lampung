@@ -79,9 +79,9 @@ class StatistikController extends Controller
 
         // 1. Klasifikasi Informasi Publik (UU KIP)
         $statKlasifikasi = [
-            'Informasi Berkala'      => InformasiPublik::where('jenis_informasi', 'Informasi Berkala')->count(),
-            'Informasi Setiap Saat'  => InformasiPublik::where('jenis_informasi', 'Informasi Setiap Saat')->count(),
-            'Informasi Serta-Merta'  => InformasiPublik::where('jenis_informasi', 'Informasi Serta-Merta')->count(),
+            'Informasi Berkala'      => InformasiPublik::where('kategori_informasi', 'Informasi Berkala')->count(),
+            'Informasi Setiap Saat'  => InformasiPublik::where('kategori_informasi', 'Informasi Setiap Saat')->count(),
+            'Informasi Serta-Merta'  => InformasiPublik::where('kategori_informasi', 'Informasi Serta-Merta')->count(),
             'Informasi Dikecualikan' => \App\Models\InformasiDikecualikan::count(),
         ];
 

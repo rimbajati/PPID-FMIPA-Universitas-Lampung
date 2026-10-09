@@ -171,11 +171,11 @@
             // Record sudah terisi → Buka form TAMBAH BARU dengan jenis & rincian yang sama
             openAddModal();
             // Pre-fill jenis dan rincian informasi
-            const jenisEl = document.getElementById('inputJenisInformasi');
+            const kategoriEl = document.getElementById('inputKategoriInformasi');
             const rincianEl = document.getElementById('inputRincianInformasi');
-            if (jenisEl) {
-                jenisEl.value = itemJson.jenis_informasi || '';
-                handleJenisInformasiChange(jenisEl.value);
+            if (kategoriEl) {
+                kategoriEl.value = itemJson.kategori_informasi || '';
+                handleKategoriInformasiChange(kategoriEl.value);
             }
             if (rincianEl) {
                 rincianEl.value = itemJson.rincian_informasi || '';
@@ -210,7 +210,7 @@
         })();
 
         const helpText = document.getElementById('fileHelpText');
-        if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)';
+        if (helpText) helpText.innerText = 'Format: PDF, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)';
 
         // Reset default inputs
         if (document.getElementById('inputSubInformasi')) document.getElementById('inputSubInformasi').value = '';
@@ -227,11 +227,11 @@
         // Pre-fill kategori jika sedang filter kategori
         const urlParamsAdd = new URLSearchParams(window.location.search);
         const currentKat = urlParamsAdd.get('kategori') || '';
-        if (document.getElementById('inputJenisInformasi')) {
-            document.getElementById('inputJenisInformasi').value = currentKat;
-            handleJenisInformasiChange(currentKat);
+        if (document.getElementById('inputKategoriInformasi')) {
+            document.getElementById('inputKategoriInformasi').value = currentKat;
+            handleKategoriInformasiChange(currentKat);
         } else {
-            handleJenisInformasiChange('');
+            handleKategoriInformasiChange('');
         }
 
         if (document.getElementById('inputBentukInformasi')) {
@@ -255,7 +255,8 @@
         btnSubmit?.classList.remove('hidden');
     };
 
-    function handleJenisInformasiChange(kategori) {
+    function handleKategoriInformasiChange(kategori) {
+        window.handleJenisInformasiChange = window.handleJenisInformasiChange || handleKategoriInformasiChange;
         const sectionRincian = document.getElementById('section-rincian-field');
         const datalist = document.getElementById('list-rincian-dynamic');
         const hasCategory = Boolean(kategori && kategori.trim() !== '');
@@ -330,12 +331,14 @@
         } else {
             // Untuk 'Cetak dan Online' maupun 'Online'
             if (sectionAksesOnline) sectionAksesOnline.classList.remove('hidden');
-            const selectedType = document.querySelector('input[name="jenis_informasi_format"]:checked')?.value || 'file';
+            const selectedType = document.querySelector('input[name="kategori_informasi_format"]:checked')?.value || 'file';
             toggleInputType(selectedType);
         }
     }
 
     // Sumber Berkas now x-data controlled (tipe File/Tautan); keep no-op for legacy callers + sync hidden ids for compat
+    window.handleKategoriInformasiChange = handleKategoriInformasiChange;
+
     window.toggleInputType = function(type) {
         // Alpine x-data drives UI; just keep required attrs safe
         const inputFile = document.getElementById('inputFile');
@@ -365,14 +368,14 @@
             document.getElementById('inputSubInformasi').value = subVal;
         }
 
-        document.getElementById('inputJenisInformasi').value = item.jenis_informasi || '';
-        handleJenisInformasiChange(item.jenis_informasi || '');
+        document.getElementById('inputKategoriInformasi').value = item.kategori_informasi || '';
+        handleKategoriInformasiChange(item.kategori_informasi || '');
         document.getElementById('inputTahun').value = item.waktu_pembuatan_informasi || item.tahun_terbit || '';
         if (document.getElementById('inputRetensiArsip')) {
             document.getElementById('inputRetensiArsip').value = item.retensi_arsip || '';
         }
         if (document.getElementById('inputRincianInformasi')) {
-            document.getElementById('inputRincianInformasi').value = item.jenis_informasi === 'Informasi Serta-Merta'
+            document.getElementById('inputRincianInformasi').value = item.kategori_informasi === 'Informasi Serta-Merta'
                 ? 'Pengumuman Serta-Merta'
                 : (item.rincian_informasi || '');
             // Update datalist sub informasi sesuai rincian yang sudah terpilih
@@ -414,7 +417,7 @@
             setAlpineFile('', '');
             if (fileDisplayName) fileDisplayName.textContent = '';
             if (fileLink) fileLink.classList.add('hidden');
-            if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)';
+            if (helpText) helpText.innerText = 'Format: PDF, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)';
         } else {
             if (alpine) alpine.tipe = 'file';
             window.toggleInputType('file');
@@ -434,7 +437,7 @@
                 setAlpineFile('', '');
                 if (fileLink) fileLink.classList.add('hidden');
                 if (fileDisplayName) fileDisplayName.textContent = '';
-                if (helpText) helpText.innerText = 'Format: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)';
+                if (helpText) helpText.innerText = 'Format: PDF, XLS, XLSX, JPG, JPEG, PNG (Maksimal 5 MB)';
             }
         }
 

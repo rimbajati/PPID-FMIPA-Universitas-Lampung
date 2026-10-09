@@ -61,9 +61,9 @@
                 @php $groupCurrent = null; @endphp
                 @forelse($informasi as $idx => $item)
                     @if($unified)
-                        @if($groupCurrent !== ($item->jenis_informasi ?? ''))
+                        @if($groupCurrent !== ($item->kategori_informasi ?? ''))
                             @php 
-                                $groupCurrent = $item->jenis_informasi ?? ''; 
+                                $groupCurrent = $item->kategori_informasi ?? ''; 
                                 $label = match($groupCurrent) {
                                     'Informasi Berkala' => 'Informasi Publik yang Wajib Disediakan Secara Berkala',
                                     'Informasi Setiap Saat' => 'Informasi Publik yang Wajib Tersedia Setiap Saat',
@@ -79,7 +79,7 @@
                         @endif
                     @endif
                     <tr class="table-dip-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-200"
-                        data-jenis="{{ strtolower($item->jenis_informasi ?? '') }}"
+                        data-jenis="{{ strtolower($item->kategori_informasi ?? '') }}"
                         data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
                         data-ringkasan="{{ strtolower($item->sub_informasi ?? '') }}"
                         data-pejabat="{{ strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '') }}"

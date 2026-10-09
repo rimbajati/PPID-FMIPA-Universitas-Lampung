@@ -25,7 +25,7 @@ class InformasiPublikTest extends TestCase
             'deskripsi_informasi' => 'Test Deskripsi',
             'kategori_informasi' => 'Informasi Setiap Saat',
             'tahun_terbit' => '2025',
-            'jenis_informasi' => 'link',
+            'kategori_informasi' => 'link',
             'link_informasi' => 'https://example.com'
         ]);
 
@@ -62,7 +62,7 @@ class InformasiPublikTest extends TestCase
             'deskripsi_informasi',
             'tahun_terbit',
             'kategori_informasi',
-            'jenis_informasi'
+            'kategori_informasi'
         ]);
     }
 
@@ -81,7 +81,7 @@ class InformasiPublikTest extends TestCase
             'deskripsi_informasi' => 'Deskripsi Dokumen Baru',
             'kategori_informasi' => 'Informasi Setiap Saat',
             'tahun_terbit' => '2025',
-            'jenis_informasi' => 'file',
+            'kategori_informasi' => 'file',
             'file_informasi' => $file,
         ]);
 
@@ -91,7 +91,7 @@ class InformasiPublikTest extends TestCase
             'deskripsi_informasi' => 'Deskripsi Dokumen Baru',
             'kategori_informasi' => 'Informasi Setiap Saat',
             'tahun_terbit' => '2025',
-            'jenis_informasi' => 'file',
+            'kategori_informasi' => 'file',
         ]);
 
         $info = InformasiPublik::first();

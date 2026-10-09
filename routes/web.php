@@ -26,9 +26,9 @@ Route::get('/', function () {
         : 0;
 
     $kategoriCount = [
-        'setiap_saat'  => \App\Models\InformasiPublik::where('jenis_informasi', 'Informasi Setiap Saat')->count(),
-        'berkala'      => \App\Models\InformasiPublik::where('jenis_informasi', 'Informasi Berkala')->count(),
-        'serta_merta'  => \App\Models\InformasiPublik::where('jenis_informasi', 'Informasi Serta-Merta')->count(),
+        'setiap_saat'  => \App\Models\InformasiPublik::where('kategori_informasi', 'Informasi Setiap Saat')->count(),
+        'berkala'      => \App\Models\InformasiPublik::where('kategori_informasi', 'Informasi Berkala')->count(),
+        'serta_merta'  => \App\Models\InformasiPublik::where('kategori_informasi', 'Informasi Serta-Merta')->count(),
         'dikecualikan' => \App\Models\InformasiDikecualikan::count(),
     ];
 

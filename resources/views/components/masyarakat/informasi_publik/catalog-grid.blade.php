@@ -16,7 +16,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($informasiList as $info)
                 @php
-                    $jenisInfo = $info->jenis_informasi ?: $info->kategori_informasi;
+                    $jenisInfo = $info->kategori_informasi ?: $info->kategori_informasi;
                     $isDikecualikan = ($jenisInfo === 'Informasi Dikecualikan');
                     $isCetakOnly = (($info->bentuk_informasi_yang_tersedia ?? $info->bentuk_informasi) === 'Cetak' && empty($info->file_informasi) && empty($info->link_informasi));
                     $fileUrl = '#';
@@ -42,8 +42,6 @@
                     
                     if ($extUpper === 'PDF') {
                         $extBadgeStyle = 'bg-rose-50 text-rose-600 border-rose-200/80';
-                    } elseif (in_array($extUpper, ['DOC', 'DOCX', 'WORD'])) {
-                        $extBadgeStyle = 'bg-blue-50 text-blue-600 border-blue-200/80';
                     } elseif (in_array($extUpper, ['XLS', 'XLSX', 'CSV', 'EXCEL', 'SPREADSHEET'])) {
                         $extBadgeStyle = 'bg-emerald-50 text-emerald-600 border-emerald-200/80';
                     } elseif ($extUpper === 'LINK') {

@@ -14,7 +14,7 @@ class InformasiPublik extends Model
     protected $fillable = [
         'rincian_informasi',
         'sub_informasi',
-        'jenis_informasi',
+        'kategori_informasi',
         'pejabat_unit_yang_menguasai_informasi',
         'penanggung_jawab_pembuatan_informasi',
         'waktu_pembuatan_informasi',

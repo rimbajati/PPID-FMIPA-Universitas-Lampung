@@ -1,4 +1,4 @@
-@props(['informasi', 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false, 'unified' => false])
+@props(['informasi', 'listKategori' => [], 'listJenis' => [], 'listTahun' => [], 'listSatker' => [], 'listBentuk' => [], 'listRetensi' => [], 'tableKey' => 'main', 'forceTable' => false, 'unified' => false])
 
 <!-- Table Container -->
 <div class="bg-white {{ ($unified && request('kategori') === '') ? 'rounded-2xl' : (request('kategori') === 'Informasi Serta-Merta' ? 'rounded-none' : 'rounded-2xl') }} border border-slate-200/80 shadow-xs overflow-hidden">
@@ -197,9 +197,9 @@
                                     </div>
                                 </th>
                                 @unless($forceTable)
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'jenis')" class="px-3.5 py-3 text-center min-w-[140px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jenis Informasi">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'jenis')" class="px-3.5 py-3 text-center min-w-[140px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Kategori Informasi">
                                     <div class="flex items-center justify-center gap-1.5">
-                                        <span>Jenis Informasi</span>
+                                        <span>Kategori Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
                                             <i class="fa-solid fa-sort"></i>
                                         </span>
@@ -261,9 +261,9 @@
                         @php $unifiedGroupCurrent = null; $unifiedColspan = 9; @endphp
                         @forelse($informasi as $idx => $item)
                             @if($isUnified && !request()->filled('kategori'))
-                                @if($unifiedGroupCurrent !== ($item->jenis_informasi ?? ''))
+                                @if($unifiedGroupCurrent !== ($item->kategori_informasi ?? ''))
                                     @php
-                                        $unifiedGroupCurrent = $item->jenis_informasi ?? '';
+                                        $unifiedGroupCurrent = $item->kategori_informasi ?? '';
                                         $unifiedGroupLabel = match($unifiedGroupCurrent) {
                                             'Informasi Berkala' => 'Informasi Publik yang Wajib Disediakan Secara Berkala',
                                             'Informasi Setiap Saat' => 'Informasi Publik yang Wajib Tersedia Setiap Saat',
@@ -298,7 +298,7 @@
                                 data-sub_informasi="{{ strtolower($subInformasiText) }}"
                                 data-tanggal="{{ $item->created_at?->timestamp ?? '' }}"
                                 data-ringkasan="{{ strtolower($item->sub_informasi ?? '') }}"
-                                data-jenis="{{ strtolower($item->jenis_informasi ?? '') }}"
+                                data-jenis="{{ strtolower($item->kategori_informasi ?? '') }}"
                                 data-pejabat="{{ strtolower($item->pejabat_unit_yang_menguasai_informasi ?? '') }}"
                                 data-penanggung_jawab="{{ strtolower($item->penanggung_jawab_pembuatan_informasi ?? '') }}"
                                 data-waktu="{{ strtolower($item->waktu_pembuatan_informasi ?? '') }}"
@@ -401,10 +401,10 @@
                                      </td>
 
                                      @unless($forceTable)
-                                     <!-- 2. Jenis Informasi -->
+                                     <!-- 2. Kategori Informasi -->
                                      <td class="px-3.5 py-3.5 text-center align-top whitespace-nowrap">
                                          @php
-                                             $jVal = trim($item->jenis_informasi ?: '');
+                                             $jVal = trim($item->kategori_informasi ?: '');
                                              $jBadgeClass = match($jVal) {
                                                  'Informasi Berkala' => 'bg-[#1B365D] text-white',
                                                  'Informasi Serta Merta', 'Informasi Serta-Merta' => 'bg-rose-500 text-white',

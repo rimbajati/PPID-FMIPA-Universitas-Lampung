@@ -111,7 +111,7 @@
                     </div>
                     <div class="space-y-2" x-data="{ fileName: '', fileSize: '', fileError: '', handleFile(e) { const f = e.target.files[0]; this.fileError=''; this.fileName=''; this.fileSize=''; if(!f) return; if(f.size > 5*1024*1024){ this.fileError='File melebihi 5 MB'; e.target.value=''; return;} this.fileName=f.name; this.fileSize = f.size > 1024*1024 ? (f.size/(1024*1024)).toFixed(1)+' MB' : (f.size/1024).toFixed(1)+' KB'; }, clearFile(){ document.getElementById('admin_keberatan_file').value=''; this.fileName=''; this.fileSize=''; this.fileError=''; } }" @if($isDatangLangsung) style="display:none" @endif>
                         <label class="text-sm font-medium text-slate-700">File jawaban <span class="text-slate-400 font-normal">(opsional)</span></label>
-                        <input type="file" id="admin_keberatan_file" name="file_jawaban" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" @change="handleFile($event)" class="sr-only">
+                        <input type="file" id="admin_keberatan_file" name="file_jawaban" accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png" @change="handleFile($event)" class="sr-only">
                         <div @click="document.getElementById('admin_keberatan_file').click()" class="flex items-center gap-2 w-full rounded-lg border border-slate-200 bg-white p-2.5 cursor-pointer transition hover:border-slate-300">
                             <span class="shrink-0 inline-flex items-center justify-center rounded-lg bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700">Pilih File</span>
                             <span class="flex-1 min-w-0 truncate text-sm" :class="fileName ? 'text-slate-700' : 'text-slate-400'" x-text="fileName || 'Belum ada file dipilih'"></span>
@@ -140,7 +140,7 @@
                             <p class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600"><i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="fileError"></span></p>
                         </template>
                         <x-admin.input-error name="file_jawaban" />
-                        <p class="text-xs text-slate-400 mt-1">Format: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG — maks 5 MB.</p>
+                        <p class="text-xs text-slate-400 mt-1">Format: PDF, XLS, XLSX, JPG, PNG — maks 5 MB.</p>
                     </div>
                 </div>
 

@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('informasi_publiks', function (Blueprint $table) {
             $table->id();
             $table->string('ringkasan_isi_informasi')->index();
-            $table->enum('jenis_informasi', [
+            $table->enum('kategori_informasi', [
                 'Informasi Setiap Saat',
                 'Informasi Berkala',
                 'Informasi Serta-Merta'

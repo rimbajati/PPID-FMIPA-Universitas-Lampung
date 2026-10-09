@@ -19,7 +19,7 @@ class ExportController extends Controller
         $query = InformasiPublik::query();
 
         if ($request->filled('kategori')) {
-            $query->where('jenis_informasi', $request->kategori);
+            $query->where('kategori_informasi', $request->kategori);
         }
 
         if ($request->filled('tahun')) {
@@ -55,9 +55,9 @@ class ExportController extends Controller
         // Selalu gunakan urutan baku dokumen DIP resmi (Berkala -> Setiap Saat -> Serta-Merta)
         $query->orderByRaw("
             CASE 
-                WHEN jenis_informasi = 'Informasi Berkala' THEN 1
-                WHEN jenis_informasi = 'Informasi Setiap Saat' THEN 2
-                WHEN jenis_informasi = 'Informasi Serta-Merta' THEN 3
+                WHEN kategori_informasi = 'Informasi Berkala' THEN 1
+                WHEN kategori_informasi = 'Informasi Setiap Saat' THEN 2
+                WHEN kategori_informasi = 'Informasi Serta-Merta' THEN 3
                 ELSE 4
             END ASC
         ")->orderByRaw("
@@ -79,7 +79,7 @@ class ExportController extends Controller
 
         $items = $query->get();
 
-        $groupedItems = $items->groupBy('jenis_informasi');
+        $groupedItems = $items->groupBy('kategori_informasi');
         $categorySections = [
             'Informasi Berkala' => 'Informasi Publik yang Wajib Disediakan secara Berkala',
             'Informasi Setiap Saat' => 'Informasi Publik yang Wajib Tersedia Setiap Saat',
@@ -214,7 +214,7 @@ class ExportController extends Controller
         $kategori = $request->kategori ?: null;
 
         if ($kategori) {
-            $query->where('jenis_informasi', $kategori);
+            $query->where('kategori_informasi', $kategori);
         }
 
         // Dukung filter tahun tunggal maupun beberapa tahun (rentang periode)
@@ -274,9 +274,9 @@ class ExportController extends Controller
             // Seluruh DIP: Selalu urutkan kategori dan rincian informasi baku dokumen resmi
             $items = $query->orderByRaw("
                 CASE 
-                    WHEN jenis_informasi = 'Informasi Berkala' THEN 1
-                    WHEN jenis_informasi = 'Informasi Setiap Saat' THEN 2
-                    WHEN jenis_informasi = 'Informasi Serta-Merta' THEN 3
+                    WHEN kategori_informasi = 'Informasi Berkala' THEN 1
+                    WHEN kategori_informasi = 'Informasi Setiap Saat' THEN 2
+                    WHEN kategori_informasi = 'Informasi Serta-Merta' THEN 3
                     ELSE 4
                 END ASC
             ")->orderByRaw("
@@ -303,7 +303,7 @@ class ExportController extends Controller
             ];
 
             $groupedItems = $items->groupBy(function($item) {
-                return $item->jenis_informasi ?: 'Informasi Lainnya';
+                return $item->kategori_informasi ?: 'Informasi Lainnya';
             })->sortBy(function($val, $key) use ($order) {
                 return $order[$key] ?? 99;
             });
