@@ -15,19 +15,20 @@
                         </summary>
                         <div class="pb-3 pl-3 space-y-1">
                             <a href="{{ url('/informasi-publik') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Daftar Informasi Publik</span>
+                                <i class="fa-solid fa-list w-4 text-center text-sky-100"></i><span>Daftar Informasi Publik</span>
                             </a>
                             <a href="{{ url('/informasi-publik/kategori/berkala') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Informasi Tersedia Secara Berkala</span>
+                                <i class="fa-regular fa-clock w-4 text-center text-sky-100"></i><span>Informasi Berkala</span>
                             </a>
                             <a href="{{ url('/informasi-publik/kategori/setiap-saat') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Informasi Tersedia Setiap Saat</span>
+                                <i class="fa-solid fa-arrows-rotate w-4 text-center text-sky-100"></i><span>Informasi Setiap Saat</span>
                             </a>
                             <a href="{{ url('/informasi-publik/kategori/serta-merta') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Informasi Diumumkan Serta-Merta</span>
+                                <i class="fa-solid fa-triangle-exclamation w-4 text-center text-sky-100"></i><span>Informasi Serta-Merta</span>
                             </a>
+                            <div class="my-2 border-t border-white/20"></div>
                             <a href="{{ url('/informasi-dikecualikan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Daftar Informasi Publik yang Dikecualikan</span>
+                                <i class="fa-solid fa-lock w-4 text-center text-sky-100"></i><span>Daftar Informasi Dikecualikan</span>
                             </a>
                         </div>
                     </details>
@@ -39,19 +40,22 @@
                         </summary>
                         <div class="pb-3 pl-3 space-y-1">
                             <a href="{{ url('/tata-cara-permohonan-dan-keberatan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Tata Cara Permohonan & Keberatan</span>
+                                <i class="fa-solid fa-compass w-4 text-center text-sky-100"></i><span>Tata Cara Permohonan</span>
                             </a>
+                            <div class="my-2 border-t border-white/20"></div>
                             <a href="{{ url('/permohonan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Permohonan Informasi</span>
+                                <i class="fa-solid fa-envelope-open-text w-4 text-center text-sky-100"></i><span>Form Permohonan Informasi</span>
                             </a>
                             <a href="{{ url('/pengajuan-keberatan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Pengajuan Keberatan</span>
+                                <i class="fa-solid fa-gavel w-4 text-center text-sky-100"></i><span>Form Pengajuan Keberatan</span>
                             </a>
+                            <div class="my-2 border-t border-white/20"></div>
                             <a href="{{ url('/riwayat-layanan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Lacak Tiket Layanan</span>
+                                <i class="fa-solid fa-ticket w-4 text-center text-sky-100"></i><span>Lacak Tiket Layanan</span>
                             </a>
+                            <div class="my-2 border-t-2 border-white/40"></div>
                             <a href="{{ url('/#statistik-layanan') }}" class="flex items-center gap-2.5 text-white text-sm py-2 font-semibold hover:text-sky-100">
-                                <span>Statistik Layanan</span>
+                                <i class="fa-solid fa-chart-simple w-4 text-center text-sky-100"></i><span>Statistik Layanan</span>
                             </a>
                         </div>
                     </details>

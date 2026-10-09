@@ -162,52 +162,17 @@ class KontenController extends Controller
     public static function getTataCara(): array
     {
         $default = [
-            'header_judul' => 'Tata Cara Permohonan dan Keberatan',
-            'header_deskripsi' => 'Panduan komprehensif mengenai prosedur resmi pengajuan permohonan informasi publik, jangka waktu pemenuhan (SLA), mekanisme penyampaian keberatan, hingga penyelesaian sengketa informasi publik di lingkungan FMIPA Universitas Lampung.',
-            'permohonan_badge' => 'Langkah Permohonan',
-            'permohonan_sla' => '10 Hari Kerja',
-            'permohonan_judul' => 'Tata Cara Permohonan Informasi',
-            'permohonan_deskripsi' => 'Masyarakat dan badan hukum dapat mengajukan permohonan informasi publik dengan langkah-langkah berikut:',
             'permohonan_langkah' => [
                 ['judul' => 'Pengisian Formulir Permohonan', 'deskripsi' => 'Isi formulir permohonan secara online melalui portal PPID FMIPA atau datang langsung ke meja layanan PPID dengan melampirkan salinan identitas resmi (KTP / Paspor / Akta Pendirian bagi Badan Hukum) serta rincian informasi yang dibutuhkan.'],
                 ['judul' => 'Registrasi & Penerimaan Nomor Tiket', 'deskripsi' => 'Petugas PPID memeriksa kelengkapan file pemohon, mencatat permohonan ke dalam buku register, dan memberikan nomor registrasi/nomor tiket unik untuk pelacakan.'],
                 ['judul' => 'Pemrosesan & Jawaban Resmi (10 + 7 Hari)', 'deskripsi' => 'PPID memberikan tanggapan resmi paling lambat 10 hari kerja sejak permohonan dinyatakan lengkap, dan dapat diperpanjang maksimal 7 hari kerja dengan pemberitahuan tertulis sebelumnya kepada pemohon.'],
                 ['judul' => 'Penyerahan Dokumen Informasi', 'deskripsi' => 'Informasi diberikan sesuai bentuk atau format yang diminta pemohon (salinan digital atau cetak). Layanan informasi tidak dipungut biaya; biaya penggandaan/pengiriman (bila ada) dibebankan kepada pemohon sesuai standar biaya yang berlaku.'],
             ],
-            'keberatan_badge' => 'Mekanisme Keberatan',
-            'keberatan_sla' => '30 Hari Kerja',
-            'keberatan_judul' => 'Tata Cara Pengajuan Keberatan',
-            'keberatan_deskripsi' => 'Pemohon informasi publik berhak mengajukan keberatan resmi apabila menemui hambatan atau tidak puas atas tanggapan PPID:',
             'keberatan_langkah' => [
                 ['judul' => 'Pengajuan Keberatan oleh Pemohon', 'deskripsi' => 'Keberatan diajukan secara tertulis (online melalui portal atau langsung) paling lambat 30 hari kerja setelah diterimanya tanggapan atau setelah terlewatinya batas waktu pemberian jawaban oleh PPID.'],
                 ['judul' => 'Pemberian Alasan Keberatan yang Sah', 'deskripsi' => 'Keberatan dapat didasari alasan: penolakan atas permohonan, informasi berkala tidak disediakan, permohonan tidak ditanggapi, permintaan tidak dipenuhi sebagaimana mestinya, pengenaan biaya yang tidak wajar, atau penyampaian informasi melebihi batas waktu.'],
                 ['judul' => 'Tanggapan oleh Atasan PPID (30 Hari)', 'deskripsi' => 'Atasan PPID (Rektor Universitas Lampung) memberikan tanggapan tertulis atas keberatan paling lambat 30 hari kerja sejak permohonan keberatan diterima secara lengkap.'],
                 ['judul' => 'Penyelesaian Sengketa Informasi (14 Hari)', 'deskripsi' => 'Apabila pemohon tidak puas dengan keputusan tanggapan keberatan dari Atasan PPID, pemohon dapat mengajukan permohonan penyelesaian Sengketa Informasi Publik ke Komisi Informasi paling lambat 14 hari kerja sejak diterimanya tanggapan tertulis.'],
-            ],
-            'sla_judul' => 'Jangka Waktu Pelayanan (SLA)',
-            'sla_items' => [
-                'Jawaban Permohonan: Maksimal 10 hari kerja (dapat diperpanjang 7 hari kerja dengan pemberitahuan tertulis).',
-                'Tanggapan Keberatan: Maksimal 30 hari kerja sejak keberatan diterima Atasan PPID.',
-                'Jam Operasional: Senin–Kamis 08.00–16.00 WIB · Jumat 08.00–16.30 WIB (Istirahat 12.00–13.00 WIB).',
-            ],
-            'biaya_judul' => 'Standar Biaya Pelayanan',
-            'biaya_items' => [
-                'Gratis (Tidak Dipungut Biaya): Layanan pencarian data, konsultasi, dan pengiriman informasi format digital via email / portal PPID.',
-                'Biaya Penggandaan / Ekspedisi: Bila pemohon meminta salinan fisik/cetak atau kurir pos, biaya dibebankan kepada pemohon sesuai standar biaya yang ditetapkan.',
-            ],
-            'biaya_link_text' => 'Pelajari Standar Biaya Layanan Informasi Unila →',
-            'biaya_link_url' => 'https://ppid.unila.ac.id/standar-biaya-pelayanan-informasi-publik/',
-            'dokumen_badge' => 'Dokumen Standar',
-            'dokumen_judul' => 'SOP & Dokumen Standar Pelayanan Informasi',
-            'dokumen_link_text' => 'Indeks Formulir Lengkap',
-            'dokumen_link_url' => 'https://ppid.unila.ac.id/formulir-layanan-informasi/',
-            'dokumen' => [
-                ['judul' => 'POS AP Layanan Informasi (SOP)', 'deskripsi' => 'Standar Operasional Prosedur Layanan', 'url' => 'https://ppid.unila.ac.id/sop-layanan-informasi/'],
-                ['judul' => 'Standar Pelayanan Informasi Publik', 'deskripsi' => 'Ketentuan umum dan hak pemohon', 'url' => 'https://ppid.unila.ac.id/standar-pelayanan-informasi-publik/'],
-                ['judul' => 'Maklumat Pelayanan', 'deskripsi' => 'Komitmen pelayanan informasi KIP', 'url' => 'https://ppid.unila.ac.id/maklumat-pelayanan/'],
-                ['judul' => 'Formulir Permohonan Informasi', 'deskripsi' => 'Lampiran VI Perki 1/2021', 'url' => 'https://ppid.unila.ac.id/formulir-permohonan-informasi-publik/'],
-                ['judul' => 'Formulir Keberatan Jawaban', 'deskripsi' => 'Lampiran X Perki 1/2021', 'url' => 'https://ppid.unila.ac.id/formulir-keberatan-jawaban-informasi-publik/'],
-                ['judul' => 'Formulir Keluhan Informasi', 'deskripsi' => 'Formulir aspirasi & pengaduan publik', 'url' => 'https://ppid.unila.ac.id/formulir-keluhan-informasi-publik/'],
             ],
         ];
 
@@ -220,9 +185,6 @@ class KontenController extends Controller
                 }
                 if (empty($merged['keberatan_langkah']) || !is_array($merged['keberatan_langkah'])) {
                     $merged['keberatan_langkah'] = $default['keberatan_langkah'];
-                }
-                if (empty($merged['dokumen']) || !is_array($merged['dokumen'])) {
-                    $merged['dokumen'] = $default['dokumen'];
                 }
                 return $merged;
             }
@@ -294,31 +256,10 @@ class KontenController extends Controller
      */
     public function updateTataCara(Request $request)
     {
-        $request->validate([
-            'header_judul'     => 'required|string|max:200',
-            'header_deskripsi' => 'required|string|max:500',
-            'permohonan_judul' => 'required|string|max:200',
-            'keberatan_judul'  => 'required|string|max:200',
-        ]);
-
+        // Hanya langkah yang disimpan — judul/deskripsi fix
         $current = self::getTataCara();
         $new = $current;
 
-        // Field sederhana
-        $fields = ['header_judul','header_deskripsi','permohonan_badge','permohonan_sla','permohonan_judul','permohonan_deskripsi','keberatan_badge','keberatan_sla','keberatan_judul','keberatan_deskripsi','sla_judul','biaya_judul','biaya_link_text','biaya_link_url','dokumen_badge','dokumen_judul','dokumen_link_text','dokumen_link_url'];
-        foreach ($fields as $f) {
-            if ($request->filled($f)) $new[$f] = trim($request->input($f));
-        }
-
-        // SLA / Biaya list (textarea baris per item)
-        if ($request->filled('sla_items_text')) {
-            $new['sla_items'] = array_values(array_filter(array_map('trim', explode("\n", $request->input('sla_items_text')))));
-        }
-        if ($request->filled('biaya_items_text')) {
-            $new['biaya_items'] = array_values(array_filter(array_map('trim', explode("\n", $request->input('biaya_items_text')))));
-        }
-
-        // Langkah permohonan & keberatan — terima array atau JSON
         $decodeSteps = function ($key) use ($request) {
             if (!$request->has($key)) return null;
             $val = $request->input($key);
@@ -337,8 +278,8 @@ class KontenController extends Controller
         $kLangkah = $decodeSteps('keberatan_langkah');
         if (is_array($kLangkah)) $new['keberatan_langkah'] = array_values(array_filter($kLangkah, fn($s) => !empty(trim($s['judul'] ?? ''))));
 
-        $dok = $decodeSteps('dokumen');
-        if (is_array($dok)) $new['dokumen'] = array_values(array_filter($dok, fn($d) => !empty(trim($d['judul'] ?? ''))));
+        // Bersihkan key lama yang sudah fix
+        foreach (['permohonan_badge','permohonan_sla','permohonan_judul','permohonan_deskripsi','keberatan_badge','keberatan_sla','keberatan_judul','keberatan_deskripsi'] as $k) unset($new[$k]);
 
         $this->saveTataCara($new);
 
@@ -393,11 +334,8 @@ class KontenController extends Controller
     {
         $request->validate([
             'kategori'  => 'required|in:nasional,internal',
-            'badge'     => 'required|string|max:50',
-            'tahun'     => 'required|string|max:50',
             'judul'     => 'required|string|max:200',
             'deskripsi' => 'required|string|max:1000',
-            'sumber'    => 'required|string|max:100',
             'url'       => 'required|url|max:500',
         ]);
 
@@ -407,11 +345,11 @@ class KontenController extends Controller
         $regulasi[] = [
             'id'        => $maxId + 1,
             'kategori'  => $request->input('kategori'),
-            'badge'     => trim($request->input('badge')),
-            'tahun'     => trim($request->input('tahun')),
+            'badge'     => $request->input('kategori') === 'nasional' ? 'Peraturan Nasional' : 'Regulasi Internal',
+            'tahun'     => date('Y'),
             'judul'     => trim($request->input('judul')),
             'deskripsi' => trim($request->input('deskripsi')),
-            'sumber'    => trim($request->input('sumber')),
+            'sumber'    => 'PPID FMIPA',
             'url'       => trim($request->input('url')),
         ];
 

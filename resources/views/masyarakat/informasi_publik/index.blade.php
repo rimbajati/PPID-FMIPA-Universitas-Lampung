@@ -8,43 +8,32 @@
     <!-- Header Hero Banner (Matching Reference UI Title & Subtitle) -->
     <x-masyarakat.informasi_publik.hero-header />
 
-    <!-- Tiga daftar terpisah berdasarkan jenis informasi -->
-    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-10">
-        @php
-            $jenisPublik = [
-                ['nama' => 'Informasi Berkala', 'judul' => 'A. Informasi Publik yang Wajib Disediakan secara Berkala', 'key' => 'berkala', 'deskripsi' => 'informasi yang wajib disediakan dan dapat diakses secara berkala.'],
-                ['nama' => 'Informasi Setiap Saat', 'judul' => 'B. Informasi Publik yang Wajib Tersedia Setiap Saat', 'key' => 'setiap-saat', 'deskripsi' => 'informasi yang wajib tersedia dan dapat diakses setiap saat.'],
-                ['nama' => 'Informasi Serta-Merta', 'judul' => 'C. Informasi Publik yang Wajib Diumumkan secara Serta-Merta', 'key' => 'serta-merta', 'deskripsi' => 'informasi yang wajib diumumkan segera tanpa penundaan.'],
-            ];
-        @endphp
-
-        @foreach($jenisPublik as $jenis)
-            @php $daftarJenis = $informasiGroups->get($jenis['nama'], collect()); @endphp
-            <section class="space-y-4" aria-labelledby="judul-{{ $jenis['key'] }}">
-                <header class="space-y-1">
-                    <h2 id="judul-{{ $jenis['key'] }}" class="text-xl md:text-2xl font-extrabold text-slate-900">{{ $jenis['judul'] }}</h2>
-                    <p class="text-sm md:text-base text-slate-600">{{ number_format($daftarJenis->count(), 0, ',', '.') }} informasi {{ $jenis['deskripsi'] }}</p>
-                </header>
-
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
-                    <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
-                        <span>Tampilkan</span>
-                        <select data-dip-per-page="{{ $jenis['key'] }}" onchange="changePerPageDip('{{ $jenis['key'] }}', this.value)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/30 cursor-pointer">
-                            <option value="10" selected>10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option>
-                        </select>
-                        <span>baris</span>
-                    </div>
-                    <form onsubmit="event.preventDefault();" class="flex items-center gap-2">
-                        <label for="cari-{{ $jenis['key'] }}" class="text-sm font-semibold text-slate-800">Cari:</label>
-                        <input id="cari-{{ $jenis['key'] }}" data-dip-search="{{ $jenis['key'] }}" oninput="searchDipTable('{{ $jenis['key'] }}', this.value)" value="{{ request('search') }}" autocomplete="off" class="w-48 sm:w-64 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/30">
-                    </form>
+    <!-- Tabel Unified DIP Masyarakat -->
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div class="space-y-6">
+            <!-- Filter Bar Tunggal -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
+                <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                    <span>Tampilkan</span>
+                    <select id="select-per-page-main" data-dip-per-page="main" onchange="changePerPageDip('main', this.value)" class="px-3 py-1.5 bg-white border border-slate-900 rounded-lg text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
+                        <option value="10" selected>10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option>
+                    </select>
+                    <span>baris</span>
                 </div>
+                <form onsubmit="event.preventDefault();" class="flex items-center gap-2">
+                    <label for="cari-main" class="text-sm font-semibold text-slate-800 select-none cursor-pointer">Cari:</label>
+                    <div class="relative">
+                        <input type="text" id="cari-main" data-dip-search="main" oninput="document.getElementById('btn-clear-search-main')?.classList.toggle('hidden', !this.value.trim()); searchDipTable('main', this.value)" value="{{ request('search') }}" autocomplete="off" class="w-64 sm:w-80 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
+                        <button type="button" id="btn-clear-search-main" onclick="const i=document.getElementById('cari-main'); if(i){i.value=''; i.focus();} this.classList.add('hidden'); searchDipTable('main', '');" title="Hapus pencarian" class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-                <x-masyarakat.informasi_publik.table :informasi="$daftarJenis" :tableKey="$jenis['key']" />
-            </section>
-        @endforeach
+            <x-masyarakat.informasi_publik.table :informasi="$informasiList" tableKey="main" unified="true" />
 
-            <!-- Card Bantuan / Ajukan Permohonan Jika Tidak Menemukan Informasi -->
+            <!-- Card Bantuan -->
             <div class="bg-gradient-to-r from-sky-600 via-sky-700 to-blue-800 text-white rounded-2xl p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="space-y-1 text-center sm:text-left">
                     <h4 class="font-extrabold text-base sm:text-lg">Tidak Menemukan Informasi yang Anda Cari?</h4>
@@ -57,8 +46,8 @@
                     <span>Ajukan Permohonan</span>
                 </a>
             </div>
-
         </div>
+    </div>
     </div>
 
 </main>

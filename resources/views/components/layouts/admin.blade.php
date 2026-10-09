@@ -74,13 +74,18 @@
             color: #0f172a !important;
             font-weight: 500 !important;
         }
-        /* Aturan Sudut Siku 90 Derajat (Sharp / Minimal Radius) untuk Semua Tabel Admin */
+        /* Semua tabel admin tetap siku 90 derajat — statistik dikecualikan agar tetap melengkung */
         table, table th, table td, table tr,
         .overflow-x-auto {
             border-radius: 0px !important;
         }
         div:has(> .overflow-x-auto), div:has(> table) {
             border-radius: 0px !important;
+        }
+        /* Statistik boleh melengkung — override siku di atas */
+        #statistik-layanan,
+        #statistik-layanan .bg-white.rounded-xl {
+            border-radius: 0.75rem !important;
         }
     </style>
 
@@ -94,13 +99,13 @@
                         sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
                     },
                     borderRadius: {
-                        'DEFAULT': '0.625rem',
-                        'sm': '0.375rem',
-                        'md': '0.5rem',
-                        'lg': '0.625rem',
-                        'xl': '0.625rem',
-                        '2xl': '0.625rem',
-                        '3xl': '0.625rem',
+                        'DEFAULT': '0.375rem',
+                        'sm': '0.25rem',
+                        'md': '0.375rem',
+                        'lg': '0.5rem',
+                        'xl': '0.5rem',
+                        '2xl': '0.5rem',
+                        '3xl': '0.75rem',
                         'full': '9999px',
                     }
                 }

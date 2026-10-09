@@ -38,12 +38,12 @@
             if (col === 'no_tiket') {
                 va = a.cells[1]?.textContent.trim() ?? '';
                 vb = b.cells[1]?.textContent.trim() ?? '';
-            } else if (col === 'nama') {
-                va = a.cells[2]?.querySelector('div')?.textContent.trim() ?? '';
-                vb = b.cells[2]?.querySelector('div')?.textContent.trim() ?? '';
             } else if (col === 'tanggal') {
-                va = a.cells[3]?.textContent.trim() ?? '';
-                vb = b.cells[3]?.textContent.trim() ?? '';
+                va = a.cells[2]?.textContent.trim() ?? '';
+                vb = b.cells[2]?.textContent.trim() ?? '';
+            } else if (col === 'nama') {
+                va = a.cells[3]?.querySelector('div')?.textContent.trim() ?? '';
+                vb = b.cells[3]?.querySelector('div')?.textContent.trim() ?? '';
             } else if (col === 'status') {
                 va = a.cells[5]?.textContent.trim() ?? '';
                 vb = b.cells[5]?.textContent.trim() ?? '';

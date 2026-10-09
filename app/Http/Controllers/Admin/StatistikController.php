@@ -87,7 +87,7 @@ class StatistikController extends Controller
 
         // 2. Cara Memperoleh Informasi
         $statCara = [
-            'Melalui Email' => Permohonan::where('cara_memperoleh_informasi', 'like', '%email%')->count(),
+            'Salinan digital (dikirim melalui email)' => Permohonan::where('cara_memperoleh_informasi', 'like', '%email%')->count(),
             'Datang langsung ke Dekanat FMIPA Universitas Lampung' => Permohonan::where('cara_memperoleh_informasi', 'like', '%langsung%')->count(),
         ];
         $caraLain = Permohonan::where('cara_memperoleh_informasi', 'not like', '%email%')
@@ -96,6 +96,20 @@ class StatistikController extends Controller
             ->count();
         if ($caraLain > 0) {
             $statCara['Lainnya'] = $caraLain;
+        }
+
+        // 3. Jenis Identitas Pemohon (KTP / Paspor / Badan Hukum)
+        $statIdentitas = [
+            'KTP' => Permohonan::where('jenis_identitas', 'KTP')->count(),
+            'Paspor' => Permohonan::where('jenis_identitas', 'Paspor')->count(),
+            'Badan Hukum' => Permohonan::where('jenis_identitas', 'Badan hukum')->count(),
+        ];
+        $identitasLain = Permohonan::whereNotIn('jenis_identitas', ['KTP', 'Paspor', 'Badan hukum'])
+            ->whereNotNull('jenis_identitas')
+            ->where('jenis_identitas', '!=', '')
+            ->count();
+        if ($identitasLain > 0) {
+            $statIdentitas['Lainnya'] = $identitasLain;
         }
 
         // 4. Alasan Pengajuan Keberatan
@@ -133,6 +147,7 @@ class StatistikController extends Controller
             'chartBulananPerTahun',
             'statKlasifikasi',
             'statCara',
+            'statIdentitas',
             'statAlasanKeberatan'
         ));
     }

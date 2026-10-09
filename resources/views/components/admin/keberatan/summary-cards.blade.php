@@ -58,7 +58,7 @@
                     <p class="text-xs font-extrabold text-slate-500 mt-0.5">Total</p>
                 </div>
                 <div class="text-[#f59e0b]/80">
-                    <i class="fa-solid fa-scale-balanced text-3xl sm:text-4xl"></i>
+                    <i class="fa-solid fa-gavel text-3xl sm:text-4xl"></i>
                 </div>
             </div>
             <div class="bg-[#f59e0b] text-white text-[11px] font-bold px-3 py-1.5 flex items-center justify-between">

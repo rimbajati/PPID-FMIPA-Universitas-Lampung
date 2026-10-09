@@ -13,46 +13,85 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 items-start">
-        
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden lg:sticky lg:top-6">
-            <div class="px-6 pt-6 pb-4 border-b border-slate-100">
-                <h2 class="text-base font-extrabold text-slate-900 flex items-center gap-2.5">
-                    <i class="fa-solid fa-plus text-sky-600"></i> Tambah Regulasi
-                </h2>
-            </div>
-            <form action="{{ route('admin.regulasi.store') }}" method="POST" class="p-6 space-y-4">
-                @csrf
-                <select name="kategori" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium">
-                    <option value="nasional">Nasional</option>
-                    <option value="internal">Internal</option>
-                </select>
-                <input type="text" name="badge" required placeholder="Badge (contoh: UU)" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
-                <input type="text" name="tahun" required placeholder="Tahun/Sumber" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
-                <input type="text" name="judul" required placeholder="Judul" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
-                <textarea name="deskripsi" required placeholder="Deskripsi" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm" rows="3"></textarea>
-                <input type="text" name="sumber" required placeholder="Sumber/Instansi" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
-                <input type="url" name="url" required placeholder="URL Dokumen" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
-                <button type="submit" class="w-full py-3 bg-sky-600 text-white font-bold text-sm rounded-xl">Simpan Regulasi</button>
-            </form>
-        </div>
+    @php
+        $nasionalAdmin = collect($regulasi)->where('kategori', 'nasional');
+        $internalAdmin = collect($regulasi)->where('kategori', 'internal');
+    @endphp
 
-        <div class="space-y-4">
-            @forelse($regulasi as $item)
-                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex items-start justify-between">
-                    <div>
-                        <span class="text-xs font-bold text-sky-600 uppercase">{{ $item['badge'] }}</span>
-                        <h3 class="text-lg font-black text-slate-900">{{ $item['judul'] }}</h3>
-                        <p class="text-sm text-slate-600 mt-1">{{ $item['deskripsi'] }}</p>
-                    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+
+        <!-- Kolom Nasional -->
+        <div class="space-y-6">
+            <h2 class="text-xl font-black text-slate-900 tracking-tight">Peraturan Nasional</h2>
+
+            @if($nasionalAdmin->count() > 0)
+            <div class="grid grid-cols-1 gap-4">
+                @foreach($nasionalAdmin as $item)
+                <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm hover:shadow-md transition space-y-1.5 group relative pr-14">
+                    <a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer" class="block">
+                        <h3 class="text-base font-black text-slate-900 group-hover:text-sky-600 transition">{{ $item['judul'] }}</h3>
+                        <p class="text-xs text-slate-600 font-medium leading-relaxed">{{ $item['deskripsi'] }}</p>
+                    </a>
                     <form action="{{ route('admin.regulasi.destroy', $item['id']) }}" method="POST">
                         @csrf @method('DELETE')
-                        <button class="text-rose-600 hover:text-rose-700 font-bold text-sm">Hapus</button>
+                        <button class="absolute top-4 right-4 w-8 h-8 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition" title="Hapus"><i class="fa-solid fa-trash text-xs"></i></button>
                     </form>
                 </div>
-            @empty
-                <p>Belum ada regulasi.</p>
-            @endforelse
+                @endforeach
+            </div>
+            @endif
+
+            <!-- Form Tambah Nasional -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden p-6 mt-4">
+                <h2 class="text-sm font-extrabold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-sky-600"></i> Tambah
+                </h2>
+                <form action="{{ route('admin.regulasi.store') }}" method="POST" class="space-y-3">
+                    @csrf
+                    <input type="hidden" name="kategori" value="nasional">
+                    <input type="text" name="judul" required placeholder="Judul" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
+                    <textarea name="deskripsi" required placeholder="Deskripsi" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm" rows="2"></textarea>
+                    <input type="url" name="url" required placeholder="URL Regulasi" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
+                    <button type="submit" class="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm rounded-xl transition">Tambah</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Kolom Internal -->
+        <div class="space-y-6">
+            <h2 class="text-xl font-black text-slate-900 tracking-tight">Regulasi Internal Universitas Lampung</h2>
+
+            @if($internalAdmin->count() > 0)
+            <div class="grid grid-cols-1 gap-4">
+                @foreach($internalAdmin as $item)
+                <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm hover:shadow-md transition space-y-1.5 group relative pr-14">
+                    <a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer" class="block">
+                        <h3 class="text-base font-black text-slate-900 group-hover:text-sky-600 transition">{{ $item['judul'] }}</h3>
+                        <p class="text-xs text-slate-600 font-medium leading-relaxed">{{ $item['deskripsi'] }}</p>
+                    </a>
+                    <form action="{{ route('admin.regulasi.destroy', $item['id']) }}" method="POST">
+                        @csrf @method('DELETE')
+                        <button class="absolute top-4 right-4 w-8 h-8 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition" title="Hapus"><i class="fa-solid fa-trash text-xs"></i></button>
+                    </form>
+                </div>
+                @endforeach
+            </div>
+            @endif
+
+            <!-- Form Tambah Internal -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden p-6 mt-4">
+                <h2 class="text-sm font-extrabold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-sky-600"></i> Tambah
+                </h2>
+                <form action="{{ route('admin.regulasi.store') }}" method="POST" class="space-y-3">
+                    @csrf
+                    <input type="hidden" name="kategori" value="internal">
+                    <input type="text" name="judul" required placeholder="Judul" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
+                    <textarea name="deskripsi" required placeholder="Deskripsi" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm" rows="2"></textarea>
+                    <input type="url" name="url" required placeholder="URL Regulasi" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
+                    <button type="submit" class="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm rounded-xl transition">Tambah</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

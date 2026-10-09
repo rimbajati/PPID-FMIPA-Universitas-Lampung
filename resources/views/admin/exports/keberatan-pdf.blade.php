@@ -137,11 +137,11 @@
                     <tr>
                         <td class="text-center">{{ $idx + 1 }}</td>
                         <td class="text-center">{{ $item->created_at ? $item->created_at->translatedFormat('d F Y') : '-' }}</td>
-                        <td style="font-weight: 600;">{{ $namaPemohon }}</td>
+                        <td>{{ $namaPemohon }}</td>
                         <td class="text-center">{{ $pekerjaan }}</td>
                         <td>{{ $item->alasan_keberatan ?: '-' }}</td>
                         <td>{{ $item->kronologi_keberatan ?: '-' }}</td>
-                        <td class="text-center" style="font-weight: 700;">{{ $item->status }}</td>
+                        <td class="text-center">{{ $item->status }}</td>
                         <td class="text-center">{{ ($isSelesai && $item->updated_at) ? $item->updated_at->translatedFormat('d F Y') : '-' }}</td>
                         <td class="text-center">{{ $durasi }}</td>
                     </tr>

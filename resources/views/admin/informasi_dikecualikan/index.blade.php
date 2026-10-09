@@ -1,7 +1,7 @@
 @extends('components.layouts.admin')
 
-@section('title', 'Daftar Informasi Dikecualikan (DIK) - Admin PPID')
-@section('header_title', 'Daftar Informasi Dikecualikan (DIK)')
+@section('title', 'Daftar Informasi yang Dikecualikan (DIK) - Admin PPID')
+@section('header_title', 'Daftar Informasi yang Dikecualikan (DIK)')
 
 @section('content')
 <div class="space-y-6">
@@ -9,7 +9,7 @@
     <!-- Section Header: Informasi Dikecualikan Overview & Tombol Tambah -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Daftar Informasi Dikecualikan</h1>
+            <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Daftar Informasi yang Dikecualikan</h1>
             <p class="text-xs md:text-sm font-semibold text-slate-400 mt-1">Kelola daftar informasi yang dikecualikan berdasarkan ketentuan hukum dan uji konsekuensi</p>
         </div>
 
@@ -49,7 +49,7 @@
             <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
                 <span>Tampilkan</span>
                 <select id="select-per-page-admin-dik" onchange="changePerPageAdminDik(this.value)" 
-                        class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
+                        class="px-3 py-1.5 bg-white border border-slate-900 rounded-lg text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
                     <option value="10" {{ (int)request('per_page', 10) === 10 ? 'selected' : '' }}>10</option>
                     <option value="25" {{ (int)request('per_page', 10) === 25 ? 'selected' : '' }}>25</option>
                     <option value="50" {{ (int)request('per_page', 10) === 50 ? 'selected' : '' }}>50</option>
@@ -71,7 +71,7 @@
                        value="{{ request('search') }}" 
                        autocomplete="off"
                        oninput="debounceSearchAdminDik()"
-                       class="w-48 sm:w-56 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-2xl text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
+                       class="w-64 sm:w-80 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
                 <button type="button" id="btn-clear-search-admin-dik" onclick="clearSearchAdminDik()" title="Hapus pencarian" 
                         class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
                     <i class="fa-solid fa-xmark"></i>
@@ -93,14 +93,14 @@
                         <col class="w-12 shrink-0">
                         <col class="w-[25%]">
                         <col class="w-[20%]">
-                        <col class="w-[12%]">
-                        <col class="w-[18%]">
+                        <col class="w-[15%]">
+                        <col class="w-[15%]">
                         <col class="w-[15%]">
                         <col class="w-[10%] shrink-0">
                     </colgroup>
                     <thead>
                         <!-- Baris Header 1 -->
-                        <tr class="bg-sky-500 text-white text-xs sm:text-sm font-extrabold tracking-tight divide-x divide-white/20 text-center leading-snug select-none">
+                        <tr class="bg-sky-500 text-white text-xs md:text-sm font-black tracking-tight divide-x divide-white/20 text-center leading-snug select-none">
                             <th rowspan="2" id="col-checkbox-header" class="hidden px-2 py-3.5 text-center">
                                 <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                             </th>
@@ -140,7 +140,7 @@
                             <th rowspan="2" class="px-2 py-3.5 text-center">Aksi</th>
                         </tr>
                         <!-- Baris Header 2 (Sub-kolom Konsekuensi) -->
-                        <tr class="bg-sky-500 text-white text-xs sm:text-sm font-extrabold tracking-tight divide-x divide-white/20 text-center leading-snug select-none">
+                        <tr class="bg-sky-500 text-white text-xs md:text-sm font-black tracking-tight divide-x divide-white/20 text-center leading-snug select-none">
                             <th onclick="sortAdminDikTable('dibuka')" class="px-3 py-2 text-center cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Konsekuensi Dibuka">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <span>Dibuka</span>
@@ -159,45 +159,30 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody id="table-admin-dik-body" class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
+                    <tbody id="table-admin-dik-body" class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800 text-left [&>tr>td]:!align-top">
                         @forelse($informasi as $idx => $item)
-                            <tr class="table-admin-dik-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-200"
+                            <tr class="table-admin-dik-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-200 align-top"
                                 data-id="{{ $item->id }}"
                                 data-no="{{ $idx + 1 }}"
                                 data-ringkasan="{{ strtolower($item->ringkasan_informasi ?? '') }}"
                                 data-dasar_hukum="{{ strtolower($item->dasar_hukum ?? '') }}"
                                 data-dibuka="{{ strtolower($item->dibuka ?? '') }}"
                                 data-ditutup="{{ strtolower($item->ditutup ?? '') }}"
-                                data-jangka_waktu="{{ strtolower($item->jangka_waktu ?? '') }}">
-                                <td class="col-checkbox-cell hidden px-2 py-3 text-center align-top">
+                                data-jangka_waktu="{{ strtolower($item->jangka_waktu ?? '') }}"
+                                style="vertical-align: top;">
+                                <td class="col-checkbox-cell hidden px-2 py-3 text-center !align-top" style="vertical-align: top;">
                                     <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                                 </td>
-                                <td class="col-admin-dik-no px-2 py-3 text-center font-bold text-slate-400 align-top">
+                                <td class="col-admin-dik-no px-2 py-3 text-center font-bold text-slate-400 !align-top" style="vertical-align: top;">
                                     {{ $idx + 1 }}
                                 </td>
-                                <td class="px-3.5 py-3 font-medium text-slate-800 leading-normal break-words align-top">
-                                    {{ $item->ringkasan_informasi }}
-                                </td>
-                                <td class="px-3 py-3 text-slate-700 break-words leading-normal align-top">
-                                    {{ $item->dasar_hukum }}
-                                </td>
-                                <td class="px-3 py-3 text-slate-700 break-words leading-normal align-top">
-                                    {{ $item->dibuka ?: '-' }}
-                                </td>
-                                <td class="px-3 py-3 text-slate-700 break-words leading-normal align-top">
-                                    {{ $item->ditutup }}
-                                </td>
-                                <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words align-top">
-                                    {{ $item->jangka_waktu }}
-                                </td>
-                                <td class="px-2 py-2.5 text-center align-middle whitespace-nowrap">
+                                <td class="px-3.5 py-3 font-medium text-slate-800 leading-normal break-words !align-top !text-left whitespace-pre-line" style="vertical-align: top; text-align: left;">{{ trim($item->ringkasan_informasi) }}</td>
+                                <td class="px-3 py-3 text-slate-700 break-words leading-normal !align-top !text-left whitespace-pre-line" style="vertical-align: top; text-align: left;">{{ trim($item->dasar_hukum) }}</td>
+                                <td class="px-3 py-3 text-slate-700 break-words leading-normal !align-top !text-left whitespace-pre-line" style="vertical-align: top; text-align: left;">{{ trim($item->dibuka) ?: '-' }}</td>
+                                <td class="px-3 py-3 text-slate-700 break-words leading-normal !align-top !text-left whitespace-pre-line" style="vertical-align: top; text-align: left;">{{ trim($item->ditutup) }}</td>
+                                <td class="px-3 py-3 !text-left font-semibold text-slate-700 break-words !align-top whitespace-pre-line" style="vertical-align: top; text-align: left;">{{ trim($item->jangka_waktu) }}</td>
+                                <td class="px-2 py-2.5 text-center !align-top whitespace-nowrap" style="vertical-align: top;">
                                     <div class="flex items-center justify-center gap-1.5">
-                                        <!-- Tombol Lihat (Detail Pop-up) -->
-                                        <button type="button" onclick="openDetailDikModal({{ json_encode($item) }})" title="Lihat Detail" 
-                                                class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer">
-                                            <i class="fa-regular fa-eye text-[11px] not-italic leading-none"></i>
-                                        </button>
-
                                         <!-- Tombol Edit -->
                                         <button type="button" onclick="openModalEditDik({{ json_encode($item) }})" title="Edit Data" 
                                                 class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
@@ -225,7 +210,7 @@
 
             <!-- Footer Kontrol Paginasi Client-side Instan -->
             <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div id="table-admin-dik-info" class="text-xs md:text-sm text-slate-800">
+                <div id="table-admin-dik-info" class="text-xs sm:text-sm font-medium text-slate-600">
                     Menampilkan 0–0 dari 0 informasi
                 </div>
                 <div id="table-admin-dik-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
@@ -239,7 +224,7 @@
 
 <style>
     #table-admin-dik-body > .table-admin-dik-row > td {
-        vertical-align: middle !important;
+        vertical-align: top !important;
     }
 </style>
 @endsection
@@ -249,7 +234,7 @@
 <!-- MODAL TAMBAH & EDIT INFORMASI DIKECUALIKAN (DIK)    -->
 <!-- =================================================== -->
 <div id="modalAddEditDik" class="hidden fixed inset-0 z-[999999] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-xs transition-opacity">
-    <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border-0 overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[96vh] transition-all duration-300 ease-in-out">
+    <div class="bg-white rounded-2xl max-w-7xl w-[96vw] shadow-2xl border-0 overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[96vh] transition-all duration-300 ease-in-out">
 
         <!-- Header Modal (Sky-Blue) -->
         <div class="bg-sky-500 text-white px-8 py-5 shrink-0 rounded-t-2xl w-full">
@@ -262,59 +247,71 @@
             @csrf
             <input type="hidden" name="_method" id="formMethodDik" value="POST">
 
-            <div class="p-8 text-xs md:text-sm overflow-y-auto flex-1 space-y-5">
+            <div class="p-6 sm:p-8 text-xs md:text-sm overflow-y-auto flex-1 space-y-6">
 
-                <!-- 1. Informasi -->
-                <div class="space-y-1">
-                    <label class="block text-xs md:text-sm font-bold text-slate-800">
-                        Informasi <span class="text-rose-500">*</span>
-                    </label>
-                    <textarea name="ringkasan_informasi" id="inputRingkasanInformasi" rows="3" required
-                              placeholder="Contoh: Dokumen Ujian Mahasiswa, Nilai Indeks Prestasi, Berkas Kepegawaian..."
-                              class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none"></textarea>
-                </div>
+                <!-- Layout Grid 2 Kolom Kiri & Kanan -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <!-- 2. Dasar Hukum -->
-                <div class="space-y-1">
-                    <label class="block text-xs md:text-sm font-bold text-slate-800">
-                        Dasar Hukum <span class="text-rose-500">*</span>
-                    </label>
-                    <textarea name="dasar_hukum" id="inputDasarHukum" rows="3" required
-                              placeholder="Contoh: UU KIP Pasal 17 Huruf h Angka 4 dan Angka 5..."
-                              class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none"></textarea>
-                </div>
+                    <!-- KOLOM KIRI: Informasi, Dasar Hukum & Jangka Waktu -->
+                    <div class="space-y-5">
+                        <!-- 1. Informasi -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs md:text-sm font-bold text-slate-800">
+                                Informasi <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" name="ringkasan_informasi" id="inputRingkasanInformasi" required
+                                      placeholder="Contoh: SK Rektor tentang Putus Studi Mahasiswa (Evaluasi Akademik I & II)"
+                                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm">
+                        </div>
 
-                <!-- 3. Konsekuensi / Pertimbangan Bagi Publik -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2 text-xs md:text-sm font-bold text-slate-800">
-                        Konsekuensi / Pertimbangan Bagi Publik
+                        <!-- 2. Dasar Hukum -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs md:text-sm font-bold text-slate-800">
+                                Dasar Hukum <span class="text-rose-500">*</span>
+                            </label>
+                            <textarea name="dasar_hukum" id="inputDasarHukum" rows="10" required
+                                      placeholder="Contoh: UU KIP No. 14/2008, UU No. 27/2022 Tentang Pelindungan Data Pribadi"
+                                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none min-h-[180px]"></textarea>
+                        </div>
+
+                        <!-- 3. Jangka Waktu -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs md:text-sm font-bold text-slate-800">
+                                Jangka Waktu <span class="text-rose-500">*</span>
+                            </label>
+                            <textarea name="jangka_waktu" id="inputJangkaWaktu" rows="3" required
+                                   placeholder="Contoh: 30 Tahun (Berdasarkan Peraturan KIP No. 1 Tahun 2021)"
+                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none"></textarea>
+                        </div>
                     </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs md:text-sm font-bold text-slate-800">
-                            Dibuka <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" name="dibuka" id="inputDibuka" required
-                               placeholder="Contoh: Informasi dapat dibuka untuk umum"
-                               class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs md:text-sm font-bold text-slate-800">
-                            Ditutup <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" name="ditutup" id="inputDitutup" required
-                               placeholder="Contoh: Seluruh Dokumen Informasi Ujian"
-                               class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm">
-                    </div>
-                </div>
 
-                <!-- 4. Jangka Waktu -->
-                <div class="space-y-1">
-                    <label class="block text-xs md:text-sm font-bold text-slate-800">
-                        Jangka Waktu <span class="text-rose-500">*</span>
-                    </label>
-                    <input type="text" name="jangka_waktu" id="inputJangkaWaktu" required
-                           placeholder="Contoh: Selama menjadi mahasiswa sampai lulus"
-                           class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm">
+                    <!-- KOLOM KANAN: Konsekuensi / Pertimbangan Bagi Publik (Dibuka & Ditutup) -->
+                    <div class="space-y-5">
+                        <div class="text-xs md:text-sm font-bold text-slate-800 pb-0.5 border-b border-slate-100">
+                            Konsekuensi / Pertimbangan Bagi Publik
+                        </div>
+
+                        <!-- Dibuka -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs md:text-sm font-bold text-slate-800">
+                                Dibuka <span class="text-rose-500">*</span>
+                            </label>
+                            <textarea name="dibuka" id="inputDibuka" rows="7" required
+                                   placeholder="Contoh: Data drop out bersifat pribadi, bisa mempermalukan individu"
+                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none min-h-[140px]"></textarea>
+                        </div>
+
+                        <!-- Ditutup -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs md:text-sm font-bold text-slate-800">
+                                Ditutup <span class="text-rose-500">*</span>
+                            </label>
+                            <textarea name="ditutup" id="inputDitutup" rows="7" required
+                                   placeholder="Contoh: Mengamankan data pribadi yang bersifat rahasia"
+                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none min-h-[140px]"></textarea>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -322,84 +319,18 @@
             <!-- Footer Buttons -->
             <div class="px-6 py-4 sm:px-8 bg-slate-50/90 border-t border-slate-100 flex items-center justify-end gap-2.5 shrink-0 rounded-b-2xl">
                 <button type="button" onclick="closeModalAddEditDik()"
-                        class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs sm:text-sm font-extrabold rounded-xl transition cursor-pointer">
+                        class="px-5 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold rounded-xl transition shadow-2xs cursor-pointer">
                     Batal
                 </button>
                 <button type="submit"
-                        class="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs sm:text-sm font-extrabold rounded-xl transition shadow-xs cursor-pointer flex items-center gap-1.5">
-                    <i class="fa-solid fa-floppy-disk text-[11px]"></i>
-                    Simpan Data
+                        class="px-6 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs sm:text-sm font-bold rounded-xl transition shadow-xs cursor-pointer">
+                    Simpan
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- ======================================================== -->
-<!-- MODAL POPUP: DETAIL INFORMASI YANG DIKECUALIKAN          -->
-<!-- ======================================================== -->
-<div id="modalDetailDik" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs hidden transition-all duration-200">
-    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-150">
-        <!-- Header Modal -->
-        <div class="px-6 pt-6 pb-4 flex items-start justify-between gap-4 border-b border-slate-100">
-            <div class="space-y-1">
-                <p class="text-xs font-semibold text-slate-400">Daftar Informasi yang Dikecualikan</p>
-                <h3 id="dikDetailRingkasan" class="text-xl sm:text-2xl font-black text-slate-900 leading-tight"></h3>
-            </div>
-            <button type="button" onclick="closeDetailDikModal()" 
-                    class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition cursor-pointer shrink-0">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
-        </div>
-
-        <!-- Body Modal (Format Persis Sesuai Gambar Referensi) -->
-        <div class="p-6 overflow-y-auto space-y-6 text-sm divide-y divide-slate-100">
-            <!-- 1. Dasar Hukum -->
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2 first:pt-0">
-                <div class="sm:col-span-4 font-bold text-slate-900">
-                    Dasar Hukum
-                </div>
-                <div id="dikDetailDasarHukum" class="sm:col-span-8 text-slate-700 font-medium whitespace-pre-line leading-relaxed">
-                </div>
-            </div>
-
-            <!-- 2. Dibuka -->
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-5">
-                <div class="sm:col-span-4 font-bold text-slate-900">
-                    Dibuka
-                </div>
-                <div id="dikDetailDibuka" class="sm:col-span-8 text-slate-700 font-medium">
-                    -
-                </div>
-            </div>
-
-            <!-- 3. Ditutup -->
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-5">
-                <div class="sm:col-span-4 font-bold text-slate-900">
-                    Ditutup
-                </div>
-                <div id="dikDetailDitutup" class="sm:col-span-8 text-slate-700 font-medium leading-relaxed">
-                </div>
-            </div>
-
-            <!-- 4. Jangka Waktu -->
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-5">
-                <div class="sm:col-span-4 font-bold text-slate-900">
-                    Jangka Waktu
-                </div>
-                <div id="dikDetailJangkaWaktu" class="sm:col-span-8 text-slate-700 font-medium leading-relaxed">
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer Modal -->
-        <div class="px-6 py-3.5 bg-slate-50/80 border-t border-slate-100 flex items-center justify-end">
-            <button type="button" onclick="closeDetailDikModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition cursor-pointer">
-                Tutup
-            </button>
-        </div>
-    </div>
-</div>
 @endsection
 
 @push('scripts')
@@ -505,20 +436,6 @@
 
     function closeModalAddEditDik() {
         document.getElementById('modalAddEditDik').classList.add('hidden');
-    }
-
-    function openDetailDikModal(data) {
-        document.getElementById('dikDetailRingkasan').innerText = data.ringkasan_informasi || '-';
-        document.getElementById('dikDetailDasarHukum').innerText = data.dasar_hukum || '-';
-        document.getElementById('dikDetailDibuka').innerText = data.dibuka || '-';
-        document.getElementById('dikDetailDitutup').innerText = data.ditutup || '-';
-        document.getElementById('dikDetailJangkaWaktu').innerText = data.jangka_waktu || '-';
-
-        document.getElementById('modalDetailDik').classList.remove('hidden');
-    }
-
-    function closeDetailDikModal() {
-        document.getElementById('modalDetailDik').classList.add('hidden');
     }
 
     // =========================================================================

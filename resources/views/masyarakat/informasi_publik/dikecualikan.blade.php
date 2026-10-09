@@ -1,15 +1,15 @@
 @extends('components.layouts.app')
 
-@section('title', 'Daftar Informasi Publik yang Dikecualikan - PPID FMIPA Universitas Lampung')
+@section('title', 'Daftar Informasi yang Dikecualikan - PPID FMIPA Universitas Lampung')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-100/70 min-h-screen pb-20">
 
     <!-- Header Hero Banner Informasi yang Dikecualikan -->
-    <x-masyarakat.informasi_publik.hero-banner title="Informasi yang Dikecualikan">
-        Memuat daftar informasi publik yang bersifat ketat, terbatas, dan rahasia yang tidak dapat diberikan kepada pemohon berdasarkan pengujian konsekuensi Pasal 17 Undang-Undang Nomor 14 Tahun 2008 tentang Keterbukaan Informasi Publik oleh PPID FMIPA Universitas Lampung. Untuk Daftar Informasi Publik yang Dikecualikan tingkat universitas dapat diakses melalui portal PPID Utama:
+    <x-masyarakat.informasi_publik.hero-banner title="Daftar Informasi yang Dikecualikan">
+        Memuat daftar informasi yang bersifat ketat, terbatas, dan rahasia yang tidak dapat diberikan kepada pemohon berdasarkan pengujian konsekuensi Pasal 17 Undang-Undang Nomor 14 Tahun 2008 tentang Keterbukaan Informasi Publik oleh PPID FMIPA Universitas Lampung. Untuk Daftar Informasi yang Dikecualikan tingkat universitas dapat diakses melalui portal PPID Utama:
         <a href="https://ppid.unila.ac.id/informasi-dikecualikan/" target="_blank" rel="noopener noreferrer" class="font-bold text-white underline decoration-white/50 underline-offset-4 hover:decoration-white">
-            Daftar Informasi Publik yang Dikecualikan Universitas Lampung &rarr;
+            Daftar Informasi yang Dikecualikan Universitas Lampung &rarr;
         </a>
     </x-masyarakat.informasi_publik.hero-banner>
 
@@ -22,7 +22,7 @@
                 <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
                     <span>Tampilkan</span>
                     <select id="select-per-page-dik" onchange="changePerPageDik(this.value)" 
-                            class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
+                            class="px-3 py-1.5 bg-white border border-slate-900 rounded-lg text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -42,7 +42,7 @@
                                id="input-search-dik"
                                autocomplete="off"
                                oninput="debounceSearchDik()"
-                               class="w-48 sm:w-56 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-2xl text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
+                               class="w-64 sm:w-80 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
                         <button type="button" id="btn-clear-search-dik" onclick="clearSearchDik()" title="Hapus pencarian" 
                                 class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
                             <i class="fa-solid fa-xmark"></i>
@@ -54,7 +54,15 @@
             <!-- Tabel Informasi Publik yang Dikecualikan (Desain Seragam dengan Tabel DIP) -->
             <div class="bg-white rounded-none border border-slate-200/80 shadow-xs overflow-hidden mb-6">
                 <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
-                    <table class="w-full min-w-[900px] text-left border-collapse border border-slate-300">
+                    <table class="w-full min-w-[900px] text-left border-collapse border border-slate-300 table-fixed">
+                        <colgroup>
+                            <col class="w-12 shrink-0">
+                            <col class="w-[27%]">
+                            <col class="w-[23%]">
+                            <col class="w-[15%]">
+                            <col class="w-[15%]">
+                            <col class="w-[15%]">
+                        </colgroup>
                         <thead>
                             <!-- Baris Header 1 -->
                             <tr class="bg-sky-500 text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-sky-600 select-none">
@@ -124,34 +132,24 @@
                                     data-ditutup="{{ strtolower($item->ditutup ?? '') }}"
                                     data-jangka_waktu="{{ strtolower($item->jangka_waktu ?? '') }}">
                                     <!-- 1. NO -->
-                                    <td class="col-dik-no px-2 py-3 text-center font-bold text-slate-400">
+                                    <td class="col-dik-no px-2 py-3 text-center font-bold text-slate-400 align-top">
                                         {{ $idx + 1 }}
                                     </td>
 
                                     <!-- 2. INFORMASI -->
-                                    <td class="px-3.5 py-3 font-medium text-slate-700 leading-normal break-words">
-                                        {{ $item->ringkasan_informasi }}
-                                    </td>
+                                    <td class="px-3.5 py-3 font-medium text-slate-700 leading-normal break-words align-top text-left whitespace-pre-line">{{ trim($item->ringkasan_informasi) }}</td>
 
                                     <!-- 3. DASAR HUKUM -->
-                                    <td class="px-3 py-3 text-slate-700 break-words leading-normal">
-                                        {{ $item->dasar_hukum ?: '-' }}
-                                    </td>
+                                    <td class="px-3 py-3 text-slate-700 break-words leading-normal align-top text-left whitespace-pre-line">{{ trim($item->dasar_hukum) ?: '-' }}</td>
 
                                     <!-- 4. KONSEKUENSI DIBUKA -->
-                                    <td class="px-3 py-3 text-slate-700 break-words leading-normal">
-                                        {{ $item->dibuka ?: '-' }}
-                                    </td>
+                                    <td class="px-3 py-3 text-slate-700 break-words leading-normal align-top text-left whitespace-pre-line">{{ trim($item->dibuka) ?: '-' }}</td>
 
                                     <!-- 5. KONSEKUENSI DITUTUP -->
-                                    <td class="px-3 py-3 text-slate-700 break-words leading-normal">
-                                        {{ $item->ditutup ?: '-' }}
-                                    </td>
+                                    <td class="px-3 py-3 text-slate-700 break-words leading-normal align-top text-left whitespace-pre-line">{{ trim($item->ditutup) ?: '-' }}</td>
 
                                     <!-- 6. JANGKA WAKTU -->
-                                    <td class="px-3 py-3 text-center font-semibold text-slate-700 break-words">
-                                        {{ $item->jangka_waktu ?: '-' }}
-                                    </td>
+                                    <td class="px-3 py-3 text-left font-semibold text-slate-700 break-words align-top whitespace-pre-line">{{ trim($item->jangka_waktu) ?: '-' }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -166,7 +164,7 @@
 
                 <!-- Footer Pagination Client-side Instan -->
                 <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div id="table-dik-info" class="text-xs md:text-sm text-slate-800">
+                    <div id="table-dik-info" class="text-xs sm:text-sm font-medium text-slate-600">
                         Menampilkan 0–0 dari 0 informasi
                     </div>
                     <div id="table-dik-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">

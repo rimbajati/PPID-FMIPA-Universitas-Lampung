@@ -34,7 +34,7 @@
                 <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
                     <span>Tampilkan</span>
                     <select id="select-per-page-kat" onchange="changePerPageKat(this.value)" 
-                            class="px-3 py-1.5 bg-white border border-slate-900 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
+                            class="px-3 py-1.5 bg-white border border-slate-900 rounded-lg text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -54,7 +54,7 @@
                                id="input-search-kat"
                                autocomplete="off"
                                oninput="debounceSearchKat()"
-                               class="w-48 sm:w-56 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-2xl text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
+                               class="w-64 sm:w-80 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
                         <button type="button" id="btn-clear-search-kat" onclick="clearSearchKat()" title="Hapus pencarian" 
                                 class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
                             <i class="fa-solid fa-xmark"></i>
@@ -119,7 +119,7 @@
 
                     <!-- Footer Pagination Serta-Merta -->
                     <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div id="table-kat-info" class="text-xs md:text-sm text-slate-800">
+                        <div id="table-kat-info" class="text-xs sm:text-sm font-medium text-slate-600">
                             Menampilkan 0–0 dari 0 informasi
                         </div>
                         <div id="table-kat-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
@@ -208,7 +208,7 @@
                                         </td>
 
                                         <!-- 3. Akses -->
-                                        <td class="px-2 py-3 text-center align-middle">
+                                        <td class="px-2 py-3 text-center align-top">
                                              <div class="flex items-center justify-center">
                                                  @if($item->bentuk_informasi_yang_tersedia === 'Cetak' && !$item->file_informasi && !$item->link_informasi)
                                                      <span class="text-slate-400 font-bold text-xs">-</span>
@@ -236,7 +236,7 @@
 
                     <!-- Footer Pagination Client-side Instan -->
                     <div class="p-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div id="table-kat-info" class="text-xs md:text-sm text-slate-800">
+                        <div id="table-kat-info" class="text-xs sm:text-sm font-medium text-slate-600">
                             Menampilkan 0–0 dari 0 informasi
                         </div>
                         <div id="table-kat-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
@@ -402,7 +402,35 @@
             katFilteredRows = katAllRows.filter(row => row.fullText.includes(query));
         }
 
-        if (katSortColumn) {
+        const isTableMode = !!document.getElementById('table-kat-body') && !document.getElementById('container-serta-merta');
+        if (isTableMode) {
+            const groupOrder = new Map();
+            katAllRows.forEach(row => {
+                const k = (row.rincian || '').trim();
+                if (!groupOrder.has(k)) groupOrder.set(k, groupOrder.size);
+            });
+            katFilteredRows.sort((a, b) => {
+                const ga = (a.rincian || '').trim();
+                const gb = (b.rincian || '').trim();
+                let gc = 0;
+                if (katSortColumn === 'rincian') {
+                    gc = ga.localeCompare(gb, 'id', { numeric: true, sensitivity: 'base' });
+                    if (katSortDirection === 'desc') gc *= -1;
+                } else {
+                    gc = (groupOrder.get(ga) ?? 0) - (groupOrder.get(gb) ?? 0);
+                }
+                if (gc) return gc;
+                if (!katSortColumn || katSortColumn === 'rincian') return a.originalIndex - b.originalIndex;
+                if (katSortColumn === 'dilihat') {
+                    const r = a.dilihat - b.dilihat;
+                    return katSortDirection === 'asc' ? r : -r;
+                }
+                const va = a[katSortColumn] || '';
+                const vb = b[katSortColumn] || '';
+                const cmp = va.localeCompare(vb, 'id', { numeric: true, sensitivity: 'base' });
+                return katSortDirection === 'asc' ? cmp : -cmp;
+            });
+        } else if (katSortColumn) {
             katFilteredRows.sort((a, b) => {
                 if (katSortColumn === 'dilihat') {
                     const valA = a.dilihat || 0;

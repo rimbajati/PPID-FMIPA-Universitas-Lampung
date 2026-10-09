@@ -27,13 +27,13 @@
                         sans: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
                     },
                     borderRadius: {
-                        'DEFAULT': '0.625rem',
-                        'sm': '0.375rem',
-                        'md': '0.5rem',
-                        'lg': '0.625rem',
-                        'xl': '0.625rem',
-                        '2xl': '0.625rem',
-                        '3xl': '0.625rem',
+                        'DEFAULT': '0.375rem',
+                        'sm': '0.25rem',
+                        'md': '0.375rem',
+                        'lg': '0.5rem',
+                        'xl': '0.5rem',
+                        '2xl': '0.5rem',
+                        '3xl': '0.75rem',
                         'full': '9999px',
                     }
                 }
@@ -123,20 +123,22 @@
             -webkit-hyphens: none !important;
         }
 
-        /* Aturan Sudut Siku 90 Derajat (Sharp / Minimal Radius) untuk Semua Tabel & Statistik */
+        /* Semua tabel masyarakat tetap siku 90 derajat — statistik dikecualikan agar tetap melengkung */
         table, table th, table td, table tr,
         .overflow-x-auto,
-        [class*="table-container"],
-        #statistik-layanan,
-        #statistik-layanan * {
+        [class*="table-container"] {
             border-radius: 0px !important;
         }
-        /* Kontainer pembungkus tabel dibuat siku tajam */
         div[class*="rounded"]:has(table),
         section[class*="rounded"]:has(table),
         div:has(> .overflow-x-auto),
         div:has(> table) {
             border-radius: 0px !important;
+        }
+        /* Statistik boleh melengkung — override siku di atas */
+        #statistik-layanan,
+        #statistik-layanan .bg-white.rounded-xl {
+            border-radius: 0.75rem !important;
         }
     </style>
 </head>

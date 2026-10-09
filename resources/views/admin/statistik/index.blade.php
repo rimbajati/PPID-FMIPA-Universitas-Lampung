@@ -42,7 +42,7 @@
     <!-- 6 Summary Overview Cards (Selaras dengan Tema Admin PPID) -->
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         <!-- Card 1: Total Layanan (Sky Blue) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-3.5 sm:p-4 flex justify-between items-center min-h-[80px]">
                 <div>
                     <span class="text-2xl sm:text-3xl font-black block tracking-tight text-[#0284c7]">{{ $totalPermohonan + $totalKeberatan }}</span>
@@ -59,24 +59,24 @@
         </div>
 
         <!-- Card 2: Permohonan Masuk (Biru Royal Vivid) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-3.5 sm:p-4 flex justify-between items-center min-h-[80px]">
                 <div>
                     <span class="text-2xl sm:text-3xl font-black block tracking-tight text-[#2563eb]">{{ $totalPermohonan }}</span>
                     <p class="text-[11px] font-extrabold text-slate-500 mt-0.5">Permohonan</p>
                 </div>
                 <div class="text-[#2563eb]/80">
-                    <i class="fa-regular fa-file-lines text-2xl sm:text-3xl"></i>
+                    <i class="fa-solid fa-envelope-open-text text-2xl sm:text-3xl"></i>
                 </div>
             </div>
             <div class="bg-[#2563eb] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
-                <span class="truncate">Permintaan Masuk</span>
-                <i class="fa-solid fa-inbox text-[10px] shrink-0 ml-1"></i>
+                <span class="truncate">Permohonan Masuk</span>
+                <i class="fa-solid fa-envelope-open-text text-[10px] shrink-0 ml-1"></i>
             </div>
         </div>
 
         <!-- Card 3: Permohonan Selesai (Hijau Emerald) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-3.5 sm:p-4 flex justify-between items-center min-h-[80px]">
                 <div>
                     <span class="text-2xl sm:text-3xl font-black block tracking-tight text-[#059669]">{{ $totalPermohonanSelesai }}</span>
@@ -87,13 +87,13 @@
                 </div>
             </div>
             <div class="bg-[#059669] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
-                <span class="truncate">Telah Dipenuhi</span>
+                <span class="truncate">Permohonan Selesai</span>
                 <i class="fa-solid fa-check text-[10px] shrink-0 ml-1"></i>
             </div>
         </div>
 
         <!-- Card 4: Permohonan Ditolak (Merah Rose) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-3.5 sm:p-4 flex justify-between items-center min-h-[80px]">
                 <div>
                     <span class="text-2xl sm:text-3xl font-black block tracking-tight text-[#e11d48]">{{ $totalPermohonanDitolak }}</span>
@@ -104,30 +104,30 @@
                 </div>
             </div>
             <div class="bg-[#e11d48] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
-                <span class="truncate">Dikecualikan</span>
+                <span class="truncate">Permohonan Ditolak</span>
                 <i class="fa-solid fa-xmark text-[10px] shrink-0 ml-1"></i>
             </div>
         </div>
 
         <!-- Card 5: Pengajuan Keberatan (Amber / Warning) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-3.5 sm:p-4 flex justify-between items-center min-h-[80px]">
                 <div>
                     <span class="text-2xl sm:text-3xl font-black block tracking-tight text-[#d97706]">{{ $totalKeberatan }}</span>
                     <p class="text-[11px] font-extrabold text-slate-500 mt-0.5">Pengajuan Keberatan</p>
                 </div>
                 <div class="text-[#d97706]/80">
-                    <i class="fa-solid fa-scale-balanced text-2xl sm:text-3xl"></i>
+                    <i class="fa-solid fa-gavel text-2xl sm:text-3xl"></i>
                 </div>
             </div>
             <div class="bg-[#d97706] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
-                <span class="truncate">Berkas Keberatan</span>
+                <span class="truncate">Pengajuan Keberatan</span>
                 <i class="fa-solid fa-triangle-exclamation text-[10px] shrink-0 ml-1"></i>
             </div>
         </div>
 
         <!-- Card 6: Waktu Respon (Indigo / Slate) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
             <div class="p-3.5 sm:p-4 flex justify-between items-center min-h-[80px]">
                 <div>
                     <span class="text-2xl sm:text-3xl font-black block tracking-tight text-[#4f46e5]">{{ $rataRataWaktuTeks ?? '1 Hari' }}</span>
@@ -145,12 +145,12 @@
     </div>
 
     <!-- MAIN CHART CARD: Grafis Tren Permohonan & Keberatan (Clean Centered Style) -->
-    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all p-6 sm:p-7 space-y-4">
+    <div class="bg-white rounded-xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all p-6 sm:p-7 space-y-4">
         
         <!-- Header Grafik (Centered Clean) -->
         <div class="relative flex items-center justify-center">
             <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight text-center">
-                Tren Permohonan & Keberatan Layanan
+                Grafik Tren Layanan Informasi
             </h2>
         </div>
 
@@ -164,19 +164,19 @@
             <!-- Clean Horizontal Legend -->
             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-5 gap-y-2 font-semibold text-slate-700">
                 <div class="inline-flex items-center gap-2 cursor-default whitespace-nowrap">
-                    <span class="w-2.5 h-2.5 rounded-xs shrink-0 bg-[#2563eb]"></span>
+                    <span class="w-2.5 h-2.5 rounded-full shrink-0 bg-[#2563eb]"></span>
                     <span class="leading-none">Permohonan</span>
                 </div>
                 <div class="inline-flex items-center gap-2 cursor-default whitespace-nowrap">
-                    <span class="w-2.5 h-2.5 rounded-xs shrink-0 bg-[#059669]"></span>
+                    <span class="w-2.5 h-2.5 rounded-full shrink-0 bg-[#059669]"></span>
                     <span class="leading-none">Selesai</span>
                 </div>
                 <div class="inline-flex items-center gap-2 cursor-default whitespace-nowrap">
-                    <span class="w-2.5 h-2.5 rounded-xs shrink-0 bg-[#e11d48]"></span>
+                    <span class="w-2.5 h-2.5 rounded-full shrink-0 bg-[#e11d48]"></span>
                     <span class="leading-none">Ditolak</span>
                 </div>
                 <div class="inline-flex items-center gap-2 cursor-default whitespace-nowrap">
-                    <span class="w-2.5 h-2.5 rounded-xs shrink-0 bg-[#f59e0b]"></span>
+                    <span class="w-2.5 h-2.5 rounded-full shrink-0 bg-[#f59e0b]"></span>
                     <span class="leading-none">Keberatan</span>
                 </div>
             </div>
@@ -186,7 +186,7 @@
                 <!-- Hint Klik Interaktif (Tampil saat mode tahun) -->
                 <div id="hintKlikTahunAdmin" class="inline-flex items-center gap-1.5 font-medium text-slate-400 text-[11px]">
                     <i class="fa-solid fa-circle-info text-sky-500 text-xs"></i>
-                    <span>Klik batang tahun pada grafik untuk me-drilldown per bulan</span>
+                    <span>Klik batang tahun untuk melihat rincian per bulan</span>
                 </div>
 
                 <!-- Indicator & Button Toggle Back (Mode Rincian Bulanan di Bawah) -->
@@ -208,15 +208,29 @@
     </div>
 
     <!-- SECTION DIAGRAM DONAT LAYANAN -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 1. Jenis Identitas (Baru) -->
+        <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all flex flex-col items-center">
+            <div class="text-center mb-4">
+                <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">Jenis Identitas</h3>
+            </div>
+            <div class="relative w-[13rem] h-[13rem] sm:w-[14.5rem] sm:h-[14.5rem] shrink-0 flex items-center justify-center my-auto">
+                <canvas id="chartDonutIdentitas"></canvas>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                    <span class="text-3xl sm:text-4xl font-black text-slate-900 leading-none tracking-tight">
+                        {{ array_sum($statIdentitas ?? []) }}
+                    </span>
+                    <span class="text-xs font-semibold text-slate-400 mt-1">Total</span>
+                </div>
+            </div>
+            <div id="legendDonutIdentitas" class="w-full grid grid-cols-1 gap-2 mt-5 pt-4 border-t border-slate-100"></div>
+        </div>
+
         <!-- 2. Cara Memperoleh Informasi -->
-        <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all flex flex-col items-center justify-between">
-            <!-- Centered Header -->
+        <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all flex flex-col items-center">
             <div class="text-center mb-4">
                 <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">Cara Memperoleh Informasi</h3>
             </div>
-
-            <!-- Centered Doughnut Chart (Satuan rem) -->
             <div class="relative w-[13rem] h-[13rem] sm:w-[14.5rem] sm:h-[14.5rem] shrink-0 flex items-center justify-center my-auto">
                 <canvas id="chartDonutCara"></canvas>
                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
@@ -226,19 +240,14 @@
                     <span class="text-xs font-semibold text-slate-400 mt-1">Total</span>
                 </div>
             </div>
-
-            <!-- Clean Bottom Legend (Sejajar ke Kanan / Horizontal Wrap) -->
-            <div id="legendDonutCara" class="w-full flex flex-row flex-wrap items-center justify-center gap-x-5 gap-y-2.5 mt-5 pt-4 border-t border-slate-100 text-xs font-medium text-slate-700"></div>
+            <div id="legendDonutCara" class="w-full grid grid-cols-1 gap-2 mt-5 pt-4 border-t border-slate-100"></div>
         </div>
 
         <!-- 3. Alasan Pengajuan Keberatan -->
-        <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all flex flex-col items-center justify-between">
-            <!-- Centered Header -->
+        <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md transition-all flex flex-col items-center">
             <div class="text-center mb-4">
                 <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">Alasan Pengajuan Keberatan</h3>
             </div>
-
-            <!-- Centered Doughnut Chart (Satuan rem) -->
             <div class="relative w-[13rem] h-[13rem] sm:w-[14.5rem] sm:h-[14.5rem] shrink-0 flex items-center justify-center my-auto">
                 <canvas id="chartDonutKeberatan"></canvas>
                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
@@ -248,9 +257,7 @@
                     <span class="text-xs font-semibold text-slate-400 mt-1">Total</span>
                 </div>
             </div>
-
-            <!-- Clean Bottom Legend (Sejajar ke Kanan / Horizontal Wrap) -->
-            <div id="legendDonutKeberatan" class="w-full flex flex-row flex-wrap items-center justify-center gap-x-5 gap-y-2.5 mt-5 pt-4 border-t border-slate-100 text-xs font-medium text-slate-700"></div>
+            <div id="legendDonutKeberatan" class="w-full grid grid-cols-1 gap-2 mt-5 pt-4 border-t border-slate-100"></div>
         </div>
 
     </div>
@@ -539,13 +546,22 @@ document.addEventListener('DOMContentLoaded', function() {
         container.innerHTML = '';
         const total = data.reduce((acc, val) => acc + val, 0);
 
+        if (total === 0) {
+            container.innerHTML = '<span class="col-span-2 text-center text-xs font-medium text-slate-400 py-2">Belum ada data</span>';
+            return;
+        }
+
         labels.forEach((label, idx) => {
             const color = colors[idx % colors.length];
+            const val = data[idx] || 0;
             const item = document.createElement('div');
-            item.className = 'inline-flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-default whitespace-nowrap';
+            item.className = 'flex items-start justify-between gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100 hover:bg-slate-100 transition-colors';
             item.innerHTML = `
-                <span class="w-2.5 h-2.5 rounded-xs shrink-0" style="background-color: ${color}"></span>
-                <span class="leading-none">${label}</span>
+                <span class="flex items-start gap-2 min-w-0 flex-1">
+                    <span class="w-2.5 h-2.5 rounded-full shrink-0 mt-[5px]" style="background-color: ${color}"></span>
+                    <span class="text-xs font-semibold text-slate-700 leading-snug break-words">${label}</span>
+                </span>
+                <span class="text-xs font-black text-slate-900 shrink-0 whitespace-nowrap pt-px">${val}</span>
             `;
             container.appendChild(item);
         });
@@ -612,6 +628,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
+
+    // 1. Donut Jenis Identitas (KTP / Paspor / Badan Hukum)
+    const ctxIdentitas = document.getElementById('chartDonutIdentitas');
+    if (ctxIdentitas) {
+        const dataIdentitas = @json($statIdentitas ?? []);
+        const labelsIdentitas = Object.keys(dataIdentitas);
+        const valuesIdentitas = Object.values(dataIdentitas);
+        const identitasColors = ['#0ea5e9', '#8b5cf6', '#f59e0b', '#64748b'];
+        createSmartDonutChart(ctxIdentitas, labelsIdentitas, valuesIdentitas, identitasColors);
+        renderCustomLegend('legendDonutIdentitas', labelsIdentitas, valuesIdentitas, identitasColors);
     }
 
     // 2. Donut Cara Memperoleh Informasi

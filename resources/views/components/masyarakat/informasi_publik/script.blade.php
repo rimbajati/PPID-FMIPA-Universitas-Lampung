@@ -100,6 +100,7 @@
         const info = document.querySelector(`[data-dip-info="${key}"]`);
         const pagination = document.querySelector(`[data-dip-pagination="${key}"]`);
         const rows = [...filtered];
+        const isUnified = tbody.dataset.unified === 'true';
 
         if (state.sortColumn) {
             rows.sort((a, b) => {
@@ -118,25 +119,35 @@
         const end = Math.min(start + state.perPage, total);
         tbody.innerHTML = '';
 
+        if (!total) {
+            tbody.innerHTML = '<tr><td colspan="8" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data informasi.</td></tr>';
+            if (info) info.innerText = 'Menampilkan 0–0 dari 0 informasi';
+            if (pagination) pagination.innerHTML = '';
+            return;
+        }
+
+        let groupRendered = null;
+        const unifiedLabelMap = { 'informasi berkala': 'Informasi Publik yang Wajib Disediakan Secara Berkala', 'informasi setiap saat': 'Informasi Publik yang Wajib Tersedia Setiap Saat', 'informasi serta-merta': 'Informasi Publik yang Wajib Diumumkan Secara Serta-Merta' };
+        const toUnifiedLabel = (v) => unifiedLabelMap[(v||'').toLowerCase().trim()] || v;
+
         tbody.closest('table')?.querySelectorAll('th[onclick*="sortDipTable"]').forEach(th => {
             const column = th.getAttribute('onclick').match(/,\s*'([^']+)'/)?.[1];
             const icon = th.querySelector('span:last-child');
             if (!column || !icon) return;
             const active = column === state.sortColumn;
             icon.className = `inline-flex items-center justify-center text-xs md:text-sm ${active ? 'text-white' : 'text-white/70 group-hover:text-white'} transition`;
-            icon.innerHTML = active
-                ? (state.sortDirection === 'desc' ? '<i class="fa-solid fa-sort-down"></i>' : '<i class="fa-solid fa-sort-up"></i>')
-                : '<i class="fa-solid fa-sort"></i>';
+            icon.innerHTML = active ? (state.sortDirection === 'desc' ? '<i class="fa-solid fa-sort-down"></i>' : '<i class="fa-solid fa-sort-up"></i>') : '<i class="fa-solid fa-sort"></i>';
         });
 
-        if (!total) {
-            tbody.innerHTML = '<tr><td colspan="8" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data informasi pada jenis ini yang sesuai.</td></tr>';
-            if (info) info.innerText = 'Menampilkan 0–0 dari 0 informasi';
-            if (pagination) pagination.innerHTML = '';
-            return;
-        }
-
         rows.slice(start, end).forEach(row => {
+            if (isUnified && groupRendered !== row.element.dataset.jenis) {
+                groupRendered = row.element.dataset.jenis;
+                const label = toUnifiedLabel(groupRendered);
+                const tr = document.createElement('tr');
+                tr.className = 'bg-sky-50/80';
+                tr.innerHTML = `<td colspan="8" class="px-4 py-3 font-black text-sm tracking-wide text-sky-700 border-t border-sky-100"><span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-500"></span>${label}</span></td>`;
+                tbody.appendChild(tr);
+            }
             const numberCell = row.element.querySelector('.col-dip-no');
             if (numberCell) numberCell.innerText = row.originalIndex;
             tbody.appendChild(row.element);

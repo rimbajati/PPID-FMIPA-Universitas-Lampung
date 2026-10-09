@@ -65,29 +65,29 @@
         <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
             <table class="w-full min-w-[1000px] text-left border-collapse border border-slate-200">
                 <thead>
-                    <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide select-none whitespace-nowrap">
+                    <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide select-none whitespace-nowrap text-left">
                         <th id="col-checkbox-header" class="hidden px-2 py-3.5 w-12 text-center">
                             <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
                         </th>
-                        <th onclick="sortKeberatanTable('no_tiket')" class="px-4 py-3.5 text-center w-40 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
-                            <div class="flex items-center justify-center gap-1.5">
+                        <th onclick="sortKeberatanTable('no_tiket')" class="px-4 py-3.5 text-left w-40 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                            <div class="flex items-center justify-between gap-1.5">
                                 <span>No. Tiket</span>
                                 <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
                                     <i class="fa-solid fa-sort"></i>
                                 </span>
                             </div>
                         </th>
-                        <th onclick="sortKeberatanTable('nama')" class="px-4 py-3.5 text-left min-w-[220px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
-                            <div class="flex items-center gap-1.5">
-                                <span>Pemohon</span>
+                        <th onclick="sortKeberatanTable('tanggal')" class="px-4 py-3.5 text-left w-36 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <span>Tgl. Pengajuan</span>
                                 <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
                                     <i class="fa-solid fa-sort"></i>
                                 </span>
                             </div>
                         </th>
-                        <th onclick="sortKeberatanTable('tanggal')" class="px-4 py-3.5 text-center w-36 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
-                            <div class="flex items-center justify-center gap-1.5">
-                                <span>Tgl. Pengajuan</span>
+                        <th onclick="sortKeberatanTable('nama')" class="px-4 py-3.5 text-left min-w-[220px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <span>Pemohon</span>
                                 <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
                                     <i class="fa-solid fa-sort"></i>
                                 </span>
@@ -105,30 +105,30 @@
                         <th class="px-3 py-3.5 text-center w-28">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200 text-sm md:text-base font-medium text-slate-800">
+                <tbody class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
                     @forelse($keberatans as $item)
                         <tr class="hover:bg-sky-50/70 transition-colors">
-                            <td class="col-checkbox-cell hidden px-2 py-3 text-center align-middle">
+                            <td class="col-checkbox-cell hidden px-2 py-3 text-center align-top">
                                 <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                             </td>
 
-                            <td class="px-4 py-3.5 font-mono font-bold text-amber-600 text-center whitespace-nowrap align-middle">
+                            <td class="px-4 py-3.5 font-mono font-bold text-amber-600 text-left whitespace-nowrap align-top">
                                 {{ $item->no_tiket ?? '-' }}
                             </td>
 
-                            <td class="px-4 py-3.5 align-middle">
-                                <div class="font-bold text-slate-900 leading-snug">{{ $item->permohonan->nama_lengkap ?? ($item->user->nama_lengkap ?? '-') }}</div>
-                            </td>
-
-                            <td class="px-4 py-3.5 text-slate-600 font-medium text-center whitespace-nowrap align-middle">
+                            <td class="px-4 py-3.5 text-slate-600 font-medium text-left whitespace-nowrap align-top">
                                 {{ $item->created_at ? $item->created_at->translatedFormat('d M Y') : '-' }}
                             </td>
 
-                            <td class="px-4 py-3.5 leading-relaxed break-words align-middle text-slate-800" title="{{ $item->alasan_keberatan }}">
+                            <td class="px-4 py-3.5 align-top">
+                                <div class="font-bold text-slate-900 leading-snug">{{ $item->permohonan->nama_lengkap ?? ($item->user->nama_lengkap ?? '-') }}</div>
+                            </td>
+
+                            <td class="px-4 py-3.5 leading-relaxed break-words align-top text-slate-800" title="{{ $item->alasan_keberatan }}">
                                 {{ $item->alasan_keberatan ?? '-' }}
                             </td>
 
-                            <td class="px-3.5 py-3.5 text-center align-middle whitespace-nowrap">
+                            <td class="px-3.5 py-3.5 text-center align-top whitespace-nowrap">
                                 <div class="flex flex-col items-center gap-1">
                                     @if($item->status === 'Diajukan' || $item->status === 'Menunggu')
                                         <span class="inline-block px-3 py-1 text-xs font-bold bg-slate-100 text-slate-700 rounded-lg border border-slate-200">
@@ -149,7 +149,7 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-3 py-3.5 text-center align-middle whitespace-nowrap">
+                            <td class="px-3 py-3.5 text-center align-top whitespace-nowrap">
                                 <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
                                     @php
                                         $statusAwal = $item->status;
@@ -197,6 +197,6 @@
 
     <!-- Pagination Footer -->
     <div class="p-6 border-t border-slate-100">
-        <x-ui.pagination :paginator="$keberatans" label="pengajuan keberatan" />
+        <x-ui.pagination :paginator="$keberatans" label="keberatan" />
     </div>
 </div>

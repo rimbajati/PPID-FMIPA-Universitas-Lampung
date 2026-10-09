@@ -82,15 +82,23 @@
                     class="hidden inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-extrabold rounded-2xl transition shadow-xs cursor-pointer shrink-0 whitespace-nowrap">
                 <i class="fa-solid fa-trash"></i> <span>Hapus (<span id="selected-count">0</span>) data terpilih</span>
             </button>
-            <label class="flex items-center gap-2 text-sm font-semibold text-slate-800">Tampilkan
-                <select data-admin-dip-per-page="{{ $dipTableKey }}" onchange="changePerPageAdminDip('{{ $dipTableKey }}', this.value)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-900">
+            <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                <span>Tampilkan</span>
+                <select data-admin-dip-per-page="{{ $dipTableKey }}" id="select-per-page-admin-dip-{{ $dipTableKey }}" onchange="changePerPageAdminDip('{{ $dipTableKey }}', this.value)" class="px-3 py-1.5 bg-white border border-slate-900 rounded-lg text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs cursor-pointer">
                     <option value="10" selected>10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option>
-                </select> baris
-            </label>
+                </select>
+                <span>baris</span>
+            </div>
         </div>
-        <label class="flex items-center gap-2 text-sm font-semibold text-slate-800">Cari:
-            <input data-admin-dip-search="{{ $dipTableKey }}" oninput="searchAdminDipTable('{{ $dipTableKey }}', this.value)" value="{{ request('search') }}" class="w-48 sm:w-64 px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-normal focus:outline-none focus:ring-2 focus:ring-sky-500/30">
-        </label>
+        <form onsubmit="event.preventDefault();" class="flex items-center gap-2">
+            <label for="input-search-admin-dip-{{ $dipTableKey }}" class="text-sm font-semibold text-slate-800 select-none cursor-pointer">Cari:</label>
+            <div class="relative">
+                <input type="text" id="input-search-admin-dip-{{ $dipTableKey }}" data-admin-dip-search="{{ $dipTableKey }}" oninput="document.getElementById('btn-clear-search-admin-dip-{{ $dipTableKey }}')?.classList.toggle('hidden', !this.value.trim()); searchAdminDipTable('{{ $dipTableKey }}', this.value)" value="{{ request('search') }}" autocomplete="off" class="w-64 sm:w-80 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
+                <button type="button" id="btn-clear-search-admin-dip-{{ $dipTableKey }}" onclick="const i=document.getElementById('input-search-admin-dip-{{ $dipTableKey }}'); if(i){i.value=''; i.focus();} this.classList.add('hidden'); searchAdminDipTable('{{ $dipTableKey }}', '');" title="Hapus pencarian" class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </form>
     </div>
 
     @if($isUnifiedView)

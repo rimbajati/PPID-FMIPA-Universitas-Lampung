@@ -83,7 +83,7 @@
             <button type="button" @click="layananOpen = !layananOpen"
                     class="w-full flex items-center justify-between rounded-xl transition-all duration-200 px-3.5 py-2.5 font-bold text-xs md:text-sm {{ $isAnyLayananActive ? 'text-white bg-sky-500' : 'text-white/90 hover:bg-sky-500 hover:text-white' }}">
                 <span class="flex items-center gap-3 min-w-0">
-                    <i class="fa-solid fa-headset text-base w-5 text-center shrink-0 {{ $isAnyLayananActive ? 'text-white' : 'text-sky-200' }}"></i>
+                    <i class="fa-solid fa-layer-group text-base w-5 text-center shrink-0 {{ $isAnyLayananActive ? 'text-white' : 'text-sky-200' }}"></i>
                     <span class="whitespace-nowrap">Layanan</span>
                 </span>
                 <span class="flex items-center gap-1.5 shrink-0 ml-2">
@@ -104,7 +104,7 @@
                 <a href="{{ url('/admin/permohonan') }}" @click="dipOpen = false"
                    class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-xs md:text-sm transition-all duration-150 overflow-hidden {{ $isPermohonanActive ? 'bg-white text-sky-600 font-extrabold shadow-sm' : 'font-medium text-sky-100 hover:bg-sky-500 hover:text-white' }}">
                     <span class="flex items-center gap-2 min-w-0 flex-1">
-                        <i class="fa-regular fa-file-lines text-xs w-4 text-center shrink-0 {{ $isPermohonanActive ? 'text-sky-600' : 'text-sky-200' }}"></i>
+                        <i class="fa-solid fa-envelope-open-text text-xs w-4 text-center shrink-0 {{ $isPermohonanActive ? 'text-sky-600' : 'text-sky-200' }}"></i>
                         <span class="whitespace-nowrap">Permohonan Informasi</span>
                     </span>
                     @if($sidebarPendingPermohonan > 0)
@@ -114,7 +114,7 @@
                 <a href="{{ url('/admin/keberatan') }}" @click="dipOpen = false"
                    class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-xs md:text-sm transition-all duration-150 overflow-hidden {{ $isKeberatanActive ? 'bg-white text-sky-600 font-extrabold shadow-sm' : 'font-medium text-sky-100 hover:bg-sky-500 hover:text-white' }}">
                     <span class="flex items-center gap-2 min-w-0 flex-1">
-                        <i class="fa-solid fa-scale-balanced text-xs w-4 text-center shrink-0 {{ $isKeberatanActive ? 'text-sky-600' : 'text-sky-200' }}"></i>
+                        <i class="fa-solid fa-gavel text-xs w-4 text-center shrink-0 {{ $isKeberatanActive ? 'text-sky-600' : 'text-sky-200' }}"></i>
                         <span class="whitespace-nowrap">Pengajuan Keberatan</span>
                     </span>
                     @if($sidebarPendingKeberatan > 0)
@@ -123,7 +123,7 @@
                 </a>
                 <a href="{{ url('/admin/tata-cara-admin') }}" @click="dipOpen = false"
                    class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs md:text-sm transition-all duration-150 {{ $isTataCaraActive ? 'bg-white text-sky-600 font-extrabold shadow-sm' : 'font-medium text-sky-100 hover:bg-sky-500 hover:text-white' }}">
-                    <i class="fa-solid fa-list-ol text-xs w-4 text-center shrink-0 {{ $isTataCaraActive ? 'text-sky-600' : 'text-sky-200' }}"></i>
+                    <i class="fa-solid fa-compass text-xs w-4 text-center shrink-0 {{ $isTataCaraActive ? 'text-sky-600' : 'text-sky-200' }}"></i>
                     <span class="whitespace-nowrap">Tata Cara Layanan</span>
                 </a>
                 <a href="{{ url('/admin/statistik') }}" @click="dipOpen = false"

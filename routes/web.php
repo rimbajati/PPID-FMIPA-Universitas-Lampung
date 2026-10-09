@@ -157,6 +157,9 @@ Route::get('/admin-panel/login', function () {
 Route::post('/admin-panel/login', [AuthController::class, 'adminLoginProcess']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+Route::get('/dokumen/blackbox-testing', function () { return view('dokumen.blackbox-testing'); })->name('dokumen.blackbox');
+Route::get('/blackbox-testing', function () { return view('dokumen.blackbox-testing'); });
+
 Route::get('/riwayat-layanan', [MasyarakatRiwayatLayananController::class, 'index'])->name('layanan.riwayat');
 Route::post('/riwayat-layanan', [MasyarakatRiwayatLayananController::class, 'index'])->name('layanan.riwayat.track');
 Route::controller(MasyarakatPermohonanController::class)->group(function () {

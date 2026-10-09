@@ -8,128 +8,64 @@
     $jabatanPIC = $profil['jabatan'] ?? 'Kasubag TU';
 @endphp
 
-<footer class="bg-[#F0F9FF] text-slate-700 py-16 border-t border-sky-200/60">
+<footer class="bg-[#E0F2FE] text-slate-600 py-6 border-t border-sky-200">
     <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
         
-        <!-- GRID 5 KOLOM (Persis Tata Letak Referensi) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-10 lg:gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
             
-            <!-- KOLOM 1: BRANDING & KONTAK (4 Columns) -->
-            <div class="lg:col-span-4 space-y-4">
-                <div class="flex items-center gap-2.5">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo PPID FMIPA Unila" class="h-8 w-auto object-contain">
-                    <h3 class="text-base font-black text-slate-900 tracking-tight">PPID FMIPA Unila</h3>
-                </div>
-                <p class="text-xs text-slate-600 leading-relaxed font-normal pr-4">
-                    Portal resmi Pejabat Pengelola Informasi dan Dokumentasi Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Lampung. Menjamin keterbukaan informasi publik secara cepat, transparan, dan akuntabel.
+            <!-- BRANDING -->
+            <div class="lg:col-span-5 space-y-2">
+                <a href="/" class="flex items-center gap-2">
+                    <img src="{{ asset('images/logoPPID.png') }}?v=2.0" alt="Logo PPID" class="h-7 w-auto object-contain">
+                    <div class="text-left leading-tight">
+                        <span class="block text-slate-900 font-extrabold text-xs tracking-wide uppercase">PPID Pelaksana</span>
+                        <span class="block text-slate-500 font-semibold text-[10px] tracking-wide uppercase">FMIPA Universitas Lampung</span>
+                    </div>
+                </a>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Portal resmi PPID Pelaksana FMIPA Universitas Lampung.
                 </p>
-
-                <div class="pt-2 space-y-1.5 text-xs text-slate-600 font-normal">
-                    <p class="font-bold text-slate-900">PPID Pelaksana FMIPA Universitas Lampung</p>
-                    <p class="text-slate-500 font-medium">PIC: <b>{{ $namaPIC }}</b> ({{ $jabatanPIC }})</p>
-                    <p><i class="fa-solid fa-envelope text-sky-500 mr-1.5"></i>{{ $email }}</p>
-                    <p><a href="https://wa.me/{{ $waRaw }}" target="_blank" class="hover:text-emerald-600 transition"><i class="fa-brands fa-whatsapp text-emerald-500 mr-1.5"></i>{{ $waDisplay }}</a></p>
-                    <p><i class="fa-solid fa-location-dot text-rose-500 mr-1.5"></i>Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Gedong Meneng, Bandar Lampung</p>
-                </div>
-
-                <div class="pt-4 text-xs text-slate-500 font-medium">
-                    &copy; {{ date('Y') }} PPID FMIPA Unila. Semua hak dilindungi.
+                <div class="pt-1.5 space-y-0.5 text-xs text-slate-500">
+                    <p><i class="fa-solid fa-envelope text-slate-400 mr-1.5 text-[11px]"></i>{{ $email }}</p>
+                    <p><i class="fa-brands fa-whatsapp text-slate-400 mr-1.5 text-[11px]"></i><a href="https://wa.me/{{ $waRaw }}" target="_blank" class="hover:text-slate-700 transition">{{ $waDisplay }}</a></p>
                 </div>
             </div>
 
-            <!-- KOLOM 2: LAYANAN PPID (2 Columns) -->
-            <div class="lg:col-span-2 space-y-3">
-                <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest">
-                    Layanan PPID
-                </h4>
-                <ul class="space-y-3 text-xs">
-                    <li>
-                        <a href="{{ route('tata-cara') }}" class="block hover:text-sky-600 transition-colors">
-                            <span class="font-semibold text-slate-800 block">Tata Cara Layanan</span>
-                            <span class="text-[10px] text-slate-400 block font-normal">Permohonan & Keberatan</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('layanan.permohonan') }}" class="block hover:text-sky-600 transition-colors">
-                            <span class="font-semibold text-slate-800 block">Permohonan Informasi</span>
-                            <span class="text-[10px] text-slate-400 block font-normal">Formulir Pengajuan Online</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('layanan.keberatan') }}" class="block hover:text-sky-600 transition-colors">
-                            <span class="font-semibold text-slate-800 block">Pengajuan Keberatan</span>
-                            <span class="text-[10px] text-slate-400 block font-normal">Proses Keberatan Publik</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('layanan.riwayat') }}" class="block hover:text-sky-600 transition-colors">
-                            <span class="font-semibold text-slate-800 block">Lacak Tiket Layanan</span>
-                            <span class="text-[10px] text-slate-400 block font-normal">Status Tiket Real-Time</span>
-                        </a>
-                    </li>
+            <!-- LINKS -->
+            <div class="lg:col-span-2 space-y-2">
+                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest">Layanan</h4>
+                <ul class="space-y-1.5 text-xs">
+                    <li><a href="{{ route('tata-cara') }}" class="hover:text-slate-900 transition">Tata Cara</a></li>
+                    <li><a href="{{ route('layanan.permohonan') }}" class="hover:text-slate-900 transition">Permohonan</a></li>
+                    <li><a href="{{ route('layanan.keberatan') }}" class="hover:text-slate-900 transition">Keberatan</a></li>
+                    <li><a href="{{ route('layanan.riwayat') }}" class="hover:text-slate-900 transition">Lacak Tiket</a></li>
                 </ul>
             </div>
 
-            <!-- KOLOM 3: INFORMASI PUBLIK (2 Columns) -->
-            <div class="lg:col-span-2 space-y-3">
-                <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest">
-                    Informasi & Regulasi
-                </h4>
-                <ul class="space-y-2.5 text-xs font-medium text-slate-600">
-                    <li>
-                        <a href="{{ url('/#profil-ppid') }}" class="hover:text-sky-600 transition-colors">Profil PPID Pelaksana</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('regulasi') }}" class="hover:text-sky-600 transition-colors">Regulasi KIP</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('informasi.publik') }}" class="hover:text-sky-600 transition-colors">Daftar Informasi Publik (DIP)</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('informasi.publik', ['kategori' => 'Berkala']) }}" class="hover:text-sky-600 transition-colors">Informasi Berkala</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('informasi.dikecualikan') }}" class="hover:text-sky-600 transition-colors">Informasi Dikecualikan</a>
-                    </li>
+            <div class="lg:col-span-3 space-y-2">
+                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest">Informasi Publik</h4>
+                <ul class="space-y-1.5 text-xs">
+                    <li><a href="{{ route('informasi.publik') }}" class="hover:text-slate-900 transition">Daftar Informasi Publik</a></li>
+                    <li><a href="{{ route('informasi.publik', ['kategori' => 'Berkala']) }}" class="hover:text-slate-900 transition">Berkala</a></li>
+                    <li><a href="{{ route('informasi.dikecualikan') }}" class="hover:text-slate-900 transition">Dikecualikan</a></li>
+                    <li><a href="{{ route('regulasi') }}" class="hover:text-slate-900 transition">Regulasi</a></li>
                 </ul>
             </div>
 
-            <!-- KOLOM 4: PORTAL TERKAIT (2 Columns) -->
-            <div class="lg:col-span-2 space-y-3">
-                <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest">
-                    Portal Terkait
-                </h4>
-                <ul class="space-y-2.5 text-xs font-medium text-slate-600">
-                    <li>
-                        <a href="https://unila.ac.id" target="_blank" rel="noopener noreferrer" class="hover:text-sky-600 transition-colors">Universitas Lampung</a>
-                    </li>
-                    <li>
-                        <a href="https://fmipa.unila.ac.id" target="_blank" rel="noopener noreferrer" class="hover:text-sky-600 transition-colors">FMIPA Unila</a>
-                    </li>
-                    <li>
-                        <a href="https://ppid.unila.ac.id" target="_blank" rel="noopener noreferrer" class="hover:text-sky-600 transition-colors">PPID Utama Unila</a>
-                    </li>
-                    <li>
-                        <a href="https://kemdikbud.go.id" target="_blank" rel="noopener noreferrer" class="hover:text-sky-600 transition-colors">Kemendikbudristek</a>
-                    </li>
+            <div class="lg:col-span-2 space-y-2">
+                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest">Tautan</h4>
+                <ul class="space-y-1.5 text-xs">
+                    <li><a href="https://unila.ac.id" target="_blank" class="hover:text-slate-900 transition">Unila</a></li>
+                    <li><a href="https://fmipa.unila.ac.id" target="_blank" class="hover:text-slate-900 transition">FMIPA</a></li>
+                    <li><a href="{{ route('admin.login') }}" class="hover:text-slate-900 transition">Login Admin</a></li>
                 </ul>
             </div>
 
-            <!-- KOLOM 5: AKUN & AKSES (2 Columns) -->
-            <div class="lg:col-span-2 space-y-3">
-                <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest">
-                    Akun & Akses
-                </h4>
-                <ul class="space-y-2.5 text-xs font-medium text-slate-600">
-                    <li>
-                    <a href="{{ route('admin.login') }}" class="hover:text-sky-600 transition-colors">Login Admin</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('beranda') }}" class="hover:text-sky-600 transition-colors">Beranda Utama</a>
-                    </li>
-                </ul>
-            </div>
+        </div>
 
+        <div class="mt-6 pt-4 border-t border-sky-100 flex flex-col md:flex-row items-center justify-between gap-2 text-[11px] text-slate-400">
+            <p>&copy; {{ date('Y') }} PPID FMIPA Unila</p>
+            <p>Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Bandar Lampung</p>
         </div>
 
     </div>

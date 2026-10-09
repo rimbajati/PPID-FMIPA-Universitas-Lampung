@@ -224,12 +224,12 @@
             </div>
 
             <!-- Footer -->
-            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
-                <button type="button" onclick="closeAddEditModal()" class="px-5 py-2 text-slate-600 hover:text-slate-800 text-sm font-semibold transition">
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2.5 shrink-0">
+                <button type="button" onclick="closeAddEditModal()" class="px-5 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-bold rounded-xl transition shadow-2xs">
                     Batal
                 </button>
-                <button type="submit" id="btnSubmitAddEdit" class="px-6 py-2.5 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-lg transition shadow-sm">
-                    Simpan Data
+                <button type="submit" id="btnSubmitAddEdit" class="px-6 py-2.5 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl transition shadow-sm">
+                    Simpan
                 </button>
             </div>
         </form>
