@@ -139,15 +139,16 @@ class KontenController extends Controller
      */
     public function updateProfil(Request $request)
     {
-        // Validasi Profil Pejabat (Existing)
+        // Validasi Profil Pejabat
         $request->validate([
             'nama'            => 'required|string|max:150',
-            'jabatan'         => 'required|string|max:200',
+            'jabatan'         => 'nullable|string|max:200',
             'foto'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
             'email'           => 'required|email|max:150',
             'whatsapp'        => 'required|string|max:30',
             'tugas_fungsi'    => 'nullable|string|max:1000',
-            // Validasi Halaman Profil (New)
+            'wakil_nama'      => 'nullable|string|max:150',
+            // Validasi Halaman Profil
             'hero_judul'      => 'required|string|max:200',
             'hero_deskripsi'  => 'required|string|max:500',
             'tentang_p1'      => 'required|string|max:1000',
@@ -158,9 +159,16 @@ class KontenController extends Controller
 
         $profil = self::getProfil();
         $profil['nama'] = trim($request->input('nama'));
-        $profil['jabatan'] = trim($request->input('jabatan'));
+        if ($request->filled('jabatan')) {
+            $profil['jabatan'] = trim($request->input('jabatan'));
+        } elseif ($request->filled('struktur_atasan_jabatan')) {
+            $profil['jabatan'] = trim($request->input('struktur_atasan_jabatan'));
+        }
         $profil['email'] = trim($request->input('email'));
         $profil['whatsapp'] = preg_replace('/[^0-9]/', '', trim($request->input('whatsapp')));
+        if ($request->has('wakil_nama')) {
+            $profil['wakil_nama'] = trim($request->input('wakil_nama'));
+        }
         if ($request->has('tugas_fungsi')) {
             $profil['tugas_fungsi'] = trim($request->input('tugas_fungsi'));
         }

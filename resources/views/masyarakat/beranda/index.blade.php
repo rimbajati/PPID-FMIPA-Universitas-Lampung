@@ -8,8 +8,8 @@
     <!-- 1. Hero Section Banner: Dekanat FMIPA & Konten Modern -->
     <x-masyarakat.beranda.hero />
 
-    <!-- 2. Profil PPID Pelaksana (Sesuai Web MONEV Unila) -->
-    <x-masyarakat.beranda.profil-ppid :profil="$profil" />
+    <!-- 2. Tentang Kami & Nilai Pelayanan Kami -->
+    <x-masyarakat.beranda.tentang-kami />
 
     <!-- DUPLICATE PREVENTION: Route profil sekarang halaman sendiri; link footer/navbar sudah ke /profil-ppid -->
 

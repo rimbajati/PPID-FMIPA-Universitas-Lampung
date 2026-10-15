@@ -1,9 +1,10 @@
-﻿@props(['faqs' => []])
+@props(['faqs' => []])
 
 <!-- Tanya Jawab Seputar PPID Section (FAQ Accordion) -->
 <section class="max-w-4xl mx-auto px-6 md:px-12 mb-20" x-data="{ activeAccordion: null }">
     <div class="text-center max-w-2xl mx-auto mb-12 space-y-3">
         <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Pertanyaan yang Sering Diajukan</h2>
+        <div class="h-1.5 w-16 bg-secondary rounded-full mx-auto"></div>
         <p class="text-sm sm:text-base text-slate-600 font-medium">Informasi penting terkait tata kelola dan pengajuan permohonan informasi publik.</p>
     </div>
 

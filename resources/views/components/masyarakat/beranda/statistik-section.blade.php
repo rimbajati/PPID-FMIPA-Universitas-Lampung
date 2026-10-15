@@ -1,4 +1,4 @@
-﻿@props([
+@props([
     'totalDokumen' => 0,
     'totalPermohonan' => 0,
     'totalPermohonanSelesai' => 0,
@@ -28,10 +28,11 @@
 <section id="statistik-layanan" class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 mb-20 relative z-20 scroll-mt-24 sm:scroll-mt-28">
 
     <!-- HEADER SECTION -->
-    <div class="text-center max-w-3xl mx-auto mb-6 sm:mb-8 space-y-2">
+    <div class="text-center max-w-3xl mx-auto mb-6 sm:mb-8 space-y-3">
         <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
             Statistik Layanan
         </h2>
+        <div class="h-1.5 w-16 bg-secondary rounded-full mx-auto"></div>
         <p class="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium">
             Rekapitulasi berkala data permohonan dan penanganan keberatan informasi publik FMIPA Universitas Lampung.
         </p>

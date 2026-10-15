@@ -116,14 +116,20 @@
                     </span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="space-y-4 max-w-4xl mx-auto">
                     @foreach(($halaman['misi'] ?? []) as $idx => $misi)
-                    <div class="bg-white border border-slate-200 rounded-3xl p-7 space-y-4 relative overflow-hidden hover:border-secondary/30 hover:shadow-xl transition-all duration-300 group">
-                        <span class="absolute -right-4 -top-2 text-7xl font-black leading-none select-none pointer-events-none group-hover:scale-110 transition-transform duration-500" style="color: rgba(15,42,68,0.05);">{{ str_pad($idx+1, 2, '0', STR_PAD_LEFT) }}</span>
-                        <div class="w-12 h-12 rounded-2xl bg-primary-light text-secondary flex items-center justify-center text-lg font-black shadow-sm">{{ $idx+1 }}</div>
-                        <div class="space-y-2">
-                            <h4 class="text-base sm:text-lg font-black text-slate-900 leading-snug group-hover:text-primary transition-colors">{{ $misi['judul'] }}</h4>
-                            <p class="text-sm text-slate-500 leading-relaxed">{{ $misi['deskripsi'] }}</p>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 relative overflow-hidden hover:border-secondary/40 hover:shadow-lg transition-all duration-300 group">
+                        <span class="absolute -right-2 -bottom-4 text-6xl font-black leading-none select-none pointer-events-none group-hover:scale-105 transition-transform duration-300" style="color: rgba(15,42,68,0.04);">{{ str_pad($idx+1, 2, '0', STR_PAD_LEFT) }}</span>
+                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary text-secondary flex items-center justify-center text-base sm:text-lg font-black shrink-0 shadow-xs">
+                            {{ $idx+1 }}
+                        </div>
+                        <div class="space-y-1 flex-1 min-w-0 pr-8">
+                            <h4 class="text-base sm:text-lg font-black text-slate-900 group-hover:text-primary transition-colors leading-snug">
+                                {{ $misi['judul'] }}
+                            </h4>
+                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                                {{ $misi['deskripsi'] }}
+                            </p>
                         </div>
                     </div>
                     @endforeach
@@ -132,9 +138,61 @@
         </div>
     </section>
 
-    <!-- 4. PROFIL PPID PELAKSANA (Struktur Organisasi Pelaksana) -->
-    <x-masyarakat.beranda.profil-ppid :profil="$profil" />
+    <!-- 4. STRUKTUR — hierarki 3 lapis: Kepala → Wakil → Koordinator -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-8 lg:px-12 py-14 space-y-8">
+        <div class="text-center space-y-3">
+            <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">{{ $halaman['struktur_judul'] ?? 'Struktur Organisasi' }}</h2>
+            <div class="h-1.5 w-16 bg-secondary rounded-full mx-auto"></div>
+        </div>
 
+        <!-- Level 1: Kepala PPID -->
+        <div class="flex justify-center">
+            <div class="relative w-full max-w-lg bg-primary text-white rounded-3xl p-8 pt-10 text-center shadow-xl">
+                <span class="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full bg-secondary text-primary text-sm font-black uppercase tracking-wider">Kepala PPID</span>
+                <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mx-auto font-black text-3xl">{{ strtoupper(substr($profil['nama'] ?? 'A', 0, 1)) }}</div>
+                <p class="font-black text-2xl mt-4 leading-tight">{{ $profil['nama'] ?? 'Dekan FMIPA' }}</p>
+                <p class="text-base text-slate-200 mt-2 font-medium">{{ ($halaman['struktur_atasan']['jabatan'] ?? 'Dekan FMIPA') }} / {{ ($halaman['struktur_atasan']['peran'] ?? 'Atasan PPID') }}</p>
+            </div>
+        </div>
+
+        <!-- Connector Kepala -> Wakil -->
+        <div class="flex justify-center -my-2"><div class="w-0.5 h-10 bg-slate-300"></div></div>
+
+        <!-- Level 2: Wakil Kepala PPID -->
+        <div class="flex justify-center">
+            <div class="relative w-full max-w-lg bg-white border-2 border-secondary/30 rounded-3xl p-8 pt-10 text-center shadow-md">
+                <span class="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full bg-primary text-white text-sm font-black uppercase tracking-wider">Wakil Kepala</span>
+                <div class="w-20 h-20 rounded-full bg-primary text-secondary flex items-center justify-center mx-auto font-black text-2xl">{{ strtoupper(substr($profil['wakil_nama'] ?? 'W', 0, 1)) }}{{ strtoupper(substr($profil['wakil_nama'] ?? '', strpos(($profil['wakil_nama'] ?? ' '), ' ') + 1, 1)) }}</div>
+                <p class="font-black text-xl sm:text-2xl mt-4 text-slate-900 leading-tight">{{ $profil['wakil_nama'] ?? ($halaman['struktur_ketua']['jabatan'] ?? 'Wakil Kepala PPID') }}</p>
+                <p class="text-base text-slate-600 mt-2 font-medium">{{ ($halaman['struktur_ketua']['peran'] ?? 'Wakil Kepala PPID') }}</p>
+            </div>
+        </div>
+
+        <!-- Connector Wakil -> Koordinator -->
+        <div class="hidden lg:flex justify-center -my-2"><div class="w-0.5 h-8 bg-slate-200"></div></div>
+        <div class="hidden lg:block relative h-8 mx-4">
+            <div class="absolute top-0 left-[12.5%] right-[12.5%] h-0.5 bg-slate-200"></div>
+            <div class="absolute top-0 left-[12.5%] w-0.5 h-8 bg-slate-200"></div>
+            <div class="absolute top-0 left-[37.5%] w-0.5 h-8 bg-slate-200"></div>
+            <div class="absolute top-0 left-[62.5%] w-0.5 h-8 bg-slate-200"></div>
+            <div class="absolute top-0 left-[87.5%] w-0.5 h-8 bg-slate-200"></div>
+        </div>
+
+        <!-- Level 3: Koordinator -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            @foreach(($halaman['struktur_bidang'] ?? []) as $idx => $bidang)
+            @php
+                $inisial = implode('', array_map(fn($w) => strtoupper(substr($w, 0, 1)), array_slice(explode(' ', $bidang['jabatan'] ?? 'X'), 0, 2)));
+                $warna = ['bg-emerald-500','bg-orange-500','bg-rose-500','bg-purple-500'][$idx % 4];
+            @endphp
+            <div class="bg-white border-2 border-slate-200 rounded-3xl p-7 text-center hover:border-secondary hover:shadow-xl transition-all">
+                <div class="w-16 h-16 rounded-full {{ $warna }} text-white font-black text-xl flex items-center justify-center mx-auto shadow-sm">{{ $inisial }}</div>
+                <p class="font-black text-lg mt-4 text-slate-900 leading-tight">{{ $bidang['jabatan'] }}</p>
+                <p class="text-sm text-slate-600 leading-relaxed mt-2">{{ $bidang['peran'] }}</p>
+            </div>
+            @endforeach
+        </div>
+    </section>
 
     <!-- 5. TUGAS & FUNGSI (list dua kolom dengan ikon sebaris, bukan grid 6 pilar gelap) -->
     <section class="bg-slate-50 border-y border-slate-100 py-14">

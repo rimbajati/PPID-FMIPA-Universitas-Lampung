@@ -43,25 +43,14 @@
     <form action="{{ route('admin.profil.update') }}" method="POST" enctype="multipart/form-data" class="w-full">
         @csrf
 
-        <!-- TAB 1: STRUKTUR ORGANISASI / PROFIL PPID PELAKSANA -->
+        <!-- TAB 1: STRUKTUR ORGANISASI (PORTAL PUBLIK) -->
         <div x-show="tab === 'struktur'" class="space-y-6">
+
+            <!-- KONTAK HELPDESK & LAYANAN PPID -->
             <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-5">
-                <h3 class="text-base font-black text-slate-900 border-b border-slate-100 pb-3">Profil PPID Pelaksana & Struktur</h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-800">Nama Pejabat / PIC PPID <span class="text-rose-500">*</span></label>
-                        <input type="text" name="nama" required
-                               value="{{ old('nama', $profil['nama'] ?? 'Dr. Aristoteles, S.Si., M.Si.') }}"
-                               class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
-                    </div>
-
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-800">Jabatan <span class="text-rose-500">*</span></label>
-                        <input type="text" name="jabatan" required
-                               value="{{ old('jabatan', $profil['jabatan'] ?? 'Kasubag TU / PIC PPID Pelaksana') }}"
-                               class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
-                    </div>
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-base font-black text-slate-900">Kontak Helpdesk Layanan PPID</h3>
+                    <span class="text-xs px-2.5 py-1 rounded-full bg-secondary-light text-primary font-bold">Kanal Resmi</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -70,6 +59,7 @@
                         <input type="email" name="email" required
                                value="{{ old('email', $profil['email'] ?? 'ppid.fmipa@unila.ac.id') }}"
                                class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
+                        <p class="text-[11px] text-slate-400">Digunakan pada footer & tombol kontak layanan.</p>
                     </div>
 
                     <div class="space-y-2">
@@ -77,33 +67,80 @@
                         <input type="text" name="whatsapp" required
                                value="{{ old('whatsapp', $profil['whatsapp'] ?? '6281320178069') }}"
                                class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
-                        <p class="text-[11px] text-slate-400">Format: 628xxxxxxxx (tanpa tanda + atau spasi)</p>
+                        <p class="text-[11px] text-slate-400">Format: 628xxxxxxxx (untuk tombol WhatsApp Hubungi PPID)</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- BAGAN HIERARKI STRUKTUR ORGANISASI (PORTAL PUBLIK) -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-base font-black text-slate-900">Bagan Struktur Organisasi (Portal Publik)</h3>
+                    <span class="text-xs px-2.5 py-1 rounded-full bg-secondary-light text-primary font-bold">Hierarki 3 Lapis</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-800">Judul Section Struktur</label>
+                        <input type="text" name="struktur_judul" value="{{ old('struktur_judul', $halaman['struktur_judul'] ?? 'Struktur Organisasi') }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-800">Deskripsi Section</label>
+                        <input type="text" name="struktur_deskripsi" value="{{ old('struktur_deskripsi', $halaman['struktur_deskripsi'] ?? '') }}" placeholder="Keterangan singkat bila ada" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm">
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold text-slate-800">Foto Pejabat</label>
-                    <div class="flex items-center gap-4">
-                        <div id="foto-preview-wrap" class="w-20 h-20 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
-                            @if(!empty($profil['foto']) && \Illuminate\Support\Facades\Storage::disk('public')->exists($profil['foto']))
-                                <img src="{{ asset('storage/' . $profil['foto']) }}" alt="Foto" class="w-full h-full object-cover">
-                            @else
-                                <span class="text-slate-400 font-black text-xl">{{ strtoupper(substr($profil['nama'] ?? 'A', 0, 1)) }}</span>
-                            @endif
+                <!-- Level 1 & 2: Pimpinan -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                    <!-- Level 1: Kepala PPID -->
+                    <div class="p-5 rounded-2xl bg-primary text-white space-y-3">
+                        <span class="text-[10px] font-black uppercase tracking-widest bg-white/20 text-slate-100 px-3 py-1 rounded-full">Level 1: Kepala PPID (Kotak Navy)</span>
+                        <div class="space-y-2 pt-1">
+                            <label class="block text-xs font-bold text-secondary">Nama Kepala PPID / Dekan <span class="text-rose-400">*</span></label>
+                            <input type="text" name="nama" required value="{{ old('nama', $profil['nama'] ?? 'Dr. Eng. Suripto Dwi Yuwono, S.Si., M.T.') }}" placeholder="Nama Lengkap dengan Gelar" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+
+                            <label class="block text-xs font-bold text-secondary">Jabatan Kepala</label>
+                            <input type="text" name="struktur_atasan_jabatan" value="{{ old('struktur_atasan_jabatan', $halaman['struktur_atasan']['jabatan'] ?? 'Dekan FMIPA') }}" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+
+                            <label class="block text-xs font-bold text-secondary">Peran / Label</label>
+                            <input type="text" name="struktur_atasan_peran" value="{{ old('struktur_atasan_peran', $halaman['struktur_atasan']['peran'] ?? 'Atasan PPID') }}" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
                         </div>
-                        <div class="space-y-1">
-                            <input type="file" name="foto" accept="image/jpeg,image/png,image/webp" class="text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-secondary-light file:text-primary hover:file:bg-secondary-light">
-                            <p class="text-[11px] text-slate-400">Format: JPG, PNG, WebP maks 3MB</p>
+                    </div>
+
+                    <!-- Level 2: Wakil Kepala PPID -->
+                    <div class="p-5 rounded-2xl bg-white border-2 border-secondary/30 space-y-3">
+                        <span class="text-[10px] font-black uppercase tracking-widest bg-primary text-white px-3 py-1 rounded-full">Level 2: Wakil Kepala (Kotak Putih)</span>
+                        <div class="space-y-2 pt-1">
+                            <label class="block text-xs font-bold text-slate-600">Nama Wakil Kepala PPID</label>
+                            <input type="text" name="wakil_nama" value="{{ old('wakil_nama', $profil['wakil_nama'] ?? '') }}" placeholder="Contoh: Dr. Ir. ..." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                            <label class="block text-xs font-bold text-slate-600">Jabatan Wakil</label>
+                            <input type="text" name="struktur_ketua_jabatan" value="{{ old('struktur_ketua_jabatan', $halaman['struktur_ketua']['jabatan'] ?? 'Wakil Dekan Bidang Umum dan Keuangan') }}" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                            <label class="block text-xs font-bold text-slate-600">Peran / Label</label>
+                            <input type="text" name="struktur_ketua_peran" value="{{ old('struktur_ketua_peran', $halaman['struktur_ketua']['peran'] ?? 'Ketua PPID Pelaksana') }}" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-700 focus:ring-2 focus:ring-primary/20">
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-2 pt-2 border-t border-slate-100">
-                    <label class="block text-sm font-bold text-slate-800">Tugas dan Fungsi <span class="text-rose-500">*</span></label>
-                    <textarea name="tugas_fungsi" rows="4"
-                              placeholder="Mengelola, menyediakan, dan melayani informasi publik..."
-                              class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition leading-relaxed">{{ old('tugas_fungsi', $profil['tugas_fungsi'] ?? 'Mengelola, menyediakan, dan melayani informasi publik di lingkungan Fakultas Matematika dan Ilmu Pengetahuan Alam; menyusun Daftar Informasi Publik unit; melayani permohonan dan keberatan; serta melaporkan layanan kepada PPID Utama Universitas Lampung.') }}</textarea>
-                    <p class="text-[11px] text-slate-400">Teks ini akan tampil pada bagian Tugas dan Fungsi di sebelah kanan foto profil pelaksana.</p>
+                <!-- Level 3: Koordinator 4 Bidang -->
+                <div class="space-y-3 pt-3 border-t border-slate-100">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-sm font-bold text-slate-800">Level 3: Koordinator Bidang (4 Kartu)</label>
+                        <span class="text-[11px] text-slate-400">Inisial lingkaran otomatis dibuat dari 2 kata pertama nama bidang</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        @foreach(($halaman['struktur_bidang'] ?? []) as $i => $b)
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-2 hover:border-secondary/40 transition">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-black text-primary uppercase">Kartu {{ $i+1 }}</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 text-slate-600 font-bold">Koordinator</span>
+                            </div>
+                            <input type="text" name="struktur_bidang_jabatan[]" value="{{ $b['jabatan'] }}" placeholder="Nama Bidang" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                            <input type="text" name="struktur_bidang_peran[]" value="{{ $b['peran'] }}" placeholder="Keterangan / peran singkat" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-600 focus:ring-2 focus:ring-primary/20">
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
