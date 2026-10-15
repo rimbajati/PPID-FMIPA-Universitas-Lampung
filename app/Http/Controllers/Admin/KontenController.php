@@ -155,10 +155,12 @@ class KontenController extends Controller
             'wakil_nama_lengkap'   => 'nullable|string|max:150',
             'wakil_gelar_belakang' => 'nullable|string|max:50',
             // Validasi Halaman Profil
-            'hero_judul'      => 'required|string|max:200',
-            'hero_deskripsi'  => 'required|string|max:500',
-            'tentang_p1'      => 'required|string|max:1000',
-            'tentang_p2'      => 'required|string|max:1000',
+            'hero_judul'      => 'nullable|string|max:200',
+            'hero_deskripsi'  => 'nullable|string|max:500',
+            'tentang_judul'   => 'nullable|string|max:200',
+            'tentang_isi'     => 'nullable|string|max:3000',
+            'tentang_p1'      => 'nullable|string|max:1000',
+            'tentang_p2'      => 'nullable|string|max:1000',
             'visi'            => 'required|string|max:1000',
             'maklumat_quote'  => 'required|string|max:500',
         ]);
@@ -234,13 +236,21 @@ class KontenController extends Controller
             $profil['foto'] = null;
         }
 
+        $existingHalaman = self::getHalamanProfil();
+
+        // Proses input Tentang PPID (1 input, pisahkan per enter)
+        $tentangIsi = trim($request->input('tentang_isi', ''));
+        $tentangParas = array_values(array_filter(array_map('trim', preg_split('/\r\n\r\n|\n\n|\r\r|\n/', $tentangIsi))));
+
         // Simpan Konten Halaman
         $halaman = [
-            'hero_judul'     => trim($request->input('hero_judul')),
-            'hero_deskripsi' => trim($request->input('hero_deskripsi')),
+            'hero_judul'     => $request->filled('hero_judul') ? trim($request->input('hero_judul')) : ($existingHalaman['hero_judul'] ?? 'Profil PPID Pelaksana FMIPA'),
+            'hero_deskripsi' => $request->filled('hero_deskripsi') ? trim($request->input('hero_deskripsi')) : ($existingHalaman['hero_deskripsi'] ?? 'Mengenal lebih dekat Pejabat Pengelola Informasi dan Dokumentasi FMIPA Universitas Lampung — unit layanan keterbukaan informasi publik, dasar hukum, struktur organisasi, tugas dan fungsi, hingga standar pelayanan.'),
             'tentang_judul'  => trim($request->input('tentang_judul', 'Apa itu PPID?')),
-            'tentang_p1'     => trim($request->input('tentang_p1')),
-            'tentang_p2'     => trim($request->input('tentang_p2')),
+            'tentang_isi'    => $tentangIsi,
+            'tentang_p1'     => $tentangParas[0] ?? trim($request->input('tentang_p1', '')),
+            'tentang_p2'     => $tentangParas[1] ?? trim($request->input('tentang_p2', '')),
+            'tentang_paragraf' => $tentangParas,
             'visi'           => trim($request->input('visi')),
             'maklumat_quote' => trim($request->input('maklumat_quote')),
         ];

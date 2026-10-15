@@ -4,7 +4,7 @@
 @section('header_title', 'Kelola Profil PPID')
 
 @section('content')
-<div class="space-y-6 w-full pb-10" x-data="{ tab: 'struktur' }">
+<div class="space-y-6 w-full pb-10" x-data="{ tab: 'tentang' }">
 
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -16,22 +16,22 @@
         </a>
     </div>
 
-    <!-- Nav Tab -->
+    <!-- Nav Tab Sesuai Urutan Baru -->
     <div class="flex gap-2 border-b border-slate-200 pb-2">
-        <button type="button" @click="tab = 'struktur'"
-                :class="tab === 'struktur' ? 'bg-primary text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+        <button type="button" @click="tab = 'tentang'"
+                :class="tab === 'tentang' ? 'bg-primary text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
                 class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer">
-            <i class="mdi mdi-sitemap-outline mr-1.5"></i> Struktur Organisasi
-        </button>
-        <button type="button" @click="tab = 'hero'"
-                :class="tab === 'hero' ? 'bg-primary text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer">
-            <i class="mdi mdi-bullhorn-outline mr-1.5"></i> Banner & Tentang
+            <i class="mdi mdi-information-outline mr-1.5"></i> Tentang PPID
         </button>
         <button type="button" @click="tab = 'visimisi'"
                 :class="tab === 'visimisi' ? 'bg-primary text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
                 class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer">
             <i class="mdi mdi-target mr-1.5"></i> Visi & Misi
+        </button>
+        <button type="button" @click="tab = 'struktur'"
+                :class="tab === 'struktur' ? 'bg-primary text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer">
+            <i class="mdi mdi-sitemap-outline mr-1.5"></i> Struktur Organisasi
         </button>
         <button type="button" @click="tab = 'maklumat'"
                 :class="tab === 'maklumat' ? 'bg-primary text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
@@ -46,72 +46,39 @@
         <!-- TAB 1: STRUKTUR ORGANISASI (PORTAL PUBLIK) -->
         <div x-show="tab === 'struktur'" class="space-y-6">
 
-            <!-- KONTAK HELPDESK & LAYANAN PPID -->
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-5">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <h3 class="text-base font-black text-slate-900">Kontak Helpdesk Layanan PPID</h3>
-                    <span class="text-xs px-2.5 py-1 rounded-full bg-secondary-light text-primary font-bold">Kanal Resmi</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-800">Email Helpdesk <span class="text-rose-500">*</span></label>
-                        <input type="email" name="email" required
-                               value="{{ old('email', $profil['email'] ?? 'ppid.fmipa@unila.ac.id') }}"
-                               class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
-                        <p class="text-[11px] text-slate-400">Digunakan pada footer & tombol kontak layanan.</p>
-                    </div>
-
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-800">Nomor WhatsApp <span class="text-rose-500">*</span></label>
-                        <input type="text" name="whatsapp" required
-                               value="{{ old('whatsapp', $profil['whatsapp'] ?? '6281320178069') }}"
-                               class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
-                        <p class="text-[11px] text-slate-400">Format: 628xxxxxxxx (untuk tombol WhatsApp Hubungi PPID)</p>
-                    </div>
-                </div>
-            </div>
-
 
             <!-- BAGAN HIERARKI STRUKTUR ORGANISASI (PORTAL PUBLIK) -->
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-5">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-6">
+                <div class="border-b border-slate-100 pb-3">
                     <h3 class="text-base font-black text-slate-900">Bagan Struktur Organisasi (Portal Publik)</h3>
-                    <span class="text-xs px-2.5 py-1 rounded-full bg-secondary-light text-primary font-bold">Hierarki 3 Lapis</span>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-800">Judul Section Struktur</label>
-                        <input type="text" name="struktur_judul" value="{{ old('struktur_judul', $halaman['struktur_judul'] ?? 'Struktur Organisasi') }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-800">Deskripsi Section</label>
-                        <input type="text" name="struktur_deskripsi" value="{{ old('struktur_deskripsi', $halaman['struktur_deskripsi'] ?? '') }}" placeholder="Keterangan singkat bila ada" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm">
-                    </div>
-                </div>
-
-                <!-- Pimpinan: Kepala PPID & Wakil Kepala PPID -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                <!-- Pimpinan: Kepala PPID & Wakil Kepala PPID (Atas Bawah) -->
+                <div class="space-y-5">
                     <!-- Kepala PPID -->
-                    <div class="p-5 rounded-2xl bg-primary text-white space-y-3">
+                    <div class="p-5 sm:p-6 rounded-2xl bg-primary text-white space-y-4">
                         <h4 class="text-sm font-black tracking-wide text-secondary border-b border-white/10 pb-2">Kepala PPID</h4>
-                        <div class="space-y-3 pt-1">
-                            <div class="space-y-1">
-                                <label class="block text-xs font-bold text-secondary">Gelar Depan</label>
-                                <input type="text" name="gelar_depan" value="{{ old('gelar_depan', $profil['gelar_depan'] ?? 'Dr. Eng.') }}" placeholder="Contoh: Dr. Eng." class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                        
+                        <div class="space-y-4">
+                            <!-- 1 Baris: Gelar Depan, Nama Lengkap, Gelar Belakang -->
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                                <div class="md:col-span-3 space-y-1">
+                                    <label class="block text-xs font-bold text-secondary">Gelar Depan</label>
+                                    <input type="text" name="gelar_depan" value="{{ old('gelar_depan', $profil['gelar_depan'] ?? 'Dr. Eng.') }}" placeholder="Contoh: Dr. Eng." class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                                </div>
+
+                                <div class="md:col-span-6 space-y-1">
+                                    <label class="block text-xs font-bold text-secondary">Nama Lengkap <span class="text-rose-400">*</span></label>
+                                    <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profil['nama_lengkap'] ?? ($profil['nama'] ?? 'Heri Satria')) }}" placeholder="Nama Lengkap" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                                </div>
+
+                                <div class="md:col-span-3 space-y-1">
+                                    <label class="block text-xs font-bold text-secondary">Gelar Belakang</label>
+                                    <input type="text" name="gelar_belakang" value="{{ old('gelar_belakang', $profil['gelar_belakang'] ?? 'S.Si., M.Si.') }}" placeholder="Contoh: S.Si., M.Si." class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                                </div>
                             </div>
 
-                            <div class="space-y-1">
-                                <label class="block text-xs font-bold text-secondary">Nama Lengkap <span class="text-rose-400">*</span></label>
-                                <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profil['nama_lengkap'] ?? ($profil['nama'] ?? 'Heri Satria')) }}" placeholder="Nama Lengkap" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
-                            </div>
-
-                            <div class="space-y-1">
-                                <label class="block text-xs font-bold text-secondary">Gelar Belakang</label>
-                                <input type="text" name="gelar_belakang" value="{{ old('gelar_belakang', $profil['gelar_belakang'] ?? 'S.Si., M.Si.') }}" placeholder="Contoh: S.Si., M.Si." class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
-                            </div>
-
+                            <!-- Baris Jabatan -->
                             <div class="space-y-1">
                                 <label class="block text-xs font-bold text-secondary">Jabatan</label>
                                 <input type="text" name="struktur_atasan_jabatan" value="{{ old('struktur_atasan_jabatan', $halaman['struktur_atasan']['jabatan'] ?? 'Dekan') }}" placeholder="Contoh: Dekan" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
@@ -120,24 +87,29 @@
                     </div>
 
                     <!-- Wakil Kepala PPID -->
-                    <div class="p-5 rounded-2xl bg-white border-2 border-secondary/30 space-y-3">
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white border-2 border-secondary/30 space-y-4">
                         <h4 class="text-sm font-black tracking-wide text-primary border-b border-slate-100 pb-2">Wakil Kepala</h4>
-                        <div class="space-y-3 pt-1">
-                            <div class="space-y-1">
-                                <label class="block text-xs font-bold text-slate-600">Gelar Depan</label>
-                                <input type="text" name="wakil_gelar_depan" value="{{ old('wakil_gelar_depan', $profil['wakil_gelar_depan'] ?? 'Dr.') }}" placeholder="Contoh: Dr." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                        
+                        <div class="space-y-4">
+                            <!-- 1 Baris: Gelar Depan, Nama Lengkap, Gelar Belakang -->
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                                <div class="md:col-span-3 space-y-1">
+                                    <label class="block text-xs font-bold text-slate-600">Gelar Depan</label>
+                                    <input type="text" name="wakil_gelar_depan" value="{{ old('wakil_gelar_depan', $profil['wakil_gelar_depan'] ?? 'Dr.') }}" placeholder="Contoh: Dr." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                                </div>
+
+                                <div class="md:col-span-6 space-y-1">
+                                    <label class="block text-xs font-bold text-slate-600">Nama Lengkap</label>
+                                    <input type="text" name="wakil_nama_lengkap" value="{{ old('wakil_nama_lengkap', $profil['wakil_nama_lengkap'] ?? ($profil['wakil_nama'] ?? 'Aristoteles')) }}" placeholder="Nama Lengkap" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                                </div>
+
+                                <div class="md:col-span-3 space-y-1">
+                                    <label class="block text-xs font-bold text-slate-600">Gelar Belakang</label>
+                                    <input type="text" name="wakil_gelar_belakang" value="{{ old('wakil_gelar_belakang', $profil['wakil_gelar_belakang'] ?? 'S.Si., M.Si.') }}" placeholder="Contoh: S.Si., M.Si." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                                </div>
                             </div>
 
-                            <div class="space-y-1">
-                                <label class="block text-xs font-bold text-slate-600">Nama Lengkap</label>
-                                <input type="text" name="wakil_nama_lengkap" value="{{ old('wakil_nama_lengkap', $profil['wakil_nama_lengkap'] ?? ($profil['wakil_nama'] ?? 'Aristoteles')) }}" placeholder="Nama Lengkap" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
-                            </div>
-
-                            <div class="space-y-1">
-                                <label class="block text-xs font-bold text-slate-600">Gelar Belakang</label>
-                                <input type="text" name="wakil_gelar_belakang" value="{{ old('wakil_gelar_belakang', $profil['wakil_gelar_belakang'] ?? 'S.Si., M.Si.') }}" placeholder="Contoh: S.Si., M.Si." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
-                            </div>
-
+                            <!-- Baris Jabatan -->
                             <div class="space-y-1">
                                 <label class="block text-xs font-bold text-slate-600">Jabatan</label>
                                 <input type="text" name="struktur_ketua_jabatan" value="{{ old('struktur_ketua_jabatan', $halaman['struktur_ketua']['jabatan'] ?? 'Wakil Dekan Bidang Umum dan Keuangan') }}" placeholder="Contoh: Wakil Dekan Bidang Umum dan Keuangan" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
@@ -216,80 +188,122 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- TAB 2: HERO BANNER & TENTANG PPID -->
-        <div x-show="tab === 'hero'" class="space-y-6">
+            <!-- KONTAK HELPDESK & LAYANAN PPID -->
             <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-5">
-                <h3 class="text-base font-black text-slate-900 border-b border-slate-100 pb-3">Hero Banner Atas</h3>
-
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold text-slate-800">Judul Banner <span class="text-rose-500">*</span></label>
-                    <input type="text" name="hero_judul" required
-                           value="{{ old('hero_judul', $halaman['hero_judul'] ?? 'Profil PPID Pelaksana FMIPA') }}"
-                           class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-base font-black text-slate-900">Kontak Helpdesk Layanan PPID</h3>
+                    <span class="text-xs px-2.5 py-1 rounded-full bg-secondary-light text-primary font-bold">Kanal Resmi</span>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold text-slate-800">Deskripsi Banner <span class="text-rose-500">*</span></label>
-                    <textarea name="hero_deskripsi" rows="3" required
-                              class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition resize-none">{{ old('hero_deskripsi', $halaman['hero_deskripsi'] ?? '') }}</textarea>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-800">Email Helpdesk <span class="text-rose-500">*</span></label>
+                        <input type="email" name="email" required
+                               value="{{ old('email', $profil['email'] ?? 'ppid.fmipa@unila.ac.id') }}"
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
+                        <p class="text-[11px] text-slate-400">Digunakan pada footer & tombol kontak layanan.</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-800">Nomor WhatsApp <span class="text-rose-500">*</span></label>
+                        <input type="text" name="whatsapp" required
+                               value="{{ old('whatsapp', $profil['whatsapp'] ?? '6281320178069') }}"
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
+                        <p class="text-[11px] text-slate-400">Format: 628xxxxxxxx (untuk tombol WhatsApp Hubungi PPID)</p>
+                    </div>
                 </div>
             </div>
+        </div>
 
+        <!-- TAB TENTANG PPID -->
+        <div x-show="tab === 'tentang'" class="space-y-6">
             <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-5">
-                <h3 class="text-base font-black text-slate-900 border-b border-slate-100 pb-3">Section "Tentang Kami (Apa itu PPID?)"</h3>
+                <h3 class="text-base font-black text-slate-900 border-b border-slate-100 pb-3">Tentang Kami</h3>
 
                 <div class="space-y-2">
-                    <label class="block text-sm font-bold text-slate-800">Judul Section</label>
-                    <input type="text" name="tentang_judul"
+                    <label class="block text-sm font-bold text-slate-800">Judul <span class="text-rose-500">*</span></label>
+                    <input type="text" name="tentang_judul" required
                            value="{{ old('tentang_judul', $halaman['tentang_judul'] ?? 'Apa itu PPID?') }}"
                            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">
                 </div>
 
+                @php
+                    $tentangIsi = old('tentang_isi');
+                    if ($tentangIsi === null) {
+                        $tentangIsi = $halaman['tentang_isi'] ?? trim(($halaman['tentang_p1'] ?? '') . "\n\n" . ($halaman['tentang_p2'] ?? ''));
+                    }
+                @endphp
                 <div class="space-y-2">
-                    <label class="block text-sm font-bold text-slate-800">Paragraf 1 (Definisi PPID) <span class="text-rose-500">*</span></label>
-                    <textarea name="tentang_p1" rows="3" required
-                              class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition resize-none">{{ old('tentang_p1', $halaman['tentang_p1'] ?? '') }}</textarea>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold text-slate-800">Paragraf 2 (Komitmen & Dasar Hukum) <span class="text-rose-500">*</span></label>
-                    <textarea name="tentang_p2" rows="3" required
-                              class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition resize-none">{{ old('tentang_p2', $halaman['tentang_p2'] ?? '') }}</textarea>
+                    <label class="block text-sm font-bold text-slate-800">Isi <span class="text-rose-500">*</span></label>
+                    <textarea name="tentang_isi" rows="6" required placeholder="Tuliskan uraian tentang PPID. Paragraf akan otomatis terbagi berdasarkan baris baru (enter) yang Anda buat."
+                              class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition">{{ $tentangIsi }}</textarea>
+                    <p class="text-xs text-slate-400">Tekan <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 font-mono text-[11px] text-slate-600">Enter 2x</kbd> untuk membuat paragraf baru.</p>
                 </div>
             </div>
         </div>
 
         <!-- TAB 3: VISI & MISI -->
         <div x-show="tab === 'visimisi'" class="space-y-6">
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-5">
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-4">
                 <h3 class="text-base font-black text-slate-900 border-b border-slate-100 pb-3">Visi</h3>
 
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold text-slate-800">Pernyataan Visi <span class="text-rose-500">*</span></label>
-                    <textarea name="visi" rows="3" required
-                              class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition resize-none">{{ old('visi', $halaman['visi'] ?? '') }}</textarea>
-                </div>
+                <textarea name="visi" rows="3" required placeholder="Tuliskan pernyataan visi..."
+                          class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition resize-none">{{ old('visi', $halaman['visi'] ?? '') }}</textarea>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-4">
+            @php
+                $misiList = old('misi_judul') !== null
+                    ? array_map(function($j, $d) { return ['judul' => $j, 'deskripsi' => $d]; }, old('misi_judul', []), old('misi_deskripsi', []))
+                    : ($halaman['misi'] ?? [
+                        ['judul' => 'Penyediaan Informasi', 'deskripsi' => 'Menyediakan dan melayani informasi publik secara cepat, tepat, dan akurat.'],
+                        ['judul' => 'Transparansi Tata Kelola', 'deskripsi' => 'Mewujudkan keterbukaan tata kelola di lingkungan fakultas secara konsisten.'],
+                        ['judul' => 'Infrastruktur Digital', 'deskripsi' => 'Mengembangkan sistem informasi dan dokumentasi yang terintegrasi berbasis teknologi modern.'],
+                        ['judul' => 'Peningkatan Kompetensi', 'deskripsi' => 'Meningkatkan kapasitas dan integritas sumber daya manusia pengelola informasi publik.']
+                    ]);
+            @endphp
+
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-7 space-y-4"
+                 x-data="{
+                     misiItems: {{ json_encode($misiList) }},
+                     addMisi() {
+                         this.misiItems.push({ judul: '', deskripsi: '' });
+                     },
+                     removeMisi(index) {
+                         if (this.misiItems.length > 1) {
+                             this.misiItems.splice(index, 1);
+                         } else {
+                             alert('Minimal harus ada 1 butir misi.');
+                         }
+                     }
+                 }">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <h3 class="text-base font-black text-slate-900">Daftar Misi (4 Poin)</h3>
+                    <h3 class="text-base font-black text-slate-900">Misi</h3>
+                    <button type="button" 
+                            @click="addMisi()"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary-dark transition cursor-pointer">
+                        <i class="mdi mdi-plus"></i> Tambah Misi
+                    </button>
                 </div>
 
                 <div class="space-y-4">
-                    @foreach(($halaman['misi'] ?? []) as $i => $m)
-                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
-                        <div class="flex items-center gap-2">
-                            <span class="w-6 h-6 rounded-md bg-primary text-white font-bold text-xs flex items-center justify-center">{{ $i + 1 }}</span>
-                            <input type="text" name="misi_judul[]" value="{{ $m['judul'] }}" placeholder="Judul Misi"
-                                   class="flex-1 px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-900">
+                    <template x-for="(item, index) in misiItems" :key="index">
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2 relative group hover:border-slate-300 transition">
+                            <div class="flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-md bg-primary text-white font-bold text-xs flex items-center justify-center shrink-0" x-text="index + 1"></span>
+                                <input type="text" name="misi_judul[]" x-model="item.judul" placeholder="Judul Misi (contoh: Penyediaan Informasi)" required
+                                       class="flex-1 px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                                <button type="button" 
+                                        @click="removeMisi(index)"
+                                        title="Hapus misi ini"
+                                        class="w-7 h-7 rounded-md bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition flex items-center justify-center text-sm shrink-0 cursor-pointer">
+                                    <i class="mdi mdi-delete-outline"></i>
+                                </button>
+                            </div>
+                            <textarea name="misi_deskripsi[]" x-model="item.deskripsi" rows="2" placeholder="Uraian Misi lengkap..." required
+                                      class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-600 focus:ring-2 focus:ring-primary/20 resize-none"></textarea>
                         </div>
-                        <textarea name="misi_deskripsi[]" rows="2" placeholder="Uraian Misi"
-                                  class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-600 resize-none">{{ $m['deskripsi'] }}</textarea>
-                    </div>
-                    @endforeach
+                    </template>
                 </div>
             </div>
         </div>

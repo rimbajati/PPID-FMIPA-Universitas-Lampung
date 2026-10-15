@@ -32,9 +32,18 @@
                     <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-black text-slate-900 tracking-tight leading-none">{{ $halaman['tentang_judul'] ?? 'Apa itu PPID?' }}</h2>
                     <div class="h-1.5 w-16 bg-primary rounded-full"></div>
                 </div>
-                <div class="space-y-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-                    <p>{{ $halaman['tentang_p1'] ?? '' }}</p>
-                    <p>{{ $halaman['tentang_p2'] ?? '' }}</p>
+                @php
+                    $rawTentang = $halaman['tentang_isi'] ?? trim(($halaman['tentang_p1'] ?? '') . "\n\n" . ($halaman['tentang_p2'] ?? ''));
+                    $paras = !empty($halaman['tentang_paragraf']) && is_array($halaman['tentang_paragraf'])
+                        ? $halaman['tentang_paragraf']
+                        : array_values(array_filter(array_map('trim', preg_split('/\r\n\r\n|\n\n|\r\r|\n/', $rawTentang))));
+                @endphp
+                <div class="space-y-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+                    @forelse($paras as $para)
+                        <p>{{ $para }}</p>
+                    @empty
+                        <p>{{ $halaman['tentang_p1'] ?? '' }}</p>
+                    @endforelse
                 </div>
             </div>
 
@@ -88,51 +97,53 @@
                 <div class="h-1.5 w-16 bg-secondary rounded-full mx-auto"></div>
             </div>
 
-            <!-- VISI — Atas, Kartu Full Width Lebar (Sejajar Container) -->
-            <div class="w-full">
-                <div class="bg-gradient-to-br from-primary to-primary-light rounded-3xl p-8 sm:p-14 text-white text-center shadow-lg relative overflow-hidden">
-                    <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
-                    <div class="absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-secondary/10 blur-3xl pointer-events-none"></div>
-                    
-                    <div class="relative space-y-6">
-                        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 text-slate-200 text-xs font-extrabold uppercase tracking-widest border border-white/20">
-                            <i class="mdi mdi-eye-outline text-[10px]"></i> Visi Kami
+            <!-- GRID KIRI - KANAN: VISI (Kiri) & MISI (Kanan) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                <!-- VISI — Kolom Kiri -->
+                <div class="lg:col-span-5 flex flex-col">
+                    <div class="bg-gradient-to-br from-primary to-primary-light rounded-3xl p-8 sm:p-10 lg:p-12 text-white shadow-lg relative overflow-hidden flex flex-col justify-center flex-1">
+                        <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
+                        <div class="absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-secondary/10 blur-3xl pointer-events-none"></div>
+                        
+                        <div class="relative space-y-6">
+                            <div>
+                                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 text-slate-200 text-xs font-extrabold uppercase tracking-widest border border-white/20">
+                                    <i class="mdi mdi-eye-outline text-secondary text-sm"></i> Visi Kami
+                                </span>
+                            </div>
+                            <blockquote class="text-xl sm:text-2xl lg:text-3xl font-black leading-snug">
+                                "{{ $halaman['visi'] ?? '' }}"
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MISI — Kolom Kanan -->
+                <div class="lg:col-span-7 flex flex-col space-y-4">
+                    <div class="flex items-center gap-2 pb-1">
+                        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/15 text-primary text-xs font-extrabold uppercase tracking-widest border border-secondary/30">
+                            <i class="mdi mdi-target text-secondary text-sm"></i> Misi Kami
                         </span>
-                        <blockquote class="text-xl sm:text-2xl lg:text-3xl font-black leading-tight">
-                            "{{ $halaman['visi'] ?? '' }}"
-                        </blockquote>
-                        <div class="pt-4 border-t border-white/10 w-32 mx-auto">
-                            <p class="text-xs sm:text-sm text-secondary font-bold uppercase tracking-wider">PPID FMIPA Unila</p>
-                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- MISI — Bawah, Grid 4 Kolom dengan Keterangan Misi Kami -->
-            <div class="space-y-6">
-                <div class="flex items-center justify-center">
-                    <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/15 text-primary text-xs font-extrabold uppercase tracking-widest border border-secondary/30">
-                        <i class="mdi mdi-target text-secondary text-sm"></i> Misi Kami
-                    </span>
-                </div>
-
-                <div class="space-y-4 max-w-4xl mx-auto">
-                    @foreach(($halaman['misi'] ?? []) as $idx => $misi)
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 relative overflow-hidden hover:border-secondary/40 hover:shadow-lg transition-all duration-300 group">
-                        <span class="absolute -right-2 -bottom-4 text-6xl font-black leading-none select-none pointer-events-none group-hover:scale-105 transition-transform duration-300" style="color: rgba(15,42,68,0.04);">{{ str_pad($idx+1, 2, '0', STR_PAD_LEFT) }}</span>
-                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary text-secondary flex items-center justify-center text-base sm:text-lg font-black shrink-0 shadow-xs">
-                            {{ $idx+1 }}
+                    <div class="space-y-3.5 flex-1 flex flex-col justify-between">
+                        @foreach(($halaman['misi'] ?? []) as $idx => $misi)
+                        <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 flex items-start gap-4 relative overflow-hidden hover:border-secondary/40 hover:shadow-md transition-all duration-300 group">
+                            <span class="absolute -right-2 -bottom-4 text-5xl font-black leading-none select-none pointer-events-none group-hover:scale-105 transition-transform duration-300" style="color: rgba(15,42,68,0.04);">{{ str_pad($idx+1, 2, '0', STR_PAD_LEFT) }}</span>
+                            <div class="w-10 h-10 rounded-xl bg-primary text-secondary flex items-center justify-center text-base font-black shrink-0 shadow-xs">
+                                {{ $idx+1 }}
+                            </div>
+                            <div class="space-y-0.5 flex-1 min-w-0 pr-6">
+                                <h4 class="text-base font-black text-slate-900 group-hover:text-primary transition-colors leading-snug">
+                                    {{ $misi['judul'] }}
+                                </h4>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                                    {{ $misi['deskripsi'] }}
+                                </p>
+                            </div>
                         </div>
-                        <div class="space-y-1 flex-1 min-w-0 pr-8">
-                            <h4 class="text-base sm:text-lg font-black text-slate-900 group-hover:text-primary transition-colors leading-snug">
-                                {{ $misi['judul'] }}
-                            </h4>
-                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                                {{ $misi['deskripsi'] }}
-                            </p>
-                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
                 </div>
             </div>
         </div>
@@ -141,7 +152,7 @@
     <!-- 4. STRUKTUR — hierarki 3 lapis: Kepala → Wakil → Koordinator -->
     <section class="max-w-6xl mx-auto px-4 sm:px-8 lg:px-12 py-14 space-y-8">
         <div class="text-center space-y-3">
-            <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">{{ $halaman['struktur_judul'] ?? 'Struktur Organisasi' }}</h2>
+            <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Struktur Organisasi</h2>
             <div class="h-1.5 w-16 bg-secondary rounded-full mx-auto"></div>
         </div>
 
@@ -271,37 +282,20 @@
             <div class="h-1 w-12 bg-primary rounded-full"></div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <div class="lg:col-span-5 bg-[#E0F2FE] border border-secondary/30 rounded-2xl p-6 sm:p-7 space-y-4">
-                <div class="flex items-center gap-2.5">
-                    <span class="w-9 h-9 rounded-xl bg-white border border-secondary/30 text-primary flex items-center justify-center"><i class="mdi mdi-certificate-outline text-sm"></i></span>
-                    <h4 class="font-extrabold text-slate-900 text-sm">Janji layanan kami</h4>
-                </div>
-                <p class="text-sm text-slate-600 italic leading-relaxed">
-                    "{{ $halaman['maklumat_quote'] ?? '' }}"
-                </p>
-                <div class="flex items-center gap-3 pt-3 border-t border-secondary/30/70">
-                    <div class="w-9 h-9 rounded-full bg-primary text-white font-bold flex items-center justify-center text-sm">
-                        {{ substr($profil['nama'] ?? 'A', 0, 1) }}
-                    </div>
-                    <div class="leading-tight">
-                        <span class="block text-sm font-bold text-slate-900">{{ $profil['nama'] ?? 'Dekan FMIPA' }}</span>
-                        <span class="block text-xs text-slate-500">Atasan PPID FMIPA Unila</span>
-                    </div>
-                </div>
+        <!-- Ringkasan Standar Pelayanan (Full Width) -->
+        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center gap-2.5">
+                <i class="mdi mdi-clipboard-text-outline text-primary text-base"></i>
+                <h3 class="font-extrabold text-slate-900 text-sm">Ringkasan Standar Pelayanan</h3>
             </div>
-
-            <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl overflow-hidden">
-                <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-100 flex items-center gap-2">
-                    <i class="mdi mdi-clipboard-outline text-primary"></i>
-                    <h3 class="font-extrabold text-slate-900 text-sm">Ringkasan standar</h3>
+            <dl class="divide-y divide-slate-100 text-xs sm:text-sm">
+                @foreach(($halaman['standar_pelayanan'] ?? []) as $row)
+                <div class="px-6 py-3.5 flex flex-col sm:flex-row sm:gap-6 hover:bg-slate-50/50 transition">
+                    <dt class="sm:w-56 shrink-0 font-bold text-slate-500 text-[11px] sm:text-xs uppercase tracking-wider pt-0.5">{{ $row['label'] }}</dt>
+                    <dd class="text-slate-800 font-medium">{{ $row['isi'] }}</dd>
                 </div>
-                <dl class="divide-y divide-slate-100 text-xs sm:text-sm">
-                    @foreach(($halaman['standar_pelayanan'] ?? []) as $row)
-                    <div class="px-5 py-2.5 flex flex-col sm:flex-row sm:gap-4"><dt class="sm:w-44 shrink-0 font-bold text-slate-500 text-[11px] uppercase tracking-wide pt-0.5">{{ $row['label'] }}</dt><dd class="text-slate-700">{{ $row['isi'] }}</dd></div>
-                    @endforeach
-                </dl>
-            </div>
+                @endforeach
+            </dl>
         </div>
     </section>
 

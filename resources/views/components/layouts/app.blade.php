@@ -69,24 +69,40 @@
         [x-cloak] { display: none !important; }
         html { 
             scroll-behavior: smooth; 
-            font-size: 14px; 
+            font-size: 15.5px; 
         }
         @media (min-width: 1700px) {
-            html { font-size: 16px; }
+            html { font-size: 16.5px; }
         }
         @media (min-width: 1400px) and (max-width: 1699px) {
-            html { font-size: 14.5px; }
+            html { font-size: 15.5px; }
         }
         @media (max-width: 1200px) {
-            html { font-size: 13.5px; }
+            html { font-size: 14.5px; }
         }
         body { 
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important; 
             font-size: 1rem; 
+            line-height: 1.6;
         }
         h1, h2, h3, .font-display {
             font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
+
+        /* Standarisasi & peningkatan ukuran font kecil agar jelas & mudah terbaca */
+        .text-\[10px\], .text-\[11px\] {
+            font-size: 0.775rem !important; /* ~12px */
+            line-height: 1.35 !important;
+        }
+        .text-xs {
+            font-size: 0.825rem !important; /* ~13px */
+            line-height: 1.45 !important;
+        }
+        .text-sm {
+            font-size: 0.925rem !important; /* ~14.5px */
+            line-height: 1.5 !important;
+        }
+
         /* Samakan tipografi semua tabel masyarakat, termasuk isi, status, dan pagination. */
         table th, table td,
         table th :not(i):not(svg), table td :not(i):not(svg),
