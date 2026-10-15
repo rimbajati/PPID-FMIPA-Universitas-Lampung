@@ -41,7 +41,7 @@
                 ‹
             </span>
         @else
-            <a href="{{ $paginator->previousPageUrl() }}" class="px-3.5 py-2 text-xs font-bold text-sky-500 hover:bg-sky-50 transition flex items-center justify-center">
+            <a href="{{ $paginator->previousPageUrl() }}" class="px-3.5 py-2 text-xs font-bold text-primary hover:bg-secondary-light transition flex items-center justify-center">
                 ‹
             </a>
         @endif
@@ -55,11 +55,11 @@
             @elseif (is_array($element))
                 @foreach ($element as $page)
                     @if ($page == $currentPage)
-                        <span class="px-3.5 py-2 min-w-[38px] text-center text-xs font-extrabold bg-sky-500 text-white shadow-2xs">
+                        <span class="px-3.5 py-2 min-w-[38px] text-center text-xs font-extrabold bg-primary text-white shadow-2xs">
                             {{ $page }}
                         </span>
                     @else
-                        <a href="{{ $paginator->url($page) }}" class="px-3.5 py-2 min-w-[38px] text-center text-xs font-bold bg-white text-sky-500 hover:bg-sky-50 transition">
+                        <a href="{{ $paginator->url($page) }}" class="px-3.5 py-2 min-w-[38px] text-center text-xs font-bold bg-white text-primary hover:bg-secondary-light transition">
                             {{ $page }}
                         </a>
                     @endif
@@ -69,7 +69,7 @@
 
         {{-- Next Page Link --}}
         @if ($paginator->hasMorePages())
-            <a href="{{ $paginator->nextPageUrl() }}" class="px-3.5 py-2 text-xs font-bold text-sky-500 hover:bg-sky-50 transition flex items-center justify-center">
+            <a href="{{ $paginator->nextPageUrl() }}" class="px-3.5 py-2 text-xs font-bold text-primary hover:bg-secondary-light transition flex items-center justify-center">
                 ›
             </a>
         @else

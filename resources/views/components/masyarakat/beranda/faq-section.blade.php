@@ -1,4 +1,4 @@
-@props(['faqs' => []])
+﻿@props(['faqs' => []])
 
 <!-- Tanya Jawab Seputar PPID Section (FAQ Accordion) -->
 <section class="max-w-4xl mx-auto px-6 md:px-12 mb-20" x-data="{ activeAccordion: null }">
@@ -17,8 +17,8 @@
                     <span class="font-extrabold text-sm sm:text-base text-slate-900 break-words min-w-0 flex-1 leading-snug">
                         {{ is_array($faq) ? ($faq['pertanyaan'] ?? '') : ($faq->pertanyaan ?? '') }}
                     </span>
-                    <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 shrink-0 transition-transform duration-300" :class="{ 'rotate-180 bg-sky-100 text-sky-700': activeAccordion === {{ $index + 1 }} }">
-                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 shrink-0 transition-transform duration-300" :class="{ 'rotate-180 bg-secondary-light text-primary': activeAccordion === {{ $index + 1 }} }">
+                        <i class="mdi mdi-chevron-down text-xs"></i>
                     </span>
                 </button>
                 <div x-show="activeAccordion === {{ $index + 1 }}" x-collapse x-cloak class="px-6 pb-5 pt-1 text-xs sm:text-sm text-slate-600 font-medium leading-relaxed border-t border-slate-100 whitespace-pre-line break-words">

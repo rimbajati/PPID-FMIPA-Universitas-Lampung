@@ -5,7 +5,7 @@
         </div>
     @endif
 
-    <nav id="main-navbar" class="w-full bg-sky-500 border-b-0 shadow-md transition-all duration-300">
+    <nav id="main-navbar" class="w-full bg-primary border-b-0 shadow-md transition-all duration-300">
         <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-3.5">
             <div class="flex justify-between items-center">
                 <!-- Left: Logo -->
@@ -13,7 +13,7 @@
                     <img id="navbar-logo" src="{{ asset('images/logoPPID.png') }}?v=2.0" alt="Logo Unila" class="h-8 md:h-10 w-auto object-contain">
                     <div class="text-left leading-tight">
                         <span id="navbar-logo-text1" class="block text-white font-extrabold text-sm md:text-base tracking-wide uppercase">PPID Pelaksana</span>
-                        <span id="navbar-logo-text2" class="block text-sky-100 font-semibold text-[10px] md:text-[11px] tracking-wide uppercase">FMIPA Universitas Lampung</span>
+                        <span id="navbar-logo-text2" class="block text-secondary font-semibold text-[10px] md:text-[11px] tracking-wide uppercase">FMIPA Universitas Lampung</span>
                     </div>
                 </a>
 
@@ -21,8 +21,8 @@
                 @include('components.ui.navbar.desktop-menu')
 
                 <!-- Mobile menu button -->
-                <button id="mobile-menu-btn" type="button" class="md:hidden text-white text-2xl focus:outline-none transition-colors ml-4">
-                    <i class="fa-solid fa-bars"></i>
+                <button id="mobile-menu-btn" type="button" class="md:hidden text-white text-3xl focus:outline-none transition-colors ml-4 leading-none flex items-center justify-center">
+                    <i class="mdi mdi-menu"></i>
                 </button>
             </div>
         </div>

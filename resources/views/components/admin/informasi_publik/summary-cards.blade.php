@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'totalInformasi',
     'totalBerkala',
     'totalSertaMerta',
@@ -19,12 +19,12 @@
                 <p class="text-xs font-extrabold text-slate-500 mt-0.5">Total</p>
             </div>
             <div class="text-[#8b5cf6]/70">
-                <i class="fa-solid fa-list text-3xl sm:text-4xl"></i>
+                <i class="mdi mdi-format-list-bulleted text-3xl sm:text-4xl"></i>
             </div>
         </div>
         <div class="bg-[#8b5cf6] text-white text-[11px] font-bold px-3 py-1.5 flex items-center justify-between">
             <span class="truncate">Update: {{ $lastUpdateTotal ? \Carbon\Carbon::parse($lastUpdateTotal)->translatedFormat('d M Y') : '-' }}</span>
-            <i class="fa-solid fa-rotate text-[10px] shrink-0 ml-1"></i>
+            <i class="mdi mdi-refresh text-[10px] shrink-0 ml-1"></i>
         </div>
     </div>
 
@@ -36,12 +36,12 @@
                 <p class="text-xs font-extrabold text-slate-500 mt-0.5">Berkala</p>
             </div>
             <div class="text-[#2563eb]/70">
-                <i class="fa-regular fa-clock text-3xl sm:text-4xl"></i>
+                <i class="mdi mdi-clock-outline text-3xl sm:text-4xl"></i>
             </div>
         </div>
         <div class="bg-[#2563eb] text-white text-[11px] font-bold px-3 py-1.5 flex items-center justify-between">
             <span class="truncate">Update: {{ $lastUpdateBerkala ? \Carbon\Carbon::parse($lastUpdateBerkala)->translatedFormat('d M Y') : '-' }}</span>
-            <i class="fa-solid fa-rotate text-[10px] shrink-0 ml-1"></i>
+            <i class="mdi mdi-refresh text-[10px] shrink-0 ml-1"></i>
         </div>
     </div>
 
@@ -53,12 +53,12 @@
                 <p class="text-xs font-extrabold text-slate-500 mt-0.5">Setiap Saat</p>
             </div>
             <div class="text-[#059669]/70">
-                <i class="fa-solid fa-arrows-rotate text-3xl sm:text-4xl"></i>
+                <i class="mdi mdi-sync text-3xl sm:text-4xl"></i>
             </div>
         </div>
         <div class="bg-[#059669] text-white text-[11px] font-bold px-3 py-1.5 flex items-center justify-between">
             <span class="truncate">Update: {{ $lastUpdateSetiapSaat ? \Carbon\Carbon::parse($lastUpdateSetiapSaat)->translatedFormat('d M Y') : '-' }}</span>
-            <i class="fa-solid fa-rotate text-[10px] shrink-0 ml-1"></i>
+            <i class="mdi mdi-refresh text-[10px] shrink-0 ml-1"></i>
         </div>
     </div>
 
@@ -70,12 +70,12 @@
                 <p class="text-xs font-extrabold text-slate-500 mt-0.5">Serta-Merta</p>
             </div>
             <div class="text-[#d97706]/70">
-                <i class="fa-solid fa-triangle-exclamation text-3xl sm:text-4xl"></i>
+                <i class="mdi mdi-alert-outline text-3xl sm:text-4xl"></i>
             </div>
         </div>
         <div class="bg-[#d97706] text-white text-[11px] font-bold px-3 py-1.5 flex items-center justify-between">
             <span class="truncate">Update: {{ $lastUpdateSertaMerta ? \Carbon\Carbon::parse($lastUpdateSertaMerta)->translatedFormat('d M Y') : '-' }}</span>
-            <i class="fa-solid fa-rotate text-[10px] shrink-0 ml-1"></i>
+            <i class="mdi mdi-refresh text-[10px] shrink-0 ml-1"></i>
         </div>
     </div>
 </div>

@@ -1,6 +1,6 @@
 @extends('components.layouts.admin')
 
-@section('title', 'Daftar Informasi Publik (DIP) - Admin PPID')
+@section('title', 'Daftar Informasi Publik (DIP) - PPID Pelaksana FMIPA Universitas Lampung')
 @section('header_title', 'Daftar Informasi Publik (DIP)')
 
 @section('content')
@@ -31,14 +31,14 @@
                 <!-- Tombol Export Sesuai Kategori, Filter, dan Sort Header Aktif -->
                 <a id="btn-export-pdf" href="{{ route('admin.export.informasi.pdf', request()->only(['kategori', 'tahun', 'satker', 'search', 'sort_by', 'sort_direction'])) }}" target="_blank"
                    class="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition-all shadow-2xs hover:shadow-xs cursor-pointer">
-                    <i class="fa-solid fa-file-pdf text-rose-500 text-sm"></i>
+                    <i class="mdi mdi-file-outline-pdf text-rose-500 text-sm"></i>
                     <span>Export</span>
                 </a>
 
                 <!-- Tombol Tambah Utama -->
                 <button type="button" onclick="openModalCreate()" 
-                        class="inline-flex items-center justify-center gap-2.5 px-5 py-3 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
-                    <i class="fa-solid fa-plus text-sm"></i>
+                        class="inline-flex items-center justify-center gap-2.5 px-5 py-3 bg-primary hover:bg-primary text-white text-xs md:text-sm font-extrabold rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
+                    <i class="mdi mdi-plus text-sm"></i>
                     <span>Tambah</span>
                 </button>
             </div>
@@ -76,11 +76,11 @@
         <div class="flex items-center gap-3 flex-wrap">
             <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()"
                     class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition shadow-2xs hover:shadow-xs cursor-pointer shrink-0 whitespace-nowrap">
-                <i class="fa-solid fa-list-check"></i> <span id="text-select-mode">Hapus</span>
+                <i class="mdi mdi-format-list-checks"></i> <span id="text-select-mode">Hapus</span>
             </button>
             <button type="button" id="btn-bulk-delete" onclick="triggerBulkDelete()"
                     class="hidden inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-extrabold rounded-2xl transition shadow-xs cursor-pointer shrink-0 whitespace-nowrap">
-                <i class="fa-solid fa-trash"></i> <span>Hapus (<span id="selected-count">0</span>) data terpilih</span>
+                <i class="mdi mdi-trash-can-outline"></i> <span>Hapus (<span id="selected-count">0</span>) data terpilih</span>
             </button>
             <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
                 <span>Tampilkan</span>
@@ -95,7 +95,7 @@
             <div class="relative">
                 <input type="text" id="input-search-admin-dip-{{ $dipTableKey }}" data-admin-dip-search="{{ $dipTableKey }}" oninput="document.getElementById('btn-clear-search-admin-dip-{{ $dipTableKey }}')?.classList.toggle('hidden', !this.value.trim()); searchAdminDipTable('{{ $dipTableKey }}', this.value)" value="{{ request('search') }}" autocomplete="off" class="w-64 sm:w-80 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
                 <button type="button" id="btn-clear-search-admin-dip-{{ $dipTableKey }}" onclick="const i=document.getElementById('input-search-admin-dip-{{ $dipTableKey }}'); if(i){i.value=''; i.focus();} this.classList.add('hidden'); searchAdminDipTable('{{ $dipTableKey }}', '');" title="Hapus pencarian" class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
-                    <i class="fa-solid fa-xmark"></i>
+                    <i class="mdi mdi-close"></i>
                 </button>
             </div>
         </form>

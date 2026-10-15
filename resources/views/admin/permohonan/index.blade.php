@@ -1,6 +1,6 @@
 @extends('components.layouts.admin')
 
-@section('title', 'Dashboard Permohonan - Admin PPID')
+@section('title', 'Dashboard Permohonan - PPID Pelaksana FMIPA Universitas Lampung')
 @section('header_title', 'Permohonan Informasi')
 
 @section('content')
@@ -53,6 +53,24 @@
         });
 
         rows.forEach(r => tbody.appendChild(r));
+
+        // Update indikator icon sort
+        document.querySelectorAll('th[onclick*="sortPermohonanTable"]').forEach(th => {
+            const c = th.getAttribute('onclick').match(/'([^']+)'/)?.[1];
+            const icon = th.querySelector('.sort-icon-wrapper') || th.querySelector('span:last-child');
+            if (!c || !icon) return;
+            if (c === _sortState.col) {
+                icon.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-secondary transition drop-shadow-xs';
+                icon.innerHTML = _sortState.dir === 'desc' 
+                    ? '<i class="mdi mdi-arrow-down-bold"></i>' 
+                    : '<i class="mdi mdi-arrow-up-bold"></i>';
+                th.classList.add('bg-primary-dark/80');
+            } else {
+                icon.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs text-white/50 group-hover:text-white transition';
+                icon.innerHTML = '<i class="mdi mdi-swap-vertical"></i>';
+                th.classList.remove('bg-primary-dark/80');
+            }
+        });
     };
 })();
 </script>

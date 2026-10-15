@@ -1,4 +1,4 @@
-@props(['profil' => []])
+﻿@props(['profil' => []])
 
 @php
     $nama           = $profil['nama'] ?? 'Aristoeteles';
@@ -20,7 +20,7 @@
         </h2>
 
         <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-            Dasar penetapan mengikuti SK Rektor Universitas Lampung tentang PPID (lihat <a href="{{ url('/regulasi') }}" class="text-sky-600 hover:text-sky-700 font-bold hover:underline">Regulasi</a>).
+            Dasar penetapan mengikuti SK Rektor Universitas Lampung tentang PPID (lihat <a href="{{ url('/regulasi') }}" class="text-primary hover:text-primary font-bold hover:underline">Regulasi</a>).
         </p>
     </div>
 
@@ -50,7 +50,7 @@
                 @else
                     {{-- Avatar Placeholder saat belum ada foto --}}
                     <div class="flex flex-col items-center justify-center gap-4 py-16 px-8 w-full h-full min-h-[260px] bg-gradient-to-br from-slate-50 to-sky-50/50">
-                        <div class="w-28 h-28 rounded-3xl bg-gradient-to-tr from-sky-500 to-blue-700 text-white font-black text-5xl flex items-center justify-center shadow-xl shadow-sky-600/30">
+                        <div class="w-28 h-28 rounded-3xl bg-gradient-to-tr from-sky-500 to-primary-light text-white font-black text-5xl flex items-center justify-center shadow-xl shadow-primary/20">
                             {{ $initial }}
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                         {{ $nama }}
                     </h3>
 
-                    <p class="text-sm sm:text-base text-sky-700 font-bold mt-1.5">
+                    <p class="text-sm sm:text-base text-primary font-bold mt-1.5">
                         {{ $jabatan }}
                     </p>
                 </div>
@@ -77,7 +77,7 @@
                 {{-- Tugas dan Fungsi --}}
                 <div class="space-y-2">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-list-check text-sky-500 text-xs"></i>
+                        <i class="mdi mdi-format-list-checks text-primary text-xs"></i>
                         <span class="text-md font-semibold text-slate-500">Tugas dan Fungsi</span>
                     </div>
                     <p class="text-sm sm:text-base text-slate-700 font-medium leading-relaxed whitespace-pre-line">

@@ -1,4 +1,4 @@
-@props(['keberatan'])
+﻿@props(['keberatan'])
 
 <div class="flex flex-wrap items-center justify-between gap-3">
     <div>
@@ -7,7 +7,7 @@
     </div>
     <a href="{{ route('admin.keberatan.index') }}"
        class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold text-sm rounded-lg transition">
-        <i class="fa-solid fa-arrow-left text-xs"></i>
+        <i class="mdi mdi-arrow-left text-xs"></i>
         Kembali
     </a>
 </div>

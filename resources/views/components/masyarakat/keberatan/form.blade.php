@@ -25,7 +25,7 @@
             <section class="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-7">
                 <div class="mb-6 flex items-center gap-3.5">
                     <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 text-lg">
-                        <i class="fa-regular fa-file-lines"></i>
+                        <i class="mdi mdi-file-document-outline"></i>
                     </span>
                     <div>
                         <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">1. Data Permohonan Asal</h2>
@@ -41,7 +41,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-regular fa-clipboard text-sm"></i>
+                                <i class="mdi mdi-clipboard-outline text-sm"></i>
                             </span>
                             <input id="no_tiket_permohonan" type="text" name="no_tiket_permohonan" value="{{ old('no_tiket_permohonan') }}" x-model="no_tiket_permohonan" autocomplete="off"
                                    placeholder="Contoh: PPID-20261006-A3B5"
@@ -49,7 +49,7 @@
                                    class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">
                         </div>
                         <p x-show="hasError('no_tiket_permohonan')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('no_tiket_permohonan')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('no_tiket_permohonan')"></span>
                         </p>
                         <p x-show="!hasError('no_tiket_permohonan')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Nomor tiket diberikan saat Anda mengajukan permohonan informasi.</p>
                         @error('no_tiket_permohonan') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -62,7 +62,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-regular fa-envelope text-sm"></i>
+                                <i class="mdi mdi-email-outline text-sm"></i>
                             </span>
                             <input id="email_pemohon" type="email" name="email" value="{{ old('email') }}" x-model="email" autocomplete="email"
                                    placeholder="nama@contoh.ac.id"
@@ -70,7 +70,7 @@
                                    class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">
                         </div>
                         <p x-show="hasError('email')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('email')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('email')"></span>
                         </p>
                         <p x-show="!hasError('email')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Email harus sama dengan saat mengajukan permohonan untuk verifikasi.</p>
                         @error('email') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -82,7 +82,7 @@
             <section class="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-7">
                 <div class="mb-6 flex items-center gap-3.5">
                     <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 text-lg">
-                        <i class="fa-regular fa-comment"></i>
+                        <i class="mdi mdi-comment-outline"></i>
                     </span>
                     <div>
                         <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">2. Alasan & Kronologi</h2>
@@ -110,14 +110,14 @@
                                 <option value="Penyampaian Informasi Melebihi Waktu Yang Ditentukan">Penyampaian Informasi Melebihi Waktu Yang Ditentukan</option>
                             </select>
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                                <i class="mdi mdi-chevron-down text-xs"></i>
                             </span>
                             <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400">
-                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                                <i class="mdi mdi-chevron-down text-xs"></i>
                             </span>
                         </div>
                         <p x-show="hasError('alasan_keberatan')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('alasan_keberatan')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('alasan_keberatan')"></span>
                         </p>
                         @error('alasan_keberatan') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
                     </div>
@@ -135,7 +135,7 @@
                                   :class="hasError('kronologi_keberatan') ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-50'"
                                   class="w-full rounded-xl border bg-white py-3 px-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none resize-none"></textarea>
                         <p x-show="hasError('kronologi_keberatan')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('kronologi_keberatan')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('kronologi_keberatan')"></span>
                         </p>
                         @error('kronologi_keberatan') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
                     </div>
@@ -152,22 +152,22 @@
                             <span class="shrink-0 inline-flex items-center justify-center rounded-full bg-amber-600 px-4 py-2 text-xs font-extrabold text-white">Pilih File</span>
                             <span class="flex-1 min-w-0 truncate text-sm" :class="pendukungFileName ? 'text-slate-800' : 'text-slate-400'" x-text="pendukungFileName || 'Belum ada file dipilih'"></span>
                             <template x-if="pendukungFileName">
-                                <button type="button" @click.stop="clearPendukungFile()" class="shrink-0 ml-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="fa-regular fa-trash-can text-sm"></i></button>
+                                <button type="button" @click.stop="clearPendukungFile()" class="shrink-0 ml-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="mdi mdi-trash-can-outline text-sm"></i></button>
                             </template>
                         </div>
                         <template x-if="pendukungFileName">
                             <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5">
-                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600"><i class="fa-regular fa-file text-sm"></i></span>
+                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600"><i class="mdi mdi-file-outline text-sm"></i></span>
                                 <div class="flex-1 min-w-0">
                                     <p class="truncate text-sm font-semibold text-slate-800" x-text="pendukungFileName"></p>
                                     <p class="text-xs text-slate-500" x-text="pendukungFileSize"></p>
                                 </div>
-                                <a :href="pendukungFileUrl" target="_blank" class="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> Lihat</a>
+                                <a :href="pendukungFileUrl" target="_blank" class="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"><i class="mdi mdi-open-in-new text-xs"></i> Lihat</a>
                             </div>
                         </template>
                         <template x-if="pendukungErrorMsg">
                             <p class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                                <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="pendukungErrorMsg"></span>
+                                <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="pendukungErrorMsg"></span>
                             </p>
                         </template>
                         <p class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Format: PDF, JPG, JPEG, PNG (Maksimal 3 MB)</p>
@@ -189,7 +189,7 @@
 
             <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center pt-2">
                 <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-amber-700 active:scale-[0.99] shadow-sm">
-                    <i class="fa-solid fa-paper-plane text-xs"></i> Kirim Keberatan
+                    <i class="mdi mdi-send-outline text-xs"></i> Kirim Keberatan
                 </button>
                 <p class="text-xs sm:text-sm text-slate-500">Keberatan akan diproses sesuai ketentuan UU KIP.</p>
             </div>
@@ -199,7 +199,7 @@
         <aside class="rounded-2xl border border-amber-100 bg-amber-50/50 p-5 sm:p-6 lg:sticky lg:top-24">
             <div class="mb-3 flex items-center gap-2.5 text-amber-800">
                 <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
-                    <i class="fa-regular fa-lightbulb text-sm"></i>
+                    <i class="mdi mdi-lightbulb-on-outline text-sm"></i>
                 </span>
                 <h2 class="text-sm font-bold text-slate-800">Ketentuan Keberatan</h2>
             </div>
@@ -219,7 +219,7 @@
                 </li>
             </ol>
             <div class="mt-4 border-t border-amber-100 pt-3 text-xs sm:text-sm leading-relaxed text-slate-600">
-                <p><i class="fa-regular fa-clock mr-1.5 text-amber-600"></i>Keberatan akan ditanggapi maksimal 30 hari kerja sejak pengajuan sesuai UU No. 14 Tahun 2008.</p>
+                <p><i class="mdi mdi-clock-outline mr-1.5 text-amber-600"></i>Keberatan akan ditanggapi maksimal 30 hari kerja sejak pengajuan sesuai UU No. 14 Tahun 2008.</p>
             </div>
         </aside>
     </div>

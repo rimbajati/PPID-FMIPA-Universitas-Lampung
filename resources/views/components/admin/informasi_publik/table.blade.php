@@ -34,7 +34,7 @@
                                 : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') : null);
                             $tglPembuatan = $item->created_at ? $item->created_at->translatedFormat('d F Y') : '-';
                         @endphp
-                        <div class="table-admin-dip-row card-admin-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-6 rounded-none border border-slate-200/80 bg-white hover:bg-sky-50/40 hover:border-sky-200 transition-all duration-200"
+                        <div class="table-admin-dip-row card-admin-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-6 rounded-none border border-slate-200/80 bg-white hover:bg-secondary-light/40 hover:border-secondary/30 transition-all duration-200"
                              data-id="{{ $item->id }}"
                              data-no="{{ $idx + 1 }}"
                              data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
@@ -54,18 +54,18 @@
                                 </div>
 
                                 <!-- Megaphone Icon -->
-                                <div class="w-11 h-11 rounded-xl bg-sky-100/70 text-sky-600 flex items-center justify-center shrink-0 group-hover/card:bg-sky-500 group-hover/card:text-white transition-colors duration-200 mt-0.5">
-                                    <i class="fa-solid fa-bullhorn text-sm"></i>
+                                <div class="w-11 h-11 rounded-xl bg-secondary-light/70 text-primary flex items-center justify-center shrink-0 group-hover/card:bg-primary group-hover/card:text-white transition-colors duration-200 mt-0.5">
+                                    <i class="mdi mdi-bullhorn-outline text-sm"></i>
                                 </div>
 
                                 <!-- Text Content -->
                                 <div class="space-y-1 flex-1 min-w-0">
-                                    <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover/card:text-sky-600 transition-colors leading-snug break-words">
+                                    <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover/card:text-primary transition-colors leading-snug break-words">
                                         {{ $item->sub_informasi }}
                                     </h3>
                                     <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 font-semibold">
                                         <span class="flex items-center gap-1.5">
-                                            <i class="fa-regular fa-calendar text-[11px]"></i>
+                                            <i class="mdi mdi-calendar-month-outline text-[11px]"></i>
                                             <span>{{ $tglPembuatan }}</span>
                                         </span>
                                     </div>
@@ -77,8 +77,8 @@
                                 @if($fileTargetUrl)
                                     <a href="{{ $fileTargetUrl }}" target="_blank" 
                                        title="Lihat Berkas" aria-label="Lihat Berkas"
-                                       class="inline-flex h-8 w-8 items-center justify-center bg-sky-50 text-sky-600 hover:bg-sky-600 hover:text-white rounded-xl transition cursor-pointer">
-                                        <i class="fa-regular fa-eye text-sm"></i>
+                                       class="inline-flex h-8 w-8 items-center justify-center bg-secondary-light text-primary hover:bg-primary hover:text-white rounded-xl transition cursor-pointer">
+                                        <i class="mdi mdi-eye-outline text-sm"></i>
                                     </a>
                                 @else
                                     <span class="text-xs font-semibold text-slate-400 italic px-3 py-1.5 bg-slate-100">Dokumen Belum Ada</span>
@@ -86,12 +86,12 @@
 
                                 <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Pengumuman" 
                                         class="inline-flex h-8 w-8 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white rounded-xl transition cursor-pointer">
-                                    <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                    <i class="mdi mdi-square-edit-outline text-[11px]"></i>
                                 </button>
 
                                 <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->sub_informasi) }}')" title="Hapus Pengumuman" 
                                         class="inline-flex h-8 w-8 items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-xl transition cursor-pointer">
-                                    <i class="fa-solid fa-trash text-[11px]"></i>
+                                    <i class="mdi mdi-trash-can-outline text-[11px]"></i>
                                 </button>
                             </div>
                         </div>
@@ -108,149 +108,149 @@
                 <table class="w-full {{ $isKategoriMode ? 'min-w-0 table-fixed' : 'min-w-[1200px] table-auto' }} text-left border-collapse border border-slate-200">
                     <thead>
                         @if($isUnified)
-                        <tr class="bg-sky-500 text-white text-xs md:text-sm font-black tracking-tight text-center leading-snug select-none">
+                        <tr class="bg-primary text-white text-xs md:text-sm font-black tracking-tight text-center leading-snug select-none">
                             <th id="col-checkbox-header-{{ $tableKey }}" class="col-checkbox-header hidden px-1 py-3 w-10 text-center">
-                                <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
+                                <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-primary focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
                             </th>
-                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'no')" class="px-2 py-3 text-center w-12 min-w-[48px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
+                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'no')" class="px-2 py-3 text-center w-12 min-w-[48px] shrink-0 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Nomor">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <span>No</span>
-                                    <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                        <i class="fa-solid fa-sort"></i>
+                                    <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                        <i class="mdi mdi-swap-vertical"></i>
                                     </span>
                                 </div>
                             </th>
-                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'ringkasan')" class="px-3.5 py-3 text-left min-w-[300px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
+                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'ringkasan')" class="px-3.5 py-3 text-left min-w-[300px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
                                 <div class="flex items-center justify-between gap-1.5">
                                     <span>Ringkasan Isi Informasi</span>
-                                    <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                        <i class="fa-solid fa-sort"></i>
+                                    <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                        <i class="mdi mdi-swap-vertical"></i>
                                     </span>
                                 </div>
                             </th>
-                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'pejabat')" class="px-3.5 py-3 text-left min-w-[210px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit yang Menguasai Informasi">
-                                <div class="flex items-center justify-between gap-1.5"><span>Pejabat/Unit yang Menguasai Informasi</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div>
+                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'pejabat')" class="px-3.5 py-3 text-left min-w-[210px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit yang Menguasai Informasi">
+                                <div class="flex items-center justify-between gap-1.5"><span>Pejabat/Unit yang Menguasai Informasi</span><span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span></div>
                             </th>
-                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'penanggung_jawab')" class="px-3.5 py-3 text-left min-w-[180px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab"><div class="flex items-center justify-between gap-1.5"><span>Penanggung Jawab</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div></th>
-                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'waktu')" class="px-3.5 py-3 text-left min-w-[170px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat Pembuatan"><div class="flex items-center justify-between gap-1.5"><span>Waktu dan Tempat Pembuatan</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div></th>
-                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'bentuk')" class="px-3 py-3 text-left min-w-[120px] cursor-pointer hover:bg-sky-600/60 transition group"><div class="flex items-center justify-between gap-1.5"><span>Format</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div></th>
-                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'retensi')" class="px-3 py-3 text-left min-w-[140px] cursor-pointer hover:bg-sky-600/60 transition group"><div class="flex items-center justify-between gap-1.5"><span>Retensi Arsip</span><span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span></div></th>
+                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'penanggung_jawab')" class="px-3.5 py-3 text-left min-w-[180px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab"><div class="flex items-center justify-between gap-1.5"><span>Penanggung Jawab</span><span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span></div></th>
+                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'waktu')" class="px-3.5 py-3 text-left min-w-[170px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat Pembuatan"><div class="flex items-center justify-between gap-1.5"><span>Waktu dan Tempat Pembuatan</span><span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span></div></th>
+                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'bentuk')" class="px-3 py-3 text-left min-w-[120px] cursor-pointer hover:bg-primary/60 transition group"><div class="flex items-center justify-between gap-1.5"><span>Format</span><span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span></div></th>
+                            <th onclick="sortAdminDipTable('{{ $tableKey }}', 'retensi')" class="px-3 py-3 text-left min-w-[140px] cursor-pointer hover:bg-primary/60 transition group"><div class="flex items-center justify-between gap-1.5"><span>Retensi Arsip</span><span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span></div></th>
                             <th class="px-2 py-3 text-center w-24 min-w-[90px] shrink-0"><span>Aksi</span></th>
                         </tr>
                         @elseif($isKategoriMode && $isSertaMertaCategory)
-                            <tr class="bg-sky-500 text-white text-xs md:text-sm font-black tracking-wide select-none">
+                            <tr class="bg-primary text-white text-xs md:text-sm font-black tracking-wide select-none">
                                 <th id="col-checkbox-header-{{ $tableKey }}" class="col-checkbox-header hidden px-2 py-3.5 w-12 text-center">
-                                    <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
+                                    <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-primary focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'sub_informasi')" class="px-4 py-3.5 text-left w-[58%] cursor-pointer hover:bg-sky-600/60 transition group">
-                                    <div class="flex items-center justify-between gap-1.5"><span>Informasi</span><span class="inline-flex items-center text-white/70 group-hover:text-white"><i class="fa-solid fa-sort"></i></span></div>
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'sub_informasi')" class="px-4 py-3.5 text-left w-[58%] cursor-pointer hover:bg-primary/60 transition group">
+                                    <div class="flex items-center justify-between gap-1.5"><span>Informasi</span><span class="sort-icon-wrapper inline-flex items-center text-white/70 group-hover:text-white"><i class="mdi mdi-swap-vertical"></i></span></div>
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'tanggal')" class="px-4 py-3.5 text-left w-[27%] cursor-pointer hover:bg-sky-600/60 transition group">
-                                    <div class="flex items-center justify-between gap-1.5"><span>Tanggal Ditambahkan</span><span class="inline-flex items-center text-white/70 group-hover:text-white"><i class="fa-solid fa-sort"></i></span></div>
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'tanggal')" class="px-4 py-3.5 text-left w-[27%] cursor-pointer hover:bg-primary/60 transition group">
+                                    <div class="flex items-center justify-between gap-1.5"><span>Tanggal Ditambahkan</span><span class="sort-icon-wrapper inline-flex items-center text-white/70 group-hover:text-white"><i class="mdi mdi-swap-vertical"></i></span></div>
                                 </th>
                                 <th class="px-2 py-3.5 text-center w-[15%] min-w-[116px]">Aksi</th>
                             </tr>
                         @elseif($isKategoriMode)
                             {{-- Header Khusus Kategori Berkala & Setiap Saat: Hanya Rincian Informasi & Sub Informasi --}}
-                            <tr class="bg-sky-500 text-white text-xs md:text-sm font-black tracking-tight select-none">
+                            <tr class="bg-primary text-white text-xs md:text-sm font-black tracking-tight select-none">
                                 <th id="col-checkbox-header-{{ $tableKey }}" class="col-checkbox-header hidden px-2 py-3.5 w-12 text-center">
-                                    <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
+                                    <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-primary focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'rincian')" class="px-4 py-3.5 text-left w-[35%] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Rincian Informasi">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'rincian')" class="px-4 py-3.5 text-left w-[35%] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Rincian Informasi">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Rincian Informasi</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'sub_informasi')" class="px-4 py-3.5 text-left w-[53%] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sub Informasi">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'sub_informasi')" class="px-4 py-3.5 text-left w-[53%] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Sub Informasi">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Sub Informasi</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'dilihat')" class="px-2 py-3.5 text-center w-[12%] min-w-[116px] cursor-pointer hover:bg-sky-600/60 transition" title="Urutkan berdasarkan akses"><div class="flex items-center justify-center gap-1"><span>Aksi</span><i class="fa-solid fa-sort text-white/70"></i></div></th>
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'dilihat')" class="px-2 py-3.5 text-center w-[12%] min-w-[116px] cursor-pointer hover:bg-primary/60 transition" title="Urutkan berdasarkan akses"><div class="flex items-center justify-center gap-1"><span>Aksi</span><span class="sort-icon-wrapper inline-flex items-center text-white/70"><i class="mdi mdi-swap-vertical"></i></span></div></th>
                             </tr>
                         @else
                             {{-- Header Standar Daftar Informasi Publik (DIP) Matriks Lengkap Sesuai Permintaan --}}
-                            <tr class="bg-sky-500 text-white text-xs md:text-sm font-black tracking-tight text-center leading-snug select-none">
+                            <tr class="bg-primary text-white text-xs md:text-sm font-black tracking-tight text-center leading-snug select-none">
                                 <th id="col-checkbox-header-{{ $tableKey }}" class="col-checkbox-header hidden px-1 py-3 w-10 text-center">
-                                    <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
+                                    <input type="checkbox" class="check-all w-4 h-4 rounded border-white/30 text-primary focus:ring-0 cursor-pointer" onclick="toggleCheckAll(this)">
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'no')" class="px-2 py-3 text-center w-12 min-w-[48px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'no')" class="px-2 py-3 text-center w-12 min-w-[48px] shrink-0 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Nomor">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>No</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'ringkasan')" class="px-3.5 py-3 text-left min-w-[300px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'ringkasan')" class="px-3.5 py-3 text-left min-w-[300px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Ringkasan Isi Informasi">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Ringkasan Isi Informasi</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
                                 @unless($forceTable)
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'jenis')" class="px-3.5 py-3 text-center min-w-[140px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Kategori Informasi">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'jenis')" class="px-3.5 py-3 text-center min-w-[140px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Kategori Informasi">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Kategori Informasi</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
                                 @endunless
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'pejabat')" class="px-3.5 py-3 text-left min-w-[210px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit yang Menguasai Informasi">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'pejabat')" class="px-3.5 py-3 text-left min-w-[210px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Pejabat/Unit yang Menguasai Informasi">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Pejabat/Unit yang Menguasai Informasi</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'penanggung_jawab')" class="px-3.5 py-3 text-left min-w-[180px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'penanggung_jawab')" class="px-3.5 py-3 text-left min-w-[180px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Penanggung Jawab</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'waktu')" class="px-3.5 py-3 text-left min-w-[170px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat Pembuatan">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'waktu')" class="px-3.5 py-3 text-left min-w-[170px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Waktu dan Tempat Pembuatan">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Waktu dan Tempat Pembuatan</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'bentuk')" class="px-3 py-3 text-center min-w-[120px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Format">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'bentuk')" class="px-3 py-3 text-center min-w-[120px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Format">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Format</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'retensi')" class="px-3 py-3 text-center min-w-[140px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Retensi Arsip">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'retensi')" class="px-3 py-3 text-center min-w-[140px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Retensi Arsip">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Retensi Arsip</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'dilihat')" class="px-2 py-3 text-center w-24 min-w-[90px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan berdasarkan Akses / Sering Dilihat">
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'dilihat')" class="px-2 py-3 text-center w-24 min-w-[90px] shrink-0 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan berdasarkan Akses / Sering Dilihat">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Aksi</span>
-                                        <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
@@ -271,10 +271,10 @@
                                             default => \Illuminate\Support\Str::title($unifiedGroupCurrent),
                                         };
                                     @endphp
-                                    <tr class="table-admin-dip-group bg-sky-50/80">
-                                        <td colspan="{{ $unifiedColspan }}" class="px-4 py-3 font-black text-xs md:text-sm tracking-wide text-sky-700 border-t border-sky-100">
+                                    <tr class="table-admin-dip-group bg-secondary-light/80">
+                                        <td colspan="{{ $unifiedColspan }}" class="px-4 py-3 font-black text-xs md:text-sm tracking-wide text-primary border-t border-secondary/20">
                                             <span class="inline-flex items-center gap-2">
-                                                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                                                <span class="w-2 h-2 rounded-full bg-primary"></span>
                                                 {{ $unifiedGroupLabel }}
                                             </span>
                                         </td>
@@ -290,7 +290,7 @@
                                     ? $item->link_informasi 
                                     : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName).'?from_admin=1') : null);
                             @endphp
-                            <tr class="table-admin-dip-row hover:bg-sky-50/70 transition-colors"
+                            <tr class="table-admin-dip-row hover:bg-secondary-light/70 transition-colors"
                                 data-id="{{ $item->id }}"
                                 data-no="{{ $idx + 1 }}"
                                 data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
@@ -317,7 +317,7 @@
                                                 <div class="font-medium text-slate-900 leading-snug">{{ $subValU }}</div>
                                             @else
                                                 <div class="font-medium text-slate-900 leading-snug">-</div>
-                                                <div class="text-xs text-amber-600 font-semibold italic flex items-center gap-1"><i class="fa-regular fa-clock text-[10px]"></i><span>Dokumen sedang dilengkapi unit</span></div>
+                                                <div class="text-xs text-amber-600 font-semibold italic flex items-center gap-1"><i class="mdi mdi-clock-outline text-[10px]"></i><span>Dokumen sedang dilengkapi unit</span></div>
                                             @endif
                                         </div>
                                     </td>
@@ -329,10 +329,10 @@
                                     <td class="px-3 py-3.5 text-center align-top">
                                         <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
                                             @if($fileTargetUrl && $fileTargetUrl !== '#')
-                                                <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg"><i class="fa-regular fa-eye text-[11px] not-italic leading-none"></i></a>
+                                                <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-primary bg-secondary-light hover:bg-primary hover:text-white transition shadow-2xs rounded-lg"><i class="mdi mdi-eye-outline text-[11px] not-italic leading-none"></i></a>
                                             @endif
-                                            <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg"><i class="fa-solid fa-pen-to-square text-[11px] not-italic leading-none"></i></button>
-                                            <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->sub_informasi) }}')" title="Hapus Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg"><i class="fa-solid fa-trash-can text-[11px] not-italic leading-none"></i></button>
+                                            <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg"><i class="mdi mdi-square-edit-outline text-[11px] not-italic leading-none"></i></button>
+                                            <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->sub_informasi) }}')" title="Hapus Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg"><i class="mdi mdi-trash-can-outline text-[11px] not-italic leading-none"></i></button>
                                         </div>
                                     </td>
                                 @elseif($isSertaMertaCategory)
@@ -345,10 +345,10 @@
                                     <td class="px-2 py-3 text-center align-top">
                                         <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
                                             @if($fileTargetUrl && $fileTargetUrl !== '#')
-                                                <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Berkas" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white rounded-lg transition"><i class="fa-regular fa-eye text-[11px]"></i></a>
+                                                <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Berkas" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-primary bg-secondary-light hover:bg-primary hover:text-white rounded-lg transition"><i class="mdi mdi-eye-outline text-[11px]"></i></a>
                                             @endif
-                                            <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white rounded-lg transition cursor-pointer"><i class="fa-solid fa-pen-to-square text-[11px]"></i></button>
-                                            <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($subInformasiText ?: $rincianText) }}')" title="Hapus" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash-can text-[11px]"></i></button>
+                                            <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white rounded-lg transition cursor-pointer"><i class="mdi mdi-square-edit-outline text-[11px]"></i></button>
+                                            <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($subInformasiText ?: $rincianText) }}')" title="Hapus" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-lg transition cursor-pointer"><i class="mdi mdi-trash-can-outline text-[11px]"></i></button>
                                         </div>
                                     </td>
                                 @elseif($isKategoriMode)
@@ -366,7 +366,7 @@
                                                 <div class="font-medium text-slate-800" title="{{ $subText }}">{{ $subText }}</div>
                                             @else
                                                 <div class="flex items-center gap-2 py-0.5">
-                                                    <i class="fa-regular fa-clock text-[11px] text-amber-500"></i>
+                                                    <i class="mdi mdi-clock-outline text-[11px] text-amber-500"></i>
                                                     <span class="text-xs text-amber-600 italic font-medium">Dokumen sedang dilengkapi unit</span>
                                                 </div>
                                             @endif
@@ -375,10 +375,10 @@
                                     <td class="px-2 py-3 text-center align-top">
                                         <div class="flex items-center justify-center gap-1 whitespace-nowrap">
                                             @if($fileTargetUrl && $fileTargetUrl !== '#')
-                                                <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white rounded-lg transition"><i class="fa-regular fa-eye text-[11px] not-italic leading-none"></i></a>
+                                                <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-primary bg-secondary-light hover:bg-primary hover:text-white rounded-lg transition"><i class="mdi mdi-eye-outline text-[11px] not-italic leading-none"></i></a>
                                             @endif
-                                            <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white rounded-lg transition cursor-pointer"><i class="fa-solid fa-pen-to-square text-[11px] not-italic leading-none"></i></button>
-                                            <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($subText ?: $rincianText) }}')" title="Hapus" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash-can text-[11px] not-italic leading-none"></i></button>
+                                            <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white rounded-lg transition cursor-pointer"><i class="mdi mdi-square-edit-outline text-[11px] not-italic leading-none"></i></button>
+                                            <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($subText ?: $rincianText) }}')" title="Hapus" class="inline-flex h-7 w-7 shrink-0 items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-lg transition cursor-pointer"><i class="mdi mdi-trash-can-outline text-[11px] not-italic leading-none"></i></button>
                                         </div>
                                     </td>
                                 @else
@@ -393,7 +393,7 @@
                                              @else
                                                  <div class="font-medium text-slate-900 leading-snug">-</div>
                                                  <div class="text-xs text-amber-600 font-semibold italic flex items-center gap-1">
-                                                     <i class="fa-regular fa-clock text-[10px]"></i>
+                                                     <i class="mdi mdi-clock-outline text-[10px]"></i>
                                                      <span>Dokumen sedang dilengkapi unit</span>
                                                  </div>
                                              @endif
@@ -410,7 +410,7 @@
                                                  'Informasi Serta Merta', 'Informasi Serta-Merta' => 'bg-rose-500 text-white',
                                                  'Informasi Setiap Saat' => 'bg-emerald-600 text-white',
                                                  'Informasi Dikecualikan' => 'bg-slate-700 text-white',
-                                                 default => 'bg-sky-600 text-white'
+                                                 default => 'bg-primary text-white'
                                              };
                                          @endphp
                                          @if($jVal)
@@ -453,15 +453,15 @@
                                          <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
                                              @if($fileTargetUrl && $fileTargetUrl !== '#')
                                                  <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" 
-                                                    class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg">
-                                                     <i class="fa-regular fa-eye text-[11px] not-italic leading-none"></i>
+                                                    class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-primary bg-secondary-light hover:bg-primary hover:text-white transition shadow-2xs rounded-lg">
+                                                     <i class="mdi mdi-eye-outline text-[11px] not-italic leading-none"></i>
                                                  </a>
                                              @endif
                                              <button type="button" onclick="editData({{ json_encode($item) }})" title="Edit Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                                 <i class="fa-solid fa-pen-to-square text-[11px] not-italic leading-none"></i>
+                                                 <i class="mdi mdi-square-edit-outline text-[11px] not-italic leading-none"></i>
                                              </button>
                                              <button type="button" onclick="triggerDelete('{{ url('/admin/informasi-publik/'.$item->id) }}', '{{ addslashes($item->sub_informasi) }}')" title="Hapus Data" class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                                 <i class="fa-solid fa-trash-can text-[11px] not-italic leading-none"></i>
+                                                 <i class="mdi mdi-trash-can-outline text-[11px] not-italic leading-none"></i>
                                              </button>
                                          </div>
                                      </td>

@@ -1,4 +1,4 @@
-@props(['informasiList'])
+﻿@props(['informasiList'])
 
 <!-- Card Grid Catalog View (Matching Reference UI Style) -->
 <div class="space-y-5">
@@ -35,7 +35,7 @@
                         $fileExt = 'PDF';
                     }
                     
-                    $badgeStyle = $kategoriStyles[$jenisInfo] ?? 'bg-sky-500 text-white';
+                    $badgeStyle = $kategoriStyles[$jenisInfo] ?? 'bg-primary text-white';
 
                     $extUpper = strtoupper($fileExt);
                     $extBadgeStyle = 'bg-slate-100 text-slate-600 border-slate-200/80';
@@ -67,10 +67,10 @@
                     <!-- Top Content Section (Judul, Deskripsi, Kategori Badge) -->
                     <div class="space-y-2.5">
                         <!-- Title -->
-                        <h3 class="text-base font-extrabold text-slate-900 group-hover:text-sky-600 transition-colors leading-snug block break-words [word-break:break-word]">
+                        <h3 class="text-base font-extrabold text-slate-900 group-hover:text-primary transition-colors leading-snug block break-words [word-break:break-word]">
                             {{ $info->sub_informasi ?? $info->judul_informasi }}
                             @if($isDikecualikan)
-                                <span class="inline-block ml-1 text-slate-400 text-xs"><i class="fa-solid fa-lock"></i></span>
+                                <span class="inline-block ml-1 text-slate-400 text-xs"><i class="mdi mdi-lock-outline"></i></span>
                             @endif
                         </h3>
 
@@ -83,7 +83,7 @@
                                 $pejabatPenguasa = $info->pejabat_unit_yang_menguasai_informasi ?? $info->pejabat_unit_yang_menguasai ?? $info->pejabat_penguasa;
                             @endphp
                             @if(!empty($pejabatPenguasa))
-                                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200/80 shadow-2xs inline-block">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-secondary-light text-primary border border-secondary/30/80 shadow-2xs inline-block">
                                     {{ $pejabatPenguasa }}
                                 </span>
                             @endif
@@ -93,7 +93,7 @@
                     <!-- Bottom Card Footer Line (Pushed to Bottom) -->
                     <div class="mt-auto pt-3.5 mt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
                         <span class="flex items-center gap-1.5 text-slate-500 font-medium">
-                            <i class="fa-regular fa-eye text-sky-500 text-[11px]"></i>
+                            <i class="mdi mdi-eye-outline text-primary text-[11px]"></i>
                             <span>Dilihat <span id="click-count-{{ $info->id }}">{{ $info->dilihat ?? 0 }}</span> kali</span>
                         </span>
 
@@ -104,7 +104,7 @@
                             </span>
 
                             <span class="flex items-center gap-1 text-[11px] font-bold text-slate-500">
-                                <i class="fa-regular fa-calendar text-slate-400 text-[11px]"></i>
+                                <i class="mdi mdi-calendar-month-outline text-slate-400 text-[11px]"></i>
                                 <span>{{ $info->waktu_pembuatan_informasi ?? $info->tahun_terbit ?? '2026' }}</span>
                             </span>
                         </div>
@@ -125,8 +125,8 @@
 
     @else
         <div class="bg-white border border-slate-200/90 rounded-2xl p-12 text-center space-y-4 shadow-xs">
-            <div class="w-16 h-16 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center text-2xl mx-auto border border-sky-100">
-                <i class="fa-solid fa-folder-open"></i>
+            <div class="w-16 h-16 bg-secondary-light text-primary rounded-2xl flex items-center justify-center text-2xl mx-auto border border-secondary/20">
+                <i class="mdi mdi-folder-open-outline"></i>
             </div>
             <div class="space-y-1">
                 <h3 class="text-lg font-black text-slate-900">Tidak Ada Informasi Ditemukan</h3>
@@ -151,7 +151,7 @@
             </div>
             <button type="button" onclick="closePublicDikModal()" 
                     class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition cursor-pointer shrink-0">
-                <i class="fa-solid fa-xmark text-sm"></i>
+                <i class="mdi mdi-close text-sm"></i>
             </button>
         </div>
 

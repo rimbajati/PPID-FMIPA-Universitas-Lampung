@@ -80,41 +80,98 @@ class KontenController extends Controller
     }
 
     /**
-     * Simpan pembaruan data Profil PPID
+     * Helper mengambil data konten lengkap halaman Profil PPID
+     */
+    public static function getHalamanProfil(): array
+    {
+        $default = [
+            'hero_judul'     => 'Profil PPID Pelaksana FMIPA',
+            'hero_deskripsi' => 'Mengenal lebih dekat Pejabat Pengelola Informasi dan Dokumentasi FMIPA Universitas Lampung — unit layanan keterbukaan informasi publik, dasar hukum, struktur organisasi, tugas dan fungsi, hingga standar pelayanan.',
+            'tentang_judul'  => 'Apa itu PPID?',
+            'tentang_p1'     => 'Pejabat Pengelola Informasi dan Dokumentasi (PPID) adalah pejabat yang bertanggung jawab di bidang penyimpanan, pendokumentasian, penyediaan, dan pelayanan informasi di badan publik.',
+            'tentang_p2'     => 'PPID FMIPA Universitas Lampung dibentuk untuk mewujudkan komitmen keterbukaan informasi publik sesuai amanat Undang-Undang Nomor 14 Tahun 2008. Kami melayani sivitas akademika dan masyarakat umum dalam memperoleh informasi publik yang berkualitas.',
+            'visi'           => 'Mewujudkan FMIPA Universitas Lampung sebagai institusi yang transparan, akuntabel, dan partisipatif dalam pengelolaan informasi publik yang berkualitas sesuai prinsip Good University Governance.',
+            'misi'           => [
+                ['judul' => 'Penyediaan Informasi', 'deskripsi' => 'Menyediakan dan melayani informasi publik secara cepat, tepat, dan akurat.'],
+                ['judul' => 'Pelayanan Prima', 'deskripsi' => 'Ramah, profesional, dan mudah diakses semua pemangku kepentingan.'],
+                ['judul' => 'Digitalisasi Dokumen', 'deskripsi' => 'Transformasi digital pengelolaan dan penyebaran informasi.'],
+                ['judul' => 'Peningkatan Kapasitas', 'deskripsi' => 'Pelatihan dan evaluasi SDM pengelola informasi berkelanjutan.'],
+            ],
+            'maklumat_quote' => 'Memberikan pelayanan informasi publik sebaik-baiknya — cepat, tepat waktu, gratis, dan sederhana sesuai peraturan perundang-undangan.',
+            'standar_pelayanan' => [
+                ['label' => 'Jenis layanan', 'isi' => 'Permohonan Informasi & Dokumentasi Publik'],
+                ['label' => 'Jam layanan', 'isi' => 'Senin – Jumat, 08:00 – 16:00 WIB'],
+                ['label' => 'Biaya', 'isi' => 'GRATIS'],
+                ['label' => 'Waktu selesai', 'isi' => '10 hari kerja (+7 hari perpanjangan)'],
+                ['label' => 'Produk', 'isi' => 'Salinan hardcopy & softcopy'],
+                ['label' => 'Dasar hukum', 'isi' => 'UU No. 14 Tahun 2008 tentang KIP'],
+                ['label' => 'Sarana', 'isi' => 'Ruang layanan, komputer, internet, formulir digital'],
+                ['label' => 'Kompetensi', 'isi' => 'Paham UU KIP & SOP layanan'],
+            ],
+            'struktur_judul'     => 'Struktur Organisasi',
+            'struktur_deskripsi' => 'Tim profesional yang berdedikasi melayani dan mendokumentasikan informasi publik',
+            'struktur_atasan'    => ['jabatan' => 'Dekan FMIPA', 'peran' => 'Atasan PPID'],
+            'struktur_ketua'     => ['jabatan' => 'Wakil Dekan Bidang Umum dan Keuangan', 'peran' => 'Ketua PPID Pelaksana'],
+            'struktur_bidang'    => [
+                ['jabatan' => 'Layanan Informasi', 'peran' => 'Front office & helpdesk'],
+                ['jabatan' => 'Dokumentasi & Arsip', 'peran' => 'Klasifikasi & retensi'],
+                ['jabatan' => 'Sengketa & Keberatan', 'peran' => 'Mediasi & adjudikasi'],
+                ['jabatan' => 'TI & Publikasi', 'peran' => 'Portal & media'],
+            ]
+        ];
+
+        if (Storage::disk('local')->exists(self::$filePath)) {
+            $data = json_decode(Storage::disk('local')->get(self::$filePath), true);
+            if (is_array($data) && isset($data['halaman_profil']) && is_array($data['halaman_profil'])) {
+                $merged = array_merge($default, $data['halaman_profil']);
+                if (isset($data['halaman_profil']['struktur_bidang'])) $merged['struktur_bidang'] = $data['halaman_profil']['struktur_bidang'];
+                if (isset($data['halaman_profil']['struktur_atasan'])) $merged['struktur_atasan'] = $data['halaman_profil']['struktur_atasan'];
+                if (isset($data['halaman_profil']['struktur_ketua'])) $merged['struktur_ketua'] = $data['halaman_profil']['struktur_ketua'];
+                return $merged;
+            }
+        }
+
+        return $default;
+    }
+
+    /**
+     * Simpan pembaruan data Profil PPID & Konten Halaman
      */
     public function updateProfil(Request $request)
     {
+        // Validasi Profil Pejabat (Existing)
         $request->validate([
             'nama'            => 'required|string|max:150',
             'jabatan'         => 'required|string|max:200',
             'foto'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
-            'dasar_penetapan' => 'nullable|string|max:500',
-            'tugas_fungsi'    => 'required|string',
             'email'           => 'required|email|max:150',
             'whatsapp'        => 'required|string|max:30',
+            'tugas_fungsi'    => 'nullable|string|max:1000',
+            // Validasi Halaman Profil (New)
+            'hero_judul'      => 'required|string|max:200',
+            'hero_deskripsi'  => 'required|string|max:500',
+            'tentang_p1'      => 'required|string|max:1000',
+            'tentang_p2'      => 'required|string|max:1000',
+            'visi'            => 'required|string|max:1000',
+            'maklumat_quote'  => 'required|string|max:500',
         ]);
 
         $profil = self::getProfil();
         $profil['nama'] = trim($request->input('nama'));
         $profil['jabatan'] = trim($request->input('jabatan'));
-        $profil['tugas_fungsi'] = trim($request->input('tugas_fungsi'));
         $profil['email'] = trim($request->input('email'));
         $profil['whatsapp'] = preg_replace('/[^0-9]/', '', trim($request->input('whatsapp')));
-        if ($request->filled('dasar_penetapan')) {
-            $profil['dasar_penetapan'] = trim($request->input('dasar_penetapan'));
+        if ($request->has('tugas_fungsi')) {
+            $profil['tugas_fungsi'] = trim($request->input('tugas_fungsi'));
         }
 
-        // Upload Foto baru jika ada
         if ($request->hasFile('foto')) {
-            // Hapus foto lama jika tersimpan di disk public
             if (!empty($profil['foto']) && Storage::disk('public')->exists($profil['foto'])) {
                 Storage::disk('public')->delete($profil['foto']);
             }
-            $path = $request->file('foto')->store('profil-ppid', 'public');
-            $profil['foto'] = $path;
+            $profil['foto'] = $request->file('foto')->store('profil-ppid', 'public');
         }
 
-        // Hapus foto jika checkbox/permintaan hapus foto dicentang
         if ($request->boolean('hapus_foto')) {
             if (!empty($profil['foto']) && Storage::disk('public')->exists($profil['foto'])) {
                 Storage::disk('public')->delete($profil['foto']);
@@ -122,15 +179,68 @@ class KontenController extends Controller
             $profil['foto'] = null;
         }
 
-        // Simpan ke beranda_konten.json
+        // Simpan Konten Halaman
+        $halaman = [
+            'hero_judul'     => trim($request->input('hero_judul')),
+            'hero_deskripsi' => trim($request->input('hero_deskripsi')),
+            'tentang_judul'  => trim($request->input('tentang_judul', 'Apa itu PPID?')),
+            'tentang_p1'     => trim($request->input('tentang_p1')),
+            'tentang_p2'     => trim($request->input('tentang_p2')),
+            'visi'           => trim($request->input('visi')),
+            'maklumat_quote' => trim($request->input('maklumat_quote')),
+        ];
+
+        // Struktur Organisasi
+        if ($request->filled('struktur_judul')) $halaman['struktur_judul'] = trim($request->input('struktur_judul'));
+        if ($request->filled('struktur_deskripsi')) $halaman['struktur_deskripsi'] = trim($request->input('struktur_deskripsi'));
+        $halaman['struktur_atasan'] = ['jabatan' => trim($request->input('struktur_atasan_jabatan') ?? 'Dekan FMIPA'), 'peran' => trim($request->input('struktur_atasan_peran') ?? 'Atasan PPID')];
+        $halaman['struktur_ketua']  = ['jabatan' => trim($request->input('struktur_ketua_jabatan') ?? 'Ketua PPID Pelaksana'), 'peran' => trim($request->input('struktur_ketua_peran') ?? 'Wakil Dekan')];
+        if ($request->has('struktur_bidang_jabatan')) {
+            $bidang = [];
+            foreach ($request->input('struktur_bidang_jabatan') as $i => $bj) {
+                if (!empty(trim($bj))) $bidang[] = ['jabatan' => trim($bj), 'peran' => trim($request->input('struktur_bidang_peran')[$i] ?? '')];
+            }
+            if (!empty($bidang)) $halaman['struktur_bidang'] = $bidang;
+        }
+
+        // Misi (Dynamic List)
+        if ($request->has('misi_judul')) {
+            $misiArr = [];
+            foreach ($request->input('misi_judul') as $idx => $mJudul) {
+                if (!empty(trim($mJudul))) {
+                    $misiArr[] = [
+                        'judul' => trim($mJudul),
+                        'deskripsi' => trim($request->input('misi_deskripsi')[$idx] ?? '')
+                    ];
+                }
+            }
+            $halaman['misi'] = $misiArr;
+        }
+
+        // Standar (Dynamic List)
+        if ($request->has('standar_label')) {
+            $stdArr = [];
+            foreach ($request->input('standar_label') as $idx => $sLabel) {
+                if (!empty(trim($sLabel))) {
+                    $stdArr[] = [
+                        'label' => trim($sLabel),
+                        'isi'   => trim($request->input('standar_isi')[$idx] ?? '')
+                    ];
+                }
+            }
+            $halaman['standar_pelayanan'] = $stdArr;
+        }
+
         $currentData = [];
         if (Storage::disk('local')->exists(self::$filePath)) {
             $currentData = json_decode(Storage::disk('local')->get(self::$filePath), true) ?: [];
         }
         $currentData['profil'] = $profil;
+        $currentData['halaman_profil'] = $halaman;
+        
         Storage::disk('local')->put(self::$filePath, json_encode($currentData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
-        return redirect()->back()->with('success', 'Profil PPID Pelaksana berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Profil dan Konten Halaman berhasil diperbarui.');
     }
 
     /**
@@ -217,7 +327,8 @@ class KontenController extends Controller
     public function profil()
     {
         return view('admin.profil.index', [
-            'profil' => self::getProfil()
+            'profil'  => self::getProfil(),
+            'halaman' => self::getHalamanProfil(),
         ]);
     }
 

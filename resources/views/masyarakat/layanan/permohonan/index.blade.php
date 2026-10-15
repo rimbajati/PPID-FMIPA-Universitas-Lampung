@@ -1,6 +1,6 @@
 @extends('components.layouts.app')
 
-@section('title', 'Ajukan Permohonan Informasi - PPID FMIPA Unila')
+@section('title', 'Ajukan Permohonan Informasi - PPID Pelaksana FMIPA Universitas Lampung')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-50 min-h-screen pb-24">
@@ -31,7 +31,7 @@
             
             <!-- Icon Sukses -->
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-inner">
-                <i class="fa-solid fa-check"></i>
+                <i class="mdi mdi-check"></i>
             </div>
 
             <!-- Konten Teks -->
@@ -53,14 +53,14 @@
                 <button type="button" @click="
                     navigator.clipboard.writeText('{{ session('success_tiket') }}');
                     const original = $el.innerHTML;
-                    $el.innerHTML = '<i class=\'fa-solid fa-check mr-2\'></i>Tersalin';
+                    $el.innerHTML = '<i class=\'mdi mdi-check mr-2\'></i>Tersalin';
                     $el.classList.replace('bg-blue-600', 'bg-emerald-600');
                     setTimeout(() => { 
                         $el.innerHTML = original;
                         $el.classList.replace('bg-emerald-600', 'bg-blue-600');
                     }, 2000);
                 " class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-extrabold rounded-xl transition shadow-md flex items-center justify-center">
-                    <i class="fa-regular fa-copy mr-2 text-base"></i>Salin Tiket
+                    <i class="mdi mdi-content-copy mr-2 text-base"></i>Salin Tiket
                 </button>
                 <button type="button" @click="show = false" 
                         class="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-extrabold rounded-xl transition">

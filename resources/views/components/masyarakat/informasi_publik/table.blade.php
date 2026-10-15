@@ -6,53 +6,53 @@
     <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
         <table class="w-full min-w-[1200px] table-auto border-collapse border border-slate-200">
             <thead>
-                <tr class="bg-sky-500 text-white text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-sky-600 text-left leading-snug select-none">
-                    <th onclick="sortDipTable('{{ $tableKey }}', 'no')" class="px-2 py-3 w-12 shrink-0 cursor-pointer hover:bg-sky-600/60 transition group">
+                <tr class="bg-primary text-white text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-primary text-left leading-snug select-none">
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'no')" class="px-2 py-3 w-12 shrink-0 cursor-pointer hover:bg-primary/60 transition group">
                         <div class="flex items-center justify-between gap-1.5">
                             <span>No</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
                         </div>
                     </th>
-                    <th onclick="sortDipTable('{{ $tableKey }}', 'ringkasan')" class="px-3.5 py-3 text-left min-w-[300px] cursor-pointer hover:bg-sky-600/60 transition group">
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'ringkasan')" class="px-3.5 py-3 text-left min-w-[300px] cursor-pointer hover:bg-primary/60 transition group">
                         <div class="flex items-center justify-between gap-1.5">
                             <span>Ringkasan Isi Informasi</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
                         </div>
                     </th>
-                    <th onclick="sortDipTable('{{ $tableKey }}', 'pejabat')" class="px-3.5 py-3 text-left min-w-[210px] cursor-pointer hover:bg-sky-600/60 transition group">
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'pejabat')" class="px-3.5 py-3 text-left min-w-[210px] cursor-pointer hover:bg-primary/60 transition group">
                         <div class="flex items-center justify-between gap-1.5">
                             <span>Pejabat/Unit yang Menguasai Informasi</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
                         </div>
                     </th>
-                    <th onclick="sortDipTable('{{ $tableKey }}', 'penanggung_jawab')" class="px-3.5 py-3 text-left min-w-[180px] cursor-pointer hover:bg-sky-600/60 transition group">
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'penanggung_jawab')" class="px-3.5 py-3 text-left min-w-[180px] cursor-pointer hover:bg-primary/60 transition group">
                         <div class="flex items-center justify-between gap-1.5">
                             <span>Penanggung Jawab</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
                         </div>
                     </th>
-                    <th onclick="sortDipTable('{{ $tableKey }}', 'waktu')" class="px-3.5 py-3 text-left min-w-[170px] cursor-pointer hover:bg-sky-600/60 transition group">
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'waktu')" class="px-3.5 py-3 text-left min-w-[170px] cursor-pointer hover:bg-primary/60 transition group">
                         <div class="flex items-center justify-between gap-1.5">
                             <span>Waktu dan Tempat Pembuatan</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
                         </div>
                     </th>
-                    <th onclick="sortDipTable('{{ $tableKey }}', 'bentuk')" class="px-3 py-3 text-left min-w-[120px] cursor-pointer hover:bg-sky-600/60 transition group">
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'bentuk')" class="px-3 py-3 text-left min-w-[120px] cursor-pointer hover:bg-primary/60 transition group">
                         <div class="flex items-center justify-between gap-1.5">
                             <span>Format</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
                         </div>
                     </th>
-                    <th onclick="sortDipTable('{{ $tableKey }}', 'retensi')" class="px-3 py-3 text-left min-w-[140px] cursor-pointer hover:bg-sky-600/60 transition group">
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'retensi')" class="px-3 py-3 text-left min-w-[140px] cursor-pointer hover:bg-primary/60 transition group">
                         <div class="flex items-center justify-between gap-1.5">
                             <span>Retensi Arsip</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
                         </div>
                     </th>
-                    <th onclick="sortDipTable('{{ $tableKey }}', 'dilihat')" class="px-2 py-3 text-left w-20 min-w-[80px] shrink-0 cursor-pointer hover:bg-sky-600/60 transition group">
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'dilihat')" class="px-2 py-3 text-left w-20 min-w-[80px] shrink-0 cursor-pointer hover:bg-primary/60 transition group">
                         <div class="flex items-center justify-between gap-1.5">
                             <span>Aksi</span>
-                            <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="fa-solid fa-sort"></i></span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
                         </div>
                     </th>
                 </tr>
@@ -71,14 +71,14 @@
                                     default => \Illuminate\Support\Str::title($groupCurrent),
                                 };
                             @endphp
-                            <tr class="bg-sky-50/80">
-                                <td colspan="8" class="px-4 py-3 font-black text-sm tracking-wide text-sky-700 border-t border-sky-100">
-                                    <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-500"></span>{{ $label }}</span>
+                            <tr class="bg-secondary-light/80">
+                                <td colspan="8" class="px-4 py-3 font-black text-sm tracking-wide text-primary border-t border-secondary/20">
+                                    <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span>{{ $label }}</span>
                                 </td>
                             </tr>
                         @endif
                     @endif
-                    <tr class="table-dip-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-200"
+                    <tr class="table-dip-row hover:bg-secondary-light/70 transition-colors divide-x divide-slate-200"
                         data-jenis="{{ strtolower($item->kategori_informasi ?? '') }}"
                         data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
                         data-ringkasan="{{ strtolower($item->sub_informasi ?? '') }}"
@@ -100,7 +100,7 @@
                                 $url = ($item->link_informasi && !$item->file_informasi) ? $item->link_informasi : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($item->nama_file_asli ?: 'file.pdf')) : null);
                             @endphp
                             @if($url)
-                                <a href="{{ $url }}" target="_blank" class="inline-flex items-center justify-center px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold rounded-lg transition">Lihat</a>
+                                <a href="{{ $url }}" target="_blank" class="inline-flex items-center justify-center px-3 py-1.5 bg-primary hover:bg-primary text-white text-xs font-bold rounded-lg transition">Lihat</a>
                             @else
                                 <span class="text-slate-400">-</span>
                             @endif

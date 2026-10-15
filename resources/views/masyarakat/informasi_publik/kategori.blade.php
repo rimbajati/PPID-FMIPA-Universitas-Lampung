@@ -9,7 +9,7 @@
     };
 @endphp
 
-@section('title', $displayTitle . ' - PPID FMIPA Universitas Lampung')
+@section('title', $displayTitle . ' - PPID Pelaksana FMIPA Universitas Lampung')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-100/70 min-h-screen pb-20">
@@ -57,7 +57,7 @@
                                class="w-64 sm:w-80 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
                         <button type="button" id="btn-clear-search-kat" onclick="clearSearchKat()" title="Hapus pencarian" 
                                 class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
-                            <i class="fa-solid fa-xmark"></i>
+                            <i class="mdi mdi-close"></i>
                         </button>
                     </div>
                 </form>
@@ -77,21 +77,21 @@
                                     : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName)) : null);
                                 $tglPembuatan = $item->created_at ? $item->created_at->translatedFormat('d F Y') : '-';
                             @endphp
-                            <div class="card-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-none border border-slate-200/80 bg-white hover:bg-sky-50/40 hover:border-sky-200 transition-all duration-200 shadow-2xs hover:shadow-xs"
+                            <div class="card-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-none border border-slate-200/80 bg-white hover:bg-secondary-light/40 hover:border-secondary/30 transition-all duration-200 shadow-2xs hover:shadow-xs"
                                  data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
                                  data-rincian="{{ strtolower($item->rincian_informasi ?? '') }}"
                                  data-sub_informasi="{{ strtolower($item->sub_informasi ?? '') }}">
                                 <div class="flex items-start gap-3.5">
-                                    <div class="w-10 h-10 rounded-xl bg-sky-100/70 text-sky-600 flex items-center justify-center shrink-0 group-hover/card:bg-sky-500 group-hover/card:text-white transition-colors duration-200 mt-0.5">
-                                        <i class="fa-solid fa-bullhorn text-sm"></i>
+                                    <div class="w-10 h-10 rounded-xl bg-secondary-light/70 text-primary flex items-center justify-center shrink-0 group-hover/card:bg-primary group-hover/card:text-white transition-colors duration-200 mt-0.5">
+                                        <i class="mdi mdi-bullhorn-outline text-sm"></i>
                                     </div>
                                     <div class="space-y-1">
-                                        <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover/card:text-sky-600 transition-colors leading-snug">
+                                        <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover/card:text-primary transition-colors leading-snug">
                                             {{ $item->sub_informasi }}
                                         </h3>
                                         <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 font-semibold">
                                             <span class="flex items-center gap-1.5">
-                                                <i class="fa-regular fa-calendar text-[11px]"></i>
+                                                <i class="mdi mdi-calendar-month-outline text-[11px]"></i>
                                                 <span>{{ $tglPembuatan }}</span>
                                             </span>
                                         </div>
@@ -101,9 +101,9 @@
                                 <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
                                     @if($fileTargetUrl)
                                         <a href="{{ $fileTargetUrl }}" target="_blank" 
-                                           class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold rounded-xl transition shadow-2xs hover:shadow-xs cursor-pointer">
+                                           class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-primary text-white text-xs font-bold rounded-xl transition shadow-2xs hover:shadow-xs cursor-pointer">
                                             <span>Lihat</span>
-                                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                            <i class="mdi mdi-open-in-new text-[10px]"></i>
                                         </a>
                                     @else
                                         <span class="text-xs font-semibold text-slate-400 italic px-3 py-1.5 bg-slate-100 rounded-xl">Dokumen Belum Tersedia</span>
@@ -133,28 +133,28 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse border border-slate-300">
                             <thead>
-                                <tr class="bg-sky-500 text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-sky-600 select-none">
-                                    <th onclick="sortKatTable('rincian')" class="px-5 py-3 min-w-[220px] sm:w-1/3 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Rincian Informasi">
+                                <tr class="bg-primary text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-primary select-none">
+                                    <th onclick="sortKatTable('rincian')" class="px-5 py-3 min-w-[220px] sm:w-1/3 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Rincian Informasi">
                                         <div class="flex items-center justify-between gap-1.5">
                                             <span>Rincian Informasi</span>
                                             <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                                <i class="fa-solid fa-sort"></i>
+                                                <i class="mdi mdi-swap-vertical"></i>
                                             </span>
                                         </div>
                                     </th>
-                                    <th onclick="sortKatTable('sub_informasi')" class="px-5 py-3 min-w-[300px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Sub Informasi">
+                                    <th onclick="sortKatTable('sub_informasi')" class="px-5 py-3 min-w-[300px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Sub Informasi">
                                         <div class="flex items-center justify-between gap-1.5">
                                             <span>Sub Informasi</span>
                                             <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                                <i class="fa-solid fa-sort"></i>
+                                                <i class="mdi mdi-swap-vertical"></i>
                                             </span>
                                         </div>
                                     </th>
-                                    <th onclick="sortKatTable('dilihat')" class="px-4 py-3 text-center w-28 shrink-0 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan berdasarkan Sering Dilihat">
+                                    <th onclick="sortKatTable('dilihat')" class="px-4 py-3 text-center w-28 shrink-0 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan berdasarkan Sering Dilihat">
                                         <div class="flex items-center justify-center gap-1.5">
                                             <span>Aksi</span>
                                             <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                                <i class="fa-solid fa-sort"></i>
+                                                <i class="mdi mdi-swap-vertical"></i>
                                             </span>
                                         </div>
                                     </th>
@@ -170,7 +170,7 @@
                                             : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName)) : null);
                                         $rincianText = trim($item->rincian_informasi ?: '-');
                                     @endphp
-                                    <tr class="table-kat-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-300"
+                                    <tr class="table-kat-row hover:bg-secondary-light/70 transition-colors divide-x divide-slate-300"
                                         data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
                                         data-rincian="{{ strtolower($rincianText) }}"
                                         data-sub_informasi="{{ strtolower($item->sub_informasi ?? '') }}">
@@ -194,13 +194,13 @@
 
                                                      @if($item->dilihat)
                                                          <div class="text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
-                                                             <i class="fa-regular fa-eye text-[10px]"></i>
+                                                             <i class="mdi mdi-eye-outline text-[10px]"></i>
                                                              <span>{{ number_format($item->dilihat) }} dilihat</span>
                                                          </div>
                                                      @endif
                                                  @else
                                                      <div class="text-xs text-slate-400 italic font-medium flex items-center gap-1.5">
-                                                         <i class="fa-regular fa-clock text-[11px]"></i>
+                                                         <i class="mdi mdi-clock-outline text-[11px]"></i>
                                                          <span>Dokumen sedang dilengkapi unit</span>
                                                      </div>
                                                  @endif
@@ -214,7 +214,7 @@
                                                      <span class="text-slate-400 font-bold text-xs">-</span>
                                                  @elseif($fileTargetUrl && $fileTargetUrl !== '#')
                                                      <a href="{{ $fileTargetUrl }}" target="_blank" title="Lihat Tautan / Berkas" 
-                                                        class="inline-flex items-center justify-center px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold rounded-lg transition shadow-2xs">
+                                                        class="inline-flex items-center justify-center px-3 py-1.5 bg-primary hover:bg-primary text-white text-xs font-bold rounded-lg transition shadow-2xs">
                                                          Lihat
                                                      </a>
                                                  @else
@@ -247,14 +247,14 @@
             @endif
 
             <!-- Call to Action Bantuan -->
-            <div class="bg-gradient-to-r from-sky-600 to-blue-700 text-white rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="bg-gradient-to-r from-primary to-primary-light text-white rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="space-y-1 text-center sm:text-left">
                     <h4 class="font-extrabold text-sm sm:text-base">Butuh dokumen atau informasi lainnya?</h4>
-                    <p class="text-xs text-sky-100">
+                    <p class="text-xs text-slate-200">
                         Anda dapat mengajukan permohonan informasi publik secara online melalui formulir permohonan resmi PPID FMIPA Unila.
                     </p>
                 </div>
-                <a href="{{ url('/permohonan') }}" class="px-4 py-2 bg-white text-sky-700 hover:bg-sky-50 font-extrabold text-xs rounded-xl transition shadow-xs shrink-0 whitespace-nowrap">
+                <a href="{{ url('/permohonan') }}" class="px-4 py-2 bg-white text-primary hover:bg-secondary-light font-extrabold text-xs rounded-xl transition shadow-xs shrink-0 whitespace-nowrap">
                     Ajukan Permohonan
                 </a>
             </div>
@@ -319,7 +319,7 @@
         if (katSortColumn === 'dilihat') {
             btn.className = 'px-3.5 py-1.5 rounded-2xl border text-xs sm:text-sm font-black transition flex items-center gap-1.5 shadow-xs cursor-pointer border-amber-500 bg-amber-500 text-white';
         } else {
-            btn.className = 'px-3.5 py-1.5 rounded-2xl border text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer border-slate-300 bg-white text-slate-700 hover:bg-sky-50 hover:text-sky-600 hover:border-sky-300';
+            btn.className = 'px-3.5 py-1.5 rounded-2xl border text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer border-slate-300 bg-white text-slate-700 hover:bg-secondary-light hover:text-primary hover:border-secondary/30';
         }
     }
 
@@ -377,17 +377,19 @@
         const headers = document.querySelectorAll('th[onclick*="sortKatTable"]');
         headers.forEach(th => {
             const colName = th.getAttribute('onclick').match(/'(.*)'/)?.[1];
-            const iconSpan = th.querySelector('span:last-child');
+            const iconSpan = th.querySelector('.sort-icon-wrapper') || th.querySelector('span:last-child');
             if (!iconSpan) return;
 
             if (colName === katSortColumn) {
-                iconSpan.className = 'inline-flex items-center justify-center text-xs md:text-sm text-white transition';
+                iconSpan.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-secondary transition drop-shadow-xs';
                 iconSpan.innerHTML = katSortDirection === 'desc' 
-                    ? '<i class="fa-solid fa-sort-down"></i>' 
-                    : '<i class="fa-solid fa-sort-up"></i>';
+                    ? '<i class="mdi mdi-arrow-down-bold"></i>' 
+                    : '<i class="mdi mdi-arrow-up-bold"></i>';
+                th.classList.add('bg-primary-dark/80');
             } else {
-                iconSpan.className = 'inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition';
-                iconSpan.innerHTML = '<i class="fa-solid fa-sort"></i>';
+                iconSpan.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/50 group-hover:text-white transition';
+                iconSpan.innerHTML = '<i class="mdi mdi-swap-vertical"></i>';
+                th.classList.remove('bg-primary-dark/80');
             }
         });
     }
@@ -549,7 +551,7 @@
             prevBtn.type = 'button';
             prevBtn.innerHTML = '‹';
             prevBtn.className = 'px-3.5 py-2 text-xs font-bold transition flex items-center justify-center ' + 
-                (katCurrentPage === 1 ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-sky-500 hover:bg-sky-50 cursor-pointer');
+                (katCurrentPage === 1 ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-primary hover:bg-secondary-light cursor-pointer');
             prevBtn.onclick = () => { if (katCurrentPage > 1) { katCurrentPage--; renderClientSideKatTable(); } };
             paginEl.appendChild(prevBtn);
 
@@ -568,7 +570,7 @@
                 pageBtn.type = 'button';
                 pageBtn.innerText = p;
                 pageBtn.className = 'px-3.5 py-2 min-w-[38px] text-center text-xs transition cursor-pointer ' + 
-                    (p === katCurrentPage ? 'font-extrabold bg-sky-500 text-white shadow-2xs' : 'font-bold bg-white text-sky-500 hover:bg-sky-50');
+                    (p === katCurrentPage ? 'font-extrabold bg-primary text-white shadow-2xs' : 'font-bold bg-white text-primary hover:bg-secondary-light');
                 pageBtn.onclick = () => { katCurrentPage = p; renderClientSideKatTable(); };
                 paginEl.appendChild(pageBtn);
             }
@@ -577,7 +579,7 @@
             nextBtn.type = 'button';
             nextBtn.innerHTML = '›';
             nextBtn.className = 'px-3.5 py-2 text-xs font-bold transition flex items-center justify-center ' + 
-                (katCurrentPage === totalPages ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-sky-500 hover:bg-sky-50 cursor-pointer');
+                (katCurrentPage === totalPages ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-primary hover:bg-secondary-light cursor-pointer');
             nextBtn.onclick = () => { if (katCurrentPage < totalPages) { katCurrentPage++; renderClientSideKatTable(); } };
             paginEl.appendChild(nextBtn);
         }

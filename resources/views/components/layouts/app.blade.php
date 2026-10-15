@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ asset('images/logoPPID.png') }}?v=2.0">
-    <link rel="icon" type="image/png" href="{{ asset('images/logoPPID.png') }}?v=2.0">
-    <link rel="icon" type="image/x-icon" href="{{ asset('images/logoPPID.png') }}?v=2.0">
-    <link rel="apple-touch-icon" href="{{ asset('images/logoPPID.png') }}?v=2.0">
+    <title>@yield('title', 'PPID Pelaksana FMIPA Universitas Lampung')</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3.0">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3.0">
+    <link rel="icon" type="image/png" href="{{ asset('images/logoPPID.png') }}?v=3.0">
+    <link rel="apple-touch-icon" href="{{ asset('images/logoPPID.png') }}?v=3.0">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Material Design Icons (MDI) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js CDN -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -23,8 +25,30 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#0f2a44',
+                            light: '#1a3a5c',
+                            dark: '#0a1d30',
+                        },
+                        secondary: {
+                            DEFAULT: '#c5a253',
+                            light: '#d4b76a',
+                            dark: '#a8893e',
+                        },
+                        accent: {
+                            DEFAULT: '#0ea5e9',
+                            light: '#38bdf8',
+                            dark: '#0284c7',
+                        },
+                        'primary-light': '#1a3a5c',
+                        'secondary-light': '#f8f5ee',
+                        'accent-light': '#e0f2fe',
+                    },
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Plus Jakarta Sans', 'sans-serif'],
+                        poppins: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     borderRadius: {
                         'DEFAULT': '0.375rem',
@@ -57,8 +81,11 @@
             html { font-size: 13.5px; }
         }
         body { 
-            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; 
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important; 
             font-size: 1rem; 
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
         /* Samakan tipografi semua tabel masyarakat, termasuk isi, status, dan pagination. */
         table th, table td,

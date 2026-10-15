@@ -1,6 +1,6 @@
 @extends('components.layouts.admin')
 
-@section('title', 'Daftar Informasi yang Dikecualikan (DIK) - Admin PPID')
+@section('title', 'Daftar Informasi yang Dikecualikan (DIK) - PPID Pelaksana FMIPA Universitas Lampung')
 @section('header_title', 'Daftar Informasi yang Dikecualikan (DIK)')
 
 @section('content')
@@ -17,13 +17,13 @@
         <div class="flex items-center gap-2.5 shrink-0">
             <a href="{{ route('admin.export.informasi-dikecualikan.pdf') }}" target="_blank"
                class="inline-flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition-all shadow-2xs hover:shadow-xs cursor-pointer">
-                <i class="fa-solid fa-file-pdf text-rose-500 text-sm"></i>
+                <i class="mdi mdi-file-outline-pdf text-rose-500 text-sm"></i>
                 <span>Export</span>
             </a>
             <!-- Tombol Tambah Utama -->
             <button type="button" onclick="openModalCreateDik()" 
-                    class="inline-flex items-center justify-center gap-2.5 px-5 py-3 bg-sky-500 hover:bg-sky-600 text-white text-xs md:text-sm font-extrabold rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
-                <i class="fa-solid fa-plus text-sm"></i>
+                    class="inline-flex items-center justify-center gap-2.5 px-5 py-3 bg-primary hover:bg-primary text-white text-xs md:text-sm font-extrabold rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
+                <i class="mdi mdi-plus text-sm"></i>
                 <span>Tambah</span>
             </button>
         </div>
@@ -36,13 +36,13 @@
             <!-- Tombol Mode Hapus -->
             <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()"
                     class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition shadow-2xs hover:shadow-xs cursor-pointer shrink-0 whitespace-nowrap">
-                <i class="fa-solid fa-list-check"></i> <span id="text-select-mode">Hapus</span>
+                <i class="mdi mdi-format-list-checks"></i> <span id="text-select-mode">Hapus</span>
             </button>
 
             <!-- Tombol Hapus Bulk (Muncul saat mode pilih aktif & ada item dicentang) -->
             <button type="button" id="btn-bulk-delete" onclick="triggerBulkDeleteDik()"
                     class="hidden inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-extrabold rounded-2xl transition shadow-xs cursor-pointer shrink-0 whitespace-nowrap">
-                <i class="fa-solid fa-trash"></i> <span>Hapus (<span id="selected-count">0</span>) data terpilih</span>
+                <i class="mdi mdi-trash-can-outline"></i> <span>Hapus (<span id="selected-count">0</span>) data terpilih</span>
             </button>
 
             <!-- Dropdown Show Entries -->
@@ -74,7 +74,7 @@
                        class="w-64 sm:w-80 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
                 <button type="button" id="btn-clear-search-admin-dik" onclick="clearSearchAdminDik()" title="Hapus pencarian" 
                         class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
-                    <i class="fa-solid fa-xmark"></i>
+                    <i class="mdi mdi-close"></i>
                 </button>
             </div>
         </form>
@@ -100,60 +100,60 @@
                     </colgroup>
                     <thead>
                         <!-- Baris Header 1 -->
-                        <tr class="bg-sky-500 text-white text-xs md:text-sm font-black tracking-tight divide-x divide-white/20 text-center leading-snug select-none">
+                        <tr class="bg-primary text-white text-xs md:text-sm font-black tracking-tight divide-x divide-white/20 text-center leading-snug select-none">
                             <th rowspan="2" id="col-checkbox-header" class="hidden px-2 py-3.5 text-center">
-                                <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
+                                <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-primary focus:ring-0 cursor-pointer">
                             </th>
-                            <th rowspan="2" onclick="sortAdminDikTable('no')" class="px-2 py-3.5 text-center cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
+                            <th rowspan="2" onclick="sortAdminDikTable('no')" class="px-2 py-3.5 text-center cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Nomor">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <span>No</span>
                                     <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                        <i class="fa-solid fa-sort"></i>
+                                        <i class="mdi mdi-swap-vertical"></i>
                                     </span>
                                 </div>
                             </th>
-                            <th rowspan="2" onclick="sortAdminDikTable('ringkasan')" class="px-3.5 py-3.5 text-center cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Informasi">
+                            <th rowspan="2" onclick="sortAdminDikTable('ringkasan')" class="px-3.5 py-3.5 text-center cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Informasi">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <span>Informasi</span>
                                     <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                        <i class="fa-solid fa-sort"></i>
+                                        <i class="mdi mdi-swap-vertical"></i>
                                     </span>
                                 </div>
                             </th>
-                            <th rowspan="2" onclick="sortAdminDikTable('dasar_hukum')" class="px-3.5 py-3.5 text-center cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Dasar Hukum">
+                            <th rowspan="2" onclick="sortAdminDikTable('dasar_hukum')" class="px-3.5 py-3.5 text-center cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Dasar Hukum">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <span>Dasar Hukum</span>
                                     <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                        <i class="fa-solid fa-sort"></i>
+                                        <i class="mdi mdi-swap-vertical"></i>
                                     </span>
                                 </div>
                             </th>
                             <th colspan="2" class="consequence-group-header px-3.5 py-2 text-center border-b border-white/20">Konsekuensi / Pertimbangan Bagi Publik</th>
-                            <th rowspan="2" onclick="sortAdminDikTable('jangka_waktu')" class="px-3.5 py-3.5 text-center cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jangka Waktu">
+                            <th rowspan="2" onclick="sortAdminDikTable('jangka_waktu')" class="px-3.5 py-3.5 text-center cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Jangka Waktu">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <span>Jangka Waktu</span>
                                     <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                        <i class="fa-solid fa-sort"></i>
+                                        <i class="mdi mdi-swap-vertical"></i>
                                     </span>
                                 </div>
                             </th>
                             <th rowspan="2" class="px-2 py-3.5 text-center">Aksi</th>
                         </tr>
                         <!-- Baris Header 2 (Sub-kolom Konsekuensi) -->
-                        <tr class="bg-sky-500 text-white text-xs md:text-sm font-black tracking-tight divide-x divide-white/20 text-center leading-snug select-none">
-                            <th onclick="sortAdminDikTable('dibuka')" class="px-3 py-2 text-center cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Konsekuensi Dibuka">
+                        <tr class="bg-primary text-white text-xs md:text-sm font-black tracking-tight divide-x divide-white/20 text-center leading-snug select-none">
+                            <th onclick="sortAdminDikTable('dibuka')" class="px-3 py-2 text-center cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Konsekuensi Dibuka">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <span>Dibuka</span>
                                     <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                        <i class="fa-solid fa-sort"></i>
+                                        <i class="mdi mdi-swap-vertical"></i>
                                     </span>
                                 </div>
                             </th>
-                            <th onclick="sortAdminDikTable('ditutup')" class="px-3 py-2 text-center cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Konsekuensi Ditutup">
+                            <th onclick="sortAdminDikTable('ditutup')" class="px-3 py-2 text-center cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Konsekuensi Ditutup">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <span>Ditutup</span>
                                     <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                        <i class="fa-solid fa-sort"></i>
+                                        <i class="mdi mdi-swap-vertical"></i>
                                     </span>
                                 </div>
                             </th>
@@ -161,7 +161,7 @@
                     </thead>
                     <tbody id="table-admin-dik-body" class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800 text-left [&>tr>td]:!align-top">
                         @forelse($informasi as $idx => $item)
-                            <tr class="table-admin-dik-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-200 align-top"
+                            <tr class="table-admin-dik-row hover:bg-secondary-light/70 transition-colors divide-x divide-slate-200 align-top"
                                 data-id="{{ $item->id }}"
                                 data-no="{{ $idx + 1 }}"
                                 data-ringkasan="{{ strtolower($item->ringkasan_informasi ?? '') }}"
@@ -186,13 +186,13 @@
                                         <!-- Tombol Edit -->
                                         <button type="button" onclick="openModalEditDik({{ json_encode($item) }})" title="Edit Data" 
                                                 class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                            <i class="fa-solid fa-pen-to-square text-[11px] not-italic leading-none"></i>
+                                            <i class="mdi mdi-square-edit-outline text-[11px] not-italic leading-none"></i>
                                         </button>
 
                                         <!-- Tombol Hapus -->
                                         <button type="button" onclick="triggerDeleteDik('{{ url('/admin/informasi-dikecualikan/' . $item->id) }}', '{{ addslashes($item->ringkasan_informasi) }}')" title="Hapus Data" 
                                                 class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs cursor-pointer rounded-lg">
-                                            <i class="fa-solid fa-trash-can text-[11px] not-italic leading-none"></i>
+                                            <i class="mdi mdi-trash-can-outline text-[11px] not-italic leading-none"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -237,7 +237,7 @@
     <div class="bg-white rounded-2xl max-w-7xl w-[96vw] shadow-2xl border-0 overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[96vh] transition-all duration-300 ease-in-out">
 
         <!-- Header Modal (Sky-Blue) -->
-        <div class="bg-sky-500 text-white px-8 py-5 shrink-0 rounded-t-2xl w-full">
+        <div class="bg-primary text-white px-8 py-5 shrink-0 rounded-t-2xl w-full">
             <h3 id="modalDikTitle" class="text-lg sm:text-xl font-extrabold text-white tracking-tight leading-snug">Tambah Informasi Dikecualikan</h3>
             <p id="modalDikSubtitle" class="text-xs text-white/90 font-medium mt-0.5 leading-normal">Masukkan detail informasi yang dikecualikan</p>
         </div>
@@ -261,7 +261,7 @@
                             </label>
                             <input type="text" name="ringkasan_informasi" id="inputRingkasanInformasi" required
                                       placeholder="Contoh: SK Rektor tentang Putus Studi Mahasiswa (Evaluasi Akademik I & II)"
-                                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm">
+                                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary transition text-xs sm:text-sm">
                         </div>
 
                         <!-- 2. Dasar Hukum -->
@@ -271,7 +271,7 @@
                             </label>
                             <textarea name="dasar_hukum" id="inputDasarHukum" rows="10" required
                                       placeholder="Contoh: UU KIP No. 14/2008, UU No. 27/2022 Tentang Pelindungan Data Pribadi"
-                                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none min-h-[180px]"></textarea>
+                                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary transition text-xs sm:text-sm resize-none min-h-[180px]"></textarea>
                         </div>
 
                         <!-- 3. Jangka Waktu -->
@@ -281,7 +281,7 @@
                             </label>
                             <textarea name="jangka_waktu" id="inputJangkaWaktu" rows="3" required
                                    placeholder="Contoh: 30 Tahun (Berdasarkan Peraturan KIP No. 1 Tahun 2021)"
-                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none"></textarea>
+                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary transition text-xs sm:text-sm resize-none"></textarea>
                         </div>
                     </div>
 
@@ -298,7 +298,7 @@
                             </label>
                             <textarea name="dibuka" id="inputDibuka" rows="7" required
                                    placeholder="Contoh: Data drop out bersifat pribadi, bisa mempermalukan individu"
-                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none min-h-[140px]"></textarea>
+                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary transition text-xs sm:text-sm resize-none min-h-[140px]"></textarea>
                         </div>
 
                         <!-- Ditutup -->
@@ -308,7 +308,7 @@
                             </label>
                             <textarea name="ditutup" id="inputDitutup" rows="7" required
                                    placeholder="Contoh: Mengamankan data pribadi yang bersifat rahasia"
-                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-sky-500 transition text-xs sm:text-sm resize-none min-h-[140px]"></textarea>
+                                   class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary transition text-xs sm:text-sm resize-none min-h-[140px]"></textarea>
                         </div>
                     </div>
 
@@ -323,7 +323,7 @@
                     Batal
                 </button>
                 <button type="submit"
-                        class="px-6 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs sm:text-sm font-bold rounded-xl transition shadow-xs cursor-pointer">
+                        class="px-6 py-2 bg-primary hover:bg-primary text-white text-xs sm:text-sm font-bold rounded-xl transition shadow-xs cursor-pointer">
                     Simpan
                 </button>
             </div>
@@ -545,17 +545,19 @@
         const headers = document.querySelectorAll('th[onclick*="sortAdminDikTable"]');
         headers.forEach(th => {
             const colName = th.getAttribute('onclick').match(/'(.*)'/)?.[1];
-            const iconSpan = th.querySelector('span:last-child');
+            const iconSpan = th.querySelector('.sort-icon-wrapper') || th.querySelector('span:last-child');
             if (!iconSpan) return;
 
             if (colName === adminDikSortColumn) {
-                iconSpan.className = 'inline-flex items-center justify-center text-xs md:text-sm text-white transition';
+                iconSpan.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-secondary transition drop-shadow-xs';
                 iconSpan.innerHTML = adminDikSortDirection === 'desc' 
-                    ? '<i class="fa-solid fa-sort-down"></i>' 
-                    : '<i class="fa-solid fa-sort-up"></i>';
+                    ? '<i class="mdi mdi-arrow-down-bold"></i>' 
+                    : '<i class="mdi mdi-arrow-up-bold"></i>';
+                th.classList.add('bg-primary-dark/80');
             } else {
-                iconSpan.className = 'inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition';
-                iconSpan.innerHTML = '<i class="fa-solid fa-sort"></i>';
+                iconSpan.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/50 group-hover:text-white transition';
+                iconSpan.innerHTML = '<i class="mdi mdi-swap-vertical"></i>';
+                th.classList.remove('bg-primary-dark/80');
             }
         });
     }
@@ -657,7 +659,7 @@
             prevBtn.type = 'button';
             prevBtn.innerHTML = '‹';
             prevBtn.className = 'px-3.5 py-2 text-xs font-bold transition flex items-center justify-center ' + 
-                (adminDikCurrentPage === 1 ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-sky-500 hover:bg-sky-50 cursor-pointer');
+                (adminDikCurrentPage === 1 ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-primary hover:bg-secondary-light cursor-pointer');
             prevBtn.onclick = () => { if (adminDikCurrentPage > 1) { adminDikCurrentPage--; renderClientSideAdminDikTable(); } };
             paginEl.appendChild(prevBtn);
 
@@ -676,7 +678,7 @@
                 pageBtn.type = 'button';
                 pageBtn.innerText = p;
                 pageBtn.className = 'px-3.5 py-2 min-w-[38px] text-center text-xs transition cursor-pointer ' + 
-                    (p === adminDikCurrentPage ? 'font-extrabold bg-sky-500 text-white shadow-2xs' : 'font-bold bg-white text-sky-500 hover:bg-sky-50');
+                    (p === adminDikCurrentPage ? 'font-extrabold bg-primary text-white shadow-2xs' : 'font-bold bg-white text-primary hover:bg-secondary-light');
                 pageBtn.onclick = () => { adminDikCurrentPage = p; renderClientSideAdminDikTable(); };
                 paginEl.appendChild(pageBtn);
             }
@@ -685,7 +687,7 @@
             nextBtn.type = 'button';
             nextBtn.innerHTML = '›';
             nextBtn.className = 'px-3.5 py-2 text-xs font-bold transition flex items-center justify-center ' + 
-                (adminDikCurrentPage === totalPages ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-sky-500 hover:bg-sky-50 cursor-pointer');
+                (adminDikCurrentPage === totalPages ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-primary hover:bg-secondary-light cursor-pointer');
             nextBtn.onclick = () => { if (adminDikCurrentPage < totalPages) { adminDikCurrentPage++; renderClientSideAdminDikTable(); } };
             paginEl.appendChild(nextBtn);
         }

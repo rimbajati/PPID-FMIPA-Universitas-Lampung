@@ -616,11 +616,20 @@
         }
         tbody.closest('table')?.querySelectorAll('th[onclick*="sortAdminDipTable"]').forEach(th => {
             const column = th.getAttribute('onclick').match(/,\s*'([^']+)'/)?.[1];
-            const icon = th.querySelector('span:last-child');
+            const icon = th.querySelector('.sort-icon-wrapper') || th.querySelector('span:last-child');
             if (!column || !icon) return;
             const active = column === state.sortColumn;
-            icon.className = `inline-flex items-center justify-center text-xs md:text-sm ${active ? 'text-white' : 'text-white/70 group-hover:text-white'} transition`;
-            icon.innerHTML = active ? (state.sortDirection === 'desc' ? '<i class="fa-solid fa-sort-down"></i>' : '<i class="fa-solid fa-sort-up"></i>') : '<i class="fa-solid fa-sort"></i>';
+            if (active) {
+                icon.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-secondary transition drop-shadow-xs';
+                icon.innerHTML = state.sortDirection === 'desc' 
+                    ? '<i class="mdi mdi-arrow-down-bold"></i>' 
+                    : '<i class="mdi mdi-arrow-up-bold"></i>';
+                th.classList.add('bg-primary-dark/80');
+            } else {
+                icon.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/50 group-hover:text-white transition';
+                icon.innerHTML = '<i class="mdi mdi-swap-vertical"></i>';
+                th.classList.remove('bg-primary-dark/80');
+            }
         });
         const total = rows.length;
         const totalPages = Math.ceil(total / state.perPage) || 1;
@@ -654,8 +663,8 @@
                 unifiedGroupRendered = row.jenis;
                 const label = toUnifiedLabel(unifiedGroupRendered);
                 const tr = document.createElement('tr');
-                tr.className = 'table-admin-dip-group bg-sky-50/80';
-                tr.innerHTML = `<td colspan="${colCountUnified}" class="px-4 py-3 font-black text-xs md:text-sm tracking-wide text-sky-700 border-t border-sky-100"><span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-500"></span>${label}</span></td>`;
+                tr.className = 'table-admin-dip-group bg-secondary-light/80';
+                tr.innerHTML = `<td colspan="${colCountUnified}" class="px-4 py-3 font-black text-xs md:text-sm tracking-wide text-primary border-t border-secondary/20"><span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span>${label}</span></td>`;
                 tbody.appendChild(tr);
             }
             const numberCell = row.element.querySelector('.col-admin-dip-no');
@@ -702,7 +711,7 @@
         const addButton = (label, target, disabled, active = false) => {
             const button = document.createElement('button');
             button.type = 'button'; button.innerText = label; button.disabled = disabled;
-            button.className = 'px-3.5 py-2 min-w-[38px] text-center text-sm transition ' + (active ? 'font-extrabold bg-sky-500 text-white' : disabled ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'font-bold bg-white text-sky-500 hover:bg-sky-50 cursor-pointer');
+            button.className = 'px-3.5 py-2 min-w-[38px] text-center text-sm transition ' + (active ? 'font-extrabold bg-primary text-white' : disabled ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'font-bold bg-white text-primary hover:bg-secondary-light cursor-pointer');
             if (!disabled) button.onclick = () => { state.page = target; renderAdminDipTable(key); };
             pagination.appendChild(button);
         };

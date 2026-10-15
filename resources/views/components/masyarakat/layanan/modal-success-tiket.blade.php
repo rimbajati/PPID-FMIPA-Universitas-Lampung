@@ -1,4 +1,4 @@
-<!-- MODAL POPUP SUKSES PERMOHONAN / KEBERATAN DENGAN NOMOR TIKET -->
+﻿<!-- MODAL POPUP SUKSES PERMOHONAN / KEBERATAN DENGAN NOMOR TIKET -->
 @if(session('success_tiket') || session('success_keberatan_tiket'))
 @php
     $isKeberatan = session()->has('success_keberatan_tiket');
@@ -23,7 +23,7 @@
 
         <!-- Ikon Sukses Ceria / Clean -->
         <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl mb-4">
-            <i class="fa-solid fa-circle-check"></i>
+            <i class="mdi mdi-check-circle-outline"></i>
         </div>
 
         <h3 class="text-xl font-bold text-slate-800 mb-1.5">{{ $judulSukses }}</h3>
@@ -42,7 +42,7 @@
                         @click="navigator.clipboard.writeText('{{ $nomorTiket }}'); copied = true; setTimeout(() => copied = false, 2000)"
                         class="text-slate-400 hover:text-slate-700 transition p-1 cursor-pointer"
                         title="Salin Nomor Tiket">
-                    <i class="fa-solid text-xs" :class="copied ? 'fa-check text-emerald-600' : 'fa-copy'"></i>
+                    <i class="text-xs" :class="copied ? 'mdi mdi-check text-emerald-600' : 'mdi mdi-content-copy'"></i>
                 </button>
             </div>
             <span x-show="copied" x-cloak class="text-[10px] text-emerald-600 font-medium block mt-0.5">Berhasil disalin!</span>
@@ -57,7 +57,7 @@
 
         <!-- Link alternatif halus untuk cek status -->
         <a href="{{ url('/riwayat-layanan') }}" class="inline-block text-xs text-slate-400 hover:text-slate-600 font-medium transition py-1">
-            Lihat riwayat layanan <i class="fa-solid fa-arrow-right text-[10px] ml-0.5"></i>
+            Lihat riwayat layanan <i class="mdi mdi-arrow-right text-[10px] ml-0.5"></i>
         </a>
 
     </div>

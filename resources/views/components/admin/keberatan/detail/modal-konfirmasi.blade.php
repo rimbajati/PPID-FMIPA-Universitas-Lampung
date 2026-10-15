@@ -1,4 +1,4 @@
-@props(['keberatan'])
+﻿@props(['keberatan'])
 
 <template x-teleport="body">
     <div x-show="showConfirmModal" x-cloak 
@@ -8,14 +8,14 @@
              @click.away="showConfirmModal = false">
             <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-inner"
                  :class="{
-                    'bg-sky-100 text-sky-600': statusSelect === 'Diproses',
+                    'bg-secondary-light text-primary': statusSelect === 'Diproses',
                     'bg-emerald-100 text-emerald-600': statusSelect === 'Selesai',
                     'bg-rose-100 text-rose-600': statusSelect === 'Ditolak'
                  }">
                 <i :class="{
-                    'fa-solid fa-gears': statusSelect === 'Diproses',
-                    'fa-solid fa-circle-check': statusSelect === 'Selesai',
-                    'fa-solid fa-triangle-exclamation': statusSelect === 'Ditolak'
+                    'mdi mdi-cogs': statusSelect === 'Diproses',
+                    'mdi mdi-check-circle-outline': statusSelect === 'Selesai',
+                    'mdi mdi-alert-outline': statusSelect === 'Ditolak'
                 }"></i>
             </div>
 
@@ -25,7 +25,7 @@
                     Apakah Anda yakin ingin mengubah status pengajuan keberatan ini menjadi 
                     <span class="font-black px-2 py-0.5 rounded text-xs inline-block"
                           :class="{
-                            'bg-sky-100 text-sky-800': statusSelect === 'Diproses',
+                            'bg-secondary-light text-sky-800': statusSelect === 'Diproses',
                             'bg-emerald-100 text-emerald-800': statusSelect === 'Selesai',
                             'bg-rose-100 text-rose-800': statusSelect === 'Ditolak'
                           }"
@@ -44,7 +44,7 @@
                 <button type="button" @click="$el.textContent='Memproses...'; $el.disabled=true; $el.classList.add('opacity-70','cursor-not-allowed'); $refs.statusForm.submit()" 
                         class="w-full py-3 text-white text-sm font-extrabold rounded-xl transition shadow-md cursor-pointer disabled:opacity-70"
                         :class="{
-                            'bg-sky-500 hover:bg-sky-600': statusSelect === 'Diproses',
+                            'bg-primary hover:bg-primary': statusSelect === 'Diproses',
                             'bg-emerald-600 hover:bg-emerald-700': statusSelect === 'Selesai',
                             'bg-rose-600 hover:bg-rose-700': statusSelect === 'Ditolak'
                         }">

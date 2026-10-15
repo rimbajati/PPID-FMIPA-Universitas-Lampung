@@ -6,7 +6,7 @@
     $isDatangLangsung = str_contains($caraLower, 'langsung') || str_contains($caraLower, 'melihat') || str_contains($caraLower, 'tempat');
 @endphp
 
-<div class="bg-white rounded-xl border border-slate-200 overflow-hidden"
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs"
      x-data="{
         statusSelect: '{{ in_array($permohonan->status, ['Selesai', 'Ditolak']) ? $permohonan->status : 'Diproses' }}',
         showConfirmModal: false,
@@ -17,9 +17,12 @@
         }
      }">
 
-    <div class="px-5 py-4 border-b border-slate-100">
-        <p class="text-sm font-semibold text-slate-900">Status Permohonan</p>
-        <p class="text-xs text-slate-500 mt-0.5">Tentukan keputusan atas permohonan informasi</p>
+    <div class="px-5 py-4 bg-primary text-white border-b border-primary-light">
+        <p class="text-sm font-extrabold tracking-tight text-white flex items-center gap-2">
+            <i class="mdi mdi-list-status text-secondary text-base"></i>
+            <span>Status Permohonan</span>
+        </p>
+        <p class="text-xs text-secondary font-medium mt-0.5">Tentukan keputusan atas permohonan informasi</p>
     </div>
 
     <div class="p-5">
@@ -54,8 +57,8 @@
                         <p class="text-xs font-semibold text-slate-700">File Jawaban:</p>
                         @foreach($permohonan->jawabanFiles as $jf)
                             <a href="{{ asset('storage/' . $jf->file_path) }}" target="_blank" class="flex items-center justify-between gap-2 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100 px-3 py-2 text-xs font-medium text-slate-700 transition">
-                                <span class="truncate"><i class="fa-regular fa-file text-slate-400 mr-1.5"></i> {{ $jf->file_name }}</span>
-                                <i class="fa-solid fa-download text-[11px] text-slate-400"></i>
+                                <span class="truncate"><i class="mdi mdi-file-outline text-slate-400 mr-1.5"></i> {{ $jf->file_name }}</span>
+                                <i class="mdi mdi-download text-[11px] text-slate-400"></i>
                             </a>
                         @endforeach
                     </div>
@@ -69,7 +72,7 @@
 
         @elseif($permohonan->keberatan)
             <div class="text-center py-6">
-                <div class="w-8 h-8 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-xs"><i class="fa-solid fa-lock"></i></div>
+                <div class="w-8 h-8 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-xs"><i class="mdi mdi-lock-outline"></i></div>
                 <p class="text-xs font-medium text-slate-700 mt-2">Terkunci — ada keberatan</p>
                 <p class="text-xs text-slate-500 mt-1">Kelola di halaman keberatan.</p>
             </div>
@@ -80,15 +83,15 @@
                 @method('PUT')
 
                 <div>
-                    <p class="text-sm font-medium text-slate-700 mb-2">Keputusan <span class="text-rose-500">*</span></p>
-                    <div class="inline-flex p-1 bg-slate-100 rounded-full">
-                        <label class="px-4 py-2 rounded-full text-sm font-medium cursor-pointer transition" :class="statusSelect === 'Diproses' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'">
+                    <p class="text-sm font-bold text-slate-800 mb-2">Keputusan <span class="text-rose-500">*</span></p>
+                    <div class="inline-flex p-1 bg-slate-100 rounded-xl w-full border border-slate-200">
+                        <label class="flex-1 text-center py-2 rounded-lg text-xs md:text-sm font-bold cursor-pointer transition" :class="statusSelect === 'Diproses' ? 'bg-primary text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'">
                             <input type="radio" name="status" value="Diproses" x-model="statusSelect" class="sr-only"> Diproses
                         </label>
-                        <label class="px-4 py-2 rounded-full text-sm font-medium cursor-pointer transition" :class="statusSelect === 'Selesai' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'">
+                        <label class="flex-1 text-center py-2 rounded-lg text-xs md:text-sm font-bold cursor-pointer transition" :class="statusSelect === 'Selesai' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'">
                             <input type="radio" name="status" value="Selesai" x-model="statusSelect" class="sr-only"> Selesai
                         </label>
-                        <label class="px-4 py-2 rounded-full text-sm font-medium cursor-pointer transition" :class="statusSelect === 'Ditolak' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'">
+                        <label class="flex-1 text-center py-2 rounded-lg text-xs md:text-sm font-bold cursor-pointer transition" :class="statusSelect === 'Ditolak' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'">
                             <input type="radio" name="status" value="Ditolak" x-model="statusSelect" class="sr-only"> Ditolak
                         </label>
                     </div>
@@ -128,12 +131,12 @@
                         </div>
                         <template x-if="fileName">
                             <div class="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2">
-                                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600 text-xs"><i class="fa-regular fa-file"></i></span>
+                                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-secondary-light text-primary text-xs"><i class="mdi mdi-file-outline"></i></span>
                                 <div class="flex-1 min-w-0">
                                     <p class="truncate text-xs font-semibold text-slate-800" x-text="fileName"></p>
                                     <p class="text-[10px] text-slate-500" x-text="fileSize"></p>
                                 </div>
-                                <button type="button" @click="clearFile()" class="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="fa-regular fa-trash-can text-xs"></i></button>
+                                <button type="button" @click="clearFile()" class="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="mdi mdi-trash-can-outline text-xs"></i></button>
                             </div>
                         </template>
                         @if($permohonan->jawabanFiles->count() > 0)
@@ -141,13 +144,13 @@
                                 <span class="font-semibold text-slate-700">File sebelumnya:</span>
                                 <ul class="list-disc list-inside mt-1 space-y-0.5">
                                     @foreach($permohonan->jawabanFiles as $jf)
-                                        <li class="truncate"><a href="{{ asset('storage/' . $jf->file_path) }}" target="_blank" class="text-sky-600 hover:underline">{{ $jf->file_name }}</a></li>
+                                        <li class="truncate"><a href="{{ asset('storage/' . $jf->file_path) }}" target="_blank" class="text-primary hover:underline">{{ $jf->file_name }}</a></li>
                                     @endforeach
                                 </ul>
                             </div>
                         @endif
                         <template x-if="fileError">
-                            <p class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600"><i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="fileError"></span></p>
+                            <p class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600"><i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="fileError"></span></p>
                         </template>
                         <x-admin.input-error name="file_jawaban" />
                         <p class="text-xs text-slate-400 mt-1">Format: PDF, XLS, XLSX, JPG, PNG — maks 5 MB.</p>
@@ -176,7 +179,7 @@
                     <button type="button" @click="triggerConfirm()" 
                             class="w-full text-white text-sm font-extrabold py-3 rounded-xl transition shadow-md cursor-pointer"
                             :class="{
-                                'bg-sky-500 hover:bg-sky-600': statusSelect === 'Diproses',
+                                'bg-primary hover:bg-primary': statusSelect === 'Diproses',
                                 'bg-emerald-600 hover:bg-emerald-700': statusSelect === 'Selesai',
                                 'bg-rose-600 hover:bg-rose-700': statusSelect === 'Ditolak'
                             }"
@@ -197,6 +200,6 @@
             <p class="text-xs font-semibold text-amber-900">Ada keberatan</p>
             <p class="text-xs font-mono text-amber-800">{{ $permohonan->keberatan->no_tiket }}</p>
         </div>
-        <a href="{{ route('admin.keberatan.show', $permohonan->keberatan->id) }}" class="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white border border-amber-200 text-amber-800 text-xs font-medium hover:bg-amber-100 transition">Buka <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+        <a href="{{ route('admin.keberatan.show', $permohonan->keberatan->id) }}" class="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white border border-amber-200 text-amber-800 text-xs font-medium hover:bg-amber-100 transition">Buka <i class="mdi mdi-arrow-right text-[10px]"></i></a>
     </div>
 @endif

@@ -1,6 +1,6 @@
 @extends('components.layouts.app')
 
-@section('title', 'Beranda - PPID FMIPA Universitas Lampung')
+@section('title', 'Beranda - PPID Pelaksana FMIPA Universitas Lampung')
 
 @section('content')
 <main class="pt-[6.875rem] md:pt-32 bg-slate-50/50">
@@ -10,6 +10,8 @@
 
     <!-- 2. Profil PPID Pelaksana (Sesuai Web MONEV Unila) -->
     <x-masyarakat.beranda.profil-ppid :profil="$profil" />
+
+    <!-- DUPLICATE PREVENTION: Route profil sekarang halaman sendiri; link footer/navbar sudah ke /profil-ppid -->
 
     <!-- 4. Statistik Transparansi PPID FMIPA Unila -->
     <x-masyarakat.beranda.statistik-section 

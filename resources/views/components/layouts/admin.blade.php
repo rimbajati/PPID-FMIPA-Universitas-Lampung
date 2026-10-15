@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ asset('images/logoPPID.png') }}?v=2.0">
-    <link rel="icon" type="image/png" href="{{ asset('images/logoPPID.png') }}?v=2.0">
-    <link rel="icon" type="image/x-icon" href="{{ asset('images/logoPPID.png') }}?v=2.0">
-    <link rel="apple-touch-icon" href="{{ asset('images/logoPPID.png') }}?v=2.0">
+    <title>@yield('title', 'Admin Panel - PPID Pelaksana FMIPA Universitas Lampung')</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3.0">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3.0">
+    <link rel="icon" type="image/png" href="{{ asset('images/logoPPID.png') }}?v=3.0">
+    <link rel="apple-touch-icon" href="{{ asset('images/logoPPID.png') }}?v=3.0">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+    <!-- Material Design Icons (MDI) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
 
     <style>
         html { 
@@ -27,8 +31,11 @@
             html { font-size: 13.5px; }
         }
         body { 
-            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important; 
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important; 
             font-size: 0.9375rem; 
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
         /* Scrollbar kustom untuk sidebar agar lebih rapi */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -95,8 +102,30 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#0f2a44',
+                            light: '#1a3a5c',
+                            dark: '#0a1d30',
+                        },
+                        secondary: {
+                            DEFAULT: '#c5a253',
+                            light: '#d4b76a',
+                            dark: '#a8893e',
+                        },
+                        accent: {
+                            DEFAULT: '#0ea5e9',
+                            light: '#38bdf8',
+                            dark: '#0284c7',
+                        },
+                        'primary-light': '#1a3a5c',
+                        'secondary-light': '#f8f5ee',
+                        'accent-light': '#e0f2fe',
+                    },
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Plus Jakarta Sans', 'sans-serif'],
+                        poppins: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     borderRadius: {
                         'DEFAULT': '0.375rem',
@@ -113,7 +142,6 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="bg-[#f1f5f9] text-slate-800 antialiased overflow-hidden flex h-screen relative">
@@ -127,8 +155,8 @@
         <!-- Header Topbar Putih -->
         <header class="bg-white h-14 md:h-16 flex items-center justify-between px-4 md:px-6 text-slate-800 shadow-sm border-b border-slate-200 w-full flex-shrink-0">
             <!-- Sisi Kiri: Tombol Hamburger -->
-            <button onclick="toggleSidebar()" type="button" class="p-1.5 text-slate-500 hover:text-slate-800 text-xl transition-all cursor-pointer focus:outline-none" title="Tampilkan/Sembunyikan Menu Sidebar">
-                <i class="fa-solid fa-bars"></i>
+            <button onclick="toggleSidebar()" type="button" class="p-1.5 text-slate-500 hover:text-slate-800 text-2xl transition-all cursor-pointer focus:outline-none" title="Tampilkan/Sembunyikan Menu Sidebar">
+                <i class="mdi mdi-menu"></i>
             </button>
 
             <!-- Sisi Kanan: Teks Tanggal -->
@@ -156,19 +184,19 @@
                 <!-- Toast Popup Notification (Hilang Otomatis 3.5 Detik) -->
                 @if(session('success'))
                     <div id="toast-success" class="fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 bg-emerald-600 text-white rounded-xl shadow-2xl transition-all duration-500 transform translate-y-0 opacity-100 border border-emerald-500">
-                        <i class="fa-solid fa-circle-check text-xl"></i>
+                        <i class="mdi mdi-check-circle-outline text-xl"></i>
                         <span class="text-sm font-bold tracking-wide">{{ session('success') }}</span>
                     </div>
                 @endif
                 @if(session('error'))
                     <div id="toast-error" class="fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 bg-red-600 text-white rounded-xl shadow-2xl transition-all duration-500 transform translate-y-0 opacity-100 border border-red-500">
-                        <i class="fa-solid fa-circle-exclamation text-xl"></i>
+                        <i class="mdi mdi-alert-circle-outline text-xl"></i>
                         <span class="text-sm font-bold tracking-wide">{{ session('error') }}</span>
                     </div>
                 @endif
                 @if($errors->any())
                     <div id="toast-validation-error" class="fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 bg-red-600 text-white rounded-xl shadow-2xl transition-all duration-500 transform translate-y-0 opacity-100 border border-red-500">
-                        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                        <i class="mdi mdi-alert-outline text-xl"></i>
                         <span class="text-sm font-bold tracking-wide">{{ $errors->first() }}</span>
                     </div>
                 @endif

@@ -120,10 +120,8 @@ Route::get('/informasi-publik/kategori/{slug}', [MasyarakatInformasiPublikContro
 Route::get('/informasi-dikecualikan', [MasyarakatInformasiPublikController::class, 'dikecualikan'])->name('informasi.dikecualikan');
 Route::get('/informasi-publik/{id}', [MasyarakatInformasiPublikController::class, 'show'])->name('informasi.detail');
 
-// Rute Profil PPID Pelaksana FMIPA Unila (Mengarahkan langsung ke section profil di beranda)
-Route::get('/profil-ppid', function () {
-    return redirect('/#profil-ppid');
-})->name('profil.ppid');
+// Rute Profil PPID Pelaksana FMIPA Unila — halaman penuh baru
+Route::get('/profil-ppid', [\App\Http\Controllers\Masyarakat\ProfilController::class, 'index'])->name('profil.ppid');
 
 // Rute Tata Cara Permohonan dan Keberatan Layanan Informasi
 Route::get('/tata-cara-permohonan-dan-keberatan', function () {

@@ -1,6 +1,6 @@
 @extends('components.layouts.app')
 
-@section('title', 'Daftar Informasi yang Dikecualikan - PPID FMIPA Universitas Lampung')
+@section('title', 'Daftar Informasi yang Dikecualikan - PPID Pelaksana FMIPA Universitas Lampung')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-100/70 min-h-screen pb-20">
@@ -45,7 +45,7 @@
                                class="w-64 sm:w-80 pl-3.5 pr-8 py-1.5 text-sm bg-white border border-slate-900 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs">
                         <button type="button" id="btn-clear-search-dik" onclick="clearSearchDik()" title="Hapus pencarian" 
                                 class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition font-bold text-xs flex items-center justify-center cursor-pointer">
-                            <i class="fa-solid fa-xmark"></i>
+                            <i class="mdi mdi-close"></i>
                         </button>
                     </div>
                 </form>
@@ -65,58 +65,58 @@
                         </colgroup>
                         <thead>
                             <!-- Baris Header 1 -->
-                            <tr class="bg-sky-500 text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-sky-600 select-none">
-                                <th rowspan="2" onclick="sortDikTable('no')" class="px-3 py-3.5 text-center w-12 shrink-0 border-r border-white/40 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Nomor">
+                            <tr class="bg-primary text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-primary select-none">
+                                <th rowspan="2" onclick="sortDikTable('no')" class="px-3 py-3.5 text-center w-12 shrink-0 border-r border-white/40 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Nomor">
                                     <div class="flex items-center justify-center gap-1">
                                         <span>No</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th rowspan="2" onclick="sortDikTable('ringkasan')" class="px-5 py-3.5 text-center min-w-[220px] max-w-[300px] border-r border-white/40 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Informasi">
+                                <th rowspan="2" onclick="sortDikTable('ringkasan')" class="px-5 py-3.5 text-center min-w-[220px] max-w-[300px] border-r border-white/40 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Informasi">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Informasi</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th rowspan="2" onclick="sortDikTable('dasar_hukum')" class="px-5 py-3.5 text-center min-w-[240px] max-w-[340px] border-r border-white/40 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Dasar Hukum">
+                                <th rowspan="2" onclick="sortDikTable('dasar_hukum')" class="px-5 py-3.5 text-center min-w-[240px] max-w-[340px] border-r border-white/40 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Dasar Hukum">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Dasar Hukum</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
                                 <th colspan="2" class="consequence-group-header px-4 py-2 text-center border-b border-r border-white/40">
                                     Konsekuensi / Pertimbangan Bagi Publik
                                 </th>
-                                <th rowspan="2" onclick="sortDikTable('jangka_waktu')" class="px-4 py-3.5 text-center min-w-[180px] max-w-[240px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Jangka Waktu">
+                                <th rowspan="2" onclick="sortDikTable('jangka_waktu')" class="px-4 py-3.5 text-center min-w-[180px] max-w-[240px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Jangka Waktu">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Jangka Waktu</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
                             </tr>
                             <!-- Baris Header 2 (Sub-kolom Konsekuensi) -->
-                            <tr class="bg-sky-500 text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-sky-600 select-none">
-                                <th onclick="sortDikTable('dibuka')" class="px-4 py-2 text-center min-w-[180px] max-w-[260px] border-r border-white/40 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Konsekuensi Dibuka">
+                            <tr class="bg-primary text-white text-[11px] sm:text-xs md:text-sm font-black tracking-tight divide-x divide-white/40 border-b border-primary select-none">
+                                <th onclick="sortDikTable('dibuka')" class="px-4 py-2 text-center min-w-[180px] max-w-[260px] border-r border-white/40 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Konsekuensi Dibuka">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Dibuka</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
-                                <th onclick="sortDikTable('ditutup')" class="px-4 py-2 text-center min-w-[180px] max-w-[260px] border-r border-white/40 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan Konsekuensi Ditutup">
+                                <th onclick="sortDikTable('ditutup')" class="px-4 py-2 text-center min-w-[180px] max-w-[260px] border-r border-white/40 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Konsekuensi Ditutup">
                                     <div class="flex items-center justify-between gap-1.5">
                                         <span>Ditutup</span>
                                         <span class="inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
-                                            <i class="fa-solid fa-sort"></i>
+                                            <i class="mdi mdi-swap-vertical"></i>
                                         </span>
                                     </div>
                                 </th>
@@ -124,7 +124,7 @@
                         </thead>
                         <tbody id="table-dik-body" class="divide-y divide-slate-300 text-xs sm:text-sm font-medium text-slate-800">
                             @forelse($items as $idx => $item)
-                                <tr class="table-dik-row hover:bg-sky-50/70 transition-colors divide-x divide-slate-300"
+                                <tr class="table-dik-row hover:bg-secondary-light/70 transition-colors divide-x divide-slate-300"
                                     data-no="{{ $idx + 1 }}"
                                     data-ringkasan="{{ strtolower($item->ringkasan_informasi ?? '') }}"
                                     data-dasar_hukum="{{ strtolower($item->dasar_hukum ?? '') }}"
@@ -261,17 +261,19 @@
         const headers = document.querySelectorAll('th[onclick*="sortDikTable"]');
         headers.forEach(th => {
             const colName = th.getAttribute('onclick').match(/'(.*)'/)?.[1];
-            const iconSpan = th.querySelector('span:last-child');
+            const iconSpan = th.querySelector('.sort-icon-wrapper') || th.querySelector('span:last-child');
             if (!iconSpan) return;
 
             if (colName === dikSortColumn) {
-                iconSpan.className = 'inline-flex items-center justify-center text-xs md:text-sm text-white transition';
+                iconSpan.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-secondary transition drop-shadow-xs';
                 iconSpan.innerHTML = dikSortDirection === 'desc' 
-                    ? '<i class="fa-solid fa-sort-down"></i>' 
-                    : '<i class="fa-solid fa-sort-up"></i>';
+                    ? '<i class="mdi mdi-arrow-down-bold"></i>' 
+                    : '<i class="mdi mdi-arrow-up-bold"></i>';
+                th.classList.add('bg-primary-dark/80');
             } else {
-                iconSpan.className = 'inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition';
-                iconSpan.innerHTML = '<i class="fa-solid fa-sort"></i>';
+                iconSpan.className = 'sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/50 group-hover:text-white transition';
+                iconSpan.innerHTML = '<i class="mdi mdi-swap-vertical"></i>';
+                th.classList.remove('bg-primary-dark/80');
             }
         });
     }
@@ -346,7 +348,7 @@
             prevBtn.type = 'button';
             prevBtn.innerHTML = '‹';
             prevBtn.className = 'px-3.5 py-2 text-xs font-bold transition flex items-center justify-center ' + 
-                (dikCurrentPage === 1 ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-sky-500 hover:bg-sky-50 cursor-pointer');
+                (dikCurrentPage === 1 ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-primary hover:bg-secondary-light cursor-pointer');
             prevBtn.onclick = () => { if (dikCurrentPage > 1) { dikCurrentPage--; renderClientSideDikTable(); } };
             paginEl.appendChild(prevBtn);
 
@@ -365,7 +367,7 @@
                 pageBtn.type = 'button';
                 pageBtn.innerText = p;
                 pageBtn.className = 'px-3.5 py-2 min-w-[38px] text-center text-xs transition cursor-pointer ' + 
-                    (p === dikCurrentPage ? 'font-extrabold bg-sky-500 text-white shadow-2xs' : 'font-bold bg-white text-sky-500 hover:bg-sky-50');
+                    (p === dikCurrentPage ? 'font-extrabold bg-primary text-white shadow-2xs' : 'font-bold bg-white text-primary hover:bg-secondary-light');
                 pageBtn.onclick = () => { dikCurrentPage = p; renderClientSideDikTable(); };
                 paginEl.appendChild(pageBtn);
             }
@@ -374,7 +376,7 @@
             nextBtn.type = 'button';
             nextBtn.innerHTML = '›';
             nextBtn.className = 'px-3.5 py-2 text-xs font-bold transition flex items-center justify-center ' + 
-                (dikCurrentPage === totalPages ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-sky-500 hover:bg-sky-50 cursor-pointer');
+                (dikCurrentPage === totalPages ? 'text-slate-300 bg-slate-50 cursor-not-allowed' : 'text-primary hover:bg-secondary-light cursor-pointer');
             nextBtn.onclick = () => { if (dikCurrentPage < totalPages) { dikCurrentPage++; renderClientSideDikTable(); } };
             paginEl.appendChild(nextBtn);
         }

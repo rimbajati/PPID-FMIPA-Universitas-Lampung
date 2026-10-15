@@ -1,6 +1,6 @@
 @extends('components.layouts.app')
 
-@section('title', 'Layanan Informasi Publik - PPID FMIPA Unila')
+@section('title', 'Layanan Informasi Publik - PPID Pelaksana FMIPA Universitas Lampung')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-50 min-h-screen pb-20">

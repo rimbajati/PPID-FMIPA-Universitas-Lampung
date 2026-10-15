@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'totalDokumen' => 0,
     'totalPermohonan' => 0,
     'totalPermohonanSelesai' => 0,
@@ -48,12 +48,12 @@
                         <p class="text-[11px] font-extrabold text-slate-500 mt-0.5">Total Layanan</p>
                     </div>
                     <div class="text-[#0284c7]/80">
-                        <i class="fa-solid fa-layer-group text-2xl sm:text-3xl"></i>
+                        <i class="mdi mdi-layers-outline text-2xl sm:text-3xl"></i>
                     </div>
                 </div>
                 <div class="bg-[#0284c7] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
                     <span class="truncate">Tiket Tercatat</span>
-                    <i class="fa-solid fa-ticket-simple text-[10px] shrink-0 ml-1"></i>
+                    <i class="mdi mdi-ticket-outline text-[10px] shrink-0 ml-1"></i>
                 </div>
             </div>
 
@@ -65,12 +65,12 @@
                         <p class="text-[11px] font-extrabold text-slate-500 mt-0.5">Permohonan</p>
                     </div>
                     <div class="text-[#2563eb]/80">
-                        <i class="fa-solid fa-envelope-open-text text-2xl sm:text-3xl"></i>
+                        <i class="mdi mdi-email-outline-open-text text-2xl sm:text-3xl"></i>
                     </div>
                 </div>
                 <div class="bg-[#2563eb] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
                     <span class="truncate">Permohonan Masuk</span>
-                    <i class="fa-solid fa-envelope-open-text text-[10px] shrink-0 ml-1"></i>
+                    <i class="mdi mdi-email-outline-open-text text-[10px] shrink-0 ml-1"></i>
                 </div>
             </div>
 
@@ -82,12 +82,12 @@
                         <p class="text-[11px] font-extrabold text-slate-500 mt-0.5">Permohonan Selesai</p>
                     </div>
                     <div class="text-[#059669]/80">
-                        <i class="fa-regular fa-circle-check text-2xl sm:text-3xl"></i>
+                        <i class="mdi mdi-check-circle-outline text-2xl sm:text-3xl"></i>
                     </div>
                 </div>
                 <div class="bg-[#059669] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
                     <span class="truncate">Permohonan Selesai</span>
-                    <i class="fa-solid fa-check text-[10px] shrink-0 ml-1"></i>
+                    <i class="mdi mdi-check text-[10px] shrink-0 ml-1"></i>
                 </div>
             </div>
 
@@ -99,12 +99,12 @@
                         <p class="text-[11px] font-extrabold text-slate-500 mt-0.5">Permohonan Ditolak</p>
                     </div>
                     <div class="text-[#e11d48]/80">
-                        <i class="fa-regular fa-circle-xmark text-2xl sm:text-3xl"></i>
+                        <i class="mdi mdi-close-circle-outline text-2xl sm:text-3xl"></i>
                     </div>
                 </div>
                 <div class="bg-[#e11d48] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
                     <span class="truncate">Permohonan Ditolak</span>
-                    <i class="fa-solid fa-xmark text-[10px] shrink-0 ml-1"></i>
+                    <i class="mdi mdi-close text-[10px] shrink-0 ml-1"></i>
                 </div>
             </div>
 
@@ -116,12 +116,12 @@
                         <p class="text-[11px] font-extrabold text-slate-500 mt-0.5">Pengajuan Keberatan</p>
                     </div>
                     <div class="text-[#d97706]/80">
-                        <i class="fa-solid fa-gavel text-2xl sm:text-3xl"></i>
+                        <i class="mdi mdi-gavel text-2xl sm:text-3xl"></i>
                     </div>
                 </div>
                 <div class="bg-[#d97706] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
                     <span class="truncate">Pengajuan Keberatan</span>
-                    <i class="fa-solid fa-triangle-exclamation text-[10px] shrink-0 ml-1"></i>
+                    <i class="mdi mdi-alert-outline text-[10px] shrink-0 ml-1"></i>
                 </div>
             </div>
 
@@ -133,12 +133,12 @@
                         <p class="text-[11px] font-extrabold text-slate-500 mt-0.5">Waktu Respon</p>
                     </div>
                     <div class="text-[#4f46e5]/80">
-                        <i class="fa-solid fa-bolt text-2xl sm:text-3xl"></i>
+                        <i class="mdi mdi-flash text-2xl sm:text-3xl"></i>
                     </div>
                 </div>
                 <div class="bg-[#4f46e5] text-white text-[10px] sm:text-[11px] font-bold px-3 py-1 flex items-center justify-between">
                     <span class="truncate">Rata-rata Layanan</span>
-                    <i class="fa-solid fa-clock-rotate-left text-[10px] shrink-0 ml-1"></i>
+                    <i class="mdi mdi-clock-outline-rotate-left text-[10px] shrink-0 ml-1"></i>
                 </div>
             </div>
         </div>
@@ -174,16 +174,16 @@
                 </div>
                 <div class="flex items-center">
                     <div id="hintKlikTahun" class="inline-flex items-center gap-1.5 font-medium text-slate-400 text-[11px]">
-                        <i class="fa-solid fa-circle-info text-sky-500 text-xs"></i>
+                        <i class="mdi mdi-information-outline text-primary text-xs"></i>
                         <span>Klik batang tahun untuk melihat rincian per bulan</span>
                     </div>
-                    <div id="containerModeBulan" class="hidden items-center gap-2.5 bg-sky-50 px-3 py-1.5 rounded-xl border border-sky-100 shadow-2xs">
+                    <div id="containerModeBulan" class="hidden items-center gap-2.5 bg-secondary-light px-3 py-1.5 rounded-xl border border-secondary/20 shadow-2xs">
                         <div class="flex items-center gap-1.5 text-xs font-bold text-slate-700">
                             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>Rincian: <span id="labelTahunAktif" class="text-sky-600 font-extrabold">Tahun {{ date('Y') }}</span></span>
+                            <span>Rincian: <span id="labelTahunAktif" class="text-primary font-extrabold">Tahun {{ date('Y') }}</span></span>
                         </div>
-                        <button type="button" onclick="kembaliKeTahunan()" class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold rounded-lg transition-all shadow-2xs cursor-pointer">
-                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        <button type="button" onclick="kembaliKeTahunan()" class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-primary hover:bg-primary text-white text-xs font-bold rounded-lg transition-all shadow-2xs cursor-pointer">
+                            <i class="mdi mdi-arrow-left text-[10px]"></i>
                             <span>Kembali</span>
                         </button>
                     </div>

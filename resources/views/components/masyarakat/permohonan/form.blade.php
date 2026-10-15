@@ -25,7 +25,7 @@
             <section class="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-7">
                 <div class="mb-6 flex items-center gap-3.5">
                     <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 text-lg">
-                        <i class="fa-regular fa-user"></i>
+                        <i class="mdi mdi-account-outline"></i>
                     </span>
                     <div>
                         <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">1. Informasi Pemohon</h2>
@@ -41,7 +41,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-regular fa-user text-sm"></i>
+                                <i class="mdi mdi-account-outline text-sm"></i>
                             </span>
                             <input id="nama_lengkap" type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" x-model="nama_lengkap" autocomplete="name"
                                    placeholder="Tulis nama lengkap tanpa gelar, sama dengan kartu identitas"
@@ -49,7 +49,7 @@
                                    class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">
                         </div>
                         <p x-show="hasError('nama_lengkap')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('nama_lengkap')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('nama_lengkap')"></span>
                         </p>
                         <p x-show="!hasError('nama_lengkap')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Tulis nama lengkap sesuai kartu identitas yang Anda unggah.</p>
                         @error('nama_lengkap') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -62,7 +62,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-solid fa-phone text-sm"></i>
+                                <i class="mdi mdi-phone-outline text-sm"></i>
                             </span>
                             <input id="no_telepon" type="text" name="no_telepon" value="{{ old('no_telepon') }}" inputmode="numeric" pattern="[0-9]*" maxlength="15" x-model="no_hp" oninput="this.value = this.value.replace(/[^0-9]/g, ''); no_hp = this.value;"
                                    placeholder="Contoh: 0812 3456 7890"
@@ -70,7 +70,7 @@
                                    class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">
                         </div>
                         <p x-show="hasError('no_telepon')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('no_telepon')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('no_telepon')"></span>
                         </p>
                         <p x-show="!hasError('no_telepon')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Untuk konfirmasi cepat bila permohonan perlu diperjelas.</p>
                         @error('no_telepon') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -83,7 +83,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-regular fa-envelope text-sm"></i>
+                                <i class="mdi mdi-email-outline text-sm"></i>
                             </span>
                             <input id="email" type="email" name="email" value="{{ old('email') }}" x-model="email" autocomplete="email"
                                    placeholder="nama@contoh.ac.id"
@@ -91,7 +91,7 @@
                                    class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">
                         </div>
                         <p x-show="hasError('email')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('email')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('email')"></span>
                         </p>
                         <p x-show="!hasError('email')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Jawaban dan nomor tiket dikirim ke alamat email ini.</p>
                         @error('email') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -104,7 +104,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-regular fa-id-badge text-sm"></i>
+                                <i class="mdi mdi-badge-account-outline text-sm"></i>
                             </span>
                             <select id="jenis_identitas" name="jenis_identitas" x-model="jenis_identitas"
                                     :class="hasError('jenis_identitas') ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-50'"
@@ -114,11 +114,11 @@
                                 <option value="Badan hukum">Badan hukum</option>
                             </select>
                             <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400">
-                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                                <i class="mdi mdi-chevron-down text-xs"></i>
                             </span>
                         </div>
                         <p x-show="hasError('jenis_identitas')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('jenis_identitas')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('jenis_identitas')"></span>
                         </p>
                         <div x-show="!hasError('jenis_identitas')">
                             <p class="mt-1.5 text-[11px] sm:text-xs text-slate-400" x-show="jenis_identitas === 'Badan hukum'">Badan hukum: gunakan akta notaris atau SK pendirian.</p>
@@ -135,7 +135,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-regular fa-id-card text-sm"></i>
+                                <i class="mdi mdi-card-account-details-outline text-sm"></i>
                             </span>
                             <input id="no_identitas" type="text" name="no_identitas" value="{{ old('no_identitas') }}"
                                    :inputmode="jenis_identitas === 'KTP' ? 'numeric' : 'text'"
@@ -147,7 +147,7 @@
                                    class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">
                         </div>
                         <p x-show="hasError('no_identitas')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('no_identitas')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('no_identitas')"></span>
                         </p>
                         <p x-show="!hasError('no_identitas')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400" x-text="hintNomorIdentitas">Nomor pada kartu identitas yang Anda unggah.</p>
                         @error('no_identitas') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -165,24 +165,24 @@
                             <span class="shrink-0 inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-xs font-extrabold text-white">Pilih File</span>
                             <span class="flex-1 min-w-0 truncate text-sm" :class="ktpName ? 'text-slate-800' : 'text-slate-400'" x-text="ktpName || 'Belum ada file dipilih'"></span>
                             <template x-if="ktpName">
-                                <button type="button" @click.stop="clearIdentitasFile()" class="shrink-0 ml-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="fa-regular fa-trash-can text-sm"></i></button>
+                                <button type="button" @click.stop="clearIdentitasFile()" class="shrink-0 ml-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-rose-500 hover:bg-rose-50 transition"><i class="mdi mdi-trash-can-outline text-sm"></i></button>
                             </template>
                         </div>
                         <template x-if="ktpName">
                             <div class="mt-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5">
-                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600"><i class="fa-regular fa-file text-sm"></i></span>
+                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600"><i class="mdi mdi-file-outline text-sm"></i></span>
                                 <div class="flex-1 min-w-0">
                                     <p class="truncate text-sm font-semibold text-slate-800" x-text="ktpName"></p>
                                     <p class="text-xs text-slate-500" x-text="ktpSize"></p>
                                 </div>
-                                <a :href="ktpUrl" target="_blank" class="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> Lihat</a>
+                                <a :href="ktpUrl" target="_blank" class="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"><i class="mdi mdi-open-in-new text-xs"></i> Lihat</a>
                             </div>
                         </template>
                         <template x-if="ktpErrorMsg">
-                            <p class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600"><i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="ktpErrorMsg"></span></p>
+                            <p class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600"><i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="ktpErrorMsg"></span></p>
                         </template>
                         <p x-show="hasError('file_identitas')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('file_identitas')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('file_identitas')"></span>
                         </p>
                         <p class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Format: JPG, JPEG, PNG, PDF (Maksimal 2 MB)</p>
                         @error('file_identitas') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -195,7 +195,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-solid fa-briefcase text-sm"></i>
+                                <i class="mdi mdi-briefcase-outline text-sm"></i>
                             </span>
                             <input id="pekerjaan" type="text" name="pekerjaan" value="{{ old('pekerjaan') }}" x-model="pekerjaan" autocomplete="organization-title"
                                    placeholder="Contoh: Mahasiswa, Dosen, Pegawai, Wiraswasta"
@@ -203,7 +203,7 @@
                                    class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">
                         </div>
                         <p x-show="hasError('pekerjaan')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('pekerjaan')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('pekerjaan')"></span>
                         </p>
                         <p x-show="!hasError('pekerjaan')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Pekerjaan atau profesi pemohon saat ini.</p>
                         @error('pekerjaan') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -216,7 +216,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute top-3.5 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-solid fa-location-dot text-sm"></i>
+                                <i class="mdi mdi-map-marker-outline text-sm"></i>
                             </span>
                             <textarea id="alamat_lengkap" name="alamat_lengkap" rows="2" x-model="alamat_lengkap" autocomplete="street-address"
                                       placeholder="Masukkan alamat lengkap sesuai identitas atau domisili saat ini"
@@ -224,7 +224,7 @@
                                       class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none">{{ old('alamat_lengkap') }}</textarea>
                         </div>
                         <p x-show="hasError('alamat_lengkap')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('alamat_lengkap')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('alamat_lengkap')"></span>
                         </p>
                         <p x-show="!hasError('alamat_lengkap')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Alamat domisili saat ini atau alamat kantor bagi badan hukum.</p>
                         @error('alamat_lengkap') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -236,7 +236,7 @@
             <section class="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-7">
                 <div class="mb-6 flex items-center gap-3.5">
                     <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 text-lg">
-                        <i class="fa-regular fa-file-lines"></i>
+                        <i class="mdi mdi-file-document-outline"></i>
                     </span>
                     <div>
                         <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">2. Detail Permohonan</h2>
@@ -255,7 +255,7 @@
                         </div>
                         <div class="relative">
                             <span class="pointer-events-none absolute top-3.5 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-regular fa-folder-open text-sm"></i>
+                                <i class="mdi mdi-folder-open-outline text-sm"></i>
                             </span>
                             <textarea id="informasi_yang_diminta" name="informasi_yang_diminta" x-model="rincian" rows="2" maxlength="500"
                                       placeholder="Contoh: Laporan realisasi anggaran FMIPA tahun 2025"
@@ -263,7 +263,7 @@
                                       class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none"></textarea>
                         </div>
                         <p x-show="hasError('informasi_yang_diminta')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('informasi_yang_diminta')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('informasi_yang_diminta')"></span>
                         </p>
                         @error('informasi_yang_diminta') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
                     </div>
@@ -278,7 +278,7 @@
                         </div>
                         <div class="relative">
                             <span class="pointer-events-none absolute top-3.5 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-regular fa-comment-dots text-sm"></i>
+                                <i class="mdi mdi-comment-outline-dots text-sm"></i>
                             </span>
                             <textarea id="tujuan_penggunaan_informasi" name="tujuan_penggunaan_informasi" x-model="tujuan" rows="2" maxlength="1000"
                                       placeholder="Contoh: Penelitian skripsi, karya ilmiah, atau kebutuhan evaluasi akademik"
@@ -286,7 +286,7 @@
                                       class="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-sm text-slate-800 placeholder:text-slate-400 transition focus:outline-none"></textarea>
                         </div>
                         <p x-show="hasError('tujuan_penggunaan_informasi')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('tujuan_penggunaan_informasi')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('tujuan_penggunaan_informasi')"></span>
                         </p>
                         @error('tujuan_penggunaan_informasi') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
                     </div>
@@ -298,7 +298,7 @@
                         </label>
                         <div class="relative">
                             <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                <i class="fa-solid fa-hand-holding-hand text-sm"></i>
+                                <i class="mdi mdi-handshake-outline text-sm"></i>
                             </span>
                             <select id="cara_memperoleh_informasi" name="cara_memperoleh_informasi" x-model="cara_memperoleh"
                                     :class="hasError('cara_memperoleh_informasi') ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-50 hover:border-slate-300'"
@@ -311,11 +311,11 @@
                                 </option>
                             </select>
                             <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400">
-                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                                <i class="mdi mdi-chevron-down text-xs"></i>
                             </span>
                         </div>
                         <p x-show="hasError('cara_memperoleh_informasi')" x-cloak class="mt-1.5 flex items-center gap-1 text-xs font-semibold text-rose-600">
-                            <i class="fa-solid fa-circle-exclamation text-[11px]"></i> <span x-text="getErrorMsg('cara_memperoleh_informasi')"></span>
+                            <i class="mdi mdi-alert-circle-outline text-[11px]"></i> <span x-text="getErrorMsg('cara_memperoleh_informasi')"></span>
                         </p>
                         <p x-show="!hasError('cara_memperoleh_informasi')" class="mt-1.5 text-[11px] sm:text-xs text-slate-400">Pilih Salinan Digital via email, atau datang langsung ke dekanat (untuk mengambil salinan cetak / melihat & membaca dokumen di tempat).</p>
                         @error('cara_memperoleh_informasi') <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p> @enderror
@@ -335,7 +335,7 @@
 
             <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center pt-2">
                 <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-700 active:scale-[0.99] shadow-sm">
-                    <i class="fa-solid fa-paper-plane text-xs"></i> Kirim Permohonan
+                    <i class="mdi mdi-send-outline text-xs"></i> Kirim Permohonan
                 </button>
                 <p class="text-xs sm:text-sm text-slate-500">Nomor tiket akan dikirim ke email untuk melacak status permohonan Anda.</p>
             </div>
@@ -345,7 +345,7 @@
         <aside class="rounded-2xl border border-blue-100 bg-blue-50/50 p-5 sm:p-6 lg:sticky lg:top-24">
             <div class="mb-3 flex items-center gap-2.5 text-blue-800">
                 <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                    <i class="fa-regular fa-lightbulb text-sm"></i>
+                    <i class="mdi mdi-lightbulb-on-outline text-sm"></i>
                 </span>
                 <h2 class="text-sm font-bold text-slate-800">Tips Mengajukan Permohonan</h2>
             </div>
@@ -365,7 +365,7 @@
                 </li>
             </ol>
             <div class="mt-4 border-t border-blue-100 pt-3 text-xs sm:text-sm leading-relaxed text-slate-600">
-                <p><i class="fa-regular fa-clock mr-1.5 text-blue-600"></i>Permohonan dijawab paling lambat 10 hari kerja dan dapat diperpanjang 7 hari kerja dengan pemberitahuan resmi.</p>
+                <p><i class="mdi mdi-clock-outline mr-1.5 text-blue-600"></i>Permohonan dijawab paling lambat 10 hari kerja dan dapat diperpanjang 7 hari kerja dengan pemberitahuan resmi.</p>
             </div>
         </aside>
     </div>

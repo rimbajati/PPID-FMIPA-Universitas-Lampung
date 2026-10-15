@@ -1,6 +1,6 @@
 @extends('components.layouts.admin')
 
-@section('title', 'Regulasi - Admin PPID')
+@section('title', 'Regulasi - PPID Pelaksana FMIPA Universitas Lampung')
 @section('header_title', 'Kelola Regulasi')
 
 @section('content')
@@ -8,7 +8,7 @@
 
     @if(session('success'))
         <div class="flex items-center gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-800 text-sm font-bold shadow-sm">
-            <i class="fa-solid fa-circle-check text-emerald-600 text-lg shrink-0"></i>
+            <i class="mdi mdi-check-circle-outline text-emerald-600 text-lg shrink-0"></i>
             <span>{{ session('success') }}</span>
         </div>
     @endif
@@ -29,12 +29,12 @@
                 @foreach($nasionalAdmin as $item)
                 <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm hover:shadow-md transition space-y-1.5 group relative pr-14">
                     <a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer" class="block">
-                        <h3 class="text-base font-black text-slate-900 group-hover:text-sky-600 transition">{{ $item['judul'] }}</h3>
+                        <h3 class="text-base font-black text-slate-900 group-hover:text-primary transition">{{ $item['judul'] }}</h3>
                         <p class="text-xs text-slate-600 font-medium leading-relaxed">{{ $item['deskripsi'] }}</p>
                     </a>
                     <form action="{{ route('admin.regulasi.destroy', $item['id']) }}" method="POST">
                         @csrf @method('DELETE')
-                        <button class="absolute top-4 right-4 w-8 h-8 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition" title="Hapus"><i class="fa-solid fa-trash text-xs"></i></button>
+                        <button class="absolute top-4 right-4 w-8 h-8 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition" title="Hapus"><i class="mdi mdi-trash-can-outline text-xs"></i></button>
                     </form>
                 </div>
                 @endforeach
@@ -44,7 +44,7 @@
             <!-- Form Tambah Nasional -->
             <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden p-6 mt-4">
                 <h2 class="text-sm font-extrabold text-slate-900 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-plus text-sky-600"></i> Tambah
+                    <i class="mdi mdi-plus text-primary"></i> Tambah
                 </h2>
                 <form action="{{ route('admin.regulasi.store') }}" method="POST" class="space-y-3">
                     @csrf
@@ -52,7 +52,7 @@
                     <input type="text" name="judul" required placeholder="Judul" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
                     <textarea name="deskripsi" required placeholder="Deskripsi" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm" rows="2"></textarea>
                     <input type="url" name="url" required placeholder="URL Regulasi" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
-                    <button type="submit" class="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm rounded-xl transition">Tambah</button>
+                    <button type="submit" class="w-full py-2 bg-primary hover:bg-primary-light text-white font-bold text-sm rounded-xl transition">Tambah</button>
                 </form>
             </div>
         </div>
@@ -66,12 +66,12 @@
                 @foreach($internalAdmin as $item)
                 <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm hover:shadow-md transition space-y-1.5 group relative pr-14">
                     <a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer" class="block">
-                        <h3 class="text-base font-black text-slate-900 group-hover:text-sky-600 transition">{{ $item['judul'] }}</h3>
+                        <h3 class="text-base font-black text-slate-900 group-hover:text-primary transition">{{ $item['judul'] }}</h3>
                         <p class="text-xs text-slate-600 font-medium leading-relaxed">{{ $item['deskripsi'] }}</p>
                     </a>
                     <form action="{{ route('admin.regulasi.destroy', $item['id']) }}" method="POST">
                         @csrf @method('DELETE')
-                        <button class="absolute top-4 right-4 w-8 h-8 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition" title="Hapus"><i class="fa-solid fa-trash text-xs"></i></button>
+                        <button class="absolute top-4 right-4 w-8 h-8 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition" title="Hapus"><i class="mdi mdi-trash-can-outline text-xs"></i></button>
                     </form>
                 </div>
                 @endforeach
@@ -81,7 +81,7 @@
             <!-- Form Tambah Internal -->
             <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden p-6 mt-4">
                 <h2 class="text-sm font-extrabold text-slate-900 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-plus text-sky-600"></i> Tambah
+                    <i class="mdi mdi-plus text-primary"></i> Tambah
                 </h2>
                 <form action="{{ route('admin.regulasi.store') }}" method="POST" class="space-y-3">
                     @csrf
@@ -89,7 +89,7 @@
                     <input type="text" name="judul" required placeholder="Judul" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
                     <textarea name="deskripsi" required placeholder="Deskripsi" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm" rows="2"></textarea>
                     <input type="url" name="url" required placeholder="URL Regulasi" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
-                    <button type="submit" class="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm rounded-xl transition">Tambah</button>
+                    <button type="submit" class="w-full py-2 bg-primary hover:bg-primary-light text-white font-bold text-sm rounded-xl transition">Tambah</button>
                 </form>
             </div>
         </div>

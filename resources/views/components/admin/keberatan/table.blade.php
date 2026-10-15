@@ -12,14 +12,14 @@
                 <!-- Tombol Hapus -->
                 <button type="button" id="btn-toggle-select" onclick="toggleSelectMode()"
                         class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs md:text-sm font-extrabold rounded-2xl transition shadow-2xs hover:shadow-xs cursor-pointer shrink-0 whitespace-nowrap select-none">
-                    <i class="fa-solid fa-list-check"></i>
+                    <i class="mdi mdi-format-list-checks"></i>
                     <span id="text-select-mode">Hapus</span>
                 </button>
 
                 <!-- Tombol Bulk Delete -->
                 <button type="button" id="btn-bulk-delete" onclick="triggerBulkDelete()"
                         class="hidden inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-extrabold rounded-2xl transition shadow-xs cursor-pointer shrink-0 whitespace-nowrap select-none">
-                    <i class="fa-solid fa-trash"></i>
+                    <i class="mdi mdi-trash-can-outline"></i>
                     <span>Hapus (<span id="selected-count">0</span>) data terpilih</span>
                 </button>
 
@@ -29,12 +29,12 @@
                 <!-- Filter Status Pills -->
                 <div class="flex items-center gap-1.5 flex-wrap">
                     <a href="{{ route('admin.keberatan.index', request()->except(['status', 'page'])) }}"
-                       class="px-3.5 py-2 text-sm font-bold rounded-xl transition whitespace-nowrap {{ !request('status') ? 'bg-sky-500 text-white shadow-xs' : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100' }}">
+                       class="px-3.5 py-2 text-sm font-bold rounded-xl transition whitespace-nowrap {{ !request('status') ? 'bg-primary text-white shadow-xs' : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100' }}">
                         Semua
                     </a>
                     @foreach(['Diajukan','Diproses','Selesai','Ditolak'] as $st)
                     <a href="{{ route('admin.keberatan.index', array_merge(request()->except(['page']), ['status' => $st])) }}"
-                       class="px-3.5 py-2 text-sm font-bold rounded-xl transition whitespace-nowrap {{ request('status') === $st ? 'bg-sky-500 text-white shadow-xs' : 'bg-white border border-slate-300 text-slate-800 hover:bg-slate-100' }}">
+                       class="px-3.5 py-2 text-sm font-bold rounded-xl transition whitespace-nowrap {{ request('status') === $st ? 'bg-primary text-white shadow-xs' : 'bg-white border border-slate-300 text-slate-800 hover:bg-slate-100' }}">
                         {{ $st }}
                     </a>
                     @endforeach
@@ -50,7 +50,7 @@
                     <input type="text" name="search" value="{{ request('search') }}"
                            placeholder="No. tiket, nama, NIK pemohon..."
                            autocomplete="off"
-                           class="w-48 sm:w-64 px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-normal focus:outline-none focus:ring-2 focus:ring-sky-500/30">
+                           class="w-48 sm:w-64 px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-normal focus:outline-none focus:ring-2 focus:ring-primary/30">
                 </label>
             </form>
         </div>
@@ -65,40 +65,40 @@
         <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
             <table class="w-full min-w-[1000px] text-left border-collapse border border-slate-200">
                 <thead>
-                    <tr class="bg-sky-500 text-white text-xs md:text-sm font-extrabold tracking-wide select-none whitespace-nowrap text-left">
+                    <tr class="bg-primary text-white text-xs md:text-sm font-extrabold tracking-wide select-none whitespace-nowrap text-left">
                         <th id="col-checkbox-header" class="hidden px-2 py-3.5 w-12 text-center">
-                            <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-sky-600 focus:ring-0 cursor-pointer">
+                            <input type="checkbox" id="check-all" onclick="toggleCheckAll(this)" class="w-4 h-4 rounded border-white/30 text-primary focus:ring-0 cursor-pointer">
                         </th>
-                        <th onclick="sortKeberatanTable('no_tiket')" class="px-4 py-3.5 text-left w-40 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                        <th onclick="sortKeberatanTable('no_tiket')" class="px-4 py-3.5 text-left w-40 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan">
                             <div class="flex items-center justify-between gap-1.5">
                                 <span>No. Tiket</span>
                                 <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
-                                    <i class="fa-solid fa-sort"></i>
+                                    <i class="mdi mdi-swap-vertical"></i>
                                 </span>
                             </div>
                         </th>
-                        <th onclick="sortKeberatanTable('tanggal')" class="px-4 py-3.5 text-left w-36 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                        <th onclick="sortKeberatanTable('tanggal')" class="px-4 py-3.5 text-left w-36 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan">
                             <div class="flex items-center justify-between gap-1.5">
                                 <span>Tgl. Pengajuan</span>
                                 <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
-                                    <i class="fa-solid fa-sort"></i>
+                                    <i class="mdi mdi-swap-vertical"></i>
                                 </span>
                             </div>
                         </th>
-                        <th onclick="sortKeberatanTable('nama')" class="px-4 py-3.5 text-left min-w-[220px] cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                        <th onclick="sortKeberatanTable('nama')" class="px-4 py-3.5 text-left min-w-[220px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan">
                             <div class="flex items-center justify-between gap-1.5">
                                 <span>Pemohon</span>
                                 <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
-                                    <i class="fa-solid fa-sort"></i>
+                                    <i class="mdi mdi-swap-vertical"></i>
                                 </span>
                             </div>
                         </th>
                         <th class="px-4 py-3.5 text-left">Alasan Keberatan</th>
-                        <th onclick="sortKeberatanTable('status')" class="px-3.5 py-3.5 text-center w-32 cursor-pointer hover:bg-sky-600/60 transition group" title="Klik untuk mengurutkan">
+                        <th onclick="sortKeberatanTable('status')" class="px-3.5 py-3.5 text-center w-32 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan">
                             <div class="flex items-center justify-center gap-1.5">
                                 <span>Status</span>
                                 <span class="inline-flex items-center justify-center text-xs text-white/70 group-hover:text-white transition">
-                                    <i class="fa-solid fa-sort"></i>
+                                    <i class="mdi mdi-swap-vertical"></i>
                                 </span>
                             </div>
                         </th>
@@ -107,7 +107,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-200 text-xs sm:text-sm font-medium text-slate-800">
                     @forelse($keberatans as $item)
-                        <tr class="hover:bg-sky-50/70 transition-colors">
+                        <tr class="hover:bg-secondary-light/70 transition-colors">
                             <td class="col-checkbox-cell hidden px-2 py-3 text-center align-top">
                                 <input type="checkbox" name="ids[]" form="form-bulk-delete" value="{{ $item->id }}" onclick="updateBulkState()" class="item-checkbox w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer">
                             </td>
@@ -159,26 +159,26 @@
                                         <a href="{{ route('admin.keberatan.show', $item->id) }}"
                                            class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer"
                                            title="Proses Keberatan">
-                                            <i class="fa-solid fa-gears text-xs"></i>
+                                            <i class="mdi mdi-cogs text-xs"></i>
                                         </a>
                                     @elseif($statusAwal === 'Perlu Tindakan' || $statusAwal === 'Diproses' || $statusAwal === 'Proses')
                                         <a href="{{ route('admin.keberatan.show', $item->id) }}"
-                                           class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer"
+                                           class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-primary bg-secondary-light hover:bg-primary hover:text-white transition shadow-2xs rounded-lg cursor-pointer"
                                            title="Tindaklanjuti">
-                                            <i class="fa-solid fa-reply text-xs"></i>
+                                            <i class="mdi mdi-reply-outline text-xs"></i>
                                         </a>
                                     @else
                                         <a href="{{ route('admin.keberatan.show', $item->id) }}"
                                            class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-slate-600 bg-slate-100 hover:bg-slate-200 transition shadow-2xs rounded-lg cursor-pointer"
                                            title="Lihat Detail">
-                                            <i class="fa-regular fa-eye text-xs"></i>
+                                            <i class="mdi mdi-eye-outline text-xs"></i>
                                         </a>
                                     @endif
 
                                     <button type="button" onclick="triggerDelete('{{ route('admin.keberatan.destroy', $item->id) }}', '{{ addslashes($item->no_tiket ?? $item->id) }}')"
                                             class="inline-flex h-8 w-8 shrink-0 items-center justify-center text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition shadow-2xs rounded-lg cursor-pointer"
                                             title="Hapus Data Keberatan">
-                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                        <i class="mdi mdi-trash-can-outline text-xs"></i>
                                     </button>
                                 </div>
                             </td>
