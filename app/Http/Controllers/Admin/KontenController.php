@@ -141,13 +141,19 @@ class KontenController extends Controller
     {
         // Validasi Profil Pejabat
         $request->validate([
-            'nama'            => 'required|string|max:150',
+            'nama'            => 'nullable|string|max:150',
+            'gelar_depan'     => 'nullable|string|max:50',
+            'nama_lengkap'    => 'nullable|string|max:150',
+            'gelar_belakang'  => 'nullable|string|max:50',
             'jabatan'         => 'nullable|string|max:200',
             'foto'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
             'email'           => 'required|email|max:150',
             'whatsapp'        => 'required|string|max:30',
             'tugas_fungsi'    => 'nullable|string|max:1000',
             'wakil_nama'      => 'nullable|string|max:150',
+            'wakil_gelar_depan'    => 'nullable|string|max:50',
+            'wakil_nama_lengkap'   => 'nullable|string|max:150',
+            'wakil_gelar_belakang' => 'nullable|string|max:50',
             // Validasi Halaman Profil
             'hero_judul'      => 'required|string|max:200',
             'hero_deskripsi'  => 'required|string|max:500',
@@ -158,7 +164,51 @@ class KontenController extends Controller
         ]);
 
         $profil = self::getProfil();
-        $profil['nama'] = trim($request->input('nama'));
+
+        // Kepala PPID - Format Nama
+        $gelarDepan = trim($request->input('gelar_depan', ''));
+        $namaLengkap = trim($request->input('nama_lengkap', ''));
+        $gelarBelakang = trim($request->input('gelar_belakang', ''));
+
+        $profil['gelar_depan'] = $gelarDepan;
+        $profil['nama_lengkap'] = $namaLengkap;
+        $profil['gelar_belakang'] = $gelarBelakang;
+
+        if (!empty($namaLengkap)) {
+            $formattedNama = $namaLengkap;
+            if (!empty($gelarDepan)) {
+                $formattedNama = $gelarDepan . ' ' . $formattedNama;
+            }
+            if (!empty($gelarBelakang)) {
+                $formattedNama = $formattedNama . ', ' . $gelarBelakang;
+            }
+            $profil['nama'] = $formattedNama;
+        } elseif ($request->filled('nama')) {
+            $profil['nama'] = trim($request->input('nama'));
+        }
+
+        // Wakil Kepala PPID - Format Nama
+        $wGelarDepan = trim($request->input('wakil_gelar_depan', ''));
+        $wNamaLengkap = trim($request->input('wakil_nama_lengkap', ''));
+        $wGelarBelakang = trim($request->input('wakil_gelar_belakang', ''));
+
+        $profil['wakil_gelar_depan'] = $wGelarDepan;
+        $profil['wakil_nama_lengkap'] = $wNamaLengkap;
+        $profil['wakil_gelar_belakang'] = $wGelarBelakang;
+
+        if (!empty($wNamaLengkap)) {
+            $formattedWakil = $wNamaLengkap;
+            if (!empty($wGelarDepan)) {
+                $formattedWakil = $wGelarDepan . ' ' . $formattedWakil;
+            }
+            if (!empty($wGelarBelakang)) {
+                $formattedWakil = $formattedWakil . ', ' . $wGelarBelakang;
+            }
+            $profil['wakil_nama'] = $formattedWakil;
+        } elseif ($request->filled('wakil_nama')) {
+            $profil['wakil_nama'] = trim($request->input('wakil_nama'));
+        }
+
         if ($request->filled('jabatan')) {
             $profil['jabatan'] = trim($request->input('jabatan'));
         } elseif ($request->filled('struktur_atasan_jabatan')) {
@@ -166,9 +216,6 @@ class KontenController extends Controller
         }
         $profil['email'] = trim($request->input('email'));
         $profil['whatsapp'] = preg_replace('/[^0-9]/', '', trim($request->input('whatsapp')));
-        if ($request->has('wakil_nama')) {
-            $profil['wakil_nama'] = trim($request->input('wakil_nama'));
-        }
         if ($request->has('tugas_fungsi')) {
             $profil['tugas_fungsi'] = trim($request->input('tugas_fungsi'));
         }
@@ -203,12 +250,25 @@ class KontenController extends Controller
         if ($request->filled('struktur_deskripsi')) $halaman['struktur_deskripsi'] = trim($request->input('struktur_deskripsi'));
         $halaman['struktur_atasan'] = ['jabatan' => trim($request->input('struktur_atasan_jabatan') ?? 'Dekan FMIPA'), 'peran' => trim($request->input('struktur_atasan_peran') ?? 'Atasan PPID')];
         $halaman['struktur_ketua']  = ['jabatan' => trim($request->input('struktur_ketua_jabatan') ?? 'Ketua PPID Pelaksana'), 'peran' => trim($request->input('struktur_ketua_peran') ?? 'Wakil Dekan')];
-        if ($request->has('struktur_bidang_jabatan')) {
+        if ($request->has('struktur_bidang_nama') || $request->has('struktur_bidang_jabatan')) {
             $bidang = [];
-            foreach ($request->input('struktur_bidang_jabatan') as $i => $bj) {
-                if (!empty(trim($bj))) $bidang[] = ['jabatan' => trim($bj), 'peran' => trim($request->input('struktur_bidang_peran')[$i] ?? '')];
+            $namas = $request->input('struktur_bidang_nama', []);
+            $jabatans = $request->input('struktur_bidang_jabatan', []);
+            $perans = $request->input('struktur_bidang_peran', []);
+            $totalItems = max(count($namas), count($jabatans));
+
+            for ($i = 0; $i < $totalItems; $i++) {
+                $nama = trim($namas[$i] ?? '');
+                $jabatan = trim($jabatans[$i] ?? ($perans[$i] ?? ''));
+                if (!empty($nama) || !empty($jabatan)) {
+                    $bidang[] = [
+                        'nama'    => $nama ?: $jabatan,
+                        'jabatan' => $jabatan,
+                        'peran'   => $jabatan,
+                    ];
+                }
             }
-            if (!empty($bidang)) $halaman['struktur_bidang'] = $bidang;
+            $halaman['struktur_bidang'] = $bidang;
         }
 
         // Misi (Dynamic List)

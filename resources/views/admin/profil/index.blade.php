@@ -91,55 +91,128 @@
                     </div>
                 </div>
 
-                <!-- Level 1 & 2: Pimpinan -->
+                <!-- Pimpinan: Kepala PPID & Wakil Kepala PPID -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
-                    <!-- Level 1: Kepala PPID -->
+                    <!-- Kepala PPID -->
                     <div class="p-5 rounded-2xl bg-primary text-white space-y-3">
-                        <span class="text-[10px] font-black uppercase tracking-widest bg-white/20 text-slate-100 px-3 py-1 rounded-full">Level 1: Kepala PPID (Kotak Navy)</span>
-                        <div class="space-y-2 pt-1">
-                            <label class="block text-xs font-bold text-secondary">Nama Kepala PPID / Dekan <span class="text-rose-400">*</span></label>
-                            <input type="text" name="nama" required value="{{ old('nama', $profil['nama'] ?? 'Dr. Eng. Suripto Dwi Yuwono, S.Si., M.T.') }}" placeholder="Nama Lengkap dengan Gelar" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                        <h4 class="text-sm font-black tracking-wide text-secondary border-b border-white/10 pb-2">Kepala PPID</h4>
+                        <div class="space-y-3 pt-1">
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-secondary">Gelar Depan</label>
+                                <input type="text" name="gelar_depan" value="{{ old('gelar_depan', $profil['gelar_depan'] ?? 'Dr. Eng.') }}" placeholder="Contoh: Dr. Eng." class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                            </div>
 
-                            <label class="block text-xs font-bold text-secondary">Jabatan Kepala</label>
-                            <input type="text" name="struktur_atasan_jabatan" value="{{ old('struktur_atasan_jabatan', $halaman['struktur_atasan']['jabatan'] ?? 'Dekan FMIPA') }}" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-secondary">Nama Lengkap <span class="text-rose-400">*</span></label>
+                                <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profil['nama_lengkap'] ?? ($profil['nama'] ?? 'Heri Satria')) }}" placeholder="Nama Lengkap" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                            </div>
 
-                            <label class="block text-xs font-bold text-secondary">Peran / Label</label>
-                            <input type="text" name="struktur_atasan_peran" value="{{ old('struktur_atasan_peran', $halaman['struktur_atasan']['peran'] ?? 'Atasan PPID') }}" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-secondary">Gelar Belakang</label>
+                                <input type="text" name="gelar_belakang" value="{{ old('gelar_belakang', $profil['gelar_belakang'] ?? 'S.Si., M.Si.') }}" placeholder="Contoh: S.Si., M.Si." class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-secondary">Jabatan</label>
+                                <input type="text" name="struktur_atasan_jabatan" value="{{ old('struktur_atasan_jabatan', $halaman['struktur_atasan']['jabatan'] ?? 'Dekan') }}" placeholder="Contoh: Dekan" class="w-full px-3 py-2.5 rounded-xl border-0 text-sm font-bold text-slate-900 bg-white focus:ring-2 focus:ring-secondary">
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Level 2: Wakil Kepala PPID -->
+                    <!-- Wakil Kepala PPID -->
                     <div class="p-5 rounded-2xl bg-white border-2 border-secondary/30 space-y-3">
-                        <span class="text-[10px] font-black uppercase tracking-widest bg-primary text-white px-3 py-1 rounded-full">Level 2: Wakil Kepala (Kotak Putih)</span>
-                        <div class="space-y-2 pt-1">
-                            <label class="block text-xs font-bold text-slate-600">Nama Wakil Kepala PPID</label>
-                            <input type="text" name="wakil_nama" value="{{ old('wakil_nama', $profil['wakil_nama'] ?? '') }}" placeholder="Contoh: Dr. Ir. ..." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
-                            <label class="block text-xs font-bold text-slate-600">Jabatan Wakil</label>
-                            <input type="text" name="struktur_ketua_jabatan" value="{{ old('struktur_ketua_jabatan', $halaman['struktur_ketua']['jabatan'] ?? 'Wakil Dekan Bidang Umum dan Keuangan') }}" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
-                            <label class="block text-xs font-bold text-slate-600">Peran / Label</label>
-                            <input type="text" name="struktur_ketua_peran" value="{{ old('struktur_ketua_peran', $halaman['struktur_ketua']['peran'] ?? 'Ketua PPID Pelaksana') }}" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-700 focus:ring-2 focus:ring-primary/20">
+                        <h4 class="text-sm font-black tracking-wide text-primary border-b border-slate-100 pb-2">Wakil Kepala</h4>
+                        <div class="space-y-3 pt-1">
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-600">Gelar Depan</label>
+                                <input type="text" name="wakil_gelar_depan" value="{{ old('wakil_gelar_depan', $profil['wakil_gelar_depan'] ?? 'Dr.') }}" placeholder="Contoh: Dr." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-600">Nama Lengkap</label>
+                                <input type="text" name="wakil_nama_lengkap" value="{{ old('wakil_nama_lengkap', $profil['wakil_nama_lengkap'] ?? ($profil['wakil_nama'] ?? 'Aristoteles')) }}" placeholder="Nama Lengkap" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-600">Gelar Belakang</label>
+                                <input type="text" name="wakil_gelar_belakang" value="{{ old('wakil_gelar_belakang', $profil['wakil_gelar_belakang'] ?? 'S.Si., M.Si.') }}" placeholder="Contoh: S.Si., M.Si." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-600">Jabatan</label>
+                                <input type="text" name="struktur_ketua_jabatan" value="{{ old('struktur_ketua_jabatan', $halaman['struktur_ketua']['jabatan'] ?? 'Wakil Dekan Bidang Umum dan Keuangan') }}" placeholder="Contoh: Wakil Dekan Bidang Umum dan Keuangan" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Level 3: Koordinator 4 Bidang -->
-                <div class="space-y-3 pt-3 border-t border-slate-100">
-                    <div class="flex items-center justify-between">
-                        <label class="block text-sm font-bold text-slate-800">Level 3: Koordinator Bidang (4 Kartu)</label>
-                        <span class="text-[11px] text-slate-400">Inisial lingkaran otomatis dibuat dari 2 kata pertama nama bidang</span>
+                <!-- Koordinator Bidang (Dinamis: Bisa Tambah & Hapus) -->
+                @php
+                    $bidangList = old('struktur_bidang_nama') !== null
+                        ? array_map(function($n, $j) { return ['nama' => $n, 'jabatan' => $j]; }, old('struktur_bidang_nama', []), old('struktur_bidang_jabatan', []))
+                        : array_map(function($b) {
+                            return [
+                                'nama'    => $b['nama'] ?? ($b['jabatan'] ?? ''),
+                                'jabatan' => $b['jabatan'] ?? ($b['peran'] ?? '')
+                            ];
+                        }, ($halaman['struktur_bidang'] ?? [
+                            ['nama' => 'Nama Koordinator', 'jabatan' => 'Layanan Informasi'],
+                            ['nama' => 'Nama Koordinator', 'jabatan' => 'Dokumentasi & Arsip'],
+                            ['nama' => 'Nama Koordinator', 'jabatan' => 'Sengketa & Keberatan'],
+                            ['nama' => 'Nama Koordinator', 'jabatan' => 'TI & Publikasi'],
+                        ]));
+                @endphp
+                <div class="space-y-4 pt-3 border-t border-slate-100" 
+                     x-data="{ 
+                         items: {{ json_encode($bidangList) }},
+                         addItem() {
+                             this.items.push({ nama: '', jabatan: '' });
+                         },
+                         removeItem(index) {
+                             if (this.items.length > 1) {
+                                 this.items.splice(index, 1);
+                             } else {
+                                 alert('Minimal harus ada 1 bidang koordinator.');
+                             }
+                         }
+                     }">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-800">Koordinator Bidang</label>
+                            <span class="text-xs text-slate-400">Atas untuk Nama Lengkap Pejabat, bawah untuk Jabatan / Peran. Inisial lingkaran otomatis dibuat dari nama lengkap.</span>
+                        </div>
+                        <button type="button" @click="addItem()" 
+                                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary text-white hover:bg-primary-light text-xs font-bold transition shadow-xs self-start sm:self-auto cursor-pointer">
+                            <i class="mdi mdi-plus-circle-outline text-sm"></i> Tambah Bidang
+                        </button>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        @foreach(($halaman['struktur_bidang'] ?? []) as $i => $b)
-                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-2 hover:border-secondary/40 transition">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-black text-primary uppercase">Kartu {{ $i+1 }}</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 text-slate-600 font-bold">Koordinator</span>
+                        <template x-for="(item, index) in items" :key="index">
+                            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2.5 hover:border-secondary/40 transition relative group">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] font-black text-primary uppercase" x-text="'Kartu ' + (index + 1)"></span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 text-slate-600 font-bold">Koordinator</span>
+                                        <button type="button" @click="removeItem(index)" 
+                                                title="Hapus bidang ini"
+                                                class="w-6 h-6 rounded-md bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition flex items-center justify-center text-xs cursor-pointer">
+                                            <i class="mdi mdi-delete-outline"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="space-y-1">
+                                        <label class="block text-xs font-bold text-slate-700">Nama</label>
+                                        <input type="text" name="struktur_bidang_nama[]" x-model="item.nama" placeholder="Contoh: Dr. Nama Pejabat / Nama Lengkap" required class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-xs font-bold text-slate-600">Jabatan / Peran</label>
+                                        <input type="text" name="struktur_bidang_jabatan[]" x-model="item.jabatan" placeholder="Contoh: Koordinator Layanan Informasi" required class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-700 focus:ring-2 focus:ring-primary/20">
+                                    </div>
+                                </div>
                             </div>
-                            <input type="text" name="struktur_bidang_jabatan[]" value="{{ $b['jabatan'] }}" placeholder="Nama Bidang" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20">
-                            <input type="text" name="struktur_bidang_peran[]" value="{{ $b['peran'] }}" placeholder="Keterangan / peran singkat" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-600 focus:ring-2 focus:ring-primary/20">
-                        </div>
-                        @endforeach
+                        </template>
                     </div>
                 </div>
             </div>

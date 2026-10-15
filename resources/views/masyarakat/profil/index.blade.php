@@ -145,13 +145,40 @@
             <div class="h-1.5 w-16 bg-secondary rounded-full mx-auto"></div>
         </div>
 
+        @php
+            // Helper fungsi inisial bersih (ambil dari nama_lengkap, atau bersihkan gelar jika tersimpan dalam nama)
+            $cleanName = function($fullName, $namaLengkap = null) {
+                if (!empty($namaLengkap)) {
+                    $words = array_values(array_filter(explode(' ', trim($namaLengkap))));
+                    if (count($words) >= 2) {
+                        return strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                    } elseif (count($words) === 1) {
+                        return strtoupper(substr($words[0], 0, 1));
+                    }
+                }
+                // Jika hanya ada nama dengan gelar, bersihkan gelar umum
+                $cleaned = preg_replace('/\b(Dr|Drs|Ir|Prof|Eng|S\.Si|M\.Si|M\.T|M\.Kom|S\.T|S\.Kom|Ph\.D|M\.Sc|B\.Sc)\b\.?/i', '', $fullName ?? '');
+                $cleaned = trim(preg_replace('/[^a-zA-Z\s]/', '', $cleaned));
+                $words = array_values(array_filter(explode(' ', $cleaned)));
+                if (count($words) >= 2) {
+                    return strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                } elseif (count($words) === 1) {
+                    return strtoupper(substr($words[0], 0, 1));
+                }
+                return strtoupper(substr($fullName ?: 'A', 0, 1));
+            };
+
+            $inisialKepala = $cleanName($profil['nama'] ?? 'Heri Satria', $profil['nama_lengkap'] ?? null);
+            $inisialWakil  = $cleanName($profil['wakil_nama'] ?? 'Aristoteles', $profil['wakil_nama_lengkap'] ?? null);
+        @endphp
+
         <!-- Level 1: Kepala PPID -->
         <div class="flex justify-center">
             <div class="relative w-full max-w-lg bg-primary text-white rounded-3xl p-8 pt-10 text-center shadow-xl">
                 <span class="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full bg-secondary text-primary text-sm font-black uppercase tracking-wider">Kepala PPID</span>
-                <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mx-auto font-black text-3xl">{{ strtoupper(substr($profil['nama'] ?? 'A', 0, 1)) }}</div>
+                <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mx-auto font-black text-2xl tracking-wider">{{ $inisialKepala }}</div>
                 <p class="font-black text-2xl mt-4 leading-tight">{{ $profil['nama'] ?? 'Dekan FMIPA' }}</p>
-                <p class="text-base text-slate-200 mt-2 font-medium">{{ ($halaman['struktur_atasan']['jabatan'] ?? 'Dekan FMIPA') }} / {{ ($halaman['struktur_atasan']['peran'] ?? 'Atasan PPID') }}</p>
+                <p class="text-base text-slate-200 mt-2 font-medium">{{ ($halaman['struktur_atasan']['jabatan'] ?? 'Dekan FMIPA') }}</p>
             </div>
         </div>
 
@@ -162,33 +189,34 @@
         <div class="flex justify-center">
             <div class="relative w-full max-w-lg bg-white border-2 border-secondary/30 rounded-3xl p-8 pt-10 text-center shadow-md">
                 <span class="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full bg-primary text-white text-sm font-black uppercase tracking-wider">Wakil Kepala</span>
-                <div class="w-20 h-20 rounded-full bg-primary text-secondary flex items-center justify-center mx-auto font-black text-2xl">{{ strtoupper(substr($profil['wakil_nama'] ?? 'W', 0, 1)) }}{{ strtoupper(substr($profil['wakil_nama'] ?? '', strpos(($profil['wakil_nama'] ?? ' '), ' ') + 1, 1)) }}</div>
+                <div class="w-20 h-20 rounded-full bg-primary text-secondary flex items-center justify-center mx-auto font-black text-2xl tracking-wider">{{ $inisialWakil }}</div>
                 <p class="font-black text-xl sm:text-2xl mt-4 text-slate-900 leading-tight">{{ $profil['wakil_nama'] ?? ($halaman['struktur_ketua']['jabatan'] ?? 'Wakil Kepala PPID') }}</p>
-                <p class="text-base text-slate-600 mt-2 font-medium">{{ ($halaman['struktur_ketua']['peran'] ?? 'Wakil Kepala PPID') }}</p>
+                <p class="text-base text-slate-600 mt-2 font-medium">{{ ($halaman['struktur_ketua']['jabatan'] ?? 'Wakil Dekan Bidang Umum dan Keuangan') }}</p>
             </div>
         </div>
 
         <!-- Connector Wakil -> Koordinator -->
-        <div class="hidden lg:flex justify-center -my-2"><div class="w-0.5 h-8 bg-slate-200"></div></div>
-        <div class="hidden lg:block relative h-8 mx-4">
-            <div class="absolute top-0 left-[12.5%] right-[12.5%] h-0.5 bg-slate-200"></div>
-            <div class="absolute top-0 left-[12.5%] w-0.5 h-8 bg-slate-200"></div>
-            <div class="absolute top-0 left-[37.5%] w-0.5 h-8 bg-slate-200"></div>
-            <div class="absolute top-0 left-[62.5%] w-0.5 h-8 bg-slate-200"></div>
-            <div class="absolute top-0 left-[87.5%] w-0.5 h-8 bg-slate-200"></div>
-        </div>
+        <div class="flex justify-center -my-2"><div class="w-0.5 h-8 bg-slate-200"></div></div>
 
-        <!-- Level 3: Koordinator -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Koordinator Bidang (Dinamis: Nama di atas, Jabatan di bawah) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
             @foreach(($halaman['struktur_bidang'] ?? []) as $idx => $bidang)
             @php
-                $inisial = implode('', array_map(fn($w) => strtoupper(substr($w, 0, 1)), array_slice(explode(' ', $bidang['jabatan'] ?? 'X'), 0, 2)));
-                $warna = ['bg-emerald-500','bg-orange-500','bg-rose-500','bg-purple-500'][$idx % 4];
+                $namaBidang = $bidang['nama'] ?? ($bidang['jabatan'] ?? 'Koordinator');
+                $jabatanBidang = $bidang['jabatan'] ?? ($bidang['peran'] ?? '');
+
+                // Bersihkan inisial dari nama
+                $inisial = $cleanName($namaBidang);
+                $warna = ['bg-emerald-500','bg-orange-500','bg-rose-500','bg-purple-500','bg-sky-500','bg-teal-500'][$idx % 6];
             @endphp
-            <div class="bg-white border-2 border-slate-200 rounded-3xl p-7 text-center hover:border-secondary hover:shadow-xl transition-all">
-                <div class="w-16 h-16 rounded-full {{ $warna }} text-white font-black text-xl flex items-center justify-center mx-auto shadow-sm">{{ $inisial }}</div>
-                <p class="font-black text-lg mt-4 text-slate-900 leading-tight">{{ $bidang['jabatan'] }}</p>
-                <p class="text-sm text-slate-600 leading-relaxed mt-2">{{ $bidang['peran'] }}</p>
+            <div class="bg-white border-2 border-slate-200 rounded-3xl p-7 text-center hover:border-secondary hover:shadow-xl transition-all flex flex-col justify-between">
+                <div>
+                    <div class="w-16 h-16 rounded-full {{ $warna }} text-white font-black text-xl flex items-center justify-center mx-auto shadow-sm tracking-wider">{{ $inisial }}</div>
+                    <p class="font-black text-lg mt-4 text-slate-900 leading-tight">{{ $namaBidang }}</p>
+                </div>
+                @if(!empty($jabatanBidang))
+                    <p class="text-sm text-slate-600 leading-relaxed mt-2.5 pt-2 border-t border-slate-100 font-medium">{{ $jabatanBidang }}</p>
+                @endif
             </div>
             @endforeach
         </div>
