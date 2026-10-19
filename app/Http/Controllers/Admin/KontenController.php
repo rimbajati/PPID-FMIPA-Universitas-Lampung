@@ -85,7 +85,7 @@ class KontenController extends Controller
     public static function getHalamanProfil(): array
     {
         $default = [
-            'hero_judul'     => 'Profil PPID Pelaksana FMIPA',
+            'hero_judul'     => 'Tentang PPID FMIPA',
             'hero_deskripsi' => 'Mengenal lebih dekat Pejabat Pengelola Informasi dan Dokumentasi FMIPA Universitas Lampung — unit layanan keterbukaan informasi publik, dasar hukum, struktur organisasi, tugas dan fungsi, hingga standar pelayanan.',
             'tentang_judul'  => 'Apa itu PPID?',
             'tentang_p1'     => 'Pejabat Pengelola Informasi dan Dokumentasi (PPID) adalah pejabat yang bertanggung jawab di bidang penyimpanan, pendokumentasian, penyediaan, dan pelayanan informasi di badan publik.',
@@ -244,7 +244,7 @@ class KontenController extends Controller
 
         // Simpan Konten Halaman
         $halaman = [
-            'hero_judul'     => $request->filled('hero_judul') ? trim($request->input('hero_judul')) : ($existingHalaman['hero_judul'] ?? 'Profil PPID Pelaksana FMIPA'),
+            'hero_judul'     => $request->filled('hero_judul') ? trim($request->input('hero_judul')) : ($existingHalaman['hero_judul'] ?? 'Tentang PPID FMIPA'),
             'hero_deskripsi' => $request->filled('hero_deskripsi') ? trim($request->input('hero_deskripsi')) : ($existingHalaman['hero_deskripsi'] ?? 'Mengenal lebih dekat Pejabat Pengelola Informasi dan Dokumentasi FMIPA Universitas Lampung — unit layanan keterbukaan informasi publik, dasar hukum, struktur organisasi, tugas dan fungsi, hingga standar pelayanan.'),
             'tentang_judul'  => trim($request->input('tentang_judul', 'Apa itu PPID?')),
             'tentang_isi'    => $tentangIsi,

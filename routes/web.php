@@ -145,14 +145,17 @@ Route::get('/regulasi', function () {
 Route::get('/layanan', function () { return redirect()->route('layanan.permohonan'); })->name('layanan');
 
 // Login admin only. Permohonan masyarakat dapat diajukan tanpa membuat akun.
-Route::get('/admin-panel/login', function () {
+Route::get('/login', function () {
     if (auth()->check() && auth()->user()->role === 'admin') {
         return redirect('/admin/informasi-publik');
     }
 
     return view('auth.admin_login');
 })->name('admin.login');
-Route::post('/admin-panel/login', [AuthController::class, 'adminLoginProcess']);
+Route::post('/login', [AuthController::class, 'adminLoginProcess']);
+Route::get('/admin-panel/login', function () {
+    return redirect()->route('admin.login');
+});
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 Route::get('/dokumen/blackbox-testing', function () { return view('dokumen.blackbox-testing'); })->name('dokumen.blackbox');

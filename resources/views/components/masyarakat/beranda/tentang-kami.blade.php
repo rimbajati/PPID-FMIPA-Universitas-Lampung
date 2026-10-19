@@ -12,7 +12,7 @@
             <div class="space-y-3">
                 <p class="text-sm font-extrabold uppercase tracking-[0.18em] text-primary">— Tentang kami</p>
                 <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-black text-slate-900 tracking-tight leading-none">{{ $halamanData['tentang_judul'] ?? 'Apa itu PPID?' }}</h2>
-                <div class="h-1.5 w-16 bg-primary rounded-full"></div>
+                <div class="h-1.5 w-16 bg-secondary rounded-full"></div>
             </div>
             <div class="space-y-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
                 <p>{{ $halamanData['tentang_p1'] ?? 'Pejabat Pengelola Informasi dan Dokumentasi (PPID) adalah pejabat yang bertanggung jawab di bidang penyimpanan, pendokumentasian, penyediaan, dan pelayanan informasi di badan publik.' }}</p>
@@ -23,9 +23,6 @@
         <!-- Kanan: Nilai Pelayanan Kami berbentuk kartu kontainer elegan -->
         <div class="lg:col-span-5">
             <div class="bg-secondary-light border border-secondary/20 rounded-3xl p-7 sm:p-8 space-y-5 shadow-xs">
-                <div class="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center text-xl shadow-sm">
-                    <i class="mdi mdi-shield-star-outline"></i>
-                </div>
                 <h3 class="text-lg font-black text-slate-900">Nilai Pelayanan Kami</h3>
                 <div class="space-y-4">
                     <div class="flex items-start gap-3.5">

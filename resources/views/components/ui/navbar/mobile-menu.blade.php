@@ -1,7 +1,7 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="md:hidden hidden bg-primary border-t border-white/20 px-4 py-3 shadow-lg absolute w-full left-0">
             <div class="flex flex-col">
-                @if(!request()->is('admin-panel/login'))
+                @if(!request()->is('admin-panel/login') && !request()->is('login'))
                     <a href="/" class="group relative text-white font-bold text-base tracking-wide py-3 border-b border-white/20 {{ request()->is('/') ? 'font-extrabold' : '' }}">Beranda</a>
 
                     <a href="{{ route('profil.ppid') }}" class="text-white/90 hover:text-white font-bold text-base tracking-wide py-3 border-b border-white/20 {{ request()->is('profil-ppid*') ? 'text-white' : '' }}">

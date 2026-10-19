@@ -1,4 +1,4 @@
-<section class="relative w-full min-h-[520px] sm:min-h-[580px] lg:min-h-[640px] flex items-center overflow-hidden border-b border-sky-950/40">
+<section class="relative w-full flex items-center overflow-hidden" style="min-height:calc(100dvh - var(--header-h)); min-height:calc(100vh - var(--header-h));">
     <!-- 1. Background Gedung Dekanat FMIPA Unila dengan Gradasi Gelap Elegan Sesuai Tema Biru PPID -->
     <div class="absolute inset-0 z-0">
         <img src="{{ asset('images/GedungDekanatFMIPA.jpg') }}" 
@@ -11,25 +11,20 @@
     </div>
 
     <!-- 2. Konten Teks Langsung Menyatu dengan Layout Membentang Panjang ke Kanan -->
-    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
         <div class="max-w-2xl sm:max-w-3xl lg:max-w-4xl space-y-6 text-left">
             
-            <!-- Subtitle Badge Pill Asli (Disesuaikan untuk Background Gelap) -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/15 text-secondary text-xs sm:text-sm font-extrabold border border-secondary/30 shadow-2xs backdrop-blur-md">
-                <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse"></span>
-                <span>Pejabat Pengelola Informasi & Dokumentasi (PPID)</span>
-            </div>
-
             <!-- Judul Utama Persis Desain Awal (Warna Putih & Highlight Sky Blue Bersinar) -->
             <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-[4rem] font-black text-white tracking-tight leading-[1.12]">
                 Portal Layanan <br>
-                <span class="relative inline-flex items-center px-4 py-1 mt-2 bg-gradient-to-r from-sky-400/20 via-sky-300/15 to-blue-400/20 rounded-2xl border border-secondary/30/40 backdrop-blur-xs shadow-2xs">
-                    <span class="bg-gradient-to-r from-sky-300 via-sky-400 to-blue-300 bg-clip-text text-transparent">Informasi Publik.</span>
+                <span class="relative inline-block pb-2">
+                    Informasi Publik.
+                    <span class="absolute bottom-0 left-0 w-full h-2.5 bg-secondary rounded-full"></span>
                 </span>
             </h1>
 
             <!-- Deskripsi Persis Desain Awal (Kontras & Lembut di Atas Gelap) -->
-            <p class="text-sm sm:text-base lg:text-lg text-slate-200 font-medium leading-relaxed max-w-2xl sm:max-w-3xl">
+            <p class="text-sm sm:text-base lg:text-lg text-slate-200 font-medium leading-relaxed max-w-2xl sm:max-w-3xl pt-2">
                 Berpedoman pada <strong class="text-secondary font-bold">UU No. 14 Tahun 2008</strong>, kami berkomitmen menghadirkan layanan informasi yang cepat, terpercaya, dan mudah diakses guna membangun tata kelola FMIPA Universitas Lampung yang akuntabel, profesional, serta transparan.
             </p>
 

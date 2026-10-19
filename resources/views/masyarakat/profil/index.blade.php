@@ -10,12 +10,9 @@
         <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-secondary/10 blur-2xl pointer-events-none"></div>
         <div class="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-secondary/5 blur-2xl pointer-events-none"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col sm:flex-row sm:items-center gap-6">
-                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white p-2.5 shadow-xl border-2 border-secondary shrink-0 flex items-center justify-center">
-                    <img src="{{ asset('images/logoPPID.png') }}?v=3.0" alt="Logo PPID FMIPA Unila" class="w-full h-full object-contain">
-                </div>
+            <div class="space-y-3">
                 <div class="space-y-2">
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">{{ $halaman['hero_judul'] ?? 'Profil PPID Pelaksana FMIPA' }}</h1>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">{{ $halaman['hero_judul'] ?? 'Tentang PPID FMIPA' }}</h1>
                     <p class="w-full max-w-none text-slate-300 text-sm sm:text-base font-normal leading-relaxed">{{ $halaman['hero_deskripsi'] ?? '' }}</p>
                 </div>
             </div>
@@ -30,7 +27,7 @@
                 <div class="space-y-3">
                     <p class="text-sm font-extrabold uppercase tracking-[0.18em] text-primary">— Tentang kami</p>
                     <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-black text-slate-900 tracking-tight leading-none">{{ $halaman['tentang_judul'] ?? 'Apa itu PPID?' }}</h2>
-                    <div class="h-1.5 w-16 bg-primary rounded-full"></div>
+                    <div class="h-1.5 w-16 bg-secondary rounded-full"></div>
                 </div>
                 @php
                     $rawTentang = $halaman['tentang_isi'] ?? trim(($halaman['tentang_p1'] ?? '') . "\n\n" . ($halaman['tentang_p2'] ?? ''));
@@ -50,9 +47,6 @@
             <!-- Kanan: Menggantikan Paket Regulasi dengan Nilai Pelayanan Kami berbentuk kartu kontainer elegan -->
             <div class="lg:col-span-5">
                 <div class="bg-secondary-light border border-secondary/20 rounded-3xl p-7 sm:p-8 space-y-5">
-                    <div class="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center text-xl shadow-sm">
-                        <i class="mdi mdi-shield-star-outline"></i>
-                    </div>
                     <h3 class="text-lg font-black text-slate-900">Nilai Pelayanan Kami</h3>
                     <div class="space-y-4">
                         <div class="flex items-start gap-3.5">
@@ -240,7 +234,7 @@
                 <div class="space-y-2">
                     <p class="text-xs font-extrabold uppercase tracking-widest text-primary">Peran & tanggung jawab</p>
                     <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Tugas & Fungsi</h2>
-                    <div class="h-1 w-12 bg-primary rounded-full"></div>
+                    <div class="h-1 w-12 bg-secondary rounded-full"></div>
                 </div>
                 <p class="text-xs text-slate-400 max-w-xs sm:text-right">Enam mandat utama PPID menurut UU KIP dan peraturan pelaksana.</p>
             </div>
@@ -279,7 +273,7 @@
         <div class="space-y-2 mb-8">
             <p class="text-xs font-extrabold uppercase tracking-widest text-primary">Standar pelayanan</p>
             <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Maklumat Pelayanan</h2>
-            <div class="h-1 w-12 bg-primary rounded-full"></div>
+            <div class="h-1 w-12 bg-secondary rounded-full"></div>
         </div>
 
         <!-- Ringkasan Standar Pelayanan (Full Width) -->

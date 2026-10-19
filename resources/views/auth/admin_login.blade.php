@@ -72,11 +72,11 @@
                 <a href="{{ url('/') }}" class="inline-block mb-3">
                     <img src="{{ asset('images/logoPPID.png') }}?v=3.0" alt="Logo PPID" class="h-16 w-auto mx-auto object-contain drop-shadow">
                 </a>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0f2a44] mb-1.5 tracking-tight">Login Admin</h1>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0f2a44] mb-1.5 tracking-tight">LOGIN ADMIN</h1>
                 <p class="text-sm font-medium text-gray-500">PPID Pelaksana FMIPA Universitas Lampung</p>
             </div>
 
-            <form action="/admin-panel/login" method="POST" class="space-y-4" novalidate autocomplete="off">
+            <form action="{{ url('/login') }}" method="POST" class="space-y-4" novalidate autocomplete="off">
                 @csrf
 
                 <!-- Input Email -->
@@ -88,7 +88,7 @@
                         </span>
                         <input type="email" name="email" value="{{ old('email') }}"
                             class="w-full pl-11 pr-4 py-3 border-2 {{ $errors->has('email') ? 'border-red-500 bg-red-50/30' : 'border-gray-200 focus:border-[#0f2a44]' }} outline-none text-sm transition rounded-xl focus:ring-2 focus:ring-[#0f2a44]/10"
-                            placeholder="Masukan email admin Anda" required autofocus>
+                            placeholder="Masukan email admin" required autofocus>
                     </div>
                     @error('email')
                         <p class="text-red-600 text-xs mt-1.5 font-medium flex items-center gap-1">
@@ -106,7 +106,7 @@
                         </span>
                         <input type="password" name="password" id="password"
                             class="w-full pl-11 pr-11 py-3 border-2 {{ $errors->has('password') ? 'border-red-500 bg-red-50/30' : 'border-gray-200 focus:border-[#0f2a44]' }} outline-none text-sm transition rounded-xl focus:ring-2 focus:ring-[#0f2a44]/10"
-                            placeholder="Masukan kata sandi Anda" required>
+                            placeholder="Masukan kata sandi admin" required>
                         <button type="button" onclick="togglePassword('password')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 focus:outline-none cursor-pointer">
                             <i class="mdi mdi-eye text-lg leading-none" id="password-icon"></i>
                         </button>
@@ -128,13 +128,13 @@
                 <!-- Button Submit -->
                 <button type="submit" class="w-full bg-[#0f2a44] hover:bg-[#1a3a5c] text-white font-bold py-3.5 px-4 transition text-sm mt-3 cursor-pointer uppercase tracking-wider rounded-xl shadow-lg shadow-[#0f2a44]/20 flex items-center justify-center gap-2 active:scale-[0.99]">
                     <i class="mdi mdi-login text-base"></i>
-                    <span>Masuk ke Panel</span>
+                    <span>Masuk ke dashboard</span>
                 </button>
             </form>
 
             <div class="mt-6 text-center">
                 <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-500 hover:text-[#0f2a44] transition">
-                    <i class="mdi mdi-arrow-left text-base"></i> Kembali ke Beranda
+                    <i class="mdi mdi-arrow-left text-base"></i> kembali ke portal publik
                 </a>
             </div>
 

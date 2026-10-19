@@ -3,7 +3,7 @@
 @section('title', 'Beranda - PPID Pelaksana FMIPA Universitas Lampung')
 
 @section('content')
-<main class="pt-[6.875rem] md:pt-32 bg-slate-50/50">
+<main class="bg-slate-50/50" style="padding-top:var(--header-h)">
 
     <!-- 1. Hero Section Banner: Dekanat FMIPA & Konten Modern -->
     <x-masyarakat.beranda.hero />

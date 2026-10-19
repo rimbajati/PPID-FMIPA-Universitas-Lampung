@@ -67,18 +67,11 @@
 
     <style>
         [x-cloak] { display: none !important; }
+        :root { --header-h: 145px; }
+        @media (max-width: 767px) { :root { --header-h: 110px; } }
         html { 
             scroll-behavior: smooth; 
-            font-size: 15.5px; 
-        }
-        @media (min-width: 1700px) {
-            html { font-size: 16.5px; }
-        }
-        @media (min-width: 1400px) and (max-width: 1699px) {
-            html { font-size: 15.5px; }
-        }
-        @media (max-width: 1200px) {
-            html { font-size: 14.5px; }
+            font-size: 16px; 
         }
         body { 
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important; 
