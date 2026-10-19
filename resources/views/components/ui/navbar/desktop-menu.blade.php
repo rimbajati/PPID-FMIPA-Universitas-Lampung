@@ -11,7 +11,7 @@
                                 <span>Beranda</span>
                                 <!-- Garis Bawah Aktif / Hover -->
                                 <span class="absolute bottom-0 h-1 rounded-full transition-all duration-200
-                                             {{ $isHome ? 'w-full bg-secondary shadow-sm' : 'w-0 group-hover:w-full bg-secondary/80' }}"></span>
+                                             {{ $isHome ? 'w-full bg-[#38bdf8] shadow-sm shadow-[#38bdf8]/50' : 'w-0 group-hover:w-full bg-[#38bdf8]/80' }}"></span>
                             </a>
 
                             <!-- 2. Profil PPID -->
@@ -19,7 +19,7 @@
                             <a href="{{ route('profil.ppid') }}" 
                                class="group relative py-2 text-base lg:text-lg tracking-wide transition-all duration-200 flex flex-col items-center {{ $isProfil ? 'text-white font-extrabold' : 'text-white/90 hover:text-white font-bold' }}">
                                 <span>Profil</span>
-                                <span class="absolute bottom-0 h-1 rounded-full transition-all duration-200 {{ $isProfil ? 'w-full bg-secondary shadow-sm' : 'w-0 group-hover:w-full bg-secondary/80' }}"></span>
+                                <span class="absolute bottom-0 h-1 rounded-full transition-all duration-200 {{ $isProfil ? 'w-full bg-[#38bdf8] shadow-sm shadow-[#38bdf8]/50' : 'w-0 group-hover:w-full bg-[#38bdf8]/80' }}"></span>
                             </a>
 
                             <!-- 3. Dropdown Menu Klasifikasi Informasi -->
@@ -39,7 +39,7 @@
                                     <i class="mdi mdi-chevron-down text-base ml-0.5 opacity-80 transition-transform duration-200" :class="{ 'rotate-180': openInfo }"></i>
                                     <!-- Garis Bawah Aktif / Hover -->
                                     <span class="absolute bottom-0 left-0 h-1 rounded-full transition-all duration-200
-                                                 {{ $isInfo ? 'w-full bg-secondary shadow-sm' : 'w-0 group-hover:w-full bg-secondary/80' }}"></span>
+                                                 {{ $isInfo ? 'w-full bg-[#38bdf8] shadow-sm shadow-[#38bdf8]/50' : 'w-0 group-hover:w-full bg-[#38bdf8]/80' }}"></span>
                                 </button>
 
                                 <div x-show="openInfo" 
@@ -139,7 +139,7 @@
                                     <i class="mdi mdi-chevron-down text-base ml-0.5 opacity-80 transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
                                     <!-- Garis Bawah Aktif / Hover -->
                                     <span class="absolute bottom-0 left-0 h-1 rounded-full transition-all duration-200
-                                                 {{ $isLayanan ? 'w-full bg-secondary shadow-sm' : 'w-0 group-hover:w-full bg-secondary/80' }}"></span>
+                                                 {{ $isLayanan ? 'w-full bg-[#38bdf8] shadow-sm shadow-[#38bdf8]/50' : 'w-0 group-hover:w-full bg-[#38bdf8]/80' }}"></span>
                                 </button>
 
                                 <div x-show="open" 
@@ -230,7 +230,19 @@
                                       {{ $isRegulasi ? 'text-white font-extrabold' : 'text-white/90 hover:text-white font-bold' }}">
                                 <span>Regulasi</span>
                                 <span class="absolute bottom-0 h-1 rounded-full transition-all duration-200
-                                             {{ $isRegulasi ? 'w-full bg-secondary shadow-sm' : 'w-0 group-hover:w-full bg-secondary/80' }}"></span>
+                                             {{ $isRegulasi ? 'w-full bg-[#38bdf8] shadow-sm shadow-[#38bdf8]/50' : 'w-0 group-hover:w-full bg-[#38bdf8]/80' }}"></span>
+                            </a>
+
+                            <!-- 6. Berita (External Link FMIPA) -->
+                            <a href="https://fmipa.unila.ac.id/berita" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="group relative py-2 text-base lg:text-lg tracking-wide transition-all duration-200 flex flex-col items-center text-white/90 hover:text-white font-bold">
+                                <span class="flex items-center gap-1.5">
+                                    <span>Berita FMIPA</span>
+                                    <i class="mdi mdi-open-in-new text-xs opacity-70 group-hover:opacity-100 transition-opacity"></i>
+                                </span>
+                                <span class="absolute bottom-0 h-1 rounded-full transition-all duration-200 w-0 group-hover:w-full bg-[#38bdf8]/80"></span>
                             </a>
 
                             @if(auth()->check() && auth()->user()->role === 'admin')

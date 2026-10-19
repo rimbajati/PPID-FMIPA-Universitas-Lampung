@@ -18,8 +18,8 @@
             <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-[4rem] font-black text-white tracking-tight leading-[1.12]">
                 Portal Layanan <br>
                 <span class="relative inline-block pb-2">
-                    Informasi Publik.
-                    <span class="absolute bottom-0 left-0 w-full h-2.5 bg-secondary rounded-full"></span>
+                    <span class="bg-gradient-to-r from-white via-sky-100 to-[#7dd3fc] bg-clip-text text-transparent">Informasi Publik.</span>
+                    <span class="absolute bottom-0 left-0 w-full h-2.5 bg-gradient-to-r from-[#0284c7] to-[#38bdf8] rounded-full shadow-sm shadow-sky-400/40"></span>
                 </span>
             </h1>
 

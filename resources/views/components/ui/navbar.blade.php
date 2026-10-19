@@ -5,7 +5,7 @@
         </div>
     @endif
 
-    <nav id="main-navbar" class="w-full bg-primary border-b-0 shadow-md transition-all duration-300">
+    <nav id="main-navbar" class="w-full bg-gradient-to-r from-[#0a1e33] via-[#0f3459] to-[#0284c7] border-b border-sky-400/20 shadow-lg shadow-sky-950/20 transition-all duration-300">
         <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-3.5">
             <div class="flex justify-between items-center">
                 <!-- Left: Logo -->

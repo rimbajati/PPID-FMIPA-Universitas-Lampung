@@ -20,14 +20,14 @@
                             dark: '#0a1d30',
                         },
                         secondary: {
-                            DEFAULT: '#c5a253',
-                            light: '#d4b76a',
-                            dark: '#a8893e',
-                        },
-                        accent: {
                             DEFAULT: '#0ea5e9',
                             light: '#38bdf8',
                             dark: '#0284c7',
+                        },
+                        accent: {
+                            DEFAULT: '#0284c7',
+                            light: '#38bdf8',
+                            dark: '#0369a1',
                         },
                     },
                     fontFamily: {

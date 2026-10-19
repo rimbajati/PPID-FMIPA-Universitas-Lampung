@@ -6,15 +6,15 @@
 
 @php
 $gradientClass = match($theme) {
-    'keberatan' => 'bg-gradient-to-r from-primary via-primary-light to-primary',
-    'permohonan' => 'bg-gradient-to-r from-primary via-primary-light to-primary',
-    default => 'bg-gradient-to-r from-primary via-primary-light to-primary',
+    'keberatan' => 'bg-gradient-to-r from-[#0a1e33] via-[#0f3459] to-[#0284c7]',
+    'permohonan' => 'bg-gradient-to-r from-[#0a1e33] via-[#0f3459] to-[#0284c7]',
+    default => 'bg-gradient-to-r from-[#0a1e33] via-[#0f3459] to-[#0284c7]',
 };
 
 $accentClass = match($theme) {
-    'keberatan' => 'bg-secondary/10',
-    'permohonan' => 'bg-secondary/10',
-    default => 'bg-secondary/10',
+    'keberatan' => 'bg-sky-400/15',
+    'permohonan' => 'bg-sky-400/15',
+    default => 'bg-sky-400/15',
 };
 
 $textAccentClass = match($theme) {
@@ -24,7 +24,7 @@ $textAccentClass = match($theme) {
 };
 @endphp
 
-<section class="{{ $gradientClass }} text-white py-12 md:py-16 relative overflow-hidden shadow-md">
+<section class="{{ $gradientClass }} text-white py-12 md:py-16 relative overflow-hidden shadow-md border-b border-sky-400/20">
     <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
     <div class="absolute -left-16 -bottom-16 w-80 h-80 rounded-full {{ $accentClass }} blur-2xl pointer-events-none"></div>
 

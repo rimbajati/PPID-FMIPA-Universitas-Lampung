@@ -107,17 +107,17 @@
                             dark: '#0a1d30',
                         },
                         secondary: {
-                            DEFAULT: '#c5a253',
-                            light: '#d4b76a',
-                            dark: '#a8893e',
-                        },
-                        accent: {
                             DEFAULT: '#0ea5e9',
                             light: '#38bdf8',
                             dark: '#0284c7',
                         },
+                        accent: {
+                            DEFAULT: '#0284c7',
+                            light: '#38bdf8',
+                            dark: '#0369a1',
+                        },
                         'primary-light': '#1a3a5c',
-                        'secondary-light': '#f8f5ee',
+                        'secondary-light': '#f0f9ff',
                         'accent-light': '#e0f2fe',
                     },
                     fontFamily: {

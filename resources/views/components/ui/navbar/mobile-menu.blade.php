@@ -1,5 +1,5 @@
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden hidden bg-primary border-t border-white/20 px-4 py-3 shadow-lg absolute w-full left-0">
+        <div id="mobile-menu" class="md:hidden hidden bg-gradient-to-b from-[#0f3459] to-[#0a1e33] border-t border-sky-400/30 px-4 py-3 shadow-xl absolute w-full left-0">
             <div class="flex flex-col">
                 @if(!request()->is('admin-panel/login') && !request()->is('login'))
                     <a href="/" class="group relative text-white font-bold text-base tracking-wide py-3 border-b border-white/20 {{ request()->is('/') ? 'font-extrabold' : '' }}">Beranda</a>
@@ -62,6 +62,11 @@
 
                     <a href="{{ url('/regulasi') }}" class="text-white/90 hover:text-white font-bold text-base tracking-wide py-3 border-b border-white/20 {{ request()->is('regulasi*') ? 'text-white' : '' }}">
                         <span>Regulasi</span>
+                    </a>
+
+                    <a href="https://fmipa.unila.ac.id/berita" target="_blank" rel="noopener noreferrer" class="text-white/90 hover:text-white font-bold text-base tracking-wide py-3 border-b border-white/20 flex items-center justify-between">
+                        <span>Berita FMIPA</span>
+                        <i class="mdi mdi-open-in-new text-sm opacity-70"></i>
                     </a>
 
                     @if(auth()->check() && auth()->user()->role === 'admin')
