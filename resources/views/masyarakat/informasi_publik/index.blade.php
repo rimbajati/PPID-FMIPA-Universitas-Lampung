@@ -1,6 +1,7 @@
 @extends('components.layouts.app')
 
 @section('title', 'Katalog Informasi Publik - PPID Pelaksana FMIPA Universitas Lampung')
+@section('meta_description', 'Katalog dan daftar informasi publik resmi FMIPA Universitas Lampung (Informasi Berkala, Serta-Merta, dan Setiap Saat). Unduh dokumen secara transparan.')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-100/70 min-h-screen pb-20">

@@ -1,17 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Halaman Utama (Beranda) -->
     <url>
         <loc>https://ppid.fmipa.unila.ac.id/</loc>
+        <lastmod>2026-10-19</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
+
+    <!-- Profil PPID FMIPA Unila -->
     <url>
-        <loc>https://ppid.fmipa.unila.ac.id/permohonan-informasi</loc>
+        <loc>https://ppid.fmipa.unila.ac.id/profil-ppid</loc>
+        <lastmod>2026-10-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Katalog Informasi Publik -->
+    <url>
+        <loc>https://ppid.fmipa.unila.ac.id/informasi-publik</loc>
+        <lastmod>2026-10-19</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://ppid.fmipa.unila.ac.id/informasi-publik/kategori/informasi-berkala</loc>
+        <lastmod>2026-10-19</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
+        <loc>https://ppid.fmipa.unila.ac.id/informasi-publik/kategori/informasi-serta-merta</loc>
+        <lastmod>2026-10-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ppid.fmipa.unila.ac.id/informasi-publik/kategori/informasi-setiap-saat</loc>
+        <lastmod>2026-10-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Daftar Informasi yang Dikecualikan -->
+    <url>
+        <loc>https://ppid.fmipa.unila.ac.id/informasi-dikecualikan</loc>
+        <lastmod>2026-10-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Tata Cara Permohonan dan Keberatan -->
+    <url>
+        <loc>https://ppid.fmipa.unila.ac.id/tata-cara-permohonan-dan-keberatan</loc>
+        <lastmod>2026-10-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Regulasi Keterbukaan Informasi Publik -->
+    <url>
+        <loc>https://ppid.fmipa.unila.ac.id/regulasi</loc>
+        <lastmod>2026-10-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Layanan Online Permohonan Informasi -->
+    <url>
+        <loc>https://ppid.fmipa.unila.ac.id/permohonan</loc>
+        <lastmod>2026-10-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Layanan Online Pengajuan Keberatan -->
+    <url>
         <loc>https://ppid.fmipa.unila.ac.id/pengajuan-keberatan</loc>
+        <lastmod>2026-10-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Layanan Lacak Tiket / Riwayat Layanan -->
+    <url>
+        <loc>https://ppid.fmipa.unila.ac.id/riwayat-layanan</loc>
+        <lastmod>2026-10-19</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>

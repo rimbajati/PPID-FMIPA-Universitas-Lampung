@@ -1,6 +1,7 @@
 @extends('components.layouts.app')
 
 @section('title', 'Pengajuan Keberatan Informasi - PPID Pelaksana FMIPA Universitas Lampung')
+@section('meta_description', 'Layanan pengajuan keberatan informasi publik secara online bagi pemohon di PPID Pelaksana FMIPA Universitas Lampung sesuai UU No. 14 Tahun 2008.')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-50 min-h-screen pb-24">

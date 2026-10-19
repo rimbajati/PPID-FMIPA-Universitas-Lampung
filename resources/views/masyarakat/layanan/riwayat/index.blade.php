@@ -1,6 +1,7 @@
 @extends('components.layouts.app')
 
 @section('title', 'Lacak Tiket Layanan - PPID Pelaksana FMIPA Universitas Lampung')
+@section('meta_description', 'Lacak status permohonan informasi publik dan pengajuan keberatan Anda secara langsung menggunakan nomor tiket atau NIK di PPID FMIPA Unila.')
 
 @section('content')
 <main class="pt-14 md:pt-[4.25rem] bg-slate-50 min-h-screen pb-24"

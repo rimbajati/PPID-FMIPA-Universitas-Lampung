@@ -1,6 +1,7 @@
 @extends('components.layouts.app')
 
-@section('title', 'Beranda - PPID Pelaksana FMIPA Universitas Lampung')
+@section('title', 'PPID Pelaksana FMIPA Universitas Lampung - Layanan Informasi Publik Resmi')
+@section('meta_description', 'Portal resmi PPID Pelaksana FMIPA Universitas Lampung (Unila). Layanan permohonan informasi publik online, pengajuan keberatan, transparansi dokumen, regulasi, dan profil.')
 
 @section('content')
 <main class="bg-slate-50/50" style="padding-top:var(--header-h)">

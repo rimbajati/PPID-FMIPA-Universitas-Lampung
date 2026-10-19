@@ -1,6 +1,7 @@
 @extends('components.layouts.app')
 
 @section('title', 'Daftar Informasi yang Dikecualikan - PPID Pelaksana FMIPA Universitas Lampung')
+@section('meta_description', 'Daftar informasi yang dikecualikan di lingkungan FMIPA Universitas Lampung berdasarkan uji konsekuensi Pasal 17 UU No. 14 Tahun 2008.')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-100/70 min-h-screen pb-20">

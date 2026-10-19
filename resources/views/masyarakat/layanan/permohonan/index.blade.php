@@ -1,6 +1,7 @@
 @extends('components.layouts.app')
 
 @section('title', 'Ajukan Permohonan Informasi - PPID Pelaksana FMIPA Universitas Lampung')
+@section('meta_description', 'Formulir permohonan informasi publik online resmi PPID Pelaksana FMIPA Universitas Lampung. Dapatkan dokumen publik secara transparan, mudah, dan akuntabel.')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-slate-50 min-h-screen pb-24">

@@ -4,6 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'PPID Pelaksana FMIPA Universitas Lampung')</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="@yield('meta_description', 'Portal Resmi PPID Pelaksana FMIPA Universitas Lampung. Layanan permohonan informasi publik, pengajuan keberatan, transparansi dokumen, dan regulasi Keterbukaan Informasi Publik di lingkungan FMIPA Unila.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'ppid fmipa unila, ppid fmipa universitas lampung, ppid unila, informasi publik fmipa unila, keterbukaan informasi publik unila, permohonan informasi publik lampung')">
+    <meta name="author" content="PPID Pelaksana FMIPA Universitas Lampung">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href="@yield('canonical_url', url()->current())">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="@yield('canonical_url', url()->current())">
+    <meta property="og:title" content="@yield('title', 'PPID Pelaksana FMIPA Universitas Lampung')">
+    <meta property="og:description" content="@yield('meta_description', 'Portal Resmi PPID Pelaksana FMIPA Universitas Lampung. Layanan permohonan informasi publik, transparansi dokumen, dan pengajuan keberatan secara online.')">
+    <meta property="og:image" content="{{ asset('images/logoPPID.png') }}">
+    <meta property="og:site_name" content="PPID FMIPA Universitas Lampung">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="@yield('canonical_url', url()->current())">
+    <meta name="twitter:title" content="@yield('title', 'PPID Pelaksana FMIPA Universitas Lampung')">
+    <meta name="twitter:description" content="@yield('meta_description', 'Portal Resmi PPID Pelaksana FMIPA Universitas Lampung. Layanan permohonan informasi publik, transparansi dokumen, dan pengajuan keberatan secara online.')">
+    <meta name="twitter:image" content="{{ asset('images/logoPPID.png') }}">
+
+    <!-- Schema.org JSON-LD (Search Engines Rich Results) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "GovernmentOrganization",
+          "@id": "https://ppid.fmipa.unila.ac.id/#organization",
+          "name": "PPID Pelaksana FMIPA Universitas Lampung",
+          "alternateName": ["PPID FMIPA Unila", "PPID Pelaksana FMIPA"],
+          "url": "https://ppid.fmipa.unila.ac.id",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "{{ asset('images/logoPPID.png') }}"
+          },
+          "parentOrganization": {
+            "@type": "CollegeOrUniversity",
+            "name": "Universitas Lampung",
+            "url": "https://unila.ac.id"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+62-813-2017-6069",
+            "contactType": "customer service",
+            "areaServed": "ID",
+            "availableLanguage": "Indonesian"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Gedung Dekanat FMIPA Unila, Jl. Prof. Dr. Sumantri Brojonegoro No. 1",
+            "addressLocality": "Bandar Lampung",
+            "addressRegion": "Lampung",
+            "postalCode": "35145",
+            "addressCountry": "ID"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://ppid.fmipa.unila.ac.id/#website",
+          "url": "https://ppid.fmipa.unila.ac.id",
+          "name": "PPID Pelaksana FMIPA Universitas Lampung",
+          "description": "Layanan Keterbukaan Informasi Publik di Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Lampung",
+          "publisher": {
+            "@id": "https://ppid.fmipa.unila.ac.id/#organization"
+          },
+          "inLanguage": "id-ID"
+        }
+      ]
+    }
+    </script>
+
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3.0">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3.0">
     <link rel="icon" type="image/png" href="{{ asset('images/logoPPID.png') }}?v=3.0">

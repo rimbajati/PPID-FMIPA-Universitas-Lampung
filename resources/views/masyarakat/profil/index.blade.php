@@ -1,6 +1,7 @@
 @extends('components.layouts.app')
 
-@section('title', 'Profil - PPID Pelaksana FMIPA Universitas Lampung')
+@section('title', 'Profil PPID Pelaksana FMIPA Universitas Lampung - Visi, Misi & Struktur Organisasi')
+@section('meta_description', 'Profil lengkap PPID Pelaksana Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Lampung (FMIPA Unila). Menampilkan visi, misi, tugas pokok, dan struktur organisasi.')
 
 @section('content')
 <main class="pt-16 md:pt-[4.5rem] bg-white min-h-screen pb-20">
