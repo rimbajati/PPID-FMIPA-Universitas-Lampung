@@ -120,7 +120,7 @@
         tbody.innerHTML = '';
 
         if (!total) {
-            tbody.innerHTML = '<tr><td colspan="5" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data informasi.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data informasi.</td></tr>';
             if (info) info.innerText = 'Menampilkan 0–0 dari 0 informasi';
             if (pagination) pagination.innerHTML = '';
             return;
@@ -154,7 +154,7 @@
                 const label = toUnifiedLabel(groupRendered);
                 const tr = document.createElement('tr');
                 tr.className = 'bg-secondary-light/80';
-                tr.innerHTML = `<td colspan="5" class="px-4 py-3 font-black text-sm tracking-wide text-primary border-t border-secondary/20"><span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span>${label}</span></td>`;
+                tr.innerHTML = `<td colspan="8" class="px-4 py-3 font-black text-sm tracking-wide text-primary border-t border-secondary/20"><span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span>${label}</span></td>`;
                 tbody.appendChild(tr);
             }
             const numberCell = row.element.querySelector('.col-dip-no');

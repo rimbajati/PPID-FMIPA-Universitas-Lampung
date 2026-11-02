@@ -216,6 +216,7 @@
         if (document.getElementById('inputSubInformasi')) document.getElementById('inputSubInformasi').value = '';
         if (document.getElementById('inputRincianInformasi')) document.getElementById('inputRincianInformasi').value = '';
         if (document.getElementById('inputPejabatPenguasa')) document.getElementById('inputPejabatPenguasa').value = '';
+        if (document.getElementById('inputPenanggungJawab')) document.getElementById('inputPenanggungJawab').value = '';
         if (document.getElementById('inputTahun')) document.getElementById('inputTahun').value = '';
         if (document.getElementById('inputRetensiArsip')) document.getElementById('inputRetensiArsip').value = '';
         if (document.getElementById('inputLink')) document.getElementById('inputLink').value = '';
@@ -635,14 +636,14 @@
         if (!total) {
             const isCategoryMode = tbody.dataset.categoryMode === 'true';
             const emptyMessage = isCategoryMode ? 'Tidak ada data informasi untuk kategori ini.' : 'Tidak ada data Informasi Publik yang sesuai.';
-            const columnCount = isUnified ? 6 : (isCategoryMode ? 4 : 6);
+            const columnCount = isUnified ? 9 : (isCategoryMode ? 4 : 9);
             tbody.innerHTML = `<tr><td colspan="${columnCount}" class="p-12 text-center text-slate-400 font-semibold">${emptyMessage}</td></tr>`;
             if (info) info.innerText = 'Menampilkan 0–0 dari 0 informasi';
             if (pagination) pagination.innerHTML = '';
             return;
         }
         let unifiedGroupRendered = null;
-        const colCountUnified = 6;
+        const colCountUnified = 9;
         const visibleRows = rows.slice(start, end);
         const unifiedLabelMap = { 'informasi berkala': 'Informasi Publik yang Wajib Disediakan Secara Berkala', 'informasi setiap saat': 'Informasi Publik yang Wajib Tersedia Setiap Saat', 'informasi serta-merta': 'Informasi Publik yang Wajib Diumumkan Secara Serta-Merta' };
         const toUnifiedLabel = (v) => unifiedLabelMap[(v||'').toLowerCase().trim()] || v;

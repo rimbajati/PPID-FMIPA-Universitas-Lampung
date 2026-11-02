@@ -19,6 +19,24 @@
                             <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
                         </div>
                     </th>
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'pejabat')" class="px-3 py-3 text-left min-w-[170px] cursor-pointer hover:bg-primary/60 transition group">
+                        <div class="flex items-center justify-between gap-1.5">
+                            <span>Pejabat yang Menguasai</span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
+                        </div>
+                    </th>
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'penanggung_jawab')" class="px-3 py-3 text-left min-w-[160px] cursor-pointer hover:bg-primary/60 transition group">
+                        <div class="flex items-center justify-between gap-1.5">
+                            <span>Penanggung Jawab</span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
+                        </div>
+                    </th>
+                    <th onclick="sortDipTable('{{ $tableKey }}', 'waktu')" class="px-3 py-3 text-left min-w-[130px] cursor-pointer hover:bg-primary/60 transition group">
+                        <div class="flex items-center justify-between gap-1.5">
+                            <span>Waktu Pembuatan</span>
+                            <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span>
+                        </div>
+                    </th>
                     <th onclick="sortDipTable('{{ $tableKey }}', 'bentuk')" class="px-3 py-3 text-left min-w-[120px] cursor-pointer hover:bg-primary/60 transition group">
                         <div class="flex items-center justify-between gap-1.5">
                             <span>Format</span>
@@ -54,7 +72,7 @@
                                 };
                             @endphp
                             <tr class="bg-secondary-light/80">
-                                <td colspan="5" class="px-4 py-3 font-black text-sm tracking-wide text-primary border-t border-secondary/20">
+                                <td colspan="8" class="px-4 py-3 font-black text-sm tracking-wide text-primary border-t border-secondary/20">
                                     <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span>{{ $label }}</span>
                                 </td>
                             </tr>
@@ -71,6 +89,9 @@
                         data-retensi="{{ strtolower($item->retensi_arsip ?? '') }}">
                         <td class="col-dip-no px-3 py-3.5 text-center font-bold text-slate-400 align-top">{{ $idx + 1 }}</td>
                         <td class="px-4 py-3.5 text-slate-900 leading-normal text-sm md:text-base align-top">{{ $item->sub_informasi ?: '-' }}</td>
+                        <td class="px-3.5 py-3.5 text-center text-slate-700 text-sm md:text-base align-top">{{ $item->pejabat_unit_yang_menguasai_informasi ?: '-' }}</td>
+                        <td class="px-3.5 py-3.5 text-center text-slate-700 text-sm md:text-base align-top">{{ $item->penanggung_jawab_pembuatan_informasi ?: '-' }}</td>
+                        <td class="px-3.5 py-3.5 text-center text-slate-700 text-sm md:text-base align-top">{{ $item->waktu_pembuatan_informasi ?: '-' }}</td>
                         <td class="px-3.5 py-3.5 text-center text-slate-700 text-sm md:text-base align-top">{{ $item->bentuk_informasi_yang_tersedia ?: '-' }}</td>
                         <td class="px-3.5 py-3.5 text-center text-slate-700 text-sm md:text-base align-top">{{ $item->retensi_arsip ?: '-' }}</td>
                         <td class="px-3 py-3.5 text-center align-top">
@@ -86,7 +107,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="p-12 text-center text-slate-400">Tidak ada data.</td></tr>
+                    <tr><td colspan="8" class="p-12 text-center text-slate-400">Tidak ada data.</td></tr>
                 @endforelse
             </tbody>
         </table>

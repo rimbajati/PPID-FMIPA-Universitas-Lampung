@@ -71,17 +71,49 @@
                         </datalist>
                     </div>
 
-                    <!-- Format -->
+                    <!-- Pejabat yang Menguasai -->
                     <div class="space-y-2">
                         <label class="block text-sm font-semibold text-slate-700">
-                            Format <span class="text-rose-500">*</span>
+                            Pejabat yang Menguasai <span class="text-rose-500">*</span>
                         </label>
-                        <select id="inputBentukInformasi" name="bentuk_informasi_yang_tersedia" required onchange="handleBentukInformasiChange(this.value)"
-                                class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm cursor-pointer">
-                            <option value="Cetak dan Online">Cetak dan Online</option>
-                            <option value="Online">Online</option>
-                            <option value="Cetak">Cetak</option>
-                        </select>
+                        <input type="text" id="inputPejabatPenguasa" name="pejabat_unit_yang_menguasai_informasi" required autocomplete="off" list="list-satker-history"
+                               placeholder="Contoh: Dekanat, Jurusan..."
+                               class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm">
+                        <datalist id="list-satker-history">
+                            @foreach($listSatker as $val)
+                                <option value="{{ $val }}"></option>
+                            @endforeach
+                        </datalist>
+                    </div>
+
+                    <!-- Penanggung Jawab -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-slate-700">
+                            Penanggung Jawab Pembuatan Informasi
+                        </label>
+                        <input type="text" id="inputPenanggungJawab" name="penanggung_jawab_pembuatan_informasi" autocomplete="off" list="list-penanggung-jawab-history"
+                               placeholder="Contoh: Wakil Dekan Bidang Umum dan Keuangan..."
+                               class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm">
+                        <datalist id="list-penanggung-jawab-history">
+                            @foreach($listPenanggungJawab as $val)
+                                <option value="{{ $val }}"></option>
+                            @endforeach
+                        </datalist>
+                    </div>
+
+                    <!-- Waktu Pembuatan -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-slate-700">
+                            Waktu Pembuatan <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="text" id="inputTahun" name="waktu_pembuatan_informasi" required autocomplete="off" list="list-tahun-history"
+                               placeholder="Contoh: 2024..."
+                               class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm">
+                        <datalist id="list-tahun-history">
+                            @foreach($listTahun as $val)
+                                <option value="{{ $val }}"></option>
+                            @endforeach
+                        </datalist>
                     </div>
 
                     <!-- Retensi Arsip -->
@@ -97,6 +129,19 @@
                                 <option value="{{ $val }}"></option>
                             @endforeach
                         </datalist>
+                    </div>
+
+                    <!-- Format -->
+                    <div class="space-y-2 md:col-span-2">
+                        <label class="block text-sm font-semibold text-slate-700">
+                            Format <span class="text-rose-500">*</span>
+                        </label>
+                        <select id="inputBentukInformasi" name="bentuk_informasi_yang_tersedia" required onchange="handleBentukInformasiChange(this.value)"
+                                class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm cursor-pointer">
+                            <option value="Cetak dan Online">Cetak dan Online</option>
+                            <option value="Online">Online</option>
+                            <option value="Cetak">Cetak</option>
+                        </select>
                     </div>
 
                     <!-- Bentuk (File / Tautan) -->

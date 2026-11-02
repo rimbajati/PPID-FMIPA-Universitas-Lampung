@@ -34,9 +34,40 @@
                                 </span>
                             </div>
                         </th>
+                        <th onclick="sortAdminDipTable('{{ $tableKey }}', 'pejabat')" class="px-3.5 py-3 text-center min-w-[170px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Pejabat yang Menguasai">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <span>Pejabat yang Menguasai</span>
+                                <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                    <i class="mdi mdi-swap-vertical"></i>
+                                </span>
+                            </div>
+                        </th>
+                        <th onclick="sortAdminDipTable('{{ $tableKey }}', 'penanggung_jawab')" class="px-3.5 py-3 text-center min-w-[160px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <span>Penanggung Jawab</span>
+                                <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                    <i class="mdi mdi-swap-vertical"></i>
+                                </span>
+                            </div>
+                        </th>
+                        <th onclick="sortAdminDipTable('{{ $tableKey }}', 'waktu')" class="px-3.5 py-3 text-center min-w-[130px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Waktu Pembuatan">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <span>Waktu Pembuatan</span>
+                                <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                    <i class="mdi mdi-swap-vertical"></i>
+                                </span>
+                            </div>
+                        </th>
                         <th onclick="sortAdminDipTable('{{ $tableKey }}', 'bentuk')" class="px-3 py-3 text-left min-w-[120px] cursor-pointer hover:bg-primary/60 transition group"><div class="flex items-center justify-between gap-1.5"><span>Format</span><span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span></div></th>
                         <th onclick="sortAdminDipTable('{{ $tableKey }}', 'retensi')" class="px-3 py-3 text-left min-w-[140px] cursor-pointer hover:bg-primary/60 transition group"><div class="flex items-center justify-between gap-1.5"><span>Retensi Arsip</span><span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition"><i class="mdi mdi-swap-vertical"></i></span></div></th>
-                        <th class="px-2 py-3 text-center w-24 min-w-[90px] shrink-0"><span>Aksi</span></th>
+                        <th onclick="sortAdminDipTable('{{ $tableKey }}', 'dilihat')" class="px-2 py-3 text-center w-24 min-w-[90px] shrink-0 cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan berdasarkan Akses / Sering Dilihat">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <span>Aksi</span>
+                                <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                    <i class="mdi mdi-swap-vertical"></i>
+                                </span>
+                            </div>
+                        </th>
                     </tr>
                     @elseif($isKategoriMode)
                         {{-- Header Kategori (Berkala, Setiap Saat, Serta-Merta): Rincian Informasi & Sub Informasi --}}
@@ -94,6 +125,30 @@
                                     </div>
                                 </th>
                                 @endunless
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'pejabat')" class="px-3.5 py-3 text-center min-w-[170px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Pejabat yang Menguasai">
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <span>Pejabat yang Menguasai</span>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
+                                        </span>
+                                    </div>
+                                </th>
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'penanggung_jawab')" class="px-3.5 py-3 text-center min-w-[160px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Penanggung Jawab">
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <span>Penanggung Jawab</span>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
+                                        </span>
+                                    </div>
+                                </th>
+                                <th onclick="sortAdminDipTable('{{ $tableKey }}', 'waktu')" class="px-3.5 py-3 text-center min-w-[130px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Waktu Pembuatan">
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <span>Waktu Pembuatan</span>
+                                        <span class="sort-icon-wrapper inline-flex items-center justify-center text-xs md:text-sm text-white/70 group-hover:text-white transition">
+                                            <i class="mdi mdi-swap-vertical"></i>
+                                        </span>
+                                    </div>
+                                </th>
                                 <th onclick="sortAdminDipTable('{{ $tableKey }}', 'bentuk')" class="px-3 py-3 text-center min-w-[120px] cursor-pointer hover:bg-primary/60 transition group" title="Klik untuk mengurutkan Format">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <span>Format</span>
@@ -122,7 +177,7 @@
                         @endif
                     </thead>
             <tbody id="table-admin-dip-body-{{ $tableKey }}" data-admin-dip-tbody="{{ $tableKey }}" data-unified="{{ $isUnified ? 'true' : 'false' }}" data-category-mode="{{ $isKategoriMode ? 'true' : 'false' }}" data-category-table="{{ $isKategoriMode ? 'true' : 'false' }}" class="{{ $isUnified ? 'divide-y divide-slate-200' : ($isKategoriMode ? '' : 'divide-y divide-slate-200') }} text-xs sm:text-sm font-medium text-slate-800 text-left align-top">
-                        @php $unifiedGroupCurrent = null; $unifiedColspan = 6; @endphp
+                        @php $unifiedGroupCurrent = null; $unifiedColspan = 9; @endphp
                         @forelse($informasi as $idx => $item)
                             @if($isUnified && !request()->filled('kategori'))
                                 @if($unifiedGroupCurrent !== ($item->kategori_informasi ?? ''))
@@ -185,6 +240,9 @@
                                             @endif
                                         </div>
                                     </td>
+                                    <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal align-top">{{ $item->pejabat_unit_yang_menguasai_informasi ?: '-' }}</td>
+                                    <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal align-top">{{ $item->penanggung_jawab_pembuatan_informasi ?: '-' }}</td>
+                                    <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal align-top">{{ $item->waktu_pembuatan_informasi ?: '-' }}</td>
                                     <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal align-top">{{ $item->bentuk_informasi_yang_tersedia ?: '-' }}</td>
                                     <td class="px-3.5 py-3.5 text-left font-medium text-slate-700 break-words text-sm md:text-base leading-normal align-top">{{ $item->retensi_arsip ?: '-' }}</td>
                                     <td class="px-3 py-3.5 text-center align-top">
@@ -270,6 +328,21 @@
 
                                      @endunless
 
+                                     <!-- 3. Pejabat/Unit -->
+                                     <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal align-top">
+                                         {{ $item->pejabat_unit_yang_menguasai_informasi ?: '-' }}
+                                     </td>
+
+                                     <!-- 4. Penanggung Jawab -->
+                                     <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal align-top">
+                                         {{ $item->penanggung_jawab_pembuatan_informasi ?: '-' }}
+                                     </td>
+
+                                     <!-- 5. Waktu Pembuatan -->
+                                     <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal align-top">
+                                         {{ $item->waktu_pembuatan_informasi ?: '-' }}
+                                     </td>
+
                                      <!-- 6. Format -->
                                      <td class="px-3.5 py-3.5 text-left font-semibold text-slate-700 break-words text-sm md:text-base leading-normal align-top">
                                          {{ $item->bentuk_informasi_yang_tersedia ?: '-' }}
@@ -300,7 +373,7 @@
                                 @endif
                             </tr>
                         @empty
-                            <tr><td colspan="{{ $isKategoriMode ? '4' : ($forceTable ? '6' : '7') }}" class="p-12 text-center text-slate-400 font-semibold">{{ $isKategoriMode ? 'Tidak ada data informasi untuk kategori ini.' : 'Tidak ada data Informasi Publik.' }}</td></tr>
+                            <tr><td colspan="{{ $isKategoriMode ? '4' : ($forceTable ? '9' : '10') }}" class="p-12 text-center text-slate-400 font-semibold">{{ $isKategoriMode ? 'Tidak ada data informasi untuk kategori ini.' : 'Tidak ada data Informasi Publik.' }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>
