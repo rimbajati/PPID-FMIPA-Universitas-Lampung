@@ -71,51 +71,6 @@
                         </datalist>
                     </div>
 
-                    <!-- Pejabat/Unit yang Menguasai Informasi -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-semibold text-slate-700">
-                            Pejabat/Unit yang Menguasai Informasi <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" id="inputPejabatPenguasa" name="pejabat_unit_yang_menguasai_informasi" required autocomplete="off"
-                               placeholder="Contoh: Dekanat..." list="list-satker-history"
-                               class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm">
-                        <datalist id="list-satker-history">
-                            @foreach($listSatker as $val)
-                                <option value="{{ $val }}"></option>
-                            @endforeach
-                        </datalist>
-                    </div>
-
-                    <!-- Penanggung Jawab -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-semibold text-slate-700">
-                            Penanggung Jawab <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" id="inputPenanggungJawab" name="penanggung_jawab_pembuatan_informasi" required maxlength="255" autocomplete="off" list="list-penanggung-jawab-history"
-                               placeholder="Contoh: Dekan..."
-                               class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm">
-                        <datalist id="list-penanggung-jawab-history">
-                            @foreach($listPenanggungJawab as $val)
-                                <option value="{{ $val }}"></option>
-                            @endforeach
-                        </datalist>
-                    </div>
-
-                    <!-- Waktu dan Tempat Pembuatan -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-semibold text-slate-700">
-                            Waktu dan Tempat Pembuatan <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" id="inputTahun" name="waktu_pembuatan_informasi" required autocomplete="off"
-                               placeholder="Contoh: 2026, Dekanat..." list="list-waktu-history"
-                               class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm">
-                        <datalist id="list-waktu-history">
-                            @foreach($listTahun as $val)
-                                <option value="{{ $val }}"></option>
-                            @endforeach
-                        </datalist>
-                    </div>
-
                     <!-- Format -->
                     <div class="space-y-2">
                         <label class="block text-sm font-semibold text-slate-700">
@@ -129,23 +84,23 @@
                         </select>
                     </div>
 
-                    <!-- Retensi Arsip + Bentuk * — 1 baris 2 kolom (swap) -->
-                    <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Retensi Arsip Kiri -->
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-slate-700">
-                                Retensi Arsip <span class="text-rose-500">*</span>
-                            </label>
-                            <input type="text" id="inputRetensiArsip" name="retensi_arsip" required autocomplete="off" list="list-retensi-history"
-                                   placeholder="Contoh: Permanen..."
-                                   class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm">
-                            <datalist id="list-retensi-history">
-                                @foreach($listRetensi as $val)
-                                    <option value="{{ $val }}"></option>
-                                @endforeach
-                            </datalist>
-                        </div>
-                        <div id="sectionAksesOnline" class="space-y-2" x-data="{
+                    <!-- Retensi Arsip -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-slate-700">
+                            Retensi Arsip <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="text" id="inputRetensiArsip" name="retensi_arsip" required autocomplete="off" list="list-retensi-history"
+                               placeholder="Contoh: Permanen..."
+                               class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition text-sm">
+                        <datalist id="list-retensi-history">
+                            @foreach($listRetensi as $val)
+                                <option value="{{ $val }}"></option>
+                            @endforeach
+                        </datalist>
+                    </div>
+
+                    <!-- Bentuk (File / Tautan) -->
+                    <div id="sectionAksesOnline" class="space-y-2 md:col-span-2" x-data="{
                             tipe: 'file',
                             fileName: '',
                             fileSize: '',
@@ -217,7 +172,6 @@
                             <div x-show="tipe==='link'">
                                 <input type="url" id="inputLink" name="link_informasi" placeholder="Contoh: https://drive.google.com/..." class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-primary transition text-sm">
                             </div>
-                        </div>
                     </div>
 
                 </div>

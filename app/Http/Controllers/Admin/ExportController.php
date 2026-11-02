@@ -249,10 +249,7 @@ class ExportController extends Controller
             });
         }
 
-        if ($kategori === 'Informasi Serta-Merta') {
-            $items = $query->orderBy('waktu_pembuatan_informasi', 'desc')->latest()->get();
-            $groupedItems = [$kategori => $items];
-        } elseif ($kategori) {
+        if ($kategori) {
             $items = $query->orderByRaw("
                 CASE 
                     WHEN rincian_informasi LIKE 'Profil Unit%' OR rincian_informasi LIKE 'Profil unit%' OR rincian_informasi LIKE 'Profil Badan Publik%' THEN 1

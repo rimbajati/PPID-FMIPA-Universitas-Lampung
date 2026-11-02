@@ -114,7 +114,7 @@ class InformasiPublikController extends Controller
             $query->where('retensi_arsip', $request->retensi);
         }
 
-        // Sorting: Serta-Merta (pengumuman) tampil terbaru di atas (latest), sedangkan kategori DIP lainnya dikelompokkan berdasarkan Rincian Informasi (Topik) agar sub-informasi satu topik selalu berkumpul berurutan
+        // Sorting: Kategori dikelompokkan berdasarkan Rincian Informasi (Topik) agar sub-informasi satu topik selalu berkumpul berurutan
         if ($request->sort == 'terlama') {
             $query->oldest();
         } elseif ($request->sort == 'terbaru') {
@@ -124,9 +124,7 @@ class InformasiPublikController extends Controller
         } elseif ($request->sort == 'judul_desc') {
             $query->orderBy('sub_informasi', 'desc');
         } else {
-            if ($request->kategori === 'Informasi Serta-Merta') {
-                $query->latest();
-            } elseif ($request->kategori === 'Informasi Berkala') {
+            if ($request->kategori === 'Informasi Berkala') {
                 // Sesuai urutan standar website Monev PPID Unila / Perki 1/2021: Profil Unit nomor 1
                 $query->orderByRaw("
                     CASE 
@@ -145,7 +143,7 @@ class InformasiPublikController extends Controller
                     END ASC
                 ")->orderBy('id', 'asc');
             } elseif ($request->filled('kategori')) {
-                // Kategori Setiap Saat atau lainnya
+                // Kategori Setiap Saat, Serta-Merta atau lainnya
                 $query->orderBy('rincian_informasi', 'asc')->orderBy('id', 'asc');
             } else {
                 // Seluruh DIP: Kelompokkan berdasarkan urutan resmi jenis informasi
@@ -192,7 +190,7 @@ class InformasiPublikController extends Controller
         $informasi = $query->get();
         $informasiGroups = collect([
             'Informasi Berkala' => $informasi->where('kategori_informasi', 'Informasi Berkala')->values(),
-            'Informasi Serta-Merta' => $informasi->where('kategori_informasi', 'Informasi Serta-Merta')->sortByDesc('created_at')->values(),
+            'Informasi Serta-Merta' => $informasi->where('kategori_informasi', 'Informasi Serta-Merta')->values(),
             'Informasi Setiap Saat' => $informasi->where('kategori_informasi', 'Informasi Setiap Saat')->values(),
         ]);
 
@@ -221,7 +219,7 @@ class InformasiPublikController extends Controller
             'rincian_informasi'                      => 'required|string|max:255',
             'sub_informasi'                          => 'nullable|string|max:255',
             'pejabat_unit_yang_menguasai_informasi'  => 'nullable|string|max:255',
-            'penanggung_jawab_pembuatan_informasi'   => 'required|string|max:255',
+            'penanggung_jawab_pembuatan_informasi'   => 'nullable|string|max:255',
             'waktu_pembuatan_informasi'              => 'nullable|string|max:255',
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',
@@ -341,7 +339,7 @@ class InformasiPublikController extends Controller
             'rincian_informasi'                      => 'required|string|max:255',
             'sub_informasi'                          => 'nullable|string|max:255',
             'pejabat_unit_yang_menguasai_informasi'  => 'nullable|string|max:255',
-            'penanggung_jawab_pembuatan_informasi'   => 'required|string|max:255',
+            'penanggung_jawab_pembuatan_informasi'   => 'nullable|string|max:255',
             'waktu_pembuatan_informasi'              => 'nullable|string|max:255',
             'bentuk_informasi_yang_tersedia'         => 'nullable|string|max:100',
             'retensi_arsip'                          => 'nullable|string|max:255',

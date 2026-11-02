@@ -63,73 +63,8 @@
                 </form>
             </div>
 
-            @if($slug === 'serta-merta')
-                <!-- Pengumuman Tipe Card List ala Unpad untuk Informasi Serta-Merta -->
-                <div class="bg-white rounded-none border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-4">
-                    <!-- Container Card List Serta-Merta (Terhubung dengan Client-Side Instant Search) -->
-                    <div id="container-serta-merta" class="space-y-3">
-                        @forelse($items as $idx => $item)
-                            @php
-                                $ext = pathinfo($item->file_informasi, PATHINFO_EXTENSION);
-                                $fileDisplayName = $item->nama_file_asli ?: (\Illuminate\Support\Str::slug($item->sub_informasi) . ($ext ? '.' . $ext : '.pdf'));
-                                $fileTargetUrl = ($item->link_informasi && !$item->file_informasi) 
-                                    ? $item->link_informasi 
-                                    : ($item->file_informasi ? url('/informasi/file/'.$item->id.'/'.rawurlencode($fileDisplayName)) : null);
-                                $tglPembuatan = $item->created_at ? $item->created_at->translatedFormat('d F Y') : '-';
-                            @endphp
-                            <div class="card-serta-merta group/card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-none border border-slate-200/80 bg-white hover:bg-secondary-light/40 hover:border-secondary/30 transition-all duration-200 shadow-2xs hover:shadow-xs"
-                                 data-dilihat="{{ (int)($item->dilihat ?? 0) }}"
-                                 data-rincian="{{ strtolower($item->rincian_informasi ?? '') }}"
-                                 data-sub_informasi="{{ strtolower($item->sub_informasi ?? '') }}">
-                                <div class="flex items-start gap-3.5">
-                                    <div class="w-10 h-10 rounded-xl bg-secondary-light/70 text-primary flex items-center justify-center shrink-0 group-hover/card:bg-primary group-hover/card:text-white transition-colors duration-200 mt-0.5">
-                                        <i class="mdi mdi-bullhorn-outline text-sm"></i>
-                                    </div>
-                                    <div class="space-y-1">
-                                        <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover/card:text-primary transition-colors leading-snug">
-                                            {{ $item->sub_informasi }}
-                                        </h3>
-                                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 font-semibold">
-                                            <span class="flex items-center gap-1.5">
-                                                <i class="mdi mdi-calendar-month-outline text-[11px]"></i>
-                                                <span>{{ $tglPembuatan }}</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
-                                    @if($fileTargetUrl)
-                                        <a href="{{ $fileTargetUrl }}" target="_blank" 
-                                           class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-primary text-white text-xs font-bold rounded-xl transition shadow-2xs hover:shadow-xs cursor-pointer">
-                                            <span>Lihat</span>
-                                            <i class="mdi mdi-open-in-new text-[10px]"></i>
-                                        </a>
-                                    @else
-                                        <span class="text-xs font-semibold text-slate-400 italic px-3 py-1.5 bg-slate-100 rounded-xl">Dokumen Belum Tersedia</span>
-                                    @endif
-                                </div>
-                            </div>
-                        @empty
-                            <div class="p-12 text-center text-slate-400 font-semibold">
-                                Belum ada pengumuman serta-merta yang diterbitkan saat ini.
-                            </div>
-                        @endforelse
-                    </div>
-
-                    <!-- Footer Pagination Serta-Merta -->
-                    <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div id="table-kat-info" class="text-xs sm:text-sm font-medium text-slate-600">
-                            Menampilkan 0–0 dari 0 informasi
-                        </div>
-                        <div id="table-kat-pagination" class="inline-flex items-center rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden divide-x divide-slate-200 bg-white select-none">
-                            <!-- Tombol dibuat via JavaScript secara instan -->
-                        </div>
-                    </div>
-                </div>
-            @else
-                <!-- Tabel Rincian Informasi & Sub Informasi (Untuk Berkala & Setiap Saat) -->
-                <div class="bg-white rounded-2xl border border-slate-300 shadow-xs overflow-hidden">
+            <!-- Tabel Rincian Informasi & Sub Informasi -->
+            <div class="bg-white rounded-2xl border border-slate-300 shadow-xs overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse border border-slate-300">
                             <thead>
@@ -244,7 +179,6 @@
                         </div>
                     </div>
                 </div>
-            @endif
 
             <!-- Call to Action Bantuan -->
             <div class="bg-gradient-to-r from-primary to-primary-light text-white rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -273,14 +207,11 @@
 
     function initClientSideKatTable() {
         const tbody = document.getElementById('table-kat-body');
-        const containerCards = document.getElementById('container-serta-merta');
-
         const rawRows = tbody ? Array.from(tbody.querySelectorAll('.table-kat-row')) : [];
-        const rawCards = containerCards ? Array.from(containerCards.querySelectorAll('.card-serta-merta')) : [];
 
-        if (rawRows.length === 0 && rawCards.length === 0) return;
+        if (rawRows.length === 0) return;
 
-        const sourceElements = rawCards.length > 0 ? rawCards : rawRows;
+        const sourceElements = rawRows;
 
         katAllRows = sourceElements.map((el, index) => {
             return {
@@ -404,62 +335,42 @@
             katFilteredRows = katAllRows.filter(row => row.fullText.includes(query));
         }
 
-        const isTableMode = !!document.getElementById('table-kat-body') && !document.getElementById('container-serta-merta');
-        if (isTableMode) {
-            const groupOrder = new Map();
-            katAllRows.forEach(row => {
-                const k = (row.rincian || '').trim();
-                if (!groupOrder.has(k)) groupOrder.set(k, groupOrder.size);
-            });
-            katFilteredRows.sort((a, b) => {
-                const ga = (a.rincian || '').trim();
-                const gb = (b.rincian || '').trim();
-                let gc = 0;
-                if (katSortColumn === 'rincian') {
-                    gc = ga.localeCompare(gb, 'id', { numeric: true, sensitivity: 'base' });
-                    if (katSortDirection === 'desc') gc *= -1;
-                } else {
-                    gc = (groupOrder.get(ga) ?? 0) - (groupOrder.get(gb) ?? 0);
-                }
-                if (gc) return gc;
-                if (!katSortColumn || katSortColumn === 'rincian') return a.originalIndex - b.originalIndex;
-                if (katSortColumn === 'dilihat') {
-                    const r = a.dilihat - b.dilihat;
-                    return katSortDirection === 'asc' ? r : -r;
-                }
-                const va = a[katSortColumn] || '';
-                const vb = b[katSortColumn] || '';
-                const cmp = va.localeCompare(vb, 'id', { numeric: true, sensitivity: 'base' });
-                return katSortDirection === 'asc' ? cmp : -cmp;
-            });
-        } else if (katSortColumn) {
-            katFilteredRows.sort((a, b) => {
-                if (katSortColumn === 'dilihat') {
-                    const valA = a.dilihat || 0;
-                    const valB = b.dilihat || 0;
-                    return katSortDirection === 'asc' ? valA - valB : valB - valA;
-                }
-                const valA = a[katSortColumn] || '';
-                const valB = b[katSortColumn] || '';
-                const cmp = valA.localeCompare(valB, 'id', { numeric: true, sensitivity: 'base' });
-                return katSortDirection === 'asc' ? cmp : -cmp;
-            });
-        } else {
-            katFilteredRows.sort((a, b) => a.originalIndex - b.originalIndex);
-        }
+        const groupOrder = new Map();
+        katAllRows.forEach(row => {
+            const k = (row.rincian || '').trim();
+            if (!groupOrder.has(k)) groupOrder.set(k, groupOrder.size);
+        });
+        katFilteredRows.sort((a, b) => {
+            const ga = (a.rincian || '').trim();
+            const gb = (b.rincian || '').trim();
+            let gc = 0;
+            if (katSortColumn === 'rincian') {
+                gc = ga.localeCompare(gb, 'id', { numeric: true, sensitivity: 'base' });
+                if (katSortDirection === 'desc') gc *= -1;
+            } else {
+                gc = (groupOrder.get(ga) ?? 0) - (groupOrder.get(gb) ?? 0);
+            }
+            if (gc) return gc;
+            if (!katSortColumn || katSortColumn === 'rincian') return a.originalIndex - b.originalIndex;
+            if (katSortColumn === 'dilihat') {
+                const r = a.dilihat - b.dilihat;
+                return katSortDirection === 'asc' ? r : -r;
+            }
+            const va = a[katSortColumn] || '';
+            const vb = b[katSortColumn] || '';
+            const cmp = va.localeCompare(vb, 'id', { numeric: true, sensitivity: 'base' });
+            return katSortDirection === 'asc' ? cmp : -cmp;
+        });
 
         renderClientSideKatTable();
     }
 
     function renderClientSideKatTable() {
         const tbody = document.getElementById('table-kat-body');
-        const containerCards = document.getElementById('container-serta-merta');
         const infoEl = document.getElementById('table-kat-info');
         const paginEl = document.getElementById('table-kat-pagination');
 
-        const isCards = !!containerCards;
-        const targetContainer = isCards ? containerCards : tbody;
-        if (!targetContainer) return;
+        if (!tbody) return;
 
         const totalItems = katFilteredRows.length;
         const totalPages = Math.ceil(totalItems / katPerPage) || 1;
@@ -470,26 +381,20 @@
         const startIndex = (katCurrentPage - 1) * katPerPage;
         const endIndex = Math.min(startIndex + katPerPage, totalItems);
 
-        if (!isCards) {
-            katAllRows.forEach(row => {
-                row.element.classList.remove('category-group-end');
-                const rincianCell = row.element.querySelector('.col-kat-rincian');
-                if (rincianCell) {
-                    rincianCell.classList.remove('category-group-boundary-cell');
-                    rincianCell.style.display = '';
-                    rincianCell.rowSpan = 1;
-                }
-            });
-        }
+        katAllRows.forEach(row => {
+            row.element.classList.remove('category-group-end');
+            const rincianCell = row.element.querySelector('.col-kat-rincian');
+            if (rincianCell) {
+                rincianCell.classList.remove('category-group-boundary-cell');
+                rincianCell.style.display = '';
+                rincianCell.rowSpan = 1;
+            }
+        });
 
-        targetContainer.innerHTML = '';
+        tbody.innerHTML = '';
 
         if (totalItems === 0) {
-            if (isCards) {
-                targetContainer.innerHTML = '<div class="p-12 text-center text-slate-400 font-semibold bg-slate-50/50 rounded-none border border-slate-100">Tidak ada pengumuman yang sesuai dengan pencarian.</div>';
-            } else {
-                targetContainer.innerHTML = '<tr><td colspan="3" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data informasi untuk kategori ini yang sesuai.</td></tr>';
-            }
+            tbody.innerHTML = '<tr><td colspan="3" class="p-12 text-center text-slate-400 font-semibold">Tidak ada data informasi untuk kategori ini yang sesuai.</td></tr>';
             if (infoEl) infoEl.innerText = 'Menampilkan 0–0 dari 0 informasi';
             if (paginEl) paginEl.innerHTML = '';
             return;
@@ -497,47 +402,40 @@
 
         const pageRows = katFilteredRows.slice(startIndex, endIndex);
 
-        if (isCards) {
-            // Render Cards untuk Informasi Serta-Merta
-            pageRows.forEach(row => {
-                targetContainer.appendChild(row.element);
-            });
-        } else {
-            // Render Tabel dengan penggabungan rowspan otomatis untuk Berkala & Setiap Saat
-            let i = 0;
-            while (i < pageRows.length) {
-                const currentRincian = (pageRows[i].rincian || '').trim();
-                let span = 1;
-                for (let j = i + 1; j < pageRows.length; j++) {
-                    const nextRincian = (pageRows[j].rincian || '').trim();
-                    if (currentRincian.localeCompare(nextRincian, 'id', { sensitivity: 'accent' }) === 0) {
-                        span++;
-                    } else {
-                        break;
-                    }
+        // Render Tabel dengan penggabungan rowspan otomatis untuk seluruh kategori (Berkala, Setiap Saat, Serta-Merta)
+        let i = 0;
+        while (i < pageRows.length) {
+            const currentRincian = (pageRows[i].rincian || '').trim();
+            let span = 1;
+            for (let j = i + 1; j < pageRows.length; j++) {
+                const nextRincian = (pageRows[j].rincian || '').trim();
+                if (currentRincian.localeCompare(nextRincian, 'id', { sensitivity: 'accent' }) === 0) {
+                    span++;
+                } else {
+                    break;
                 }
-
-                for (let k = 0; k < span; k++) {
-                    const tr = pageRows[i + k].element;
-                    const rincianTd = tr.querySelector('.col-kat-rincian');
-                    if (rincianTd) {
-                        if (k === 0) {
-                            rincianTd.style.display = '';
-                            rincianTd.setAttribute('rowspan', span);
-                        } else {
-                            rincianTd.style.display = 'none';
-                        }
-                    }
-                    targetContainer.appendChild(tr);
-                }
-
-                if (i + span < pageRows.length) {
-                    pageRows[i + span - 1].element.classList.add('category-group-end');
-                    pageRows[i].element.querySelector('.col-kat-rincian')?.classList.add('category-group-boundary-cell');
-                }
-
-                i += span;
             }
+
+            for (let k = 0; k < span; k++) {
+                const tr = pageRows[i + k].element;
+                const rincianTd = tr.querySelector('.col-kat-rincian');
+                if (rincianTd) {
+                    if (k === 0) {
+                        rincianTd.style.display = '';
+                        rincianTd.setAttribute('rowspan', span);
+                    } else {
+                        rincianTd.style.display = 'none';
+                    }
+                }
+                tbody.appendChild(tr);
+            }
+
+            if (i + span < pageRows.length) {
+                pageRows[i + span - 1].element.classList.add('category-group-end');
+                pageRows[i].element.querySelector('.col-kat-rincian')?.classList.add('category-group-boundary-cell');
+            }
+
+            i += span;
         }
 
         if (infoEl) {

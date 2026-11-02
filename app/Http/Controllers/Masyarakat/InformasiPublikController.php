@@ -278,11 +278,7 @@ class InformasiPublikController extends Controller
             $query->where('waktu_pembuatan_informasi', $request->tahun);
         }
 
-        if ($slug === 'serta-merta') {
-            $items = $query->orderBy('waktu_pembuatan_informasi', 'desc')
-                           ->orderBy('created_at', 'desc')
-                           ->get();
-        } elseif ($slug === 'berkala') {
+        if ($slug === 'berkala') {
             // Urutkan persis 11 poin standar website Monev PPID Unila / Perki 1/2021 (Profil Unit urutan pertama)
             $items = $query->orderByRaw("
                 CASE 
@@ -301,7 +297,7 @@ class InformasiPublikController extends Controller
                 END ASC
             ")->orderBy('id', 'asc')->get();
         } else {
-            // Kelompokkan per rincian informasi terlebih dahulu agar sub-informasi satu topik berkumpul dan rowspan rapi
+            // Kelompokkan per rincian informasi terlebih dahulu agar sub-informasi satu topik berkumpul dan rowspan rapi (Setiap Saat & Serta-Merta)
             $items = $query->orderBy('rincian_informasi', 'asc')
                            ->orderBy('id', 'asc')
                            ->get();

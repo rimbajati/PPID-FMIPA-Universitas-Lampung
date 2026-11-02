@@ -260,21 +260,14 @@
         const sectionRincian = document.getElementById('section-rincian-field');
         const datalist = document.getElementById('list-rincian-dynamic');
         const hasCategory = Boolean(kategori && kategori.trim() !== '');
-        const isSertaMerta = kategori === 'Informasi Serta-Merta';
         const rincianInput = document.getElementById('inputRincianInformasi');
         const subLabel = document.getElementById('labelSubInformasi');
 
-        // Serta-Merta adalah satu pengumuman langsung, bukan kelompok rincian/subinformasi.
-        sectionRincian?.classList.toggle('hidden', isSertaMerta);
-        if (subLabel) subLabel.textContent = isSertaMerta ? 'Informasi' : 'Sub Informasi';
+        sectionRincian?.classList.remove('hidden');
+        if (subLabel) subLabel.textContent = 'Sub Informasi';
         if (rincianInput) {
-            if (isSertaMerta) {
-                rincianInput.value = 'Pengumuman Serta-Merta';
-                rincianInput.removeAttribute('required');
-            } else {
-                if (rincianInput.value === 'Pengumuman Serta-Merta') rincianInput.value = '';
-                rincianInput.setAttribute('required', 'required');
-            }
+            if (rincianInput.value === 'Pengumuman Serta-Merta') rincianInput.value = '';
+            rincianInput.setAttribute('required', 'required');
         }
 
         toggleSubDetailFields(true);
@@ -368,16 +361,18 @@
             document.getElementById('inputSubInformasi').value = subVal;
         }
 
-        document.getElementById('inputKategoriInformasi').value = item.kategori_informasi || '';
-        handleKategoriInformasiChange(item.kategori_informasi || '');
-        document.getElementById('inputTahun').value = item.waktu_pembuatan_informasi || item.tahun_terbit || '';
+        if (document.getElementById('inputKategoriInformasi')) {
+            document.getElementById('inputKategoriInformasi').value = item.kategori_informasi || '';
+            handleKategoriInformasiChange(item.kategori_informasi || '');
+        }
+        if (document.getElementById('inputTahun')) {
+            document.getElementById('inputTahun').value = item.waktu_pembuatan_informasi || item.tahun_terbit || '';
+        }
         if (document.getElementById('inputRetensiArsip')) {
             document.getElementById('inputRetensiArsip').value = item.retensi_arsip || '';
         }
         if (document.getElementById('inputRincianInformasi')) {
-            document.getElementById('inputRincianInformasi').value = item.kategori_informasi === 'Informasi Serta-Merta'
-                ? 'Pengumuman Serta-Merta'
-                : (item.rincian_informasi || '');
+            document.getElementById('inputRincianInformasi').value = item.rincian_informasi || '';
             // Update datalist sub informasi sesuai rincian yang sudah terpilih
             updateSubInformasiDatalist(item.rincian_informasi || '');
         }
@@ -413,7 +408,7 @@
         if (item.link_informasi && !item.file_informasi) {
             if (alpine) alpine.tipe = 'link';
             window.toggleInputType('link');
-            document.getElementById('inputLink').value = item.link_informasi || '';
+            if (document.getElementById('inputLink')) document.getElementById('inputLink').value = item.link_informasi || '';
             setAlpineFile('', '');
             if (fileDisplayName) fileDisplayName.textContent = '';
             if (fileLink) fileLink.classList.add('hidden');
@@ -639,22 +634,15 @@
         tbody.innerHTML = '';
         if (!total) {
             const isCategoryMode = tbody.dataset.categoryMode === 'true';
-            const isSertaMertaTable = tbody.dataset.sertaMertaTable === 'true';
             const emptyMessage = isCategoryMode ? 'Tidak ada data informasi untuk kategori ini.' : 'Tidak ada data Informasi Publik yang sesuai.';
-            if (isSertaMertaTable) {
-                tbody.innerHTML = `<div class="p-12 text-center text-slate-400 font-semibold border border-slate-200">${emptyMessage}</div>`;
-                if (info) info.innerText = 'Menampilkan 0–0 dari 0 informasi';
-                if (pagination) pagination.innerHTML = '';
-                return;
-            }
-            const columnCount = (isSertaMertaTable ? 3 : (isUnified ? 9 : (isCategoryMode ? 4 : 9)));
+            const columnCount = isUnified ? 6 : (isCategoryMode ? 4 : 6);
             tbody.innerHTML = `<tr><td colspan="${columnCount}" class="p-12 text-center text-slate-400 font-semibold">${emptyMessage}</td></tr>`;
             if (info) info.innerText = 'Menampilkan 0–0 dari 0 informasi';
             if (pagination) pagination.innerHTML = '';
             return;
         }
         let unifiedGroupRendered = null;
-        const colCountUnified = 9;
+        const colCountUnified = 6;
         const visibleRows = rows.slice(start, end);
         const unifiedLabelMap = { 'informasi berkala': 'Informasi Publik yang Wajib Disediakan Secara Berkala', 'informasi setiap saat': 'Informasi Publik yang Wajib Tersedia Setiap Saat', 'informasi serta-merta': 'Informasi Publik yang Wajib Diumumkan Secara Serta-Merta' };
         const toUnifiedLabel = (v) => unifiedLabelMap[(v||'').toLowerCase().trim()] || v;
